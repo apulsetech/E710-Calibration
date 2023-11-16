@@ -1,0 +1,4 @@
+version=2.00.00
+src_version=b95d670dd956
+src_branch=release/yukon-fw-v2.0.0
+build_date=Thu 17 Aug 2023 12:10:14 PM PDT

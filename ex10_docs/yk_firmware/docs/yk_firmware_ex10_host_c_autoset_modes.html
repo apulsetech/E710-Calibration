@@ -1,0 +1,361 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Autoset &#8212; Impinj Reader Chip SDK</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinxdoc.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Drop Query" href="yk_firmware_ex10_host_c_drop_query.html" />
+    <link rel="prev" title="Advanced Topics" href="yk_firmware_ex10_host_c_advanced_topics.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="yk_firmware_ex10_host_c_drop_query.html" title="Drop Query"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="yk_firmware_ex10_host_c_advanced_topics.html" title="Advanced Topics"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="yk_firmware_ex10_host_c_api.html" >Impinj Reader Chip C Host SDK</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="yk_firmware_ex10_host_c_advanced_topics.html" accesskey="U">Advanced Topics</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Autoset</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="autoset">
+<span id="ex10-api-host-c-api-autoset-modes"></span><h1>Autoset<a class="headerlink" href="#autoset" title="Permalink to this headline">¶</a></h1>
+<p>The Autoset feature allows the reader software to inventory the maximum number
+of tags in the shortest amount of time, by exploiting a sequence of RF modes.</p>
+<p>The RF mode sequence runs inventory rounds using the fastest, least sensitive mode first,
+followed by successively slower, more sensitive RF modes. The final inventory round
+completes the sequence using the most sensitive, slowest, RF mode.</p>
+<p>The following table describes each Autoset mode, its intended region for use, and which
+SKUs support the RF modes.</p>
+<p>See <a class="reference internal" href="yk_firmware_ex10_api_operations.html#setrfmodeop"><span class="std std-ref">SetRFModeOp</span></a> for the table of RF modes.</p>
+<table class="colwidths-given docutils align-default" id="id1">
+<caption><span class="caption-number">Table 7 </span><span class="caption-text">Autoset Modes</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 30%" />
+<col style="width: 20%" />
+<col style="width: 40%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>AutosetModeId</p></th>
+<th class="head"><p>SKU</p></th>
+<th class="head"><p>Region</p></th>
+<th class="head"><p>RF Mode Sequence</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1120</p></td>
+<td><p>E910, E710</p></td>
+<td><p>FCC</p></td>
+<td><p>[103, 148, 146, 185]</p></td>
+</tr>
+<tr class="row-odd"><td><p>1122</p></td>
+<td><p>E510</p></td>
+<td><p>FCC</p></td>
+<td><p>[120, 148, 146, 185]</p></td>
+</tr>
+<tr class="row-even"><td><p>1123</p></td>
+<td><p>E310</p></td>
+<td><p>FCC</p></td>
+<td><p>[125, 141, 146, 185]</p></td>
+</tr>
+<tr class="row-odd"><td><p>1220</p></td>
+<td><p>E910, E710, E510, E310</p></td>
+<td><p>EU1 (ETSI_LOWER)</p></td>
+<td><p>[225, 223, 241, 285]</p></td>
+</tr>
+<tr class="row-even"><td><p>1320</p></td>
+<td><p>E910, E710</p></td>
+<td><p>EU2 (ETSI_UPPER)</p></td>
+<td><p>[302, 345, 343, 382]</p></td>
+</tr>
+<tr class="row-odd"><td><p>1322</p></td>
+<td><p>E510</p></td>
+<td><p>EU2 (ETSI_UPPER)</p></td>
+<td><p>[323, 345, 343, 382]</p></td>
+</tr>
+<tr class="row-even"><td><p>1323</p></td>
+<td><p>E310</p></td>
+<td><p>EU2 (ETSI_UPPER)</p></td>
+<td><p>[325, 342, 343, 382]</p></td>
+</tr>
+<tr class="row-odd"><td><p>1420</p></td>
+<td><p>E910, E710, E510, E310</p></td>
+<td><p>All others</p></td>
+<td><p>[203, 223, 241, 285]</p></td>
+</tr>
+</tbody>
+</table>
+<p>The following activity diagram (flowchart) illustrates the sequencing of
+inventory rounds.</p>
+<figure class="align-default">
+<img alt="../../_images/autoset_activity_diagram.svg" src="../../_images/autoset_activity_diagram.svg" /></figure>
+<p>The Autoset Mode structure is intended to be used with
+<a class="reference internal" href="ex10_host_c_use_cases/inventory_sequence.html#ex10-api-host-c-api-use-case-inventory-sequence"><span class="std std-ref">Ex10 Inventory Sequence Use Case</span></a> in the following manner:</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="k">enum</span> <span class="n">AutosetModeId</span> <span class="n">Ex10AutosetModes</span><span class="p">.</span><span class="n">get_autoset_mode_id</span><span class="p">(</span><span class="k">enum</span> <span class="n">Ex10RegionID</span> <span class="n">region_id</span><span class="p">,</span>
+                                                        <span class="k">enum</span> <span class="n">ProductSku</span>   <span class="n">sku</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>This function can be used to obtain the best possible <code class="docutils literal notranslate"><span class="pre">enum</span> <span class="pre">AutosetModeId</span></code> value for
+specific region and SKU combination.</p>
+<p>Once an <code class="docutils literal notranslate"><span class="pre">AutosetModeId</span></code> is chosen, it can be used to obtain the list of RF modes using the function:</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span> <span class="nc">AutosetRfModes</span> <span class="k">const</span><span class="o">*</span> <span class="n">Ex10AutosetModes</span><span class="p">.</span><span class="n">get_autoset_rf_modes</span><span class="p">(</span><span class="k">enum</span> <span class="n">AutosetModeId</span> <span class="n">autoset_mode_id</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>This function returns a pointer to the <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">AutosetRfModes</span></code> which contains the RF modes array data.</p>
+<p>Then the caller can fill out a <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">InventoryRoundConfigBasic</span></code> based on the RF mode array data along
+with other client specific parameters using the function:</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span> <span class="nc">Ex10Result</span> <span class="p">(</span><span class="o">*</span><span class="n">init_autoset_basic_inventory_sequence</span><span class="p">)(</span>
+    <span class="k">struct</span> <span class="nc">InventoryRoundConfigBasic</span><span class="o">*</span> <span class="n">inventory_round_config</span><span class="p">,</span>
+    <span class="kt">size_t</span>                            <span class="n">inventory_round_config_size</span><span class="p">,</span>
+    <span class="k">struct</span> <span class="nc">AutosetRfModes</span> <span class="k">const</span><span class="o">*</span>      <span class="n">autoset_rf_modes</span><span class="p">,</span>
+    <span class="kt">uint8_t</span>                           <span class="n">antenna</span><span class="p">,</span>
+    <span class="kt">int16_t</span>                           <span class="n">tx_power_cdbm</span><span class="p">,</span>
+    <span class="kt">uint8_t</span>                           <span class="n">target</span><span class="p">,</span>
+    <span class="k">enum</span> <span class="n">InventoryRoundControlSession</span> <span class="n">session</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>This function call fills in the client allocated <code class="docutils literal notranslate"><span class="pre">inventory_round_config</span></code> parameter
+for each inventory round to be performed.</p>
+<p>The resulting <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">InventoryRoundConfigBasic</span></code> data is then attached to a <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">InventoryRoundSequence</span></code>,
+which can be passed in to the <code class="docutils literal notranslate"><span class="pre">Ex10InventorySequenceUseCase.run_inventory_sequence()</span></code>, and each RF mode within
+the Autoset mode list will be inventoried.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">Ex10AutosetModes</span></code> interface is documented below:</p>
+<dl class="cpp enum">
+<dt class="sig sig-object cpp" id="_CPPv413AutosetModeId">
+<span id="_CPPv313AutosetModeId"></span><span id="_CPPv213AutosetModeId"></span><span class="target" id="ex10__autoset__modes_8h_1ac14cdc3da19e0ee0147c13e38510b705"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">AutosetModeId</span></span></span><a class="headerlink" href="#_CPPv413AutosetModeId" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Enumeration of Autoset modes supported by the SDK. </p>
+<p><em>Values:</em></p>
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N13AutosetModeId19AutosetMode_InvalidE">
+<span id="_CPPv3N13AutosetModeId19AutosetMode_InvalidE"></span><span id="_CPPv2N13AutosetModeId19AutosetMode_InvalidE"></span><span class="target" id="ex10__autoset__modes_8h_1ac14cdc3da19e0ee0147c13e38510b705a881e17204d831efca3d5ce44278e6374"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">AutosetMode_Invalid</span></span></span><a class="headerlink" href="#_CPPv4N13AutosetModeId19AutosetMode_InvalidE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Indicates the Autoset mode is invalid. </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N13AutosetModeId16AutosetMode_1120E">
+<span id="_CPPv3N13AutosetModeId16AutosetMode_1120E"></span><span id="_CPPv2N13AutosetModeId16AutosetMode_1120E"></span><span class="target" id="ex10__autoset__modes_8h_1ac14cdc3da19e0ee0147c13e38510b705a574f4e360b976c55110a811eb616c461"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">AutosetMode_1120</span></span></span><a class="headerlink" href="#_CPPv4N13AutosetModeId16AutosetMode_1120E" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Region: FCC, SKU: E910, E710. </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N13AutosetModeId16AutosetMode_1122E">
+<span id="_CPPv3N13AutosetModeId16AutosetMode_1122E"></span><span id="_CPPv2N13AutosetModeId16AutosetMode_1122E"></span><span class="target" id="ex10__autoset__modes_8h_1ac14cdc3da19e0ee0147c13e38510b705a5fa7c005564ad5a5666f7455685453df"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">AutosetMode_1122</span></span></span><a class="headerlink" href="#_CPPv4N13AutosetModeId16AutosetMode_1122E" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Region: FCC, SKU: E510. </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N13AutosetModeId16AutosetMode_1123E">
+<span id="_CPPv3N13AutosetModeId16AutosetMode_1123E"></span><span id="_CPPv2N13AutosetModeId16AutosetMode_1123E"></span><span class="target" id="ex10__autoset__modes_8h_1ac14cdc3da19e0ee0147c13e38510b705a613b5f91d808512fc2dc5a718e6891d4"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">AutosetMode_1123</span></span></span><a class="headerlink" href="#_CPPv4N13AutosetModeId16AutosetMode_1123E" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Region: FCC, SKU: E310. </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N13AutosetModeId16AutosetMode_1220E">
+<span id="_CPPv3N13AutosetModeId16AutosetMode_1220E"></span><span id="_CPPv2N13AutosetModeId16AutosetMode_1220E"></span><span class="target" id="ex10__autoset__modes_8h_1ac14cdc3da19e0ee0147c13e38510b705a7bb9d4808d9aa9ac18aaa7ae3f4c4490"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">AutosetMode_1220</span></span></span><a class="headerlink" href="#_CPPv4N13AutosetModeId16AutosetMode_1220E" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Region: EU1 (ETSI_LOWER), SKU: E910, E710, E510, E310. </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N13AutosetModeId16AutosetMode_1320E">
+<span id="_CPPv3N13AutosetModeId16AutosetMode_1320E"></span><span id="_CPPv2N13AutosetModeId16AutosetMode_1320E"></span><span class="target" id="ex10__autoset__modes_8h_1ac14cdc3da19e0ee0147c13e38510b705a3d95da3ca5813d75f639471e2fd9c123"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">AutosetMode_1320</span></span></span><a class="headerlink" href="#_CPPv4N13AutosetModeId16AutosetMode_1320E" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Region: EU2 (ETSI_UPPER), SKU: E910, E710. </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N13AutosetModeId16AutosetMode_1322E">
+<span id="_CPPv3N13AutosetModeId16AutosetMode_1322E"></span><span id="_CPPv2N13AutosetModeId16AutosetMode_1322E"></span><span class="target" id="ex10__autoset__modes_8h_1ac14cdc3da19e0ee0147c13e38510b705a961f6d117d511ceee2730d077b38f65f"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">AutosetMode_1322</span></span></span><a class="headerlink" href="#_CPPv4N13AutosetModeId16AutosetMode_1322E" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Region: EU2 (ETSI_UPPER), SKU: E510. </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N13AutosetModeId16AutosetMode_1323E">
+<span id="_CPPv3N13AutosetModeId16AutosetMode_1323E"></span><span id="_CPPv2N13AutosetModeId16AutosetMode_1323E"></span><span class="target" id="ex10__autoset__modes_8h_1ac14cdc3da19e0ee0147c13e38510b705ae98af3766ee7988ea33bd4aaded1fec3"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">AutosetMode_1323</span></span></span><a class="headerlink" href="#_CPPv4N13AutosetModeId16AutosetMode_1323E" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Region: EU2 (ETSI_UPPER), SKU: E310. </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N13AutosetModeId16AutosetMode_1420E">
+<span id="_CPPv3N13AutosetModeId16AutosetMode_1420E"></span><span id="_CPPv2N13AutosetModeId16AutosetMode_1420E"></span><span class="target" id="ex10__autoset__modes_8h_1ac14cdc3da19e0ee0147c13e38510b705a596440728ecf18fdab163bd61840993c"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">AutosetMode_1420</span></span></span><a class="headerlink" href="#_CPPv4N13AutosetModeId16AutosetMode_1420E" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Region: All others, SKU: E910, E710, E510, E310. </p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv414AutosetRfModes">
+<span id="_CPPv314AutosetRfModes"></span><span id="_CPPv214AutosetRfModes"></span><span id="AutosetRfModes"></span><span class="target" id="struct_autoset_rf_modes"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">AutosetRfModes</span></span></span><a class="headerlink" href="#_CPPv414AutosetRfModes" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>A container of RF modes aggregated by an Autoset mode. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N14AutosetRfModes15autoset_mode_idE">
+<span id="_CPPv3N14AutosetRfModes15autoset_mode_idE"></span><span id="_CPPv2N14AutosetRfModes15autoset_mode_idE"></span><span id="AutosetRfModes::autoset_mode_id__AutosetModeId"></span><span class="target" id="struct_autoset_rf_modes_1a727a70b59c204c34446ab2399a85720d"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv413AutosetModeId" title="AutosetModeId"><span class="n"><span class="pre">AutosetModeId</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">autoset_mode_id</span></span></span><a class="headerlink" href="#_CPPv4N14AutosetRfModes15autoset_mode_idE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The Autoset mode ID. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N14AutosetRfModes12rf_mode_listE">
+<span id="_CPPv3N14AutosetRfModes12rf_mode_listE"></span><span id="_CPPv2N14AutosetRfModes12rf_mode_listE"></span><span id="AutosetRfModes::rf_mode_list__RfModesCP"></span><span class="target" id="struct_autoset_rf_modes_1a032029ceef1795af0d6721239b586258"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="n"><span class="pre">RfModes</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">rf_mode_list</span></span></span><a class="headerlink" href="#_CPPv4N14AutosetRfModes12rf_mode_listE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The RF modes contained as an array. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N14AutosetRfModes15rf_modes_lengthE">
+<span id="_CPPv3N14AutosetRfModes15rf_modes_lengthE"></span><span id="_CPPv2N14AutosetRfModes15rf_modes_lengthE"></span><span id="AutosetRfModes::rf_modes_length__s"></span><span class="target" id="struct_autoset_rf_modes_1ab5a7caa72a2e0f2f75287e04edfd402f"></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">rf_modes_length</span></span></span><a class="headerlink" href="#_CPPv4N14AutosetRfModes15rf_modes_lengthE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The number of RF modes within the array. </p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv416Ex10AutosetModes">
+<span id="_CPPv316Ex10AutosetModes"></span><span id="_CPPv216Ex10AutosetModes"></span><span id="Ex10AutosetModes"></span><span class="target" id="struct_ex10_autoset_modes"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10AutosetModes</span></span></span><a class="headerlink" href="#_CPPv416Ex10AutosetModes" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Each Autoset mode accessor references an array of RF modes containing AUTOSET_RF_MODE_COUNT elements. </p>
+<p>These RF modes, from lowest to highest index, within the array, provide better sensitivity with slower tag access.</p>
+<p>The Autoset modes are specific to a given region. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N16Ex10AutosetModes20get_autoset_rf_modesE">
+<span id="_CPPv3N16Ex10AutosetModes20get_autoset_rf_modesE"></span><span id="_CPPv2N16Ex10AutosetModes20get_autoset_rf_modesE"></span><span class="target" id="struct_ex10_autoset_modes_1a6931bf3960050f69aef80b76c8a8db61"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv414AutosetRfModes" title="AutosetRfModes"><span class="n"><span class="pre">AutosetRfModes</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_autoset_rf_modes</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv413AutosetModeId" title="AutosetModeId"><span class="n"><span class="pre">AutosetModeId</span></span></a><span class="w"> </span><span class="n"><span class="pre">autoset_mode_id</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N16Ex10AutosetModes20get_autoset_rf_modesE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Get a pointer to a struct of <a class="reference internal" href="#struct_autoset_rf_modes"><span class="std std-ref">AutosetRfModes</span></a> based on the Autoset mode passed in and the region name. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Invalid region names will return the “Other regions” RF modes. </p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Param autoset_mode_id</dt>
+<dd class="field-odd"><p>The Autoset mode.</p>
+</dd>
+<dt class="field-even">Return</dt>
+<dd class="field-even"><p>struct <a class="reference internal" href="#struct_autoset_rf_modes"><span class="std std-ref">AutosetRfModes</span></a> const* The RF modes associated with an Autoset mode. NULL if the function call fails. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N16Ex10AutosetModes19get_autoset_mode_idE">
+<span id="_CPPv3N16Ex10AutosetModes19get_autoset_mode_idE"></span><span id="_CPPv2N16Ex10AutosetModes19get_autoset_mode_idE"></span><span class="target" id="struct_ex10_autoset_modes_1adc624772f6f6435dff772b754991945c"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv413AutosetModeId" title="AutosetModeId"><span class="n"><span class="pre">AutosetModeId</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_autoset_mode_id</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><a class="reference internal" href="ex10_host_c_reader_primitives/regulatory_regions.html#_CPPv412Ex10RegionId" title="Ex10RegionId"><span class="n"><span class="pre">Ex10RegionId</span></span></a><span class="w"> </span><span class="n"><span class="pre">region_id</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><a class="reference internal" href="yk_firmware_ex10_host_c_register_accessors.html#_CPPv410ProductSku" title="ProductSku"><span class="n"><span class="pre">ProductSku</span></span></a><span class="w"> </span><span class="n"><span class="pre">sku</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N16Ex10AutosetModes19get_autoset_mode_idE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Based on the region and SKU, get the associated Autoset mode ID. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Param region_id</dt>
+<dd class="field-odd"><p>Specifies the region for RF mode optimization. </p>
+</dd>
+<dt class="field-even">Param sku</dt>
+<dd class="field-even"><p>Specifies the SKU on which the Autoset RF modes will be used.</p>
+</dd>
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>enum AutosetModeId The Autoset mode that will perform optimally on a specific SKU for a specific region. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N16Ex10AutosetModes37init_autoset_basic_inventory_sequenceE">
+<span id="_CPPv3N16Ex10AutosetModes37init_autoset_basic_inventory_sequenceE"></span><span id="_CPPv2N16Ex10AutosetModes37init_autoset_basic_inventory_sequenceE"></span><span class="target" id="struct_ex10_autoset_modes_1a084d73de00cf04e90a88a011d5ac9473"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">init_autoset_basic_inventory_sequence</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="yk_firmware_ex10_host_c_reader_layer.html#_CPPv425InventoryRoundConfigBasic" title="InventoryRoundConfigBasic"><span class="n"><span class="pre">InventoryRoundConfigBasic</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">inventory_round_config</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n"><span class="pre">inventory_round_config_size</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv414AutosetRfModes" title="AutosetRfModes"><span class="n"><span class="pre">AutosetRfModes</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">autoset_rf_modes</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n"><span class="pre">antenna</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">int16_t</span></span><span class="w"> </span><span class="n"><span class="pre">tx_power_cdbm</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n"><span class="pre">target</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><a class="reference internal" href="yk_firmware_ex10_host_c_register_accessors.html#_CPPv428InventoryRoundControlSession" title="InventoryRoundControlSession"><span class="n"><span class="pre">InventoryRoundControlSession</span></span></a><span class="w"> </span><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N16Ex10AutosetModes37init_autoset_basic_inventory_sequenceE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Initialize the array of struct <a class="reference internal" href="yk_firmware_ex10_host_c_reader_layer.html#struct_inventory_round_config_basic"><span class="std std-ref">InventoryRoundConfigBasic</span></a> nodes. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Param inventory_round_config</dt>
+<dd class="field-odd"><p><strong>[out]</strong> An array of struct <a class="reference internal" href="yk_firmware_ex10_host_c_reader_layer.html#struct_inventory_round_config_basic"><span class="std std-ref">InventoryRoundConfigBasic</span></a> nodes to initialize with Autoset RF modes and related inventory parameters. </p>
+</dd>
+<dt class="field-even">Param inventory_round_config_size</dt>
+<dd class="field-even"><p>The number of nodes in the inventory_round_config array. Used to bounds check the inventory_round_config array size against the autoset_rf_modes array size. </p>
+</dd>
+<dt class="field-odd">Param autoset_rf_modes</dt>
+<dd class="field-odd"><p>A const pointer struct <a class="reference internal" href="#struct_autoset_rf_modes"><span class="std std-ref">AutosetRfModes</span></a>, which contains an array of RF modes for running inventory rounds. </p>
+</dd>
+<dt class="field-even">Param antenna</dt>
+<dd class="field-even"><p>The antenna port to use during the inventory round. </p>
+</dd>
+<dt class="field-odd">Param tx_power_cdbm</dt>
+<dd class="field-odd"><p>The transmit power in cdBm to use during the round. </p>
+</dd>
+<dt class="field-even">Param target</dt>
+<dd class="field-even"><p>The inventory flag to target during the inventory round; i.e. target_A or target_B. </p>
+</dd>
+<dt class="field-odd">Param session</dt>
+<dd class="field-odd"><p>The inventory session for tags to participate in.</p>
+</dd>
+<dt class="field-even">Return</dt>
+<dd class="field-even"><p>struct <a class="reference internal" href="ex10_host_c_support/ex10_result.html#struct_ex10_result"><span class="std std-ref">Ex10Result</span></a> Indicates whether the function was successful or not. </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="../../_static/logo.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="yk_firmware_ex10_host_c_advanced_topics.html"
+                        title="previous chapter">Advanced Topics</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="yk_firmware_ex10_host_c_drop_query.html"
+                        title="next chapter">Drop Query</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="yk_firmware_ex10_host_c_drop_query.html" title="Drop Query"
+             >next</a></li>
+        <li class="right" >
+          <a href="yk_firmware_ex10_host_c_advanced_topics.html" title="Advanced Topics"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="yk_firmware_ex10_host_c_api.html" >Impinj Reader Chip C Host SDK</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="yk_firmware_ex10_host_c_advanced_topics.html" >Advanced Topics</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Autoset</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Impinj, Inc..
+    </div>
+  </body>
+</html>

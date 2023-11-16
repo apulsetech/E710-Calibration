@@ -1,0 +1,377 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Ex10PowerModes &#8212; Impinj Reader Chip SDK</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinxdoc.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Ex10SjcAccessor" href="yk_firmware_ex10_host_c_sjc_accessor.html" />
+    <link rel="prev" title="Drop Query" href="yk_firmware_ex10_host_c_drop_query.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="yk_firmware_ex10_host_c_sjc_accessor.html" title="Ex10SjcAccessor"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="yk_firmware_ex10_host_c_drop_query.html" title="Drop Query"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="yk_firmware_ex10_host_c_api.html" >Impinj Reader Chip C Host SDK</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="yk_firmware_ex10_host_c_advanced_topics.html" accesskey="U">Advanced Topics</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Ex10PowerModes</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="ex10powermodes">
+<span id="ex10-api-host-c-api-power-modes"></span><h1>Ex10PowerModes<a class="headerlink" href="#ex10powermodes" title="Permalink to this headline">¶</a></h1>
+<p>The Ex10PowerModes interface is an optional layer which allows a host to
+set the Impinj Reader Chip into a lower power state, along with its peripherals,
+without performing a software and peripheral teardown.</p>
+<p>One benefit of removing power from the Impinj Reader Chip using the
+Ex10PowerModes API, rather than a full software teardown, is that the
+calibration data for the Impinj Reader Chip remains intact within the SDK;
+specifically the Ex10Reader private <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">Ex10ReaderPrivate.calibration</span></code>
+member.</p>
+<p>The calibration data is not re-read from the Impinj Reader Chip when
+transitioning across the Power Modes.</p>
+<p>The Ex10PowerModes layer relies on the Ex10Reader layer to bring the Impinj
+Reader chip up into the <code class="docutils literal notranslate"><span class="pre">PowerModeReady</span></code> state once <code class="docutils literal notranslate"><span class="pre">Ex10Reader.init_ex10()</span></code>
+has been called.</p>
+<dl class="cpp enum">
+<dt class="sig sig-object cpp" id="_CPPv49PowerMode">
+<span id="_CPPv39PowerMode"></span><span id="_CPPv29PowerMode"></span><span class="target" id="ex10__power__modes_8h_1a6c27e9967ccb6dd452cb0f3594647443"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">PowerMode</span></span></span><a class="headerlink" href="#_CPPv49PowerMode" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The power modes control provides top level control of the Impinj Reader Chip, its peripherals connected through the GPIO pins (labelled DIGITAL_IO on the schematic), and the Impinj Reader Chip internal analog power. </p>
+<p><table class="colwidths-auto docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p></p></th>
+<th class="head"><p>Off </p></th>
+<th class="head"><p>Standby </p></th>
+<th class="head"><p>Ready </p></th>
+<th class="head"><p>ReadyCold  </p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>PA_BIAS_ENABLE </p></td>
+<td><p>X </p></td>
+<td><p>0 </p></td>
+<td><p>1 </p></td>
+<td><p>0 </p></td>
+</tr>
+<tr class="row-odd"><td><p>RF_PS_ENABLE </p></td>
+<td><p>X </p></td>
+<td><p>0 </p></td>
+<td><p>1 </p></td>
+<td><p>0 </p></td>
+</tr>
+<tr class="row-even"><td><p>Ex10 Analog Power </p></td>
+<td><p>X </p></td>
+<td><p>0 </p></td>
+<td><p>1 </p></td>
+<td><p>1 </p></td>
+</tr>
+<tr class="row-odd"><td><p>PWR_EN </p></td>
+<td><p>0 </p></td>
+<td><p>1 </p></td>
+<td><p>1 </p></td>
+<td><p>1 </p></td>
+</tr>
+</tbody>
+</table>
+
+X = Don’t Care</p>
+<p><dl class="simple">
+<dt><strong>See</strong></dt><dd><p>struct <a class="reference internal" href="ex10_board_specific/ex10_gpio.html#struct_ex10_gpio_config"><span class="std std-ref">Ex10GpioConfig</span></a>, struct <a class="reference internal" href="ex10_board_specific/ex10_gpio.html#struct_ex10_gpio_helpers"><span class="std std-ref">Ex10GpioHelpers</span></a> </p>
+</dd>
+</dl>
+</p>
+<p><em>Values:</em></p>
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N9PowerMode16PowerModeInvalidE">
+<span id="_CPPv3N9PowerMode16PowerModeInvalidE"></span><span id="_CPPv2N9PowerMode16PowerModeInvalidE"></span><span class="target" id="ex10__power__modes_8h_1a6c27e9967ccb6dd452cb0f3594647443ab1fb8a005f11c88ce90ac7815b8d7c15"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">PowerModeInvalid</span></span></span><a class="headerlink" href="#_CPPv4N9PowerMode16PowerModeInvalidE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The invalid state is set if the power mode API call fails to change state. This state is set if any of the calls to the Ops layer fail. </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N9PowerMode12PowerModeOffE">
+<span id="_CPPv3N9PowerMode12PowerModeOffE"></span><span id="_CPPv2N9PowerMode12PowerModeOffE"></span><span class="target" id="ex10__power__modes_8h_1a6c27e9967ccb6dd452cb0f3594647443a0dcb0b85403885f0d55c8b77ec1afb52"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">PowerModeOff</span></span></span><a class="headerlink" href="#_CPPv4N9PowerMode12PowerModeOffE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Power is removed from the Impinj Reader Chip and its peripherals. </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N9PowerMode16PowerModeStandbyE">
+<span id="_CPPv3N9PowerMode16PowerModeStandbyE"></span><span id="_CPPv2N9PowerMode16PowerModeStandbyE"></span><span class="target" id="ex10__power__modes_8h_1a6c27e9967ccb6dd452cb0f3594647443a2cf2316476c9283173a06c674dd8e179"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">PowerModeStandby</span></span></span><a class="headerlink" href="#_CPPv4N9PowerMode16PowerModeStandbyE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The Impinj Reader Chip is powered, however, its internal analog power supplies are disabled. The external Power Amplifer is not powered. </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N9PowerMode18PowerModeReadyColdE">
+<span id="_CPPv3N9PowerMode18PowerModeReadyColdE"></span><span id="_CPPv2N9PowerMode18PowerModeReadyColdE"></span><span class="target" id="ex10__power__modes_8h_1a6c27e9967ccb6dd452cb0f3594647443ae17e18f297462e4ca0cef28139aa096f"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">PowerModeReadyCold</span></span></span><a class="headerlink" href="#_CPPv4N9PowerMode18PowerModeReadyColdE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The Impinj Reader Chip and is fully powered up; including its internal analog circuitry. External peripherals are not powered on. </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N9PowerMode14PowerModeReadyE">
+<span id="_CPPv3N9PowerMode14PowerModeReadyE"></span><span id="_CPPv2N9PowerMode14PowerModeReadyE"></span><span class="target" id="ex10__power__modes_8h_1a6c27e9967ccb6dd452cb0f3594647443a87813ffe788d77264d342f02afe1e629"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">PowerModeReady</span></span></span><a class="headerlink" href="#_CPPv4N9PowerMode14PowerModeReadyE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The Impinj Reader Chip and its internal analog circuitry are powered. The external Power Amplifer is powered. The Impinj Reader Chip is ready to inventory RFID tags. </p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv414Ex10PowerModes">
+<span id="_CPPv314Ex10PowerModes"></span><span id="_CPPv214Ex10PowerModes"></span><span id="Ex10PowerModes"></span><span class="target" id="struct_ex10_power_modes"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10PowerModes</span></span></span><a class="headerlink" href="#_CPPv414Ex10PowerModes" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The Ex10 reader interface. </p>
+<p><div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>It is recommended that the initial <a class="reference internal" href="yk_firmware_ex10_host_c_reader_layer.html#struct_ex10_reader_1a3a9180bfae88e97f9fb29d5fe7f02da6"><span class="std std-ref">Ex10Reader.init_ex10()</span></a> function sets the Impinj Reader Chip into a state consistent with <code class="docutils literal notranslate"><span class="pre">PowerModeReady</span></code>.<ul class="simple">
+<li><p>This is consistent with how the <a class="reference internal" href="yk_firmware_ex10_host_c_reader_layer.html#struct_ex10_reader_1a3a9180bfae88e97f9fb29d5fe7f02da6"><span class="std std-ref">Ex10Reader.init_ex10()</span></a> initializes the Impinj Reader Chip.</p></li>
+<li><p>This is consistent with the <a class="reference internal" href="ex10_board_specific/ex10_board_spec.html#struct_ex10_board_spec_1a7913e7d77858dc7ebe6dffac556a2a9a"><span class="std std-ref">Ex10BoardSpec.get_default_gpio_output_levels()</span></a> implementation.</p></li>
+<li><p>This will not conflict with stored settings startup sequencing.</p></li>
+<li><p>It is expected that since the Impinj Reader Chip is being powered up then there are tags to be inventoried; PowerModeReady is ready to start inventorying tags.</p></li>
+<li><p>If the <a class="reference internal" href="yk_firmware_ex10_host_c_reader_layer.html#struct_ex10_reader"><span class="std std-ref">Ex10Reader</span></a> module is changed to complete its initialization, via the <a class="reference internal" href="yk_firmware_ex10_host_c_reader_layer.html#struct_ex10_reader_1a3a9180bfae88e97f9fb29d5fe7f02da6"><span class="std std-ref">Ex10Reader.init_ex10()</span></a> function, into a mode other than PowerModeReady, then the <a class="reference internal" href="#struct_ex10_power_modes_1a3c796274e4688262c10e774437f54c06"><span class="std std-ref">Ex10PowerModes.init()</span></a> behavior will need to change accordingly. </p></li>
+</ul>
+</p>
+</div>
+</p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N14Ex10PowerModes4initE">
+<span id="_CPPv3N14Ex10PowerModes4initE"></span><span id="_CPPv2N14Ex10PowerModes4initE"></span><span class="target" id="struct_ex10_power_modes_1a3c796274e4688262c10e774437f54c06"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">init</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N14Ex10PowerModes4initE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Initialize the <a class="reference internal" href="#struct_ex10_power_modes"><span class="std std-ref">Ex10PowerModes</span></a> object. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N14Ex10PowerModes6deinitE">
+<span id="_CPPv3N14Ex10PowerModes6deinitE"></span><span id="_CPPv2N14Ex10PowerModes6deinitE"></span><span class="target" id="struct_ex10_power_modes_1a0af0214db3a9f5243e0364b18c941939"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">deinit</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N14Ex10PowerModes6deinitE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Release any resources used by the <a class="reference internal" href="#struct_ex10_power_modes"><span class="std std-ref">Ex10PowerModes</span></a> object. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N14Ex10PowerModes14set_power_modeE">
+<span id="_CPPv3N14Ex10PowerModes14set_power_modeE"></span><span id="_CPPv2N14Ex10PowerModes14set_power_modeE"></span><span class="target" id="struct_ex10_power_modes_1ac8f88e94a2a834be3c60a3c39faf7929"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">set_power_mode</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv49PowerMode" title="PowerMode"><span class="n"><span class="pre">PowerMode</span></span></a><span class="w"> </span><span class="n"><span class="pre">power_mode</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N14Ex10PowerModes14set_power_modeE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Set the power mode. </p>
+<p><dl class="simple">
+<dt><strong>See</strong></dt><dd><p>enum PowerMode</p>
+</dd>
+</dl>
+</p>
+<dl class="field-list simple">
+<dt class="field-odd">Param power_mode</dt>
+<dd class="field-odd"><p>The power mode to set. </p>
+</dd>
+<dt class="field-even">Return</dt>
+<dd class="field-even"><p>struct <a class="reference internal" href="ex10_host_c_support/ex10_result.html#struct_ex10_result"><span class="std std-ref">Ex10Result</span></a> Indicates whether the transition to the requested power mode was successful or not. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N14Ex10PowerModes14get_power_modeE">
+<span id="_CPPv3N14Ex10PowerModes14get_power_modeE"></span><span id="_CPPv2N14Ex10PowerModes14get_power_modeE"></span><span class="target" id="struct_ex10_power_modes_1aa30814b86eea426af625e3dd89c5f58b"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv49PowerMode" title="PowerMode"><span class="n"><span class="pre">PowerMode</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_power_mode</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N14Ex10PowerModes14get_power_modeE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Get the <a class="reference internal" href="#struct_ex10_power_modes"><span class="std std-ref">Ex10PowerModes</span></a> power mode. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>enum PowerMode The current operating power mode. </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+<section id="measured-power-modes-current-consumption">
+<h2>Measured Power Modes current consumption<a class="headerlink" href="#measured-power-modes-current-consumption" title="Permalink to this headline">¶</a></h2>
+<p>The following table illustrates typical current draw measurements on the
+E710 reference design board for each power mode. These measurements were taken
+using the C SDK example <code class="docutils literal notranslate"><span class="pre">inventory_power_modes.c</span></code>.</p>
+<table class="colwidths-auto docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Power Mode</p></th>
+<th class="head"><p>Current Draw [mA]</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>PowerModeOff</p></td>
+<td><p>10</p></td>
+</tr>
+<tr class="row-odd"><td><p>PowerModeStandby</p></td>
+<td><p>60</p></td>
+</tr>
+<tr class="row-even"><td><p>PowerModeReadyCold</p></td>
+<td><p>210</p></td>
+</tr>
+<tr class="row-odd"><td><p>PowerModeReady, CW Off</p></td>
+<td><p>1080</p></td>
+</tr>
+<tr class="row-even"><td><p>PowerModeReady, Inventory &#64; 30 dBm</p></td>
+<td><p>1360</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="power-modes-porting-considerations">
+<h2>Power Modes porting considerations<a class="headerlink" href="#power-modes-porting-considerations" title="Permalink to this headline">¶</a></h2>
+<section id="settling-time-delays">
+<h3>Settling time delays<a class="headerlink" href="#settling-time-delays" title="Permalink to this headline">¶</a></h3>
+<p>The board specific function <code class="docutils literal notranslate"><span class="pre">Ex10BoardSpec.get_pa_bias_power_on_delay_ms()</span></code> is used to
+define the settling time required by the analog components when transitioning into the
+PowerModeReady state.</p>
+<p>The customer’s board implementation, and their embedded software environment,
+should determine:</p>
+<ul class="simple">
+<li><p>Which power modes they intend to use</p></li>
+<li><p>The appropriate settling time(s) required by external components</p></li>
+<li><p>Adjust the settling times as appropriate to their use cases and peripherals</p></li>
+</ul>
+</section>
+<section id="power-mode-state-consistency-with-the-ex10reader-layer">
+<h3>Power Mode state consistency with the Ex10Reader layer<a class="headerlink" href="#power-mode-state-consistency-with-the-ex10reader-layer" title="Permalink to this headline">¶</a></h3>
+<p>As previously stated, the PowerModes module is intended to be an optional component.
+Products can remove the module and the SDK will work properly. To remove the PowerModes
+module, simply remove the dependencies found within the board_init.c module and the
+<code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">Ex10Interface</span></code> aggregation and initialization.</p>
+<p>If the Ex10Reader layer is modified to come up in a state not consistent with the PowerModeReady
+state, then the PowerModes module should be modified to be consistent with the Ex10Reader layer,
+or some other means of Ex10Reader to Ex10PowerModes synchronization will need to be implemented
+by the customer.</p>
+</section>
+</section>
+<section id="ex10powertransactor">
+<span id="ex10-api-host-c-api-power-transactor"></span><h2>Ex10PowerTransactor<a class="headerlink" href="#ex10powertransactor" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">Ex10PowerTransactor</span></code> manipulates the host GPIO lines to power up/down the
+Impinj Reader Chip into the Bootloader and/or Application.</p>
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv419Ex10PowerTransactor">
+<span id="_CPPv319Ex10PowerTransactor"></span><span id="_CPPv219Ex10PowerTransactor"></span><span id="Ex10PowerTransactor"></span><span class="target" id="struct_ex10_power_transactor"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10PowerTransactor</span></span></span><a class="headerlink" href="#_CPPv419Ex10PowerTransactor" title="Permalink to this definition">¶</a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N19Ex10PowerTransactor4initE">
+<span id="_CPPv3N19Ex10PowerTransactor4initE"></span><span id="_CPPv2N19Ex10PowerTransactor4initE"></span><span class="target" id="struct_ex10_power_transactor_1ad11189e715b651f9d9dbef86a8c2b91b"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">init</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N19Ex10PowerTransactor4initE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N19Ex10PowerTransactor6deinitE">
+<span id="_CPPv3N19Ex10PowerTransactor6deinitE"></span><span id="_CPPv2N19Ex10PowerTransactor6deinitE"></span><span class="target" id="struct_ex10_power_transactor_1a5ba8b5dfe7928be438dd2a628288a35e"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">deinit</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N19Ex10PowerTransactor6deinitE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N19Ex10PowerTransactor23power_up_to_applicationE">
+<span id="_CPPv3N19Ex10PowerTransactor23power_up_to_applicationE"></span><span id="_CPPv2N19Ex10PowerTransactor23power_up_to_applicationE"></span><span class="target" id="struct_ex10_power_transactor_1a4e8160abf6c7dc84b945744c865670b0"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">power_up_to_application</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N19Ex10PowerTransactor23power_up_to_applicationE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Power on the Impinj Reader Chip into the Application. </p>
+<p>If the application programmed into the Impinj Reader Chip is not valid then the reader will be executing the within the bootloader.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns &lt;</dt>
+<dd class="field-odd"><p>0 Indicates a device IO or operation system error. </p>
+</dd>
+<dt class="field-even">Returns 1</dt>
+<dd class="field-even"><p>Indicates that the Impinj Reader Chip is executing in the bootloader context. </p>
+</dd>
+<dt class="field-odd">Returns 2</dt>
+<dd class="field-odd"><p>Indicates that the Impinj Reader Chip is executing in the application context (success). </p>
+</dd>
+<dt class="field-even">Return</dt>
+<dd class="field-even"><p>int Indicates whether the call was successful. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N19Ex10PowerTransactor22power_up_to_bootloaderE">
+<span id="_CPPv3N19Ex10PowerTransactor22power_up_to_bootloaderE"></span><span id="_CPPv2N19Ex10PowerTransactor22power_up_to_bootloaderE"></span><span class="target" id="struct_ex10_power_transactor_1a10e8e0a31cb577b5e8b0d1d855768de6"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">power_up_to_bootloader</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N19Ex10PowerTransactor22power_up_to_bootloaderE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Power on the Impinj Reader Chip into the Bootloader. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N19Ex10PowerTransactor10power_downE">
+<span id="_CPPv3N19Ex10PowerTransactor10power_downE"></span><span id="_CPPv2N19Ex10PowerTransactor10power_downE"></span><span class="target" id="struct_ex10_power_transactor_1aca6ec28264eed99415f49cdee0ee5cc3"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">power_down</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N19Ex10PowerTransactor10power_downE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Remove power from the Impinj Reader Chip, keeping software interfaces intact and ready for use. </p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="../../_static/logo.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Ex10PowerModes</a><ul>
+<li><a class="reference internal" href="#measured-power-modes-current-consumption">Measured Power Modes current consumption</a></li>
+<li><a class="reference internal" href="#power-modes-porting-considerations">Power Modes porting considerations</a><ul>
+<li><a class="reference internal" href="#settling-time-delays">Settling time delays</a></li>
+<li><a class="reference internal" href="#power-mode-state-consistency-with-the-ex10reader-layer">Power Mode state consistency with the Ex10Reader layer</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#ex10powertransactor">Ex10PowerTransactor</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="yk_firmware_ex10_host_c_drop_query.html"
+                        title="previous chapter">Drop Query</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="yk_firmware_ex10_host_c_sjc_accessor.html"
+                        title="next chapter">Ex10SjcAccessor</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="yk_firmware_ex10_host_c_sjc_accessor.html" title="Ex10SjcAccessor"
+             >next</a></li>
+        <li class="right" >
+          <a href="yk_firmware_ex10_host_c_drop_query.html" title="Drop Query"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="yk_firmware_ex10_host_c_api.html" >Impinj Reader Chip C Host SDK</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="yk_firmware_ex10_host_c_advanced_topics.html" >Advanced Topics</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Ex10PowerModes</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Impinj, Inc..
+    </div>
+  </body>
+</html>

@@ -1,0 +1,193 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Ex10EventFifoQueue &#8212; Impinj Reader Chip SDK</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinxdoc.css" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Regulatory Regions Structures and Interfaces" href="regulatory_regions.html" />
+    <link rel="prev" title="Ex10Inventory" href="inventory.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="regulatory_regions.html" title="Regulatory Regions Structures and Interfaces"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="inventory.html" title="Ex10Inventory"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../yk_firmware_ex10_host_c_api.html" >Impinj Reader Chip C Host SDK</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../yk_firmware_ex10_host_c_api_layers.html" >API Layers</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="reader_primitives_layer.html" accesskey="U">Ex10 Reader Primitives</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Ex10EventFifoQueue</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="ex10eventfifoqueue">
+<span id="ex10-api-host-c-api-reader-primitives-event-fifo-queue"></span><h1>Ex10EventFifoQueue<a class="headerlink" href="#ex10eventfifoqueue" title="Permalink to this headline">¶</a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">Ex10EventFifoQueue</span></code> reader primitive provides a queue to pass EventFifo
+buffers between the interrupt context and the main context.  So typically the
+use case layer will have an interrupt callback that gets called from the interrupt
+handler in the SDK. This will do any processing necessary in the interrupt context
+and then pass it to the main context though this queue.  The main context will then
+consume the buffers and return them to the free list.  Any Mutex locking is done
+in this primitive, and will utilize the operating system abstraction layer in the
+boards section to implement the correct mutex type.</p>
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv418Ex10EventFifoQueue">
+<span id="_CPPv318Ex10EventFifoQueue"></span><span id="_CPPv218Ex10EventFifoQueue"></span><span id="Ex10EventFifoQueue"></span><span class="target" id="struct_ex10_event_fifo_queue"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10EventFifoQueue</span></span></span><a class="headerlink" href="#_CPPv418Ex10EventFifoQueue" title="Permalink to this definition">¶</a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N18Ex10EventFifoQueue4initE">
+<span id="_CPPv3N18Ex10EventFifoQueue4initE"></span><span id="_CPPv2N18Ex10EventFifoQueue4initE"></span><span class="target" id="struct_ex10_event_fifo_queue_1ae5d646fcb97f9bae3fb45ff8f326536c"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">init</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N18Ex10EventFifoQueue4initE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Initialize the Event Fifo Queue structures. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N18Ex10EventFifoQueue19list_node_push_backE">
+<span id="_CPPv3N18Ex10EventFifoQueue19list_node_push_backE"></span><span id="_CPPv2N18Ex10EventFifoQueue19list_node_push_backE"></span><span class="target" id="struct_ex10_event_fifo_queue_1a6de2b85952f34231501adfec39281098"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">list_node_push_back</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../yk_firmware_ex10_host_c_other_types.html#_CPPv414FifoBufferNode" title="FifoBufferNode"><span class="n"><span class="pre">FifoBufferNode</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">fifo_buffer_node</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N18Ex10EventFifoQueue19list_node_push_backE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Push a <a class="reference internal" href="../yk_firmware_ex10_host_c_other_types.html#struct_fifo_buffer_node"><span class="std std-ref">FifoBufferNode</span></a> onto the back of the reader.event_fifo_list. </p>
+<p>The reader list mutex is used to maintain exclusive access to the reader list.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Param fifo_buffer_node</dt>
+<dd class="field-odd"><p>A pointer to the <a class="reference internal" href="../yk_firmware_ex10_host_c_other_types.html#struct_fifo_buffer_node"><span class="std std-ref">FifoBufferNode</span></a>. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N18Ex10EventFifoQueue11packet_peekE">
+<span id="_CPPv3N18Ex10EventFifoQueue11packet_peekE"></span><span id="_CPPv2N18Ex10EventFifoQueue11packet_peekE"></span><span class="target" id="struct_ex10_event_fifo_queue_1a0fae93a97ffdde769f56fe8f63c6ce22"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../ex10_host_c_support/event_parser.html#_CPPv415EventFifoPacket" title="EventFifoPacket"><span class="n"><span class="pre">EventFifoPacket</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">packet_peek</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N18Ex10EventFifoQueue11packet_peekE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return the packet at the front of the packet queue. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>An <a class="reference internal" href="../yk_firmware_ex10_host_c_other_types.html#struct_event_fifo_packet"><span class="std std-ref">EventFifoPacket</span></a> or NULL if none available. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N18Ex10EventFifoQueue13packet_removeE">
+<span id="_CPPv3N18Ex10EventFifoQueue13packet_removeE"></span><span id="_CPPv2N18Ex10EventFifoQueue13packet_removeE"></span><span class="target" id="struct_ex10_event_fifo_queue_1a7905dec21459c25d5666e1a3ed016fe2"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">packet_remove</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N18Ex10EventFifoQueue13packet_removeE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Delete the packet at the front of the packet queue. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>There is a limited amount of room for packets in the packet queue, so packets should be discarded regularly using remove_packet() to ensure room for new packets.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The packet must only be removed once it is not longer in use. <a class="reference internal" href="#struct_ex10_event_fifo_queue_1a7905dec21459c25d5666e1a3ed016fe2"><span class="std std-ref">packet_remove()</span></a> is similar to calling free() on allocated memory. Once the packet has been removed its packet pointer obtained through <a class="reference internal" href="#struct_ex10_event_fifo_queue_1a0fae93a97ffdde769f56fe8f63c6ce22"><span class="std std-ref">packet_peek()</span></a> is invalid.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Calling packet_free() allows for new packets to be read from the Ex10. If <a class="reference internal" href="#struct_ex10_event_fifo_queue_1a7905dec21459c25d5666e1a3ed016fe2"><span class="std std-ref">packet_remove()</span></a> is not called then reading will stall and the available buffer space will have been used up. </p>
+</div>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N18Ex10EventFifoQueue11packet_waitE">
+<span id="_CPPv3N18Ex10EventFifoQueue11packet_waitE"></span><span id="_CPPv2N18Ex10EventFifoQueue11packet_waitE"></span><span class="target" id="struct_ex10_event_fifo_queue_1a5460f8472e56137eb69dda1cda10f279"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">packet_wait</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N18Ex10EventFifoQueue11packet_waitE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Wait, blocking until packets are ready for reading. </p>
+<p>When packets are available to read, this function will unblock. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N18Ex10EventFifoQueue24packet_wait_with_timeoutE">
+<span id="_CPPv3N18Ex10EventFifoQueue24packet_wait_with_timeoutE"></span><span id="_CPPv2N18Ex10EventFifoQueue24packet_wait_with_timeoutE"></span><span class="target" id="struct_ex10_event_fifo_queue_1aa50acbd06571881f19eb256c0433e7f2"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">packet_wait_with_timeout</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n"><span class="pre">timeout_us</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N18Ex10EventFifoQueue24packet_wait_with_timeoutE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Wait, blocking until packets are ready for reading, with a expiration timeout. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns true</dt>
+<dd class="field-odd"><p>The function timeout occurred without packets being available. </p>
+</dd>
+<dt class="field-even">Returns false</dt>
+<dd class="field-even"><p>Packets are available for reading. </p>
+</dd>
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>bool Indicates the reason the function has returned. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N18Ex10EventFifoQueue13packet_unwaitE">
+<span id="_CPPv3N18Ex10EventFifoQueue13packet_unwaitE"></span><span id="_CPPv2N18Ex10EventFifoQueue13packet_unwaitE"></span><span class="target" id="struct_ex10_event_fifo_queue_1aef08d335c2b3e25f1214b77f2d778497"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">packet_unwait</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N18Ex10EventFifoQueue13packet_unwaitE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Unblock the <a class="reference internal" href="#struct_ex10_event_fifo_queue_1a5460f8472e56137eb69dda1cda10f279"><span class="std std-ref">packet_wait()</span></a> call, even when no packets are pending. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This function should be called from a thread other than the thread that is waiting for packets. </p>
+</div>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../../../_static/logo.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="inventory.html"
+                        title="previous chapter">Ex10Inventory</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="regulatory_regions.html"
+                        title="next chapter">Regulatory Regions Structures and Interfaces</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="regulatory_regions.html" title="Regulatory Regions Structures and Interfaces"
+             >next</a></li>
+        <li class="right" >
+          <a href="inventory.html" title="Ex10Inventory"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../yk_firmware_ex10_host_c_api.html" >Impinj Reader Chip C Host SDK</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../yk_firmware_ex10_host_c_api_layers.html" >API Layers</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="reader_primitives_layer.html" >Ex10 Reader Primitives</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Ex10EventFifoQueue</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Impinj, Inc..
+    </div>
+  </body>
+</html>

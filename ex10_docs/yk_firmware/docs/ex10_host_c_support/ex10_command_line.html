@@ -1,0 +1,340 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Ex10CommandLine &#8212; Impinj Reader Chip SDK</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinxdoc.css" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Legacy Ex10Reader Layer" href="../yk_firmware_ex10_host_c_reader_layer.html" />
+    <link rel="prev" title="Ex10 SDK Error Reporting" href="ex10_result.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../yk_firmware_ex10_host_c_reader_layer.html" title="Legacy Ex10Reader Layer"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="ex10_result.html" title="Ex10 SDK Error Reporting"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../yk_firmware_ex10_host_c_api.html" >Impinj Reader Chip C Host SDK</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../yk_firmware_ex10_host_c_api_layers.html" >API Layers</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="support_modules.html" accesskey="U">Ex10 Support Modules</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Ex10CommandLine</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="ex10commandline">
+<span id="ex10-api-host-c-api-command-line"></span><h1>Ex10CommandLine<a class="headerlink" href="#ex10commandline" title="Permalink to this headline">¶</a></h1>
+<p>The Ex10CommandLine module is a helper function that is used to parse
+command line arguments for the use case examples.  This allows the user
+to be able to modify the behavior of the use case examples depending on
+which arguments they support.</p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-unnamed-group">Unnamed Group</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv411parse_int32PKc7int32_t">
+<span id="_CPPv311parse_int32PKc7int32_t"></span><span id="_CPPv211parse_int32PKc7int32_t"></span><span id="parse_int32__cCP.int32_t"></span><span class="target" id="ex10__command__line_8h_1a5a0b9b40dbf1d8ffeedd0e41d4f8385f"></span><span class="n"><span class="pre">int32_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">parse_int32</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">str</span></span>, <span class="n"><span class="pre">int32_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">error_value</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv411parse_int32PKc7int32_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>String parsing functions to various types.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>str</strong> – A null terminated C language ASCII character string. </p></li>
+<li><p><strong>error_value</strong> – When type parsing fails, use this value. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The parsed value type. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv412parse_uint32PKc8uint32_t">
+<span id="_CPPv312parse_uint32PKc8uint32_t"></span><span id="_CPPv212parse_uint32PKc8uint32_t"></span><span id="parse_uint32__cCP.uint32_t"></span><span class="target" id="ex10__command__line_8h_1a151fc0be6a3c37d8e939b6acdc2a7c03"></span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">parse_uint32</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">str</span></span>, <span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">error_value</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv412parse_uint32PKc8uint32_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv411parse_floatPKcf">
+<span id="_CPPv311parse_floatPKcf"></span><span id="_CPPv211parse_floatPKcf"></span><span id="parse_float__cCP.float"></span><span class="target" id="ex10__command__line_8h_1a3296cb2d59e3a3ddf92bd9e784af35a9"></span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">parse_float</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">str</span></span>, <span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">error_value</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv411parse_floatPKcf" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-defines">Defines</p>
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.MAX_SPECIFIER_COUNT">
+<span class="target" id="ex10__command__line_8h_1a39e4973d873d32d6104280cf7d85eb4f"></span><span class="sig-name descname"><span class="n"><span class="pre">MAX_SPECIFIER_COUNT</span></span></span><a class="headerlink" href="#c.MAX_SPECIFIER_COUNT" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.MAX_SPECIFIER_LENGTH">
+<span class="target" id="ex10__command__line_8h_1a2cdf84720e7d3d393c09a6fbbde1ef03"></span><span class="sig-name descname"><span class="n"><span class="pre">MAX_SPECIFIER_LENGTH</span></span></span><a class="headerlink" href="#c.MAX_SPECIFIER_LENGTH" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-enums">Enums</p>
+<dl class="cpp enum">
+<dt class="sig sig-object cpp" id="_CPPv427Ex10CommandLineArgumentType">
+<span id="_CPPv327Ex10CommandLineArgumentType"></span><span id="_CPPv227Ex10CommandLineArgumentType"></span><span class="target" id="ex10__command__line_8h_1a7b0c2ff6d9fa9a03486d95e261eb8103"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10CommandLineArgumentType</span></span></span><a class="headerlink" href="#_CPPv427Ex10CommandLineArgumentType" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p><em>Values:</em></p>
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N27Ex10CommandLineArgumentType36Ex10CommandLineArgumentUninitializedE">
+<span id="_CPPv3N27Ex10CommandLineArgumentType36Ex10CommandLineArgumentUninitializedE"></span><span id="_CPPv2N27Ex10CommandLineArgumentType36Ex10CommandLineArgumentUninitializedE"></span><span class="target" id="ex10__command__line_8h_1a7b0c2ff6d9fa9a03486d95e261eb8103aa2458bcf0838943ff38501d7ca3c08e7"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10CommandLineArgumentUninitialized</span></span></span><a class="headerlink" href="#_CPPv4N27Ex10CommandLineArgumentType36Ex10CommandLineArgumentUninitializedE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N27Ex10CommandLineArgumentType27Ex10CommandLineArgumentCharE">
+<span id="_CPPv3N27Ex10CommandLineArgumentType27Ex10CommandLineArgumentCharE"></span><span id="_CPPv2N27Ex10CommandLineArgumentType27Ex10CommandLineArgumentCharE"></span><span class="target" id="ex10__command__line_8h_1a7b0c2ff6d9fa9a03486d95e261eb8103a1920f6eff786cfa863be716ad6a92285"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10CommandLineArgumentChar</span></span></span><a class="headerlink" href="#_CPPv4N27Ex10CommandLineArgumentType27Ex10CommandLineArgumentCharE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N27Ex10CommandLineArgumentType28Ex10CommandLineArgumentInt32E">
+<span id="_CPPv3N27Ex10CommandLineArgumentType28Ex10CommandLineArgumentInt32E"></span><span id="_CPPv2N27Ex10CommandLineArgumentType28Ex10CommandLineArgumentInt32E"></span><span class="target" id="ex10__command__line_8h_1a7b0c2ff6d9fa9a03486d95e261eb8103a9f1848ebe6394f98a3d700071718ea7b"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10CommandLineArgumentInt32</span></span></span><a class="headerlink" href="#_CPPv4N27Ex10CommandLineArgumentType28Ex10CommandLineArgumentInt32E" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N27Ex10CommandLineArgumentType29Ex10CommandLineArgumentUint32E">
+<span id="_CPPv3N27Ex10CommandLineArgumentType29Ex10CommandLineArgumentUint32E"></span><span id="_CPPv2N27Ex10CommandLineArgumentType29Ex10CommandLineArgumentUint32E"></span><span class="target" id="ex10__command__line_8h_1a7b0c2ff6d9fa9a03486d95e261eb8103a87e082238a4ea7ad713b8cbc04f1cc0f"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10CommandLineArgumentUint32</span></span></span><a class="headerlink" href="#_CPPv4N27Ex10CommandLineArgumentType29Ex10CommandLineArgumentUint32E" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N27Ex10CommandLineArgumentType28Ex10CommandLineArgumentFloatE">
+<span id="_CPPv3N27Ex10CommandLineArgumentType28Ex10CommandLineArgumentFloatE"></span><span id="_CPPv2N27Ex10CommandLineArgumentType28Ex10CommandLineArgumentFloatE"></span><span class="target" id="ex10__command__line_8h_1a7b0c2ff6d9fa9a03486d95e261eb8103afaa5d3d2c7dc8e2070a0cbbdb5861b38"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10CommandLineArgumentFloat</span></span></span><a class="headerlink" href="#_CPPv4N27Ex10CommandLineArgumentType28Ex10CommandLineArgumentFloatE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N27Ex10CommandLineArgumentType27Ex10CommandLineArgumentBoolE">
+<span id="_CPPv3N27Ex10CommandLineArgumentType27Ex10CommandLineArgumentBoolE"></span><span id="_CPPv2N27Ex10CommandLineArgumentType27Ex10CommandLineArgumentBoolE"></span><span class="target" id="ex10__command__line_8h_1a7b0c2ff6d9fa9a03486d95e261eb8103a8866c22bf9e5a7f2d0a232293080ab4d"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10CommandLineArgumentBool</span></span></span><a class="headerlink" href="#_CPPv4N27Ex10CommandLineArgumentType27Ex10CommandLineArgumentBoolE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N27Ex10CommandLineArgumentType30Ex10CommandLineArgumentSetTrueE">
+<span id="_CPPv3N27Ex10CommandLineArgumentType30Ex10CommandLineArgumentSetTrueE"></span><span id="_CPPv2N27Ex10CommandLineArgumentType30Ex10CommandLineArgumentSetTrueE"></span><span class="target" id="ex10__command__line_8h_1a7b0c2ff6d9fa9a03486d95e261eb8103a8603d1a42592c373e477e5e6853bc11a"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10CommandLineArgumentSetTrue</span></span></span><a class="headerlink" href="#_CPPv4N27Ex10CommandLineArgumentType30Ex10CommandLineArgumentSetTrueE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N27Ex10CommandLineArgumentType31Ex10CommandLineArgumentSetFalseE">
+<span id="_CPPv3N27Ex10CommandLineArgumentType31Ex10CommandLineArgumentSetFalseE"></span><span id="_CPPv2N27Ex10CommandLineArgumentType31Ex10CommandLineArgumentSetFalseE"></span><span class="target" id="ex10__command__line_8h_1a7b0c2ff6d9fa9a03486d95e261eb8103ad3434f805285124b14a5d4754d942f73"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10CommandLineArgumentSetFalse</span></span></span><a class="headerlink" href="#_CPPv4N27Ex10CommandLineArgumentType31Ex10CommandLineArgumentSetFalseE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N27Ex10CommandLineArgumentType29Ex10CommandLineArgumentStringE">
+<span id="_CPPv3N27Ex10CommandLineArgumentType29Ex10CommandLineArgumentStringE"></span><span id="_CPPv2N27Ex10CommandLineArgumentType29Ex10CommandLineArgumentStringE"></span><span class="target" id="ex10__command__line_8h_1a7b0c2ff6d9fa9a03486d95e261eb8103a9962a1905ac7545c3159920fb43fd668"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10CommandLineArgumentString</span></span></span><a class="headerlink" href="#_CPPv4N27Ex10CommandLineArgumentType29Ex10CommandLineArgumentStringE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-functions">Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv423ex10_parse_command_linePPCKciPK23Ex10CommandLineArgument6size_tP28Ex10CommandLineArgumentValue">
+<span id="_CPPv323ex10_parse_command_linePPCKciPK23Ex10CommandLineArgument6size_tP28Ex10CommandLineArgumentValue"></span><span id="_CPPv223ex10_parse_command_linePPCKciPK23Ex10CommandLineArgument6size_tP28Ex10CommandLineArgumentValue"></span><span id="ex10_parse_command_line__cCPCP.i.Ex10CommandLineArgumentCP.s.Ex10CommandLineArgumentValueP"></span><span class="target" id="ex10__command__line_8h_1a4ee179efab42cce0aeba44e1cf67bd65"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ex10_parse_command_line</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">argv</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">argc</span></span>, <span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv423Ex10CommandLineArgument" title="Ex10CommandLineArgument"><span class="n"><span class="pre">Ex10CommandLineArgument</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">arguments</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">arguments_size</span></span>, <span class="k"><span class="pre">union</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv428Ex10CommandLineArgumentValue" title="Ex10CommandLineArgumentValue"><span class="n"><span class="pre">Ex10CommandLineArgumentValue</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">values</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv423ex10_parse_command_linePPCKciPK23Ex10CommandLineArgument6size_tP28Ex10CommandLineArgumentValue" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Parse the command line arguments from main(). </p>
+<p>Each node in the arguments array specifies how a command line argument is to be parsed into this array. If a command line specifier is encountered, then the associated node in this array is set to the parsed value. If no value is found which matches the specifier, then the default value is used (i.e. the value element within the values array is unchanged).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>argv</strong> – The argument list passed into main. </p></li>
+<li><p><strong>argc</strong> – The number of arguments to parse. </p></li>
+<li><p><strong>arguments</strong> – The specifiers and container of parsed arguments. </p></li>
+<li><p><strong>arguments_size</strong> – The number of nodes in the parameter arguments. </p></li>
+<li><p><strong>[in</strong> – out] values The parsed values array. The number of nodes in this array must match the arguments_size parameter. </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv430ex10_eprint_command_line_usagePK23Ex10CommandLineArgument6size_t">
+<span id="_CPPv330ex10_eprint_command_line_usagePK23Ex10CommandLineArgument6size_t"></span><span id="_CPPv230ex10_eprint_command_line_usagePK23Ex10CommandLineArgument6size_t"></span><span id="ex10_eprint_command_line_usage__Ex10CommandLineArgumentCP.s"></span><span class="target" id="ex10__command__line_8h_1ad6b587c00900ebfc1d5d87b7a69602a4"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ex10_eprint_command_line_usage</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv423Ex10CommandLineArgument" title="Ex10CommandLineArgument"><span class="n"><span class="pre">Ex10CommandLineArgument</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">arguments</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">arguments_size</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv430ex10_eprint_command_line_usagePK23Ex10CommandLineArgument6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Based on the struct <a class="reference internal" href="#struct_ex10_command_line_argument"><span class="std std-ref">Ex10CommandLineArgument</span></a> array, print the usage description to the console. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>arguments</strong> – The specifiers and container of parsed arguments. </p></li>
+<li><p><strong>arguments_size</strong> – The number of nodes in the parameter arguments. </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv431ex10_eprint_command_line_valuesPK23Ex10CommandLineArgument6size_tPK28Ex10CommandLineArgumentValue">
+<span id="_CPPv331ex10_eprint_command_line_valuesPK23Ex10CommandLineArgument6size_tPK28Ex10CommandLineArgumentValue"></span><span id="_CPPv231ex10_eprint_command_line_valuesPK23Ex10CommandLineArgument6size_tPK28Ex10CommandLineArgumentValue"></span><span id="ex10_eprint_command_line_values__Ex10CommandLineArgumentCP.s.Ex10CommandLineArgumentValueCP"></span><span class="target" id="ex10__command__line_8h_1a22630bc1871bc3d66ba4f2299988338b"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ex10_eprint_command_line_values</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv423Ex10CommandLineArgument" title="Ex10CommandLineArgument"><span class="n"><span class="pre">Ex10CommandLineArgument</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">arguments</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">arguments_size</span></span>, <span class="k"><span class="pre">union</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv428Ex10CommandLineArgumentValue" title="Ex10CommandLineArgumentValue"><span class="n"><span class="pre">Ex10CommandLineArgumentValue</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">values</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv431ex10_eprint_command_line_valuesPK23Ex10CommandLineArgument6size_tPK28Ex10CommandLineArgumentValue" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Based on the struct <a class="reference internal" href="#struct_ex10_command_line_argument"><span class="std std-ref">Ex10CommandLineArgument</span></a> array, print the values to the console. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>arguments</strong> – The specifiers and container of parsed arguments. </p></li>
+<li><p><strong>arguments_size</strong> – The number of nodes in the parameter arguments. </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv426ex10_lookup_argument_indexPK23Ex10CommandLineArgument6size_tPKc">
+<span id="_CPPv326ex10_lookup_argument_indexPK23Ex10CommandLineArgument6size_tPKc"></span><span id="_CPPv226ex10_lookup_argument_indexPK23Ex10CommandLineArgument6size_tPKc"></span><span id="ex10_lookup_argument_index__Ex10CommandLineArgumentCP.s.cCP"></span><span class="target" id="ex10__command__line_8h_1adf8e206b4e3373cbc566eabfebd8eeb9"></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ex10_lookup_argument_index</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv423Ex10CommandLineArgument" title="Ex10CommandLineArgument"><span class="n"><span class="pre">Ex10CommandLineArgument</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">arguments</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">arguments_size</span></span>, <span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">specifier</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv426ex10_lookup_argument_indexPK23Ex10CommandLineArgument6size_tPKc" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Find a node in the array of struct <a class="reference internal" href="#struct_ex10_command_line_argument"><span class="std std-ref">Ex10CommandLineArgument</span></a> arguments which contains a matching specifier. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>arguments</strong> – The pointer to the arguments array to search through. </p></li>
+<li><p><strong>arguments_size</strong> – The number of nodes in the arguments array. </p></li>
+<li><p><strong>specifier</strong> – The specifier text to match. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns arguments_size</dt>
+<dd class="field-even"><p>if no specifier match is found. </p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>size_t The index into the arguments array for this the specifier is found. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv417ex10_lookup_valuePK23Ex10CommandLineArgument6size_tPKcP28Ex10CommandLineArgumentValue">
+<span id="_CPPv317ex10_lookup_valuePK23Ex10CommandLineArgument6size_tPKcP28Ex10CommandLineArgumentValue"></span><span id="_CPPv217ex10_lookup_valuePK23Ex10CommandLineArgument6size_tPKcP28Ex10CommandLineArgumentValue"></span><span id="ex10_lookup_value__Ex10CommandLineArgumentCP.s.cCP.Ex10CommandLineArgumentValueP"></span><span class="target" id="ex10__command__line_8h_1ad5033492028ec6296fd992e4d32d444c"></span><span class="k"><span class="pre">union</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv428Ex10CommandLineArgumentValue" title="Ex10CommandLineArgumentValue"><span class="n"><span class="pre">Ex10CommandLineArgumentValue</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">ex10_lookup_value</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv423Ex10CommandLineArgument" title="Ex10CommandLineArgument"><span class="n"><span class="pre">Ex10CommandLineArgument</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">arguments</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">arguments_size</span></span>, <span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">specifier</span></span>, <span class="k"><span class="pre">union</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv428Ex10CommandLineArgumentValue" title="Ex10CommandLineArgumentValue"><span class="n"><span class="pre">Ex10CommandLineArgumentValue</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">parsed_values</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417ex10_lookup_valuePK23Ex10CommandLineArgument6size_tPKcP28Ex10CommandLineArgumentValue" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<dl class="cpp union">
+<dt class="sig sig-object cpp" id="_CPPv428Ex10CommandLineArgumentValue">
+<span id="_CPPv328Ex10CommandLineArgumentValue"></span><span id="_CPPv228Ex10CommandLineArgumentValue"></span><span class="target" id="union_ex10_command_line_argument_value"></span><span class="k"><span class="pre">union</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10CommandLineArgumentValue</span></span></span><a class="headerlink" href="#_CPPv428Ex10CommandLineArgumentValue" title="Permalink to this definition">¶</a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N28Ex10CommandLineArgumentValue9characterE">
+<span id="_CPPv3N28Ex10CommandLineArgumentValue9characterE"></span><span id="_CPPv2N28Ex10CommandLineArgumentValue9characterE"></span><span id="Ex10CommandLineArgumentValue::character__c"></span><span class="target" id="union_ex10_command_line_argument_value_1a4fc74d5225984e449c15cd243d92c50c"></span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">character</span></span></span><a class="headerlink" href="#_CPPv4N28Ex10CommandLineArgumentValue9characterE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N28Ex10CommandLineArgumentValue5int32E">
+<span id="_CPPv3N28Ex10CommandLineArgumentValue5int32E"></span><span id="_CPPv2N28Ex10CommandLineArgumentValue5int32E"></span><span id="Ex10CommandLineArgumentValue::int32__int32_t"></span><span class="target" id="union_ex10_command_line_argument_value_1a6860870236bd3396a64d4b240c0df21c"></span><span class="n"><span class="pre">int32_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">int32</span></span></span><a class="headerlink" href="#_CPPv4N28Ex10CommandLineArgumentValue5int32E" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N28Ex10CommandLineArgumentValue6uint32E">
+<span id="_CPPv3N28Ex10CommandLineArgumentValue6uint32E"></span><span id="_CPPv2N28Ex10CommandLineArgumentValue6uint32E"></span><span id="Ex10CommandLineArgumentValue::uint32__uint32_t"></span><span class="target" id="union_ex10_command_line_argument_value_1a86935313ae513ad00156bba7fc3fa77c"></span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">uint32</span></span></span><a class="headerlink" href="#_CPPv4N28Ex10CommandLineArgumentValue6uint32E" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N28Ex10CommandLineArgumentValue7floaterE">
+<span id="_CPPv3N28Ex10CommandLineArgumentValue7floaterE"></span><span id="_CPPv2N28Ex10CommandLineArgumentValue7floaterE"></span><span id="Ex10CommandLineArgumentValue::floater__float"></span><span class="target" id="union_ex10_command_line_argument_value_1a55aeefbfc8d9345dc191d1c72d068839"></span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">floater</span></span></span><a class="headerlink" href="#_CPPv4N28Ex10CommandLineArgumentValue7floaterE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N28Ex10CommandLineArgumentValue7booleanE">
+<span id="_CPPv3N28Ex10CommandLineArgumentValue7booleanE"></span><span id="_CPPv2N28Ex10CommandLineArgumentValue7booleanE"></span><span id="Ex10CommandLineArgumentValue::boolean__b"></span><span class="target" id="union_ex10_command_line_argument_value_1a20087d9f088ea1c215a0eed3ff47f7da"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">boolean</span></span></span><a class="headerlink" href="#_CPPv4N28Ex10CommandLineArgumentValue7booleanE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N28Ex10CommandLineArgumentValue6stringE">
+<span id="_CPPv3N28Ex10CommandLineArgumentValue6stringE"></span><span id="_CPPv2N28Ex10CommandLineArgumentValue6stringE"></span><span id="Ex10CommandLineArgumentValue::string__cCP"></span><span class="target" id="union_ex10_command_line_argument_value_1a9b413105db050e1f8b21ab4ac3bc1b15"></span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">string</span></span></span><a class="headerlink" href="#_CPPv4N28Ex10CommandLineArgumentValue6stringE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv423Ex10CommandLineArgument">
+<span id="_CPPv323Ex10CommandLineArgument"></span><span id="_CPPv223Ex10CommandLineArgument"></span><span id="Ex10CommandLineArgument"></span><span class="target" id="struct_ex10_command_line_argument"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10CommandLineArgument</span></span></span><a class="headerlink" href="#_CPPv423Ex10CommandLineArgument" title="Permalink to this definition">¶</a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N23Ex10CommandLineArgument10specifiersE">
+<span id="_CPPv3N23Ex10CommandLineArgument10specifiersE"></span><span id="_CPPv2N23Ex10CommandLineArgument10specifiersE"></span><span id="Ex10CommandLineArgument::specifiers__cCPA"></span><span class="target" id="struct_ex10_command_line_argument_1af185b706952c2ffb8d0ddf62547b8de8"></span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">specifiers</span></span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">MAX_SPECIFIER_COUNT</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#_CPPv4N23Ex10CommandLineArgument10specifiersE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N23Ex10CommandLineArgument15specifiers_sizeE">
+<span id="_CPPv3N23Ex10CommandLineArgument15specifiers_sizeE"></span><span id="_CPPv2N23Ex10CommandLineArgument15specifiers_sizeE"></span><span id="Ex10CommandLineArgument::specifiers_size__s"></span><span class="target" id="struct_ex10_command_line_argument_1a35d9395f50ec8663cad977a821804e35"></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">specifiers_size</span></span></span><a class="headerlink" href="#_CPPv4N23Ex10CommandLineArgument15specifiers_sizeE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The number of strings in the specifiers array. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N23Ex10CommandLineArgument4typeE">
+<span id="_CPPv3N23Ex10CommandLineArgument4typeE"></span><span id="_CPPv2N23Ex10CommandLineArgument4typeE"></span><span id="Ex10CommandLineArgument::type__Ex10CommandLineArgumentType"></span><span class="target" id="struct_ex10_command_line_argument_1a8697e5829ce8832e33f32b0f8a7ee23a"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv427Ex10CommandLineArgumentType" title="Ex10CommandLineArgumentType"><span class="n"><span class="pre">Ex10CommandLineArgumentType</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">type</span></span></span><a class="headerlink" href="#_CPPv4N23Ex10CommandLineArgument4typeE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N23Ex10CommandLineArgument11descriptionE">
+<span id="_CPPv3N23Ex10CommandLineArgument11descriptionE"></span><span id="_CPPv2N23Ex10CommandLineArgument11descriptionE"></span><span id="Ex10CommandLineArgument::description__cCP"></span><span class="target" id="struct_ex10_command_line_argument_1aa70fb0c901285a008aa91edb42faee51"></span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">description</span></span></span><a class="headerlink" href="#_CPPv4N23Ex10CommandLineArgument11descriptionE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>If non-NULL, then provides a description for use by ex10_print_command_line_usage(). </p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../../../_static/logo.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="ex10_result.html"
+                        title="previous chapter">Ex10 SDK Error Reporting</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../yk_firmware_ex10_host_c_reader_layer.html"
+                        title="next chapter">Legacy Ex10Reader Layer</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../yk_firmware_ex10_host_c_reader_layer.html" title="Legacy Ex10Reader Layer"
+             >next</a></li>
+        <li class="right" >
+          <a href="ex10_result.html" title="Ex10 SDK Error Reporting"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../yk_firmware_ex10_host_c_api.html" >Impinj Reader Chip C Host SDK</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../yk_firmware_ex10_host_c_api_layers.html" >API Layers</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="support_modules.html" >Ex10 Support Modules</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Ex10CommandLine</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Impinj, Inc..
+    </div>
+  </body>
+</html>

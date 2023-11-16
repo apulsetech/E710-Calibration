@@ -1,0 +1,910 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>GPIO Abstractions &#8212; Impinj Reader Chip SDK</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinxdoc.css" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Ex10HostInterface" href="ex10_host_interface.html" />
+    <link rel="prev" title="Ex10DriverList" href="ex10_driver_list.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="ex10_host_interface.html" title="Ex10HostInterface"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="ex10_driver_list.html" title="Ex10DriverList"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../yk_firmware_ex10_host_c_api.html" >Impinj Reader Chip C Host SDK</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="ex10_board_specific.html" accesskey="U">Board Specific Implementation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">GPIO Abstractions</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="gpio-abstractions">
+<span id="ex10-api-host-c-api-board-gpio"></span><h1>GPIO Abstractions<a class="headerlink" href="#gpio-abstractions" title="Permalink to this headline">¶</a></h1>
+<p>In a reader implementation there are typically other devices that control
+different aspects of the readers operation.  This can include things like
+antenna muxes, TX or RX filters, or board power controls.  These GPIOs can
+be controlled by the host processor or the GPIOs provided by the Impinj reader
+chip.  In the Impinj E710 development kit there are several of these controls
+and the GPIO interface features below help to abstract them so that
+another reader design can use the same API but have different functionality
+associated with the features.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">Ex10GpioInterface</span></code> structure below is a top level structure that represents
+the GPIO interface on the host that is used to control and communicate with the
+Impinj reader chip.  The board implementation must implement these functions
+so that the SDK can communicate with the Impinj reader chip.  The power and
+enable functions must be implemented, but can be stubs if the reader is designed
+to have the Impinj reader chip powered up and enabled by default.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">Ex10GpioDriver</span></code> structure is the driver for the host GPIO pins.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">Ex10GpioConfig</span></code> is a structure that is defined by the reader for the
+GPIO pins that are controlled by the Impinj reader chip.  This structure is
+then used by the SDK to set the Impinj reader chip GPIOs for the required
+condition.  The <code class="docutils literal notranslate"><span class="pre">Ex10GpioHelpers</span></code> structure contains typical helper functions
+that are used to manipulate the Impinj reader chip GPIOs for setting different
+conditions in the reader.  They are up to the board layer to implement as
+needed for the hardware.  These functions may need to do something and not
+change the GPIO settings at all, such as controlling an antenna mux by
+a host SPI interface instead of GPIOs on the Impinj reader chip.  In this
+situation it would do the required SPI transaction, and then not modify
+the <code class="docutils literal notranslate"><span class="pre">gpio_pins_set_clear</span></code> structure that the SDK will use to set the
+Impinj reader chip GPIOs.</p>
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv417Ex10GpioInterface">
+<span id="_CPPv317Ex10GpioInterface"></span><span id="_CPPv217Ex10GpioInterface"></span><span id="Ex10GpioInterface"></span><span class="target" id="struct_ex10_gpio_interface"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10GpioInterface</span></span></span><a class="headerlink" href="#_CPPv417Ex10GpioInterface" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>This interface is a pass-through to the <a class="reference internal" href="#struct_ex10_gpio_driver"><span class="std std-ref">Ex10GpioDriver</span></a> interface. </p>
+<p><div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Not all of the <a class="reference internal" href="#struct_ex10_gpio_driver"><span class="std std-ref">Ex10GpioDriver</span></a> functions are exposed by the <a class="reference internal" href="#struct_ex10_gpio_interface"><span class="std std-ref">Ex10GpioInterface</span></a> interface. </p>
+</div>
+<dl class="simple">
+<dt><strong>See</strong></dt><dd><p>struct <a class="reference internal" href="#struct_ex10_gpio_driver"><span class="std std-ref">Ex10GpioDriver</span></a> for a description of these functions. </p>
+</dd>
+</dl>
+</p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N17Ex10GpioInterface10initializeE">
+<span id="_CPPv3N17Ex10GpioInterface10initializeE"></span><span id="_CPPv2N17Ex10GpioInterface10initializeE"></span><span class="target" id="struct_ex10_gpio_interface_1ae70bea27686a814f9072ccbb1946288d"></span><span class="n"><span class="pre">int32_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">initialize</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n"><span class="pre">board_power_on</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n"><span class="pre">ex10_enable</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n"><span class="pre">reset</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N17Ex10GpioInterface10initializeE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N17Ex10GpioInterface7cleanupE">
+<span id="_CPPv3N17Ex10GpioInterface7cleanupE"></span><span id="_CPPv2N17Ex10GpioInterface7cleanupE"></span><span class="target" id="struct_ex10_gpio_interface_1a76d44c0ba80d0a698e02e53fef15b383"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">cleanup</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N17Ex10GpioInterface7cleanupE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N17Ex10GpioInterface15set_board_powerE">
+<span id="_CPPv3N17Ex10GpioInterface15set_board_powerE"></span><span id="_CPPv2N17Ex10GpioInterface15set_board_powerE"></span><span class="target" id="struct_ex10_gpio_interface_1a5eb0b3aad01d9b050c821dc6cf5cbd13"></span><span class="n"><span class="pre">int32_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">set_board_power</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n"><span class="pre">power_on</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N17Ex10GpioInterface15set_board_powerE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N17Ex10GpioInterface15get_board_powerE">
+<span id="_CPPv3N17Ex10GpioInterface15get_board_powerE"></span><span id="_CPPv2N17Ex10GpioInterface15get_board_powerE"></span><span class="target" id="struct_ex10_gpio_interface_1ac773e0bbdc4b199e2da2b5b0bf396494"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_board_power</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N17Ex10GpioInterface15get_board_powerE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N17Ex10GpioInterface15set_ex10_enableE">
+<span id="_CPPv3N17Ex10GpioInterface15set_ex10_enableE"></span><span id="_CPPv2N17Ex10GpioInterface15set_ex10_enableE"></span><span class="target" id="struct_ex10_gpio_interface_1a21d8b9af35554b07782b91ff08415e87"></span><span class="n"><span class="pre">int32_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">set_ex10_enable</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n"><span class="pre">enable</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N17Ex10GpioInterface15set_ex10_enableE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N17Ex10GpioInterface15get_ex10_enableE">
+<span id="_CPPv3N17Ex10GpioInterface15get_ex10_enableE"></span><span id="_CPPv2N17Ex10GpioInterface15get_ex10_enableE"></span><span class="target" id="struct_ex10_gpio_interface_1ab1d497fc1e1c47e38df490ac0f4e5dda"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_ex10_enable</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N17Ex10GpioInterface15get_ex10_enableE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N17Ex10GpioInterface21register_irq_callbackE">
+<span id="_CPPv3N17Ex10GpioInterface21register_irq_callbackE"></span><span id="_CPPv2N17Ex10GpioInterface21register_irq_callbackE"></span><span class="target" id="struct_ex10_gpio_interface_1a162abfad46919346e0546bd5a63d91fb"></span><span class="n"><span class="pre">int32_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">register_irq_callback</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">cb_func</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N17Ex10GpioInterface21register_irq_callbackE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N17Ex10GpioInterface23deregister_irq_callbackE">
+<span id="_CPPv3N17Ex10GpioInterface23deregister_irq_callbackE"></span><span id="_CPPv2N17Ex10GpioInterface23deregister_irq_callbackE"></span><span class="target" id="struct_ex10_gpio_interface_1a72f6f2de2c15972dfb1338bd4aaf3550"></span><span class="n"><span class="pre">int32_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">deregister_irq_callback</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N17Ex10GpioInterface23deregister_irq_callbackE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N17Ex10GpioInterface27irq_monitor_callback_enableE">
+<span id="_CPPv3N17Ex10GpioInterface27irq_monitor_callback_enableE"></span><span id="_CPPv2N17Ex10GpioInterface27irq_monitor_callback_enableE"></span><span class="target" id="struct_ex10_gpio_interface_1a079186bec34fd99f1664d882e1720559"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">irq_monitor_callback_enable</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n"><span class="pre">enable</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N17Ex10GpioInterface27irq_monitor_callback_enableE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N17Ex10GpioInterface31irq_monitor_callback_is_enabledE">
+<span id="_CPPv3N17Ex10GpioInterface31irq_monitor_callback_is_enabledE"></span><span id="_CPPv2N17Ex10GpioInterface31irq_monitor_callback_is_enabledE"></span><span class="target" id="struct_ex10_gpio_interface_1a79b2af32183d5fcb7c1393caea2ff8a2"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">irq_monitor_callback_is_enabled</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N17Ex10GpioInterface31irq_monitor_callback_is_enabledE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N17Ex10GpioInterface10irq_enableE">
+<span id="_CPPv3N17Ex10GpioInterface10irq_enableE"></span><span id="_CPPv2N17Ex10GpioInterface10irq_enableE"></span><span class="target" id="struct_ex10_gpio_interface_1aad2511688df13dbd1465ebc5bf308f0b"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">irq_enable</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">bool</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N17Ex10GpioInterface10irq_enableE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N17Ex10GpioInterface21thread_is_irq_monitorE">
+<span id="_CPPv3N17Ex10GpioInterface21thread_is_irq_monitorE"></span><span id="_CPPv2N17Ex10GpioInterface21thread_is_irq_monitorE"></span><span class="target" id="struct_ex10_gpio_interface_1a96b6f7b9f7a683674f84db9b3b59fd9b"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">thread_is_irq_monitor</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N17Ex10GpioInterface21thread_is_irq_monitorE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N17Ex10GpioInterface14assert_reset_nE">
+<span id="_CPPv3N17Ex10GpioInterface14assert_reset_nE"></span><span id="_CPPv2N17Ex10GpioInterface14assert_reset_nE"></span><span class="target" id="struct_ex10_gpio_interface_1ab9878cf9de0b021094b12032d81a25f1"></span><span class="n"><span class="pre">int32_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">assert_reset_n</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N17Ex10GpioInterface14assert_reset_nE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N17Ex10GpioInterface16deassert_reset_nE">
+<span id="_CPPv3N17Ex10GpioInterface16deassert_reset_nE"></span><span id="_CPPv2N17Ex10GpioInterface16deassert_reset_nE"></span><span class="target" id="struct_ex10_gpio_interface_1ad3532dbe92e15747f36cf08b9c257001"></span><span class="n"><span class="pre">int32_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">deassert_reset_n</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N17Ex10GpioInterface16deassert_reset_nE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N17Ex10GpioInterface12reset_deviceE">
+<span id="_CPPv3N17Ex10GpioInterface12reset_deviceE"></span><span id="_CPPv2N17Ex10GpioInterface12reset_deviceE"></span><span class="target" id="struct_ex10_gpio_interface_1a7830861e9e9d3fd5c72d6a3fcd3d4e2c"></span><span class="n"><span class="pre">int32_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">reset_device</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N17Ex10GpioInterface12reset_deviceE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N17Ex10GpioInterface14assert_ready_nE">
+<span id="_CPPv3N17Ex10GpioInterface14assert_ready_nE"></span><span id="_CPPv2N17Ex10GpioInterface14assert_ready_nE"></span><span class="target" id="struct_ex10_gpio_interface_1aa7fd65eba4e68fa5325a9bed68ceed39"></span><span class="n"><span class="pre">int32_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">assert_ready_n</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N17Ex10GpioInterface14assert_ready_nE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N17Ex10GpioInterface15release_ready_nE">
+<span id="_CPPv3N17Ex10GpioInterface15release_ready_nE"></span><span id="_CPPv2N17Ex10GpioInterface15release_ready_nE"></span><span class="target" id="struct_ex10_gpio_interface_1aee1b0932c8d1804f3d74a1ad5ea905c8"></span><span class="n"><span class="pre">int32_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">release_ready_n</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N17Ex10GpioInterface15release_ready_nE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N17Ex10GpioInterface17busy_wait_ready_nE">
+<span id="_CPPv3N17Ex10GpioInterface17busy_wait_ready_nE"></span><span id="_CPPv2N17Ex10GpioInterface17busy_wait_ready_nE"></span><span class="target" id="struct_ex10_gpio_interface_1a04ef8ad5fe738b9d0a2be7a739364148"></span><span class="n"><span class="pre">int32_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">busy_wait_ready_n</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n"><span class="pre">ready_n_timeout_ms</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N17Ex10GpioInterface17busy_wait_ready_nE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N17Ex10GpioInterface15ready_n_pin_getE">
+<span id="_CPPv3N17Ex10GpioInterface15ready_n_pin_getE"></span><span id="_CPPv2N17Ex10GpioInterface15ready_n_pin_getE"></span><span class="target" id="struct_ex10_gpio_interface_1a5909e7ad6d4dbf3efd685e3f56d39eb6"></span><span class="n"><span class="pre">int32_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">ready_n_pin_get</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N17Ex10GpioInterface15ready_n_pin_getE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv414Ex10GpioDriver">
+<span id="_CPPv314Ex10GpioDriver"></span><span id="_CPPv214Ex10GpioDriver"></span><span id="Ex10GpioDriver"></span><span class="target" id="struct_ex10_gpio_driver"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10GpioDriver</span></span></span><a class="headerlink" href="#_CPPv414Ex10GpioDriver" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The Ex10 GPIO driver interface. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N14Ex10GpioDriver15gpio_initializeE">
+<span id="_CPPv3N14Ex10GpioDriver15gpio_initializeE"></span><span id="_CPPv2N14Ex10GpioDriver15gpio_initializeE"></span><span class="target" id="struct_ex10_gpio_driver_1a5bc15342af185ae10a71628ebcb55a5c"></span><span class="n"><span class="pre">int32_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">gpio_initialize</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n"><span class="pre">board_power_on</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n"><span class="pre">ex10_enable</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n"><span class="pre">reset</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N14Ex10GpioDriver15gpio_initializeE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Acquire ownership of the Ex10 connection pins from the the GPIO driver and initialize their state. </p>
+<p>i.e Set the pins’ directions and levels.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If this function returns with a failure, resources will likely have been allocated, and not released. The caller should free resources by calling <a class="reference internal" href="#struct_ex10_gpio_driver_1a1ac1a9dded059d5dd99f19fd95a5d95a"><span class="std std-ref">gpio_cleanup()</span></a> to free these resources. </p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Param board_power_on</dt>
+<dd class="field-odd"><p>If true, asserts the PWR_EN line to enable the the Impinj Reader Chip power supply. If false, power is disabled to the Reader Chip. </p>
+</dd>
+<dt class="field-even">Param ex10_enable</dt>
+<dd class="field-even"><p>If true the Ex10 ENABLE is asserted high. If false the Ex10 ENABLE line is deasserted low. </p>
+</dd>
+<dt class="field-odd">Param reset</dt>
+<dd class="field-odd"><p>If true the RESET_N line is asserted low. if false the RESET_N line is deasserted high.</p>
+</dd>
+<dt class="field-even">Return</dt>
+<dd class="field-even"><p>int32_t Indicates success or failure. Zero for success, non-zero for failure.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N14Ex10GpioDriver12gpio_cleanupE">
+<span id="_CPPv3N14Ex10GpioDriver12gpio_cleanupE"></span><span id="_CPPv2N14Ex10GpioDriver12gpio_cleanupE"></span><span class="target" id="struct_ex10_gpio_driver_1a1ac1a9dded059d5dd99f19fd95a5d95a"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">gpio_cleanup</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N14Ex10GpioDriver12gpio_cleanupE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Release the GPIO driver and its resources from usage. </p>
+<p>In the reference design, this will:<ul class="simple">
+<li><p>Destroy and join the IRQ_N monitor thread.</p></li>
+<li><p>Release and close resources requested from the GPIO library. </p></li>
+</ul>
+</p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N14Ex10GpioDriver15set_board_powerE">
+<span id="_CPPv3N14Ex10GpioDriver15set_board_powerE"></span><span id="_CPPv2N14Ex10GpioDriver15set_board_powerE"></span><span class="target" id="struct_ex10_gpio_driver_1a7b40d97beafc3beeed71a075eabfee42"></span><span class="n"><span class="pre">int32_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">set_board_power</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n"><span class="pre">power_on</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N14Ex10GpioDriver15set_board_powerE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Sets the PWR_EN line high to supply the EX10 VDD with power or sets the PWR_EN line low to disable power to the EX10 VDD. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Param power_on</dt>
+<dd class="field-odd"><p>true to assert PWR_EN high; false to deassert PWR_EN.</p>
+</dd>
+<dt class="field-even">Return</dt>
+<dd class="field-even"><p>int32_t Indicates success or failure. Zero for success, non-zero for failure. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N14Ex10GpioDriver15get_board_powerE">
+<span id="_CPPv3N14Ex10GpioDriver15get_board_powerE"></span><span id="_CPPv2N14Ex10GpioDriver15get_board_powerE"></span><span class="target" id="struct_ex10_gpio_driver_1aa8c4ca93c93ed472104089324ee70791"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_board_power</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N14Ex10GpioDriver15get_board_powerE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Get the PWR_EN line state. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>bool Indicates the PWR_EN line level. true: The line level is logical high (1). false: The line level is logical low (0). </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N14Ex10GpioDriver15set_ex10_enableE">
+<span id="_CPPv3N14Ex10GpioDriver15set_ex10_enableE"></span><span id="_CPPv2N14Ex10GpioDriver15set_ex10_enableE"></span><span class="target" id="struct_ex10_gpio_driver_1a23957e597a497d7daa8e8902f8938b38"></span><span class="n"><span class="pre">int32_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">set_ex10_enable</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n"><span class="pre">enable</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N14Ex10GpioDriver15set_ex10_enableE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Assert the ENABLE line high or deassert the ENABLE line low. </p>
+<p>When the ENABLE line is low the EX10 device will internally power down. When the ENABLE line transitions from low to high the Ex10 device executes a POR (power-on-reset).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If the power_on parameter is true, this call will not return until the RESET_N pin is high (‘1’).</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Param enable</dt>
+<dd class="field-odd"><p>When true the ENABLE line is assert high; when false the ENABLE line is deasserted low.</p>
+</dd>
+<dt class="field-even">Return</dt>
+<dd class="field-even"><p>int32_t Indicates success or failure. Zero for success, non-zero for failure. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N14Ex10GpioDriver15get_ex10_enableE">
+<span id="_CPPv3N14Ex10GpioDriver15get_ex10_enableE"></span><span id="_CPPv2N14Ex10GpioDriver15get_ex10_enableE"></span><span class="target" id="struct_ex10_gpio_driver_1ae4ad3535d52475db2b96e171f521ebe0"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_ex10_enable</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N14Ex10GpioDriver15get_ex10_enableE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Get the ENABLE line state. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>bool Indicates the ENABLE line level. true: The line level is logical high (1). false: The line level is logical low (0). </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N14Ex10GpioDriver21register_irq_callbackE">
+<span id="_CPPv3N14Ex10GpioDriver21register_irq_callbackE"></span><span id="_CPPv2N14Ex10GpioDriver21register_irq_callbackE"></span><span class="target" id="struct_ex10_gpio_driver_1ae9fe91ef8cce623c2050ca3baa14cb5f"></span><span class="n"><span class="pre">int32_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">register_irq_callback</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">cb_func</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N14Ex10GpioDriver21register_irq_callbackE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Registers a callback function which occurs on the falling edge of the IRQ_N_PIN and is processed within the irq_n_monitor thread context. </p>
+<p>Successful registration of the interrupt callback will start the IRQ_N monitor thread, which will call back within this thread context to the client supplied cb_func parameter when IRQ_N asserts low.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Param cb_func</dt>
+<dd class="field-odd"><p>The function that is called when IRQ_N asserts low.</p>
+</dd>
+<dt class="field-even">Return</dt>
+<dd class="field-even"><p>int32_t Indicates success or failure. Zero for success, non-zero for failure. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N14Ex10GpioDriver23deregister_irq_callbackE">
+<span id="_CPPv3N14Ex10GpioDriver23deregister_irq_callbackE"></span><span id="_CPPv2N14Ex10GpioDriver23deregister_irq_callbackE"></span><span class="target" id="struct_ex10_gpio_driver_1afca098286574c49c4c752a2c87a80f85"></span><span class="n"><span class="pre">int32_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">deregister_irq_callback</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N14Ex10GpioDriver23deregister_irq_callbackE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Deregister the callback function from the IRQ_N monitor thread. </p>
+<p>This will destroy the IRQ_N monitor thread and remove the callback entry from the gpio driver.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>int32_t Indicates success or failure. Zero for success, non-zero for failure. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N14Ex10GpioDriver27irq_monitor_callback_enableE">
+<span id="_CPPv3N14Ex10GpioDriver27irq_monitor_callback_enableE"></span><span id="_CPPv2N14Ex10GpioDriver27irq_monitor_callback_enableE"></span><span class="target" id="struct_ex10_gpio_driver_1a80f097f394915d4cddfe795a04d367b5"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">irq_monitor_callback_enable</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n"><span class="pre">enable</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N14Ex10GpioDriver27irq_monitor_callback_enableE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Enable or disable the IRQ_N monitor thread to call the registered callback function. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Param enable</dt>
+<dd class="field-odd"><p>If set to true then the registered callback function will be called, within the IRQ_N monitor thread context, when an IRQ_N falling edge occurs. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N14Ex10GpioDriver31irq_monitor_callback_is_enabledE">
+<span id="_CPPv3N14Ex10GpioDriver31irq_monitor_callback_is_enabledE"></span><span id="_CPPv2N14Ex10GpioDriver31irq_monitor_callback_is_enabledE"></span><span class="target" id="struct_ex10_gpio_driver_1adec812eaaf42016086e67025a41bdbea"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">irq_monitor_callback_is_enabled</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N14Ex10GpioDriver31irq_monitor_callback_is_enabledE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Determine whether the IRQ_N monitor thread will call the registered callback in response to interrupt activity. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>bool true: The registered callback will be called when the IRQ_N falling edge is detected. false: The registered callback will not be called when the IRQ_N falling edge is detected. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N14Ex10GpioDriver10irq_enableE">
+<span id="_CPPv3N14Ex10GpioDriver10irq_enableE"></span><span id="_CPPv2N14Ex10GpioDriver10irq_enableE"></span><span class="target" id="struct_ex10_gpio_driver_1a653868bf1088c90b8e8bd428e2e51e31"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">irq_enable</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n"><span class="pre">enable</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N14Ex10GpioDriver10irq_enableE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Locks or unlocks access to the host (SPI) and GPIO interfaces to guard against pre-emptive access to the hardware interfaces. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In the reference design, a POSIX non-counting mutex is used to perform this lock. </p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Param enable</dt>
+<dd class="field-odd"><p>If set to false, the hardware interfaces are locked for use by the caller. If set to true, the hardware interfaces are released for use.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N14Ex10GpioDriver21thread_is_irq_monitorE">
+<span id="_CPPv3N14Ex10GpioDriver21thread_is_irq_monitorE"></span><span id="_CPPv2N14Ex10GpioDriver21thread_is_irq_monitorE"></span><span class="target" id="struct_ex10_gpio_driver_1a0d33fc255bd9285184d09716cc3675b6"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">thread_is_irq_monitor</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N14Ex10GpioDriver21thread_is_irq_monitorE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Determine whether the IRQ_N monitor thread is the same thread calling this function. </p>
+<p>This is useful for profiling and debug purposes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>bool true if the calling thread matches the IRQ_N monitor thread, false if it does not. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N14Ex10GpioDriver14assert_reset_nE">
+<span id="_CPPv3N14Ex10GpioDriver14assert_reset_nE"></span><span id="_CPPv2N14Ex10GpioDriver14assert_reset_nE"></span><span class="target" id="struct_ex10_gpio_driver_1a07298ec609d186bec5fdb8b23eca51e1"></span><span class="n"><span class="pre">int32_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">assert_reset_n</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N14Ex10GpioDriver14assert_reset_nE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Assert the RESET_N line low. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>int32_t Indicates success or failure. Zero for success, non-zero for failure. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N14Ex10GpioDriver16deassert_reset_nE">
+<span id="_CPPv3N14Ex10GpioDriver16deassert_reset_nE"></span><span id="_CPPv2N14Ex10GpioDriver16deassert_reset_nE"></span><span class="target" id="struct_ex10_gpio_driver_1a348f5cd4cfb6067cf2b25f171330d9fc"></span><span class="n"><span class="pre">int32_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">deassert_reset_n</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N14Ex10GpioDriver16deassert_reset_nE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Deassert the RESET_N line high. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>int32_t Indicates success or failure. Zero for success, non-zero for failure. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N14Ex10GpioDriver15release_ready_nE">
+<span id="_CPPv3N14Ex10GpioDriver15release_ready_nE"></span><span id="_CPPv2N14Ex10GpioDriver15release_ready_nE"></span><span class="target" id="struct_ex10_gpio_driver_1a3dcc3d1bf749294b450d1a4c4a9d0de1"></span><span class="n"><span class="pre">int32_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">release_ready_n</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N14Ex10GpioDriver15release_ready_nE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Sets the READY_N line as an input. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>int32_t Indicates success or failure. Zero for success, non-zero for failure. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N14Ex10GpioDriver14assert_ready_nE">
+<span id="_CPPv3N14Ex10GpioDriver14assert_ready_nE"></span><span id="_CPPv2N14Ex10GpioDriver14assert_ready_nE"></span><span class="target" id="struct_ex10_gpio_driver_1ad01a997bfd67a4a8b5d3b65cc1dd7040"></span><span class="n"><span class="pre">int32_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">assert_ready_n</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N14Ex10GpioDriver14assert_ready_nE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Assert the READY_N line low. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>int32_t Indicates success or failure. Zero for success, non-zero for failure. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N14Ex10GpioDriver12reset_deviceE">
+<span id="_CPPv3N14Ex10GpioDriver12reset_deviceE"></span><span id="_CPPv2N14Ex10GpioDriver12reset_deviceE"></span><span class="target" id="struct_ex10_gpio_driver_1a1fee143b24d655046cc1c9a6089a9e01"></span><span class="n"><span class="pre">int32_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">reset_device</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N14Ex10GpioDriver12reset_deviceE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Pulse the RESET_N line low, then high; resetting the Impinj Reader Chip. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>int32_t Indicates success or failure. Zero for success, non-zero for failure. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N14Ex10GpioDriver17busy_wait_ready_nE">
+<span id="_CPPv3N14Ex10GpioDriver17busy_wait_ready_nE"></span><span id="_CPPv2N14Ex10GpioDriver17busy_wait_ready_nE"></span><span class="target" id="struct_ex10_gpio_driver_1a2b3f32f7c1dc6a68c4aa14e98c334ca4"></span><span class="n"><span class="pre">int32_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">busy_wait_ready_n</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n"><span class="pre">timeout_ms</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N14Ex10GpioDriver17busy_wait_ready_nE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Waits for the READY_N pin to assert LOW with a specified timeout. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Param timeout_ms</dt>
+<dd class="field-odd"><p>The amount of time to wait, in milliseconds, for READY_N to assert.</p>
+</dd>
+<dt class="field-even">Returns 0</dt>
+<dd class="field-even"><p>The call was successful. </p>
+</dd>
+<dt class="field-odd">Returns -1</dt>
+<dd class="field-odd"><p>The call was unsuccessful. Check errno for the failure reason.</p>
+</dd>
+<dt class="field-even">Return</dt>
+<dd class="field-even"><p>int32_t A indicator of success or failure. </p>
+</dd>
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>int32_t Indicates success or failure. Zero for success, non-zero for failure. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N14Ex10GpioDriver15ready_n_pin_getE">
+<span id="_CPPv3N14Ex10GpioDriver15ready_n_pin_getE"></span><span id="_CPPv2N14Ex10GpioDriver15ready_n_pin_getE"></span><span class="target" id="struct_ex10_gpio_driver_1a6ae09452ecd7b10b64563e20959af61d"></span><span class="n"><span class="pre">int32_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">ready_n_pin_get</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N14Ex10GpioDriver15ready_n_pin_getE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Get the state of the READY_N GPI line. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>int32_t The state of READY_N </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N14Ex10GpioDriver18get_test_pin_levelE">
+<span id="_CPPv3N14Ex10GpioDriver18get_test_pin_levelE"></span><span id="_CPPv2N14Ex10GpioDriver18get_test_pin_levelE"></span><span class="target" id="struct_ex10_gpio_driver_1ae111182711da2d3fd1c16d6bb35911d9"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_test_pin_level</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n"><span class="pre">pin_no</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N14Ex10GpioDriver18get_test_pin_levelE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Get the voltage level of the pin. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Param pin_no</dt>
+<dd class="field-odd"><p>The number of the GPIO pin to test</p>
+</dd>
+<dt class="field-even">Return</dt>
+<dd class="field-even"><p>bool true: GPIO pin output level is high(1), false if it is low(0) or the pin is not a valid test GPIO. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N14Ex10GpioDriver19debug_pin_get_countE">
+<span id="_CPPv3N14Ex10GpioDriver19debug_pin_get_countE"></span><span id="_CPPv2N14Ex10GpioDriver19debug_pin_get_countE"></span><span class="target" id="struct_ex10_gpio_driver_1a8c16ac5982f9ccd5d44fe8819704044c"></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">debug_pin_get_count</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N14Ex10GpioDriver19debug_pin_get_countE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Get the number of GPIO pins on the board which can be used as debug pins. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>size_t The number of GPIO pins that can be used for debug purposes. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N14Ex10GpioDriver13debug_pin_getE">
+<span id="_CPPv3N14Ex10GpioDriver13debug_pin_getE"></span><span id="_CPPv2N14Ex10GpioDriver13debug_pin_getE"></span><span class="target" id="struct_ex10_gpio_driver_1a33452c7c241bd581d8c4e88e452d9ef9"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">debug_pin_get</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n"><span class="pre">pin_idx</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N14Ex10GpioDriver13debug_pin_getE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Get the debug pin state. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Param pin_idx</dt>
+<dd class="field-odd"><p>The debug pin to inquire about: [0 … N), where N is the number of debug pins reported by the <a class="reference internal" href="#struct_ex10_gpio_driver_1a8c16ac5982f9ccd5d44fe8819704044c"><span class="std std-ref">debug_pin_get_count()</span></a> function.</p>
+</dd>
+<dt class="field-even">Return</dt>
+<dd class="field-even"><p>bool true: The debug pin is ‘1’, false if it is ‘0’. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N14Ex10GpioDriver13debug_pin_setE">
+<span id="_CPPv3N14Ex10GpioDriver13debug_pin_setE"></span><span id="_CPPv2N14Ex10GpioDriver13debug_pin_setE"></span><span class="target" id="struct_ex10_gpio_driver_1a2157a6a479e92889671b56d803b84444"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">debug_pin_set</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n"><span class="pre">pin_idx</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N14Ex10GpioDriver13debug_pin_setE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Set the debug pin state. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Param pin_idx</dt>
+<dd class="field-odd"><p>The debug pin to set: [0 … N) where N is the number of debug pins reported by the <a class="reference internal" href="#struct_ex10_gpio_driver_1a8c16ac5982f9ccd5d44fe8819704044c"><span class="std std-ref">debug_pin_get_count()</span></a> function.</p>
+</dd>
+<dt class="field-even">Param value</dt>
+<dd class="field-even"><p>Sets the debug pin output level: true = ‘1’, false = ‘0’. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N14Ex10GpioDriver16debug_pin_toggleE">
+<span id="_CPPv3N14Ex10GpioDriver16debug_pin_toggleE"></span><span id="_CPPv2N14Ex10GpioDriver16debug_pin_toggleE"></span><span class="target" id="struct_ex10_gpio_driver_1a252a3a085f487ce0c3e58de11fa3c43e"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">debug_pin_toggle</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n"><span class="pre">pin_idx</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N14Ex10GpioDriver16debug_pin_toggleE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Toggle the debug pin state. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Param pin_idx</dt>
+<dd class="field-odd"><p>The debug pin to toggle: [0 … N) where N is the number of debug pins reported by the <a class="reference internal" href="#struct_ex10_gpio_driver_1a8c16ac5982f9ccd5d44fe8819704044c"><span class="std std-ref">debug_pin_get_count()</span></a> function. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N14Ex10GpioDriver17led_pin_get_countE">
+<span id="_CPPv3N14Ex10GpioDriver17led_pin_get_countE"></span><span id="_CPPv2N14Ex10GpioDriver17led_pin_get_countE"></span><span class="target" id="struct_ex10_gpio_driver_1a9774ac1d19d41f7411d347cf2e95510d"></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">led_pin_get_count</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N14Ex10GpioDriver17led_pin_get_countE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Get the number of pins on the board which are connected to LEDs. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>size_t The number of GPIO pins that are connected to LEDs. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N14Ex10GpioDriver11led_pin_getE">
+<span id="_CPPv3N14Ex10GpioDriver11led_pin_getE"></span><span id="_CPPv2N14Ex10GpioDriver11led_pin_getE"></span><span class="target" id="struct_ex10_gpio_driver_1a526aa6700e7a556e0d2c872950ff6fdf"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">led_pin_get</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n"><span class="pre">pin_idx</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N14Ex10GpioDriver11led_pin_getE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Get the LED pin state. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Param pin_idx</dt>
+<dd class="field-odd"><p>The LED pin to inquire about: [0 … N), where N is the number of LEDs reported by the <a class="reference internal" href="#struct_ex10_gpio_driver_1a9774ac1d19d41f7411d347cf2e95510d"><span class="std std-ref">led_pin_get_count()</span></a> function.</p>
+</dd>
+<dt class="field-even">Return</dt>
+<dd class="field-even"><p>bool true: The LED is lit, false if it is not lit. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N14Ex10GpioDriver11led_pin_setE">
+<span id="_CPPv3N14Ex10GpioDriver11led_pin_setE"></span><span id="_CPPv2N14Ex10GpioDriver11led_pin_setE"></span><span class="target" id="struct_ex10_gpio_driver_1a8da0a58e86d399ec0526999688a685b9"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">led_pin_set</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n"><span class="pre">pin_idx</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N14Ex10GpioDriver11led_pin_setE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Set the LED pin state. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Param pin_idx</dt>
+<dd class="field-odd"><p>The LED pin to set: [0 … N), where N is the number of LEDs reported by the <a class="reference internal" href="#struct_ex10_gpio_driver_1a9774ac1d19d41f7411d347cf2e95510d"><span class="std std-ref">led_pin_get_count()</span></a> function.</p>
+</dd>
+<dt class="field-even">Param value</dt>
+<dd class="field-even"><p>Set to true to light the LED, to false ot turn it off. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N14Ex10GpioDriver14led_pin_toggleE">
+<span id="_CPPv3N14Ex10GpioDriver14led_pin_toggleE"></span><span id="_CPPv2N14Ex10GpioDriver14led_pin_toggleE"></span><span class="target" id="struct_ex10_gpio_driver_1af02af4ecc5d85bd2e397f90edb4a5cd9"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">led_pin_toggle</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n"><span class="pre">pin_idx</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N14Ex10GpioDriver14led_pin_toggleE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Toggle the LED pin state. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Param pin_idx</dt>
+<dd class="field-odd"><p>The LED pin to toggle: [0 … N), where N is the number of LEDs reported by the <a class="reference internal" href="#struct_ex10_gpio_driver_1a9774ac1d19d41f7411d347cf2e95510d"><span class="std std-ref">led_pin_get_count()</span></a> function. </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv414Ex10GpioConfig">
+<span id="_CPPv314Ex10GpioConfig"></span><span id="_CPPv214Ex10GpioConfig"></span><span id="Ex10GpioConfig"></span><span class="target" id="struct_ex10_gpio_config"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10GpioConfig</span></span></span><a class="headerlink" href="#_CPPv414Ex10GpioConfig" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>E710 Evaluation board GPIO levels mapping: Antenna: 2: ‘0’, 1: ‘1’ Baseband Filter: Highpass: ‘0’, Bandpass: ‘1’ PA Bias Enable: Disable: ‘0’, Enable: ‘1’ PA Bias Range: Low: ‘0’, High: ‘1’ RF Enable: Disable: ‘0’, Enable: ‘1’ SAW Filter: 900-930 MHz: ‘0’, 865-868 MHz: ‘1’. </p>
+<p>(forward declaration)</p>
+<p>
+Each board level implementation will need to provide its own specific declaration of the <a class="reference internal" href="#struct_ex10_gpio_config"><span class="std std-ref">Ex10GpioConfig</span></a> depending on what functionality the board provides. <dl class="field-list simple">
+<dt class="field-odd">param gpio_config</dt>
+<dd class="field-odd"><p>Board agnostic settings which require GPIO levels to be set to specific levels.</p>
+</dd>
+</dl>
+</p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N14Ex10GpioConfig7antennaE">
+<span id="_CPPv3N14Ex10GpioConfig7antennaE"></span><span id="_CPPv2N14Ex10GpioConfig7antennaE"></span><span id="Ex10GpioConfig::antenna__uint8_t"></span><span class="target" id="struct_ex10_gpio_config_1a1312daeef74c43200555a047b23924ee"></span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">antenna</span></span></span><a class="headerlink" href="#_CPPv4N14Ex10GpioConfig7antennaE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N14Ex10GpioConfig15baseband_filterE">
+<span id="_CPPv3N14Ex10GpioConfig15baseband_filterE"></span><span id="_CPPv2N14Ex10GpioConfig15baseband_filterE"></span><span id="Ex10GpioConfig::baseband_filter__BasebandFilterType"></span><span class="target" id="struct_ex10_gpio_config_1a4b3bf3f0042faccb8327f07ff9ce0205"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="n"><span class="pre">BasebandFilterType</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">baseband_filter</span></span></span><a class="headerlink" href="#_CPPv4N14Ex10GpioConfig15baseband_filterE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N14Ex10GpioConfig5dio_0E">
+<span id="_CPPv3N14Ex10GpioConfig5dio_0E"></span><span id="_CPPv2N14Ex10GpioConfig5dio_0E"></span><span id="Ex10GpioConfig::dio_0__b"></span><span class="target" id="struct_ex10_gpio_config_1a6699473ce47a7a19b48fc7d36523ae69"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dio_0</span></span></span><a class="headerlink" href="#_CPPv4N14Ex10GpioConfig5dio_0E" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N14Ex10GpioConfig5dio_1E">
+<span id="_CPPv3N14Ex10GpioConfig5dio_1E"></span><span id="_CPPv2N14Ex10GpioConfig5dio_1E"></span><span id="Ex10GpioConfig::dio_1__b"></span><span class="target" id="struct_ex10_gpio_config_1a2656ac60364a18b720eacaaed5e7def4"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dio_1</span></span></span><a class="headerlink" href="#_CPPv4N14Ex10GpioConfig5dio_1E" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N14Ex10GpioConfig5dio_6E">
+<span id="_CPPv3N14Ex10GpioConfig5dio_6E"></span><span id="_CPPv2N14Ex10GpioConfig5dio_6E"></span><span id="Ex10GpioConfig::dio_6__b"></span><span class="target" id="struct_ex10_gpio_config_1a188c0c94621bbcda67f39181b06aa973"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dio_6</span></span></span><a class="headerlink" href="#_CPPv4N14Ex10GpioConfig5dio_6E" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N14Ex10GpioConfig5dio_8E">
+<span id="_CPPv3N14Ex10GpioConfig5dio_8E"></span><span id="_CPPv2N14Ex10GpioConfig5dio_8E"></span><span id="Ex10GpioConfig::dio_8__b"></span><span class="target" id="struct_ex10_gpio_config_1a0819a9cf5337b3a74d12c5459f9596b5"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dio_8</span></span></span><a class="headerlink" href="#_CPPv4N14Ex10GpioConfig5dio_8E" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N14Ex10GpioConfig6dio_13E">
+<span id="_CPPv3N14Ex10GpioConfig6dio_13E"></span><span id="_CPPv2N14Ex10GpioConfig6dio_13E"></span><span id="Ex10GpioConfig::dio_13__b"></span><span class="target" id="struct_ex10_gpio_config_1a81f5bafcb9c793f597e1038915d93dba"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dio_13</span></span></span><a class="headerlink" href="#_CPPv4N14Ex10GpioConfig6dio_13E" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N14Ex10GpioConfig14pa_bias_enableE">
+<span id="_CPPv3N14Ex10GpioConfig14pa_bias_enableE"></span><span id="_CPPv2N14Ex10GpioConfig14pa_bias_enableE"></span><span id="Ex10GpioConfig::pa_bias_enable__b"></span><span class="target" id="struct_ex10_gpio_config_1a28380d279b60fb094342441819b1d776"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">pa_bias_enable</span></span></span><a class="headerlink" href="#_CPPv4N14Ex10GpioConfig14pa_bias_enableE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N14Ex10GpioConfig11power_rangeE">
+<span id="_CPPv3N14Ex10GpioConfig11power_rangeE"></span><span id="_CPPv2N14Ex10GpioConfig11power_rangeE"></span><span id="Ex10GpioConfig::power_range__PowerRange"></span><span class="target" id="struct_ex10_gpio_config_1aece2b229803cba9e443e3079609accd3"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="n"><span class="pre">PowerRange</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">power_range</span></span></span><a class="headerlink" href="#_CPPv4N14Ex10GpioConfig11power_rangeE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N14Ex10GpioConfig9rf_enableE">
+<span id="_CPPv3N14Ex10GpioConfig9rf_enableE"></span><span id="_CPPv2N14Ex10GpioConfig9rf_enableE"></span><span id="Ex10GpioConfig::rf_enable__b"></span><span class="target" id="struct_ex10_gpio_config_1a4010127bcd9ac3850cc17cf4ad06a59b"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">rf_enable</span></span></span><a class="headerlink" href="#_CPPv4N14Ex10GpioConfig9rf_enableE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N14Ex10GpioConfig9rf_filterE">
+<span id="_CPPv3N14Ex10GpioConfig9rf_filterE"></span><span id="_CPPv2N14Ex10GpioConfig9rf_filterE"></span><span id="Ex10GpioConfig::rf_filter__RfFilter"></span><span class="target" id="struct_ex10_gpio_config_1a1379531a742dba87ce490d1e24ef8a9f"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><a class="reference internal" href="../ex10_host_c_reader_primitives/rf_power.html#_CPPv48RfFilter" title="RfFilter"><span class="n"><span class="pre">RfFilter</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">rf_filter</span></span></span><a class="headerlink" href="#_CPPv4N14Ex10GpioConfig9rf_filterE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv415Ex10GpioHelpers">
+<span id="_CPPv315Ex10GpioHelpers"></span><span id="_CPPv215Ex10GpioHelpers"></span><span id="Ex10GpioHelpers"></span><span class="target" id="struct_ex10_gpio_helpers"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10GpioHelpers</span></span></span><a class="headerlink" href="#_CPPv415Ex10GpioHelpers" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Converts a structure of GPIO functional settings into struct <a class="reference internal" href="#struct_gpio_pins_set_clear"><span class="std std-ref">GpioPinsSetClear</span></a> which can be used to set the SetClearGpioPinsOp registers. </p>
+<p>Each of these function calls combines the struct <a class="reference internal" href="#struct_gpio_pins_set_clear"><span class="std std-ref">GpioPinsSetClear</span></a> parameter, using bit-wise OR, with the gpio_pins_set_clear values passed in. In this manner successive calls can be combined into a single run of SetClearGpioPinsOp. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N15Ex10GpioHelpers10get_levelsE">
+<span id="_CPPv3N15Ex10GpioHelpers10get_levelsE"></span><span id="_CPPv2N15Ex10GpioHelpers10get_levelsE"></span><span class="target" id="struct_ex10_gpio_helpers_1a5224021223542b6100bb6e5292d262cf"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_levels</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv414Ex10GpioConfig" title="Ex10GpioConfig"><span class="n"><span class="pre">Ex10GpioConfig</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">gpio_config</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">gpio_levels</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N15Ex10GpioHelpers10get_levelsE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Converts a structure of GPIO settings into a uint32_t bitmask of GPIO settings. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Param gpio_config</dt>
+<dd class="field-odd"><p>The desired GPIO configuration. </p>
+</dd>
+<dt class="field-even">Param gpio_levels</dt>
+<dd class="field-even"><p><strong>[out]</strong> A bitmask which can be written to the GpioOutputLevels register.</p>
+</dd>
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>struct <a class="reference internal" href="../ex10_host_c_support/ex10_result.html#struct_ex10_result"><span class="std std-ref">Ex10Result</span></a> Indicates whether the function call passed or failed. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N15Ex10GpioHelpers10get_configE">
+<span id="_CPPv3N15Ex10GpioHelpers10get_configE"></span><span id="_CPPv2N15Ex10GpioHelpers10get_configE"></span><span class="target" id="struct_ex10_gpio_helpers_1a1630704c03ff5848fe6f89e182be2121"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_config</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n"><span class="pre">gpio_levels</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv414Ex10GpioConfig" title="Ex10GpioConfig"><span class="n"><span class="pre">Ex10GpioConfig</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">gpio_config</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N15Ex10GpioHelpers10get_configE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Converts a bitmask of GPIO settings into a structure of GPIO settings. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Param gpio_levels</dt>
+<dd class="field-odd"><p>A bitmask of GPIO settings which could be used with the GpioOutputLevels register. </p>
+</dd>
+<dt class="field-even">Param gpio_config</dt>
+<dd class="field-even"><p><strong>[out]</strong> A structure of GPIO settings which match settings in the gpio_levels bitmask. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N15Ex10GpioHelpers18get_output_enablesE">
+<span id="_CPPv3N15Ex10GpioHelpers18get_output_enablesE"></span><span id="_CPPv2N15Ex10GpioHelpers18get_output_enablesE"></span><span class="target" id="struct_ex10_gpio_helpers_1a5e13c12b5259cfaad277773540075e48"></span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_output_enables</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N15Ex10GpioHelpers18get_output_enablesE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>uint32_t A bit field of GPIO pins which must be enabled as outputs for proper board operation. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N15Ex10GpioHelpers16set_antenna_portE">
+<span id="_CPPv3N15Ex10GpioHelpers16set_antenna_portE"></span><span id="_CPPv2N15Ex10GpioHelpers16set_antenna_portE"></span><span class="target" id="struct_ex10_gpio_helpers_1affd82ec0b9ccb154cc26e25af24748fd"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">set_antenna_port</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv416GpioPinsSetClear" title="GpioPinsSetClear"><span class="n"><span class="pre">GpioPinsSetClear</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">gpio_pins_set_clear</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n"><span class="pre">antenna</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N15Ex10GpioHelpers16set_antenna_portE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Set the antenna port selection bit(s) within the <a class="reference internal" href="#struct_gpio_pins_set_clear"><span class="std std-ref">GpioPinsSetClear</span></a> structure. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Param [in/out]</dt>
+<dd class="field-odd"><p>gpio_pins_set_clear The GPIO output level and enable settings.</p>
+</dd>
+<dt class="field-even">Param antenna</dt>
+<dd class="field-even"><p>The antenna port to be selected when the SetClearGpioPinsOp is run.</p>
+</dd>
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>struct <a class="reference internal" href="../ex10_host_c_support/ex10_result.html#struct_ex10_result"><span class="std std-ref">Ex10Result</span></a> Indicates whether the function call passed or failed. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N15Ex10GpioHelpers22set_rx_baseband_filterE">
+<span id="_CPPv3N15Ex10GpioHelpers22set_rx_baseband_filterE"></span><span id="_CPPv2N15Ex10GpioHelpers22set_rx_baseband_filterE"></span><span class="target" id="struct_ex10_gpio_helpers_1a1e89e67db89d3ac697e16fb9839a123f"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">set_rx_baseband_filter</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv416GpioPinsSetClear" title="GpioPinsSetClear"><span class="n"><span class="pre">GpioPinsSetClear</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">gpio_pins_set_clear</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="n"><span class="pre">BasebandFilterType</span></span><span class="w"> </span><span class="n"><span class="pre">rx_baseband_filter</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N15Ex10GpioHelpers22set_rx_baseband_filterE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Set the Rx Baseband Filter bit within the <a class="reference internal" href="#struct_gpio_pins_set_clear"><span class="std std-ref">GpioPinsSetClear</span></a> structure. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Param [in/out]</dt>
+<dd class="field-odd"><p>gpio_pins_set_clear The GPIO output level and enable settings.</p>
+</dd>
+<dt class="field-even">Param rx_baseband_filter</dt>
+<dd class="field-even"><p>The Rx Baseband Filter setting, which is based on RF mode.</p>
+</dd>
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>struct <a class="reference internal" href="../ex10_host_c_support/ex10_result.html#struct_ex10_result"><span class="std std-ref">Ex10Result</span></a> Indicates whether the function call passed or failed. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N15Ex10GpioHelpers18set_pa_bias_enableE">
+<span id="_CPPv3N15Ex10GpioHelpers18set_pa_bias_enableE"></span><span id="_CPPv2N15Ex10GpioHelpers18set_pa_bias_enableE"></span><span class="target" id="struct_ex10_gpio_helpers_1a248203173747d9c7fdbd83d0c037adfb"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">set_pa_bias_enable</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv416GpioPinsSetClear" title="GpioPinsSetClear"><span class="n"><span class="pre">GpioPinsSetClear</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">gpio_pins_set_clear</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n"><span class="pre">pa_bias_enable</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N15Ex10GpioHelpers18set_pa_bias_enableE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Set the PA Bias Enable bit within the <a class="reference internal" href="#struct_gpio_pins_set_clear"><span class="std std-ref">GpioPinsSetClear</span></a> structure. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Param [in/out]</dt>
+<dd class="field-odd"><p>gpio_pins_set_clear The GPIO output level and enable settings.</p>
+</dd>
+<dt class="field-even">Param pa_bias_enable</dt>
+<dd class="field-even"><p>true to enabel the PA Bias Enable, false to disable the PA Bias Enable.</p>
+</dd>
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>struct <a class="reference internal" href="../ex10_host_c_support/ex10_result.html#struct_ex10_result"><span class="std std-ref">Ex10Result</span></a> Indicates whether the function call passed or failed. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N15Ex10GpioHelpers18set_pa_power_rangeE">
+<span id="_CPPv3N15Ex10GpioHelpers18set_pa_power_rangeE"></span><span id="_CPPv2N15Ex10GpioHelpers18set_pa_power_rangeE"></span><span class="target" id="struct_ex10_gpio_helpers_1a93df20bd109846efedb18822ec716466"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">set_pa_power_range</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv416GpioPinsSetClear" title="GpioPinsSetClear"><span class="n"><span class="pre">GpioPinsSetClear</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">gpio_pins_set_clear</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="n"><span class="pre">PowerRange</span></span><span class="w"> </span><span class="n"><span class="pre">pa_power_range</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N15Ex10GpioHelpers18set_pa_power_rangeE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Set the PA Power Range bit within the <a class="reference internal" href="#struct_gpio_pins_set_clear"><span class="std std-ref">GpioPinsSetClear</span></a> structure. </p>
+<p>There are 2 PA bias range values:<ul class="simple">
+<li><p>high power: PA bias &gt; 27 dBm</p></li>
+<li><p>low power: PA bias &lt;= 27 dBm</p></li>
+</ul>
+</p>
+<dl class="field-list simple">
+<dt class="field-odd">Param [in/out]</dt>
+<dd class="field-odd"><p>gpio_pins_set_clear The GPIO output level and enable settings.</p>
+</dd>
+<dt class="field-even">Param pa_power_range</dt>
+<dd class="field-even"><p>The specific PA bias range value to apply.</p>
+</dd>
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>struct <a class="reference internal" href="../ex10_host_c_support/ex10_result.html#struct_ex10_result"><span class="std std-ref">Ex10Result</span></a> Indicates whether the function call passed or failed. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N15Ex10GpioHelpers26set_rf_power_supply_enableE">
+<span id="_CPPv3N15Ex10GpioHelpers26set_rf_power_supply_enableE"></span><span id="_CPPv2N15Ex10GpioHelpers26set_rf_power_supply_enableE"></span><span class="target" id="struct_ex10_gpio_helpers_1a9f140b302f6ff7e770ce5152d7c3299a"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">set_rf_power_supply_enable</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv416GpioPinsSetClear" title="GpioPinsSetClear"><span class="n"><span class="pre">GpioPinsSetClear</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">gpio_pins_set_clear</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n"><span class="pre">rf_ps_enable</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N15Ex10GpioHelpers26set_rf_power_supply_enableE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Set the RF Power Supply enable bit within the <a class="reference internal" href="#struct_gpio_pins_set_clear"><span class="std std-ref">GpioPinsSetClear</span></a> structure. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Param [in/out]</dt>
+<dd class="field-odd"><p>gpio_pins_set_clear The GPIO output level and enable settings.</p>
+</dd>
+<dt class="field-even">Param rf_ps_enable</dt>
+<dd class="field-even"><p>true to enable the external RF power supply, false to disable the external RF power supply.</p>
+</dd>
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>struct <a class="reference internal" href="../ex10_host_c_support/ex10_result.html#struct_ex10_result"><span class="std std-ref">Ex10Result</span></a> Indicates whether the function call passed or failed. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N15Ex10GpioHelpers16set_tx_rf_filterE">
+<span id="_CPPv3N15Ex10GpioHelpers16set_tx_rf_filterE"></span><span id="_CPPv2N15Ex10GpioHelpers16set_tx_rf_filterE"></span><span class="target" id="struct_ex10_gpio_helpers_1adb9b2cd846efeb5dc473b046c7389eda"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">set_tx_rf_filter</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv416GpioPinsSetClear" title="GpioPinsSetClear"><span class="n"><span class="pre">GpioPinsSetClear</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">gpio_pins_set_clear</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><a class="reference internal" href="../ex10_host_c_reader_primitives/rf_power.html#_CPPv48RfFilter" title="RfFilter"><span class="n"><span class="pre">RfFilter</span></span></a><span class="w"> </span><span class="n"><span class="pre">tx_rf_filter</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N15Ex10GpioHelpers16set_tx_rf_filterE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Set the Tx RF Filter (SAW) selection bit within the <a class="reference internal" href="#struct_gpio_pins_set_clear"><span class="std std-ref">GpioPinsSetClear</span></a> structure. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Param [in/out]</dt>
+<dd class="field-odd"><p>gpio_pins_set_clear The GPIO output level and enable settings.</p>
+</dd>
+<dt class="field-even">Param tx_rf_filter</dt>
+<dd class="field-even"><p>The Tx RF filter selection value.</p>
+</dd>
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>struct <a class="reference internal" href="../ex10_host_c_support/ex10_result.html#struct_ex10_result"><span class="std std-ref">Ex10Result</span></a> Indicates whether the function call passed or failed. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N15Ex10GpioHelpers19set_dio_unused_pinsE">
+<span id="_CPPv3N15Ex10GpioHelpers19set_dio_unused_pinsE"></span><span id="_CPPv2N15Ex10GpioHelpers19set_dio_unused_pinsE"></span><span class="target" id="struct_ex10_gpio_helpers_1a82ccfb5db4d1e188f9a66d52f14fb251"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">set_dio_unused_pins</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv416GpioPinsSetClear" title="GpioPinsSetClear"><span class="n"><span class="pre">GpioPinsSetClear</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">gpio_pins_set_clear</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n"><span class="pre">dio_bits</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N15Ex10GpioHelpers19set_dio_unused_pinsE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Set the unused DIGITAL_IO pins of the Ex10 device to specific values within the <a class="reference internal" href="#struct_gpio_pins_set_clear"><span class="std std-ref">GpioPinsSetClear</span></a> structure. </p>
+<p>
+Setting dio_bits = (1u &lt;&lt; 0u) | (1u &lt;&lt; 1u); will set gpio_pins_set_clear.output_level_set = 3 gpio_pins_set_clear.output_enable_set = 3</p>
+<dl class="field-list simple">
+<dt class="field-odd">Param [in/out]</dt>
+<dd class="field-odd"><p>gpio_pins_set_clear The GPIO output level and enable settings.</p>
+</dd>
+<dt class="field-even">Param dio_bits</dt>
+<dd class="field-even"><p>A bit-wise set of DIGITAL_IO pins whose values are to be set high (1) or low (0). This will set all of the unused DIGITAL_IO lines to a specific bit pattern.</p>
+</dd>
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>struct <a class="reference internal" href="../ex10_host_c_support/ex10_result.html#struct_ex10_result"><span class="std std-ref">Ex10Result</span></a> Indicates whether the function call passed or failed. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N15Ex10GpioHelpers14print_pin_bitsE">
+<span id="_CPPv3N15Ex10GpioHelpers14print_pin_bitsE"></span><span id="_CPPv2N15Ex10GpioHelpers14print_pin_bitsE"></span><span class="target" id="struct_ex10_gpio_helpers_1a1092793503aa9e314bfcc0d83f3ba578"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">print_pin_bits</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n"><span class="pre">gpio_pin_bits</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N15Ex10GpioHelpers14print_pin_bitsE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Print the GPIO 32-bit field in a friendly manner. </p>
+<p>Useful for debug.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Param fp</dt>
+<dd class="field-odd"><p>A FILE stream pointer to send the printable output. </p>
+</dd>
+<dt class="field-even">Param gpio_pin_bits</dt>
+<dd class="field-even"><p>The GPIO bit field. </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv416GpioPinsSetClear">
+<span id="_CPPv316GpioPinsSetClear"></span><span id="_CPPv216GpioPinsSetClear"></span><span id="GpioPinsSetClear"></span><span class="target" id="struct_gpio_pins_set_clear"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">GpioPinsSetClear</span></span></span><a class="headerlink" href="#_CPPv416GpioPinsSetClear" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Used to control output state of each DIGITAL_IO pin of the Impinj Read Chip. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N16GpioPinsSetClear16output_level_setE">
+<span id="_CPPv3N16GpioPinsSetClear16output_level_setE"></span><span id="_CPPv2N16GpioPinsSetClear16output_level_setE"></span><span id="GpioPinsSetClear::output_level_set__uint32_t"></span><span class="target" id="struct_gpio_pins_set_clear_1a2e452f7f8a877c3f9e102f2b4ef573a2"></span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">output_level_set</span></span></span><a class="headerlink" href="#_CPPv4N16GpioPinsSetClear16output_level_setE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Set a group of DIGITAL_IO pins to have their outputs set to Logic 1. This value will only be preset on pins which have their outputs enabled. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N16GpioPinsSetClear18output_level_clearE">
+<span id="_CPPv3N16GpioPinsSetClear18output_level_clearE"></span><span id="_CPPv2N16GpioPinsSetClear18output_level_clearE"></span><span id="GpioPinsSetClear::output_level_clear__uint32_t"></span><span class="target" id="struct_gpio_pins_set_clear_1a2756e250a0f9615e3ba9b79f2edf1675"></span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">output_level_clear</span></span></span><a class="headerlink" href="#_CPPv4N16GpioPinsSetClear18output_level_clearE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Set a group of DIGITAL_IO pins to have their outputs set to Logic 0. This value will only be preset on pins which have their outputs enabled. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N16GpioPinsSetClear17output_enable_setE">
+<span id="_CPPv3N16GpioPinsSetClear17output_enable_setE"></span><span id="_CPPv2N16GpioPinsSetClear17output_enable_setE"></span><span id="GpioPinsSetClear::output_enable_set__uint32_t"></span><span class="target" id="struct_gpio_pins_set_clear_1a86af208b1013153721074e22eedcaa9a"></span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">output_enable_set</span></span></span><a class="headerlink" href="#_CPPv4N16GpioPinsSetClear17output_enable_setE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Set a group of DIGITAL_IO pins to be enabled as output pins. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N16GpioPinsSetClear19output_enable_clearE">
+<span id="_CPPv3N16GpioPinsSetClear19output_enable_clearE"></span><span id="_CPPv2N16GpioPinsSetClear19output_enable_clearE"></span><span id="GpioPinsSetClear::output_enable_clear__uint32_t"></span><span class="target" id="struct_gpio_pins_set_clear_1adc40e95606ee679ac6d83e17c3ce1731"></span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">output_enable_clear</span></span></span><a class="headerlink" href="#_CPPv4N16GpioPinsSetClear19output_enable_clearE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Disable a group of DIGITAL_IO pins from being enabled as output pins. Pins which have their output disabled will have the Hi-Z state. </p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../../../_static/logo.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="ex10_driver_list.html"
+                        title="previous chapter">Ex10DriverList</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="ex10_host_interface.html"
+                        title="next chapter">Ex10HostInterface</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="ex10_host_interface.html" title="Ex10HostInterface"
+             >next</a></li>
+        <li class="right" >
+          <a href="ex10_driver_list.html" title="Ex10DriverList"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../yk_firmware_ex10_host_c_api.html" >Impinj Reader Chip C Host SDK</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="ex10_board_specific.html" >Board Specific Implementation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">GPIO Abstractions</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Impinj, Inc..
+    </div>
+  </body>
+</html>

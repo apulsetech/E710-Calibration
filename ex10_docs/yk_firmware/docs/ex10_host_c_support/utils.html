@@ -1,0 +1,265 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Ex10 Utils &#8212; Impinj Reader Chip SDK</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinxdoc.css" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Ex10Helpers" href="helpers.html" />
+    <link rel="prev" title="Ex10 Ramp Module Manager" href="ramp_module_manager.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="helpers.html" title="Ex10Helpers"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="ramp_module_manager.html" title="Ex10 Ramp Module Manager"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../yk_firmware_ex10_host_c_api.html" >Impinj Reader Chip C Host SDK</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../yk_firmware_ex10_host_c_api_layers.html" >API Layers</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="support_modules.html" accesskey="U">Ex10 Support Modules</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Ex10 Utils</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="ex10-utils">
+<span id="ex10-api-host-c-api-utils"></span><h1>Ex10 Utils<a class="headerlink" href="#ex10-utils" title="Permalink to this headline">¶</a></h1>
+<p>The Ex10 Utils are a collection of common code functions that are used by
+different parts of the SDK and application.  These functions are intended
+to be global functions with an <code class="docutils literal notranslate"><span class="pre">ex10_</span></code> prefix so that they can be included
+in an application individually.  As opposed to the other modules that use
+a struct to collect up a group of function pointers.  This forces the linker
+to include all of those functions in the application event if they are not
+not actually used.  These functions are stand alone functions that do
+a simple common task.</p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-defines">Defines</p>
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.ZERO_ACCESS_PWD">
+<span class="target" id="ex10__utils_8h_1a75dd3437b20eb2cebe3f0f873d8643a0"></span><span class="sig-name descname"><span class="n"><span class="pre">ZERO_ACCESS_PWD</span></span></span><a class="headerlink" href="#c.ZERO_ACCESS_PWD" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The zero password is the default password of tags. It is also the value to restore the tag to in examples. </p>
+</dd></dl>
+
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.NON_ZERO_ACCESS_PWD">
+<span class="target" id="ex10__utils_8h_1a7898403b0d12c3f39fbc0d304d048e2e"></span><span class="sig-name descname"><span class="n"><span class="pre">NON_ZERO_ACCESS_PWD</span></span></span><a class="headerlink" href="#c.NON_ZERO_ACCESS_PWD" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The non_zero password is used for all examples to align to one non-zero password. </p>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-functions">Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv415ex10_swap_bytes8uint16_t">
+<span id="_CPPv315ex10_swap_bytes8uint16_t"></span><span id="_CPPv215ex10_swap_bytes8uint16_t"></span><span id="ex10_swap_bytes__uint16_t"></span><span class="target" id="ex10__utils_8h_1ac43362ec61d211ce9cbe8a732f17fa4d"></span><span class="n"><span class="pre">uint16_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ex10_swap_bytes</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">uint16_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">value</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv415ex10_swap_bytes8uint16_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Swaps the two bytes of a uint16_t. </p>
+<p>Useful for correcting endian-ness of uint16_t values reported from the (big-endian) Gen2 tag. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv427ex10_set_default_gpio_setupv">
+<span id="_CPPv327ex10_set_default_gpio_setupv"></span><span id="_CPPv227ex10_set_default_gpio_setupv"></span><span id="ex10_set_default_gpio_setup__void"></span><span class="target" id="ex10__utils_8h_1a597db9d790bd3f94ff0b873e5649b929"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ex10_set_default_gpio_setup</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">void</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv427ex10_set_default_gpio_setupv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Get the default board gpio setup from the board spec and send that setup to the Ex10 device. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv420ex10_discard_packetsbbb">
+<span id="_CPPv320ex10_discard_packetsbbb"></span><span id="_CPPv220ex10_discard_packetsbbb"></span><span id="ex10_discard_packets__b.b.b"></span><span class="target" id="ex10__utils_8h_1a1023aa5b01e16261fe14fde9756a6e34"></span><span class="n"><span class="pre">ssize_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ex10_discard_packets</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">print_packets</span></span>, <span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">flush_packets</span></span>, <span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">debug_aggregate_op</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv420ex10_discard_packetsbbb" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Purge FIFO of remaining packets. </p>
+<p>Print summary of each packet </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>print_packets</strong> – Print each packet purged from the EventFifo queue. </p></li>
+<li><p><strong>flush_packets</strong> – Uses the InsertFifoEvent command, with the Trigger Interrupt flag set, to trigger an ReadFifo command, allowing the host to receive all pending EventFifo data held by the Reader Chip. </p></li>
+<li><p><strong>debug_aggregate_op</strong> – Provides detailed information about an AggregateOp failure, if an <a class="reference internal" href="../yk_firmware_ex10_host_c_other_types.html#struct_aggregate_op_summary"><span class="std std-ref">AggregateOpSummary</span></a> packet is encountered in the dumped packet stream.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns -1</dt>
+<dd class="field-even"><p>Indicates ~~an error occurred when emptying the FIFO. </p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>ssize_t On success, the number of EventFifo packets discarded. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv421ex10_deep_copy_packetP15EventFifoPacketPK15EventFifoPacket">
+<span id="_CPPv321ex10_deep_copy_packetP15EventFifoPacketPK15EventFifoPacket"></span><span id="_CPPv221ex10_deep_copy_packetP15EventFifoPacketPK15EventFifoPacket"></span><span id="ex10_deep_copy_packet__EventFifoPacketP.EventFifoPacketCP"></span><span class="target" id="ex10__utils_8h_1a1c9084d8e271614e2bf59e7f7903323b"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ex10_deep_copy_packet</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="event_parser.html#_CPPv415EventFifoPacket" title="EventFifoPacket"><span class="n"><span class="pre">EventFifoPacket</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">dst</span></span>, <span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="event_parser.html#_CPPv415EventFifoPacket" title="EventFifoPacket"><span class="n"><span class="pre">EventFifoPacket</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">src</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv421ex10_deep_copy_packetP15EventFifoPacketPK15EventFifoPacket" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Perform a deep copy of an EventFifo packet from one <a class="reference internal" href="../yk_firmware_ex10_host_c_other_types.html#struct_event_fifo_packet"><span class="std std-ref">EventFifoPacket</span></a> struct to another. </p>
+<p>the caller is responsible for allocating and correctly setting up the backing memory in the destination packet.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dst</strong> – pointer to the destination packet </p></li>
+<li><p><strong>src</strong> – pointer to the source packet </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv423ex10_copy_tag_read_dataP11TagReadDataPK13TagReadFields">
+<span id="_CPPv323ex10_copy_tag_read_dataP11TagReadDataPK13TagReadFields"></span><span id="_CPPv223ex10_copy_tag_read_dataP11TagReadDataPK13TagReadFields"></span><span id="ex10_copy_tag_read_data__TagReadDataP.TagReadFieldsCP"></span><span class="target" id="ex10__utils_8h_1aaae96a3d389029eac5103372c6f636d2"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ex10_copy_tag_read_data</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="event_parser.html#_CPPv411TagReadData" title="TagReadData"><span class="n"><span class="pre">TagReadData</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">dst</span></span>, <span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="event_parser.html#_CPPv413TagReadFields" title="TagReadFields"><span class="n"><span class="pre">TagReadFields</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">src</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv423ex10_copy_tag_read_dataP11TagReadDataPK13TagReadFields" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Copy the EventFifo <a class="reference internal" href="../yk_firmware_ex10_host_c_other_types.html#struct_tag_read"><span class="std std-ref">TagRead</span></a> extracted data into the destination type struct <a class="reference internal" href="../yk_firmware_ex10_host_c_other_types.html#struct_tag_read_data"><span class="std std-ref">TagReadData</span></a>. </p>
+<p>The struct <a class="reference internal" href="../yk_firmware_ex10_host_c_other_types.html#struct_tag_read_fields"><span class="std std-ref">TagReadFields</span></a> contains data pointers into the relevant fields of the EventFifo <a class="reference internal" href="../yk_firmware_ex10_host_c_other_types.html#struct_tag_read"><span class="std std-ref">TagRead</span></a> packet, allowing for easy data extraction. The EventFifo packet will be deleted when the function <a class="reference internal" href="../yk_firmware_ex10_host_c_reader_layer.html#struct_ex10_reader_1a5422a8ec579b28dc1e1ce5810e0ffc69"><span class="std std-ref">Ex10Reader.packet_remove()</span></a> function is called, which releases the EventFifo memory back to the pool for reuse. The struct <a class="reference internal" href="../yk_firmware_ex10_host_c_other_types.html#struct_tag_read"><span class="std std-ref">TagRead</span></a> provides a destination for the <a class="reference internal" href="../yk_firmware_ex10_host_c_other_types.html#struct_tag_read"><span class="std std-ref">TagRead</span></a> data, allowing the client to use the tag data beyond the lifetime of the EventFifo <a class="reference internal" href="../yk_firmware_ex10_host_c_other_types.html#struct_tag_read"><span class="std std-ref">TagRead</span></a> packet.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns true</dt>
+<dd class="field-odd"><p>indicates that the tag was copied without error. </p>
+</dd>
+<dt class="field-even">Returns struct</dt>
+<dd class="field-even"><p><a class="reference internal" href="ex10_result.html#struct_ex10_result"><span class="std std-ref">Ex10Result</span></a> fails if either the EPC or the TID length was larger than the struct <a class="reference internal" href="../yk_firmware_ex10_host_c_other_types.html#struct_tag_read_data"><span class="std std-ref">TagReadData</span></a> allocation. To determine which copy failed, the destination length fields should be compared with the source length fields. </p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>bool Indicates whether the copy operation was successful. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv433ex10_eprint_command_result_fieldsPK19CommandResultFields">
+<span id="_CPPv333ex10_eprint_command_result_fieldsPK19CommandResultFields"></span><span id="_CPPv233ex10_eprint_command_result_fieldsPK19CommandResultFields"></span><span id="ex10_eprint_command_result_fields__CommandResultFieldsCP"></span><span class="target" id="ex10__utils_8h_1a1eb1c45b2db3d877647a9b040a8f9daf"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ex10_eprint_command_result_fields</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../yk_firmware_ex10_host_c_register_accessors.html#_CPPv419CommandResultFields" title="CommandResultFields"><span class="n"><span class="pre">CommandResultFields</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">error</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv433ex10_eprint_command_result_fieldsPK19CommandResultFields" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Print the Command Result fields using ex10_eprintf(). </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv420ex10_bytes_to_uint32PKv">
+<span id="_CPPv320ex10_bytes_to_uint32PKv"></span><span id="_CPPv220ex10_bytes_to_uint32PKv"></span><span id="ex10_bytes_to_uint32__voidCP"></span><span class="target" id="ex10__utils_8h_1a549254a5f44ae93fddcc2ea27b2402a2"></span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ex10_bytes_to_uint32</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">bytes</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv420ex10_bytes_to_uint32PKv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Read 4 bytes from a data stream, and return the little-endian uint32_t value. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>bytes</strong> – The byte stream to read from. </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>uint32_t The unsigned 32-bit value. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv420ex10_bytes_to_uint16PKv">
+<span id="_CPPv320ex10_bytes_to_uint16PKv"></span><span id="_CPPv220ex10_bytes_to_uint16PKv"></span><span id="ex10_bytes_to_uint16__voidCP"></span><span class="target" id="ex10__utils_8h_1afc474052376ba0cae67009ec92b9f92b"></span><span class="n"><span class="pre">uint16_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ex10_bytes_to_uint16</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">bytes</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv420ex10_bytes_to_uint16PKv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Read 2 bytes from a data stream, and return the little-endian uint16_t value. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>bytes</strong> – The byte stream to read from. </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>uint16_t The unsigned 16-bit value. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv49abs_int167int16_t">
+<span id="_CPPv39abs_int167int16_t"></span><span id="_CPPv29abs_int167int16_t"></span><span id="abs_int16__int16_t"></span><span class="target" id="ex10__utils_8h_1aaaf1dbd988684c7838c723c3cd1ec147"></span><span class="n"><span class="pre">uint16_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">abs_int16</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">int16_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">signed_value</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv49abs_int167int16_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Width specific absolute value functions. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>signed_value</strong> – The signed value of a width specific integer. </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The unsigned absolute value of the associated unsigned value. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv49abs_int327int32_t">
+<span id="_CPPv39abs_int327int32_t"></span><span id="_CPPv29abs_int327int32_t"></span><span id="abs_int32__int32_t"></span><span class="target" id="ex10__utils_8h_1a768c3ceb4392a2c69398b916c3229958"></span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">abs_int32</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">int32_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">signed_value</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv49abs_int327int32_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv413ex10_fill_u32P8uint32_t8uint32_t6size_t">
+<span id="_CPPv313ex10_fill_u32P8uint32_t8uint32_t6size_t"></span><span id="_CPPv213ex10_fill_u32P8uint32_t8uint32_t6size_t"></span><span id="ex10_fill_u32__uint32_tP.uint32_t.s"></span><span class="target" id="ex10__utils_8h_1ae351f319f025ec0e7152682c65bd3da3"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ex10_fill_u32</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">dest</span></span>, <span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">value</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">count</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv413ex10_fill_u32P8uint32_t8uint32_t6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv424ex10_calculate_read_rate8uint32_t8uint32_t">
+<span id="_CPPv324ex10_calculate_read_rate8uint32_t8uint32_t"></span><span id="_CPPv224ex10_calculate_read_rate8uint32_t8uint32_t"></span><span id="ex10_calculate_read_rate__uint32_t.uint32_t"></span><span class="target" id="ex10__utils_8h_1ac1118df74e7ea387787aa04df9fe594f"></span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ex10_calculate_read_rate</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">tag_count</span></span>, <span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">duration_us</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv424ex10_calculate_read_rate8uint32_t8uint32_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>A common function for read rate calculation. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tag_count</strong> – The number of tags inventoried. </p></li>
+<li><p><strong>duration_us</strong> – The duration in microseconds. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>uint32_t The tag read rate in tags/second. </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../../../_static/logo.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="ramp_module_manager.html"
+                        title="previous chapter">Ex10 Ramp Module Manager</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="helpers.html"
+                        title="next chapter">Ex10Helpers</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="helpers.html" title="Ex10Helpers"
+             >next</a></li>
+        <li class="right" >
+          <a href="ramp_module_manager.html" title="Ex10 Ramp Module Manager"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../yk_firmware_ex10_host_c_api.html" >Impinj Reader Chip C Host SDK</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../yk_firmware_ex10_host_c_api_layers.html" >API Layers</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="support_modules.html" >Ex10 Support Modules</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Ex10 Utils</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Impinj, Inc..
+    </div>
+  </body>
+</html>

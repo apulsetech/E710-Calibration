@@ -1,0 +1,184 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Ex10Test &#8212; Impinj Reader Chip SDK</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinxdoc.css" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Ex10Ops Layer" href="../yk_firmware_ex10_host_c_ops_layer.html" />
+    <link rel="prev" title="Ex10Calibration" href="calibration.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../yk_firmware_ex10_host_c_ops_layer.html" title="Ex10Ops Layer"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="calibration.html" title="Ex10Calibration"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../yk_firmware_ex10_host_c_api.html" >Impinj Reader Chip C Host SDK</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../yk_firmware_ex10_host_c_api_layers.html" >API Layers</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="reader_primitives_layer.html" accesskey="U">Ex10 Reader Primitives</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Ex10Test</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="ex10test">
+<span id="ex10-api-host-c-api-reader-primitives-test"></span><h1>Ex10Test<a class="headerlink" href="#ex10test" title="Permalink to this headline">¶</a></h1>
+<p>The Ex10Test reader primitive is not used in normal Impinj Reader chip operations
+such as inventory or access commands.  This is used for elements that are more
+related to development such as just ramping up the transmitter to CW.  Or running
+the PRBS test op that will output PRBS data on the transmitter that is useful for
+spectral mask testing.</p>
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv48Ex10Test">
+<span id="_CPPv38Ex10Test"></span><span id="_CPPv28Ex10Test"></span><span id="Ex10Test"></span><span class="target" id="struct_ex10_test"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10Test</span></span></span><a class="headerlink" href="#_CPPv48Ex10Test" title="Permalink to this definition">¶</a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8Ex10Test7cw_testE">
+<span id="_CPPv3N8Ex10Test7cw_testE"></span><span id="_CPPv2N8Ex10Test7cw_testE"></span><span class="target" id="struct_ex10_test_1a1174dbbc3693c1c744b595442d032d17"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">cw_test</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n"><span class="pre">antenna</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="n"><span class="pre">RfModes</span></span><span class="w"> </span><span class="n"><span class="pre">rf_mode</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">int16_t</span></span><span class="w"> </span><span class="n"><span class="pre">tx_power_cdbm</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n"><span class="pre">frequency_khz</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../yk_firmware_ex10_host_c_register_accessors.html#_CPPv428PowerDroopCompensationFields" title="PowerDroopCompensationFields"><span class="n"><span class="pre">PowerDroopCompensationFields</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">droop_comp</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">uint16_t</span></span><span class="w"> </span><span class="n"><span class="pre">temperature_adc</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n"><span class="pre">temp_comp_enabled</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N8Ex10Test7cw_testE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Transmit a continuous wave until regulatory timers expire. </p>
+<p><dl class="simple">
+<dt><strong>See</strong></dt><dd><p>inventory() for parameter descriptions.</p>
+</dd>
+</dl>
+</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>Info about any encountered errors. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8Ex10Test9prbs_testE">
+<span id="_CPPv3N8Ex10Test9prbs_testE"></span><span id="_CPPv2N8Ex10Test9prbs_testE"></span><span class="target" id="struct_ex10_test_1a2fd3f5fa1f1c81c72e60e23baad51b43"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">prbs_test</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n"><span class="pre">antenna</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="n"><span class="pre">RfModes</span></span><span class="w"> </span><span class="n"><span class="pre">rf_mode</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">int16_t</span></span><span class="w"> </span><span class="n"><span class="pre">tx_power_cdbm</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n"><span class="pre">frequency_khz</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">uint16_t</span></span><span class="w"> </span><span class="n"><span class="pre">temperature_adc</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n"><span class="pre">temp_comp_enabled</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N8Ex10Test9prbs_testE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Transmit a pseudo-random bit stream until regulatory timers expire. </p>
+<p>User must call stop_transmitting() to end this operation.</p>
+<p><dl class="simple">
+<dt><strong>See</strong></dt><dd><p>inventory() for parameter descriptions. </p>
+</dd>
+</dl>
+</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>Info about any encountered errors. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8Ex10Test8ber_testE">
+<span id="_CPPv3N8Ex10Test8ber_testE"></span><span id="_CPPv2N8Ex10Test8ber_testE"></span><span class="target" id="struct_ex10_test_1af845e8abb8fc0769f2e162086ded9176"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">ber_test</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n"><span class="pre">antenna</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="n"><span class="pre">RfModes</span></span><span class="w"> </span><span class="n"><span class="pre">rf_mode</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">int16_t</span></span><span class="w"> </span><span class="n"><span class="pre">tx_power_cdbm</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n"><span class="pre">frequency_khz</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">uint16_t</span></span><span class="w"> </span><span class="n"><span class="pre">num_bits</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">uint16_t</span></span><span class="w"> </span><span class="n"><span class="pre">num_packets</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n"><span class="pre">delimiter_only</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">uint16_t</span></span><span class="w"> </span><span class="n"><span class="pre">temperature_adc</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n"><span class="pre">temp_comp_enabled</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N8Ex10Test8ber_testE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Run a packetized BER test. </p>
+<p><dl class="simple">
+<dt><strong>See</strong></dt><dd><p>inventory() for other parameter descriptions. </p>
+</dd>
+</dl>
+</p>
+<dl class="field-list simple">
+<dt class="field-odd">Param num_bits</dt>
+<dd class="field-odd"><p>Number of bits per packet </p>
+</dd>
+<dt class="field-even">Param num_packets</dt>
+<dd class="field-even"><p>Number of packets to receive </p>
+</dd>
+<dt class="field-odd">Param delimiter_only</dt>
+<dd class="field-odd"><p>Use a delimiter instead of a query to trigger a packet. </p>
+</dd>
+<dt class="field-even">Return</dt>
+<dd class="field-even"><p>Info about any encountered errors. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8Ex10Test15etsi_burst_testE">
+<span id="_CPPv3N8Ex10Test15etsi_burst_testE"></span><span id="_CPPv2N8Ex10Test15etsi_burst_testE"></span><span class="target" id="struct_ex10_test_1a46faeeeeb172721498379dd07db895cf"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">etsi_burst_test</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../yk_firmware_ex10_host_c_register_accessors.html#_CPPv427InventoryRoundControlFields" title="InventoryRoundControlFields"><span class="n"><span class="pre">InventoryRoundControlFields</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">inventory_config</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../yk_firmware_ex10_host_c_register_accessors.html#_CPPv429InventoryRoundControl_2Fields" title="InventoryRoundControl_2Fields"><span class="n"><span class="pre">InventoryRoundControl_2Fields</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">inventory_config_2</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n"><span class="pre">antenna</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="n"><span class="pre">RfModes</span></span><span class="w"> </span><span class="n"><span class="pre">rf_mode</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">int16_t</span></span><span class="w"> </span><span class="n"><span class="pre">tx_power_cdbm</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">uint16_t</span></span><span class="w"> </span><span class="n"><span class="pre">on_time_ms</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">uint16_t</span></span><span class="w"> </span><span class="n"><span class="pre">off_time_ms</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n"><span class="pre">frequency_khz</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">uint16_t</span></span><span class="w"> </span><span class="n"><span class="pre">temperature_adc</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n"><span class="pre">temp_comp_enabled</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N8Ex10Test15etsi_burst_testE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Start up a continuous cycle of ramp up, inventory, ramp down. </p>
+<p>User must call stop_transmitting() to end this operation.</p>
+<p><dl class="simple">
+<dt><strong>See</strong></dt><dd><p>inventory() for parameter descriptions. </p>
+</dd>
+</dl>
+</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>Info about any encountered errors. </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../../../_static/logo.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="calibration.html"
+                        title="previous chapter">Ex10Calibration</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../yk_firmware_ex10_host_c_ops_layer.html"
+                        title="next chapter">Ex10Ops Layer</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../yk_firmware_ex10_host_c_ops_layer.html" title="Ex10Ops Layer"
+             >next</a></li>
+        <li class="right" >
+          <a href="calibration.html" title="Ex10Calibration"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../yk_firmware_ex10_host_c_api.html" >Impinj Reader Chip C Host SDK</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../yk_firmware_ex10_host_c_api_layers.html" >API Layers</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="reader_primitives_layer.html" >Ex10 Reader Primitives</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Ex10Test</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Impinj, Inc..
+    </div>
+  </body>
+</html>

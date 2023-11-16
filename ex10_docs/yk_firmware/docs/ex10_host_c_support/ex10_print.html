@@ -1,0 +1,170 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Ex10Print &#8212; Impinj Reader Chip SDK</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinxdoc.css" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Ex10EventParser" href="event_parser.html" />
+    <link rel="prev" title="Ex10Helpers" href="helpers.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="event_parser.html" title="Ex10EventParser"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="helpers.html" title="Ex10Helpers"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../yk_firmware_ex10_host_c_api.html" >Impinj Reader Chip C Host SDK</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../yk_firmware_ex10_host_c_api_layers.html" >API Layers</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="support_modules.html" accesskey="U">Ex10 Support Modules</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Ex10Print</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="ex10print">
+<span id="ex10-api-host-c-api-print"></span><h1>Ex10Print<a class="headerlink" href="#ex10print" title="Permalink to this headline">¶</a></h1>
+<p>The Ex10Print layer is a wrapper function around a normal printf().  These
+wrapper functions can be enabled or disabled at build time with the following
+defines, that have default definitions in the top level
+<cite>ex10_c_dev_kitCMakeList.txt</cite> file, and can be overridden on the build
+command line with <cite>-D EX10_ENABLE_PRINT=OFF</cite> for example.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">EX10_ENABLE_PRINT</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">EX10_ENABLE_PRINT_ERR</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">EX10_ENABLE_PRINT_EX</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">EX10_ENABLE_PRINT_EX_ERR</span></code></p></li>
+</ul>
+</div></blockquote>
+<p>This allows these printf() commands to be enabled/disabled at compile time as
+desired.  And the implementation of the <code class="docutils literal notranslate"><span class="pre">ex10_eprintf_impl()</span></code> call allows
+for the printf() functionality to be redirected in systems that do not
+have a normal <code class="docutils literal notranslate"><span class="pre">stdout</span></code>, like a microcontroller that has a UART output for
+debug for example.</p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-defines">Defines</p>
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.ex10_printf">
+<span class="target" id="ex10__print_8h_1a8a3daa56872a217c49b5cda6ae006912"></span><span class="sig-name descname"><span class="n"><span class="pre">ex10_printf</span></span></span><span class="sig-paren">(</span><span class="p"><span class="pre">...</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.ex10_printf" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.ex10_eprintf">
+<span class="target" id="ex10__print_8h_1aa34b7b05fdff7291996a1c81d0a10e81"></span><span class="sig-name descname"><span class="n"><span class="pre">ex10_eprintf</span></span></span><span class="sig-paren">(</span><span class="p"><span class="pre">...</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.ex10_eprintf" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.ex10_eputs">
+<span class="target" id="ex10__print_8h_1ab3b63f9cb340f4a8f1bd26374ec4c099"></span><span class="sig-name descname"><span class="n"><span class="pre">ex10_eputs</span></span></span><span class="sig-paren">(</span><span class="p"><span class="pre">...</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.ex10_eputs" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.ex10_ex_printf">
+<span class="target" id="ex10__print_8h_1a4571cdc55eb14084733cbd0825b9b7bf"></span><span class="sig-name descname"><span class="n"><span class="pre">ex10_ex_printf</span></span></span><span class="sig-paren">(</span><span class="p"><span class="pre">...</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.ex10_ex_printf" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.ex10_ex_eprintf">
+<span class="target" id="ex10__print_8h_1a6b89576ce6a7fbbbfadbe2e84f684ac9"></span><span class="sig-name descname"><span class="n"><span class="pre">ex10_ex_eprintf</span></span></span><span class="sig-paren">(</span><span class="p"><span class="pre">...</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.ex10_ex_eprintf" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.ex10_ex_eputs">
+<span class="target" id="ex10__print_8h_1a981792346983b9f7aded704a25389164"></span><span class="sig-name descname"><span class="n"><span class="pre">ex10_ex_eputs</span></span></span><span class="sig-paren">(</span><span class="p"><span class="pre">...</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.ex10_ex_eputs" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-functions">Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv416ex10_printf_implPKcz">
+<span id="_CPPv316ex10_printf_implPKcz"></span><span id="_CPPv216ex10_printf_implPKcz"></span><span id="ex10_printf_impl__cCP.z"></span><span class="target" id="ex10__print_8h_1ab65620ebcab0f3a6bb2a7390f2f25d5a"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ex10_printf_impl</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">fmt</span></span>, <span class="p"><span class="pre">...</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416ex10_printf_implPKcz" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv417ex10_eprintf_implPKcPKcz">
+<span id="_CPPv317ex10_eprintf_implPKcPKcz"></span><span id="_CPPv217ex10_eprintf_implPKcPKcz"></span><span id="ex10_eprintf_impl__cCP.cCP.z"></span><span class="target" id="ex10__print_8h_1ae4ec1c9e7b86317be2fdfbf5780f702a"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ex10_eprintf_impl</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">func</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">fmt</span></span>, <span class="p"><span class="pre">...</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417ex10_eprintf_implPKcPKcz" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv415ex10_eputs_implPKcz">
+<span id="_CPPv315ex10_eputs_implPKcz"></span><span id="_CPPv215ex10_eputs_implPKcz"></span><span id="ex10_eputs_impl__cCP.z"></span><span class="target" id="ex10__print_8h_1af509a2472914ad5e9e7d05d4c28143d6"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ex10_eputs_impl</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">fmt</span></span>, <span class="p"><span class="pre">...</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv415ex10_eputs_implPKcz" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv417ex10_empty_printfPKcz">
+<span id="_CPPv317ex10_empty_printfPKcz"></span><span id="_CPPv217ex10_empty_printfPKcz"></span><span id="ex10_empty_printf__cCP.z"></span><span class="target" id="ex10__print_8h_1ac6b8aae74d465d2b571d0b654fa3279e"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ex10_empty_printf</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">fmt</span></span>, <span class="p"><span class="pre">...</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417ex10_empty_printfPKcz" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../../../_static/logo.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="helpers.html"
+                        title="previous chapter">Ex10Helpers</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="event_parser.html"
+                        title="next chapter">Ex10EventParser</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="event_parser.html" title="Ex10EventParser"
+             >next</a></li>
+        <li class="right" >
+          <a href="helpers.html" title="Ex10Helpers"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../yk_firmware_ex10_host_c_api.html" >Impinj Reader Chip C Host SDK</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../yk_firmware_ex10_host_c_api_layers.html" >API Layers</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="support_modules.html" >Ex10 Support Modules</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Ex10Print</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Impinj, Inc..
+    </div>
+  </body>
+</html>

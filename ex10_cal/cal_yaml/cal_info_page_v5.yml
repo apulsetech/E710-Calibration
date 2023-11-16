@@ -1,0 +1,583 @@
+brief: Ex10 Calibration Info Page
+
+parameters:
+  - name: CalibrationVersion
+    brief: The version number of this calibration file
+    description: |
+      This is the version number for the format of this data
+    address: 0
+    length: 1
+    fields:
+      - name: CalFileVersion
+        pos: 0
+        bits: 8
+        init_value: 0xff
+
+  - name: CustomerCalibrationVersion
+    brief: The customer assigned version number of this calibration file
+    description: |
+        This is the customer assigned version number for the format of this data
+    address: 1
+    length: 1
+    fields:
+      - name: CustomerCalFileVersion
+        pos: 0
+        bits: 8
+        init_value: 0x00
+
+  - name: VersionStrings
+    brief: Version numbers of the power calibration algorithm.
+    description: |
+      Version number of the power calibration algorithm.
+    address: 4
+    length: 6
+    fields:
+      - name: PowerDetectCalType
+        description: |
+          Type of power detection algorithm:
+          - ``1`` log-amp,
+          - ``2`` polyfit,
+          - ``3`` LUT,
+          - ``4`` logistic fit,
+          - ``5`` individual LUT
+        pos: 0
+        bits: 8
+        init_value: 5
+
+      - name: ForwardPowerCalType
+        description: |
+          Type of forward power calibration.
+        pos: 8
+        bits: 8
+        init_value: 1
+
+      - name: PowerDetectorTempCompType
+        description: |
+          Type of temperature compensation for power detectors:
+          - ``1`` Piecewise linear fit at (-40, 0, 25, 60, 85) over PDET ADC
+          - ``2`` Linear fit over power
+        pos: 16
+        bits: 8
+        init_value: 2
+
+      - name: ForwardPowerTempCompType
+        description: |
+          Type of temperature compensation for forward power:
+          - ``1`` Linear fit
+        pos: 24
+        bits: 8
+        init_value: 1
+
+      - name: PowerDetectorFreqCompType
+        description: |
+          Type of frequency compensation for power detectors:
+          - ``1`` Linear fit
+          - ``2`` Linear interpolation
+        pos: 32
+        bits: 8
+        init_value: 2
+
+      - name: ForwardPowerFreqCompType
+        description: |
+          Type of frequency compensation for forward power:
+          - ``1`` Linear fit
+        pos: 40
+        bits: 8
+        init_value: 1
+
+  - name: UserBoardId
+    brief: A user-defined board ID
+    description: |
+      This is a user-defined identifier for the specific board currently being
+      calibrated
+    address: 10
+    length: 2
+    fields:
+      - name: UserBoardId
+        pos: 0
+        bits: 16
+        init_value: 0
+
+  - name: TxScalarCal
+    brief: Digital Tx scalar value used in calibration.
+    description: |
+      This scalar value is 5 dB offset from full scale and should be used for
+      the power ramp algorithm.
+    address: 12
+    length: 2
+    fields:
+      - name: TxScalarCal
+        pos: 0
+        bits: short
+        init_value: 1152
+
+  - name: RfFilterUpperBand
+    brief: Frequency limits of upper RF bands used in current calibration.
+    address: 14
+    length: 8
+    fields:
+      - name: LowFreqLimit
+        pos: 0
+        bits: float
+        init_value: 0.0
+      - name: HighFreqLimit
+        pos: 0
+        bits: float
+        init_value: 0.0
+
+  - name: RfFilterLowerBand
+    brief: Frequency limits of lower RF bands used in current calibration.
+    address: 22
+    length: 8
+    fields:
+      - name: LowFreqLimit
+        pos: 0
+        bits: float
+        init_value: 0.0
+      - name: HighFreqLimit
+        pos: 0
+        bits: float
+        init_value: 0.0
+
+  - name: ValidPdetAdcs
+    brief: PDET ADC value ranges for each PDET curve to avoid clipping
+    address: 30
+    length: 4
+    fields:
+      - name: ValidMinAdc
+        pos: 0
+        bits: 16
+        init_value: 0
+      - name: ValidMaxAdc
+        pos: 16
+        bits: 16
+        init_value: 0
+
+  - name: ControlLoopParams
+    brief: Parameters to control the PowerControlLoopOp.
+    address: 34
+    length: 4
+    fields:
+      - name: LoopGainDivisor
+        pos: 8
+        bits: 16
+        init_value: 0
+      - name: ErrorThreshold
+        pos: 0
+        bits: 8
+        init_value: 0
+      - name: MaxIterations
+        pos: 32
+        bits: 8
+        init_value: 0
+
+  - name: UpperBandPdetAdcLut
+    brief: Measured PDET ADC values for each coarse power setting
+    address: 40
+    length: 186
+    fields:
+      - name: Pdet0_Adc_Lut
+        pos: 0
+        bits: 16
+        init_value: 0
+        num_entries: 31
+      - name: Pdet1_Adc_Lut
+        pos: 496
+        bits: 16
+        init_value: 0
+        num_entries: 31
+      - name: Pdet2_Adc_Lut
+        pos: 992
+        bits: 16
+        init_value: 0
+        num_entries: 31
+
+  - name: UpperBandFwdPowerCoarsePwrCal
+    brief: List of calibrated coarse attenuation values, with PPA_HALF_PWR off
+    description: |
+     List of calibrated coarse attenuation values, with PPA_HALF_PWR toggle off
+    address: 226
+    length: 124
+    fields:
+      - name: Coarse_Attn_Cal
+        pos: 0
+        bits: float
+        init_value: 0.0
+        num_entries: 31
+        description: |
+          Calibrated coarse attenuation at setting 0-30.
+
+  - name: UpperBandFwdPowerTempSlope
+    brief: Temperature slope of forward power curve
+    description: |
+      Linear coefficient for temperature compensation of forward power curve.
+      The equation is power_compensated = power_in - (temp * temp_slope)
+      - ((freq - freq_offset) * freq_slope)
+    address: 350
+    length: 4
+    fields:
+      - name: FwdPowerTempSlope
+        pos: 0
+        bits: float
+        init_value: 0.0
+
+  - name: UpperBandCalTemp
+    brief: Calibration temperature ADC code
+    address: 354
+    length: 2
+    fields:
+      - name: CalTempADC
+        pos: 0
+        bits: 16
+        init_value: 0
+
+  - name: UpperBandLoPdetTempSlope
+    brief: Temperature slope of Lo power detector curve
+    description: |
+      Piecewise linear compensation of temperature offset for power detector
+      curves.  Precharacterized over samples for each power detector block.
+    address: 356
+    length: 12
+    fields:
+      - name: LoPdetTempSlope
+        pos: 0
+        bits: float
+        init_value: 0.0
+        num_entries: 3
+
+  - name: UpperBandLoPdetFreqLut
+    brief: Power detector ADC shifts over frequency
+    address: 368
+    length: 24
+    fields:
+      - name: LoPdetFreqAdcShifts0
+        pos: 0
+        bits: short
+        init_value: 0
+        num_entries: 4
+      - name: LoPdetFreqAdcShifts1
+        pos: 64
+        bits: short
+        init_value: 0
+        num_entries: 4
+      - name: LoPdetFreqAdcShifts2
+        pos: 128
+        bits: short
+        init_value: 0
+        num_entries: 4
+
+  - name: UpperBandLoPdetFreqs
+    brief: Power detector frequencies for LUT
+    address: 392
+    length: 16
+    fields:
+      - name: LoPdetFreqs
+        pos: 0
+        bits: float
+        init_value: 0
+        num_entries: 4
+
+  - name: UpperBandFwdPwrFreqLut
+    brief: Output power shifts over frequency
+    address: 424
+    length: 16
+    fields:
+      - name: FwdPwrShifts
+        pos: 0
+        bits: float
+        init_value: 0.0
+        num_entries: 4
+
+  - name: LowerBandPdetAdcLut
+    brief: Measured PDET ADC values for each coarse power setting
+    address: 456
+    length: 186
+    fields:
+      - name: Pdet0_Adc_Lut
+        pos: 0
+        bits: 16
+        init_value: 0
+        num_entries: 31
+      - name: Pdet1_Adc_Lut
+        pos: 496
+        bits: 16
+        init_value: 0
+        num_entries: 31
+      - name: Pdet2_Adc_Lut
+        pos: 992
+        bits: 16
+        init_value: 0
+        num_entries: 31
+
+  - name: LowerBandFwdPowerCoarsePwrCal
+    brief: List of calibrated coarse attenuation values, with PPA_HALF_PWR off
+    description: |
+     List of calibrated coarse attenuation values, with PPA_HALF_PWR toggle off
+    address: 642
+    length: 124
+    fields:
+      - name: Coarse_Attn_Cal
+        pos: 0
+        bits: float
+        init_value: 0.0
+        num_entries: 31
+        description: |
+          Calibrated coarse attenuation at setting 0-30.
+
+  - name: LowerBandFwdPowerTempSlope
+    brief: Temperature slope of forward power curve
+    description: |
+      Linear coefficient for temperature compensation of forward power curve.
+      The equation is power_compensated = power_in - (temp * temp_slope)
+      - ((freq - freq_offset) * freq_slope)
+    address: 766
+    length: 4
+    fields:
+      - name: FwdPowerTempSlope
+        pos: 0
+        bits: float
+        init_value: 0.0
+
+  - name: LowerBandCalTemp
+    brief: Calibration temperature ADC code
+    address: 770
+    length: 2
+    fields:
+      - name: CalTempADC
+        pos: 0
+        bits: 16
+        init_value: 0
+
+  - name: LowerBandLoPdetTempSlope
+    brief: Temperature slope of Lo power detector curve
+    description: |
+      Piecewise linear compensation of temperature offset for power detector
+      curves.  Precharacterized over samples.
+    address: 772
+    length: 12
+    fields:
+      - name: LoPdetTempSlope
+        pos: 0
+        bits: float
+        init_value: 0.0
+        num_entries: 3
+
+  - name: LowerBandLoPdetFreqLut
+    brief: Power detector estimate shifts over frequency
+    address: 784
+    length: 24
+    fields:
+      - name: LoPdetFreqAdcShifts0
+        pos: 0
+        bits: short
+        init_value: 0
+        num_entries: 4
+      - name: LoPdetFreqAdcShifts1
+        pos: 64
+        bits: short
+        init_value: 0
+        num_entries: 4
+      - name: LoPdetFreqAdcShifts2
+        pos: 128
+        bits: short
+        init_value: 0
+        num_entries: 4
+
+
+  - name: LowerBandLoPdetFreqs
+    brief: Power detector frequencies for LUT
+    address: 808
+    length: 32
+    fields:
+      - name: LoPdetFreqs
+        pos: 0
+        bits: float
+        init_value: 0
+        num_entries: 4
+
+  - name: LowerBandFwdPwrFreqLut
+    brief: Output power shifts over frequency
+    address: 840
+    length: 32
+    fields:
+      - name: FwdPwrShifts
+        pos: 0
+        bits: float
+        init_value: 0.0
+        num_entries: 4
+
+  - name: DcOffsetCal
+    brief: Estimate DC offsets
+    address: 872
+    length: 124
+    fields:
+      - name: Dc_Offset
+        pos: 0
+        bits: int
+        init_value: 0
+        num_entries: 31
+
+  - name: RssiRfModes
+    brief: Calibrated modes for RSSI
+    address: 996
+    length: 64
+    fields:
+      - name: RfModes
+        pos: 0
+        bits: 16
+        init_value: 0
+        num_entries: 32
+
+  - name: RssiRfModeLut
+    brief: Lookup table for correcting RSSI estimations based on RF mode
+    address: 1060
+    length: 64
+    fields:
+      - name: RfModeLut
+        pos: 0
+        bits: short
+        init_value: 0
+        num_entries: 32
+
+  - name: RssiPga1Lut
+    brief: Lookup table for correcting RSSI estimations based on PGA1 Gain
+    address: 1124
+    length: 8
+    fields:
+      - name: Pga1Lut
+        pos: 0
+        bits: short
+        init_value: 0
+        num_entries: 4
+
+  - name: RssiPga2Lut
+    brief: Lookup table for correcting RSSI estimations based on PGA2 Gain
+    address: 1132
+    length: 8
+    fields:
+      - name: Pga2Lut
+        pos: 0
+        bits: short
+        init_value: 0
+        num_entries: 4
+
+  - name: RssiPga3Lut
+    brief: Lookup table for correcting RSSI estimations based on PGA3 Gain
+    address: 1140
+    length: 8
+    fields:
+      - name: Pga3Lut
+        pos: 0
+        bits: short
+        init_value: 0
+        num_entries: 4
+
+  - name: RssiMixerGainLut
+    brief: Lookup table for correcting RSSI based on mixer gain
+    address: 1148
+    length: 8
+    fields:
+      - name: MixerGainLut
+        pos: 0
+        bits: short
+        init_value: 0
+        num_entries: 4
+
+  - name: RssiRxAttLut
+    brief: Lookup table for correcting RSSI estimations based on Rx attenuator
+    address: 1156
+    length: 8
+    fields:
+      - name: RxAttGainLut
+        pos: 0
+        bits: short
+        init_value: 0
+        num_entries: 4
+
+  - name: RssiAntennas
+    brief: Antennas used for RSSI calibration
+    address: 1164
+    length: 8
+    fields:
+      - name: Antenna
+        pos: 0
+        bits: 8
+        init_value: 0
+        num_entries: 8
+
+  - name: RssiAntennaLut
+    brief: Lookup table for correcting RSSI estimations based on antenna
+    address: 1172
+    length: 16
+    fields:
+      - name: AntennaLut
+        pos: 0
+        bits: short
+        init_value: 0
+        num_entries: 8
+
+  - name: UpperBandRssiFreqOffset
+    brief: RSSI shifts over frequency
+    address: 1188
+    length: 2
+    fields:
+      - name: FreqShift
+        pos: 0
+        bits: short
+        init_value: 0
+        num_entries: 1
+
+  - name: LowerBandRssiFreqOffset
+    brief: RSSI shifts over frequency
+    address: 1190
+    length: 2
+    fields:
+      - name: FreqShift
+        pos: 0
+        bits: short
+        init_value: 0
+        num_entries: 1
+
+  - name: RssiRxDefaultPwr
+    brief: Rx powers for RSSI cal
+    address: 1192
+    length: 2
+    fields:
+      - name: InputPowers
+        pos: 0
+        bits: short
+        init_value: 0
+        num_entries: 1
+
+  - name: RssiRxDefaultLog2
+    brief: RSSI shifts over input Rx power
+    address: 1194
+    length: 2
+    fields:
+      - name: PowerShifts
+        pos: 0
+        bits: short
+        init_value: 0
+        num_entries: 1
+
+  - name: RssiTempSlope
+    brief: Linear coefficients for RSSI shifts across temperature
+    address: 1196
+    length: 4
+    fields:
+      - name: RssiTempSlope
+        pos: 0
+        bits: float
+        init_value: 0.0
+        num_entries: 1
+
+  - name: RssiTempIntercept
+    brief: Linear coefficients for RSSI shifts across temperature
+    address: 1200
+    length: 2
+    fields:
+      - name: RssiTempIntercept
+        pos: 0
+        bits: 16
+        init_value: 0
+

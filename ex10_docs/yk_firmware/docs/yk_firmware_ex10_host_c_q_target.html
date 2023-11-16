@@ -1,0 +1,207 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Inventory Round Q/Target Behavior for Continuous Inventory &#8212; Impinj Reader Chip SDK</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinxdoc.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Tx Power Droop Compensation" href="yk_firmware_power_droop_compensation.html" />
+    <link rel="prev" title="Ex10SjcAccessor" href="yk_firmware_ex10_host_c_sjc_accessor.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="yk_firmware_power_droop_compensation.html" title="Tx Power Droop Compensation"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="yk_firmware_ex10_host_c_sjc_accessor.html" title="Ex10SjcAccessor"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="yk_firmware_ex10_host_c_api.html" >Impinj Reader Chip C Host SDK</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="yk_firmware_ex10_host_c_advanced_topics.html" accesskey="U">Advanced Topics</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Inventory Round Q/Target Behavior for Continuous Inventory</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="inventory-round-q-target-behavior-for-continuous-inventory">
+<h1>Inventory Round Q/Target Behavior for Continuous Inventory<a class="headerlink" href="#inventory-round-q-target-behavior-for-continuous-inventory" title="Permalink to this headline">¶</a></h1>
+<p>When the continuous_inventory() function is used, the SDK starts or restarts
+each inventory round based on the values in ContInventoryHelperParams
+passed in.</p>
+<p>The specific parameters that affect this behavior are:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">InventoryHelperParams</span> <span class="o">.</span><span class="n">dual_target</span>
+<span class="n">InventoryHelperParams</span>
+    <span class="o">.</span><span class="n">inventory_config</span>
+        <span class="o">.</span><span class="n">initial_q</span>
+        <span class="o">.</span><span class="n">max_q</span>
+        <span class="o">.</span><span class="n">min_q</span>
+        <span class="o">.</span><span class="n">num_min_q_cycles</span>
+        <span class="o">.</span><span class="n">session</span>
+        <span class="o">.</span><span class="n">target</span>
+    <span class="o">.</span><span class="n">inventory_config_2</span>
+        <span class="o">.</span><span class="n">max_queries_since_valid_epc</span>
+        <span class="o">.</span><span class="n">starting_min_q_count</span>
+        <span class="o">.</span><span class="n">starting_max_queries_since_valid_epc_count</span>
+</pre></div>
+</div>
+<p>For additional details regarding these parameters please refer to the
+<a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-InventoryRoundControl">InventoryRoundControl</a>
+and <a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-InventoryRoundControl_2">InventoryRoundControl_2</a>
+registers’ descriptions.</p>
+<p>Continuous inventory can briefly stop for several reasons and the SDK will
+restart inventory with Q and target parameters depending on the stop reason.</p>
+<section id="round-completion">
+<h2>Round Completion<a class="headerlink" href="#round-completion" title="Permalink to this headline">¶</a></h2>
+<p>If the round ends due to the tag population being exhausted with Q at
+or near the minimum specified, the LMAC determines that a round is complete
+and an LmacInventoryStop packet is sent with a “Done” stop reason.</p>
+<p>The next round will start with a Q value reset to
+InventoryHelperParams.inventory_config.initial_q and for dual target,
+the target will be switched so that tags can be inventoried again.</p>
+</section>
+<section id="regulatory-hop">
+<h2>Regulatory Hop<a class="headerlink" href="#regulatory-hop" title="Permalink to this headline">¶</a></h2>
+<p>When a regulatory timer expires, RF power ramps down and a channel hop
+is done.  When power ramps up and inventory continues on the new channel,
+the Q value and target that were used just before the hop are used.</p>
+</section>
+<section id="example-inventory">
+<h2>Example Inventory<a class="headerlink" href="#example-inventory" title="Permalink to this headline">¶</a></h2>
+<dl class="simple">
+<dt>This graph of Q and target over time shows an example of:</dt><dd><ul class="simple">
+<li><p>Q and target set after the end of a round</p></li>
+<li><p>a regulatory channel hop in the middle of a round</p></li>
+</ul>
+</dd>
+</dl>
+<p>The physical setup was a 64-tag test board connected to an Impinj E710
+Development Kit.  The app firmware was modified so the regulatory timers
+were shortened to increase the occurrence of channel hops.</p>
+<figure class="align-default">
+<img alt="../../_images/q_graph.svg" src="../../_images/q_graph.svg" /></figure>
+</section>
+<section id="stop-summary-vs-sdk-behavior">
+<h2>Stop Summary vs SDK Behavior<a class="headerlink" href="#stop-summary-vs-sdk-behavior" title="Permalink to this headline">¶</a></h2>
+<p>When an inventory round stops, the LMAC gives a stop reason.  This table shows
+the action that the reader layer takes for each type.  Error cases and a stop
+due to a host request are “Don’t care” since inventory will not continue.</p>
+<table class="docutils align-default" id="id1">
+<caption><span class="caption-number">Table 8 </span><span class="caption-text">Inventory round stop reason behavior</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>InventorySummary*</p></th>
+<th class="head"><p>Action</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Done</p></td>
+<td><p>Flip target (dual target), reset Q</p></td>
+</tr>
+<tr class="row-odd"><td><p>Host</p></td>
+<td><p>Don’t care</p></td>
+</tr>
+<tr class="row-even"><td><p>Regulatory</p></td>
+<td><p>Preserve Q, target</p></td>
+</tr>
+<tr class="row-odd"><td><p>EventFifoFull</p></td>
+<td><p>Don’t care</p></td>
+</tr>
+<tr class="row-even"><td><p>TxNotRampedUp</p></td>
+<td><p>Don’t care</p></td>
+</tr>
+<tr class="row-odd"><td><p>InvalidParam</p></td>
+<td><p>Don’t care</p></td>
+</tr>
+<tr class="row-even"><td><p>LmacOverload</p></td>
+<td><p>Don’t care</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="session-0">
+<h2>Session 0<a class="headerlink" href="#session-0" title="Permalink to this headline">¶</a></h2>
+<p>For session 0 which has no tag state persistance, the target is reset to “A”
+at the end of the inventory round.</p>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="../../_static/logo.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Inventory Round Q/Target Behavior for Continuous Inventory</a><ul>
+<li><a class="reference internal" href="#round-completion">Round Completion</a></li>
+<li><a class="reference internal" href="#regulatory-hop">Regulatory Hop</a></li>
+<li><a class="reference internal" href="#example-inventory">Example Inventory</a></li>
+<li><a class="reference internal" href="#stop-summary-vs-sdk-behavior">Stop Summary vs SDK Behavior</a></li>
+<li><a class="reference internal" href="#session-0">Session 0</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="yk_firmware_ex10_host_c_sjc_accessor.html"
+                        title="previous chapter">Ex10SjcAccessor</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="yk_firmware_power_droop_compensation.html"
+                        title="next chapter">Tx Power Droop Compensation</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="yk_firmware_power_droop_compensation.html" title="Tx Power Droop Compensation"
+             >next</a></li>
+        <li class="right" >
+          <a href="yk_firmware_ex10_host_c_sjc_accessor.html" title="Ex10SjcAccessor"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="yk_firmware_ex10_host_c_api.html" >Impinj Reader Chip C Host SDK</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="yk_firmware_ex10_host_c_advanced_topics.html" >Advanced Topics</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Inventory Round Q/Target Behavior for Continuous Inventory</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Impinj, Inc..
+    </div>
+  </body>
+</html>

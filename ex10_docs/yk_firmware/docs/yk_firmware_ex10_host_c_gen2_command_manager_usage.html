@@ -1,0 +1,334 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Gen2 Tx Command Manager Usage &#8212; Impinj Reader Chip SDK</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinxdoc.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Debugging Aggregate Op Errors" href="yk_firmware_ex10_host_c_api_debugging_aggregate_op_errors.html" />
+    <link rel="prev" title="Reverse Power Threshold Detection" href="yk_firmware_ex10_host_c_reverse_power_detect.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="yk_firmware_ex10_host_c_api_debugging_aggregate_op_errors.html" title="Debugging Aggregate Op Errors"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="yk_firmware_ex10_host_c_reverse_power_detect.html" title="Reverse Power Threshold Detection"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="yk_firmware_ex10_host_c_api.html" >Impinj Reader Chip C Host SDK</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="yk_firmware_ex10_host_c_advanced_topics.html" accesskey="U">Advanced Topics</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Gen2 Tx Command Manager Usage</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="gen2-tx-command-manager-usage">
+<span id="ex10-api-host-c-api-gen2-tx-command-manager-usage"></span><h1>Gen2 Tx Command Manager Usage<a class="headerlink" href="#gen2-tx-command-manager-usage" title="Permalink to this headline">¶</a></h1>
+<section id="step-1-theory-of-operation">
+<h2>Step 1 – Theory Of Operation<a class="headerlink" href="#step-1-theory-of-operation" title="Permalink to this headline">¶</a></h2>
+<p>A specific layer has been created to assist in creating and using the gen2
+commands. This layer contains an SDK buffer which is used to store information
+about the gen2 commands. This is used to assist the user in command
+encoding/decoding, enabling, and usage. The SDK buffer is separate from the
+device side buffer. The local SDK buffer is encoded and written into the device
+side buffer through usage of the command manager API.</p>
+</section>
+<section id="step-1-setup">
+<h2>Step 1 – Setup<a class="headerlink" href="#step-1-setup" title="Permalink to this headline">¶</a></h2>
+<p>In working with the gen2 commands, rather than the command structures being
+intertwined with the ops, one begins by retrieving the gen2 sequence helper:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">struct</span> <span class="n">Ex10Gen2TxCommandManager</span> <span class="n">const</span><span class="o">*</span> <span class="n">g2tcm</span> <span class="o">=</span> <span class="n">get_ex10_gen2_tx_command_manager</span><span class="p">(</span><span class="n">void</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>The buffer builder has an init function which is called in the SDK reader layer,
+but should be called if not utilizing that layer. This invalidates all commands
+in the local buffer, and properly allocates the backing memory of the structures
+in the local gen2 command storage. The function to call follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">void</span> <span class="n">init</span> <span class="p">(</span><span class="n">void</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>This clears the local buffers, but leaves the device side buffers as they are.
+Clearing the device side buffer is not always necessary since it will be cleared
+at device start up and overwritten when you add commands regardless. Clearing of
+the local or device side buffer can be done through the individual calls following:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">void</span> <span class="n">clear_sequence</span><span class="p">(</span><span class="n">void</span><span class="p">);</span>
+<span class="n">void</span> <span class="n">clear_local_sequence</span> <span class="p">(</span><span class="n">void</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>This is to ensure there is nothing leftover in the sequence storage that we did
+not intend to use. There is not a need to utilize this every time you want to
+add something in. There is, however, a max of 10 commands. If you still want
+previous commands, but are running close on the command limit, you can always
+clear a single index of the sequence through the following:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">struct</span> <span class="n">Gen2TxCommandManagerError</span> <span class="n">clear_command_in_local_sequence</span><span class="p">(</span><span class="n">uint8_t</span> <span class="n">clear_idx</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="step-2-error-management">
+<h2>Step 2 – Error Management<a class="headerlink" href="#step-2-error-management" title="Permalink to this headline">¶</a></h2>
+<p>You will notice that a number of the functions used in the sequence manager
+return the following structure:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">struct</span> <span class="n">Gen2TxCommandManagerError</span>
+</pre></div>
+</div>
+<p>This is used to inform the user what happened within the api. The main piece to
+check is the ‘error_occurred’ field. If this boolean is set to true, you will
+want to check the error field to find what specifically happened.
+There is also a ‘current_index’ field which gets set to inform the user which
+index is being operated on if any. An example would be if you are clearing out
+a command using the previously mentioned:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">struct</span> <span class="n">Gen2TxCommandManagerError</span> <span class="n">clear_command_in_local_sequence</span><span class="p">(</span><span class="n">uint8_t</span> <span class="n">clear_idx</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>If successful, the ‘current_index’ field will be set with the index which was
+cleared. If not, the field dictates the index at which the error occurred.</p>
+</section>
+<section id="step-3-adding-commands">
+<h2>Step 3 – Adding commands<a class="headerlink" href="#step-3-adding-commands" title="Permalink to this headline">¶</a></h2>
+<p>The buffer is now ready to accept new commands. There are 2 ways to add a new
+command to the local buffer. You can call one of the following:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">struct</span> <span class="n">Gen2TxCommandManagerError</span> <span class="p">(</span><span class="o">*</span><span class="n">append_encoded_command</span><span class="p">)(</span>
+   <span class="n">const</span> <span class="n">struct</span> <span class="n">BitSpan</span><span class="o">*</span> <span class="n">tx_buffer</span><span class="p">,</span>
+   <span class="n">uint8_t</span>                <span class="n">transaction_id</span><span class="p">);</span>
+
+<span class="n">struct</span> <span class="n">Gen2TxCommandManagerError</span> <span class="p">(</span><span class="o">*</span><span class="n">encode_and_append_command</span><span class="p">)(</span>
+   <span class="n">struct</span> <span class="n">Gen2CommandSpec</span><span class="o">*</span> <span class="n">cmd_spec</span><span class="p">,</span>
+   <span class="n">uint8_t</span>                 <span class="n">transaction_id</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>This gives you the option of adding in a pre-encoded command, or adding in a
+command specifier which will be encoded for you.
+If you go the route of adding in a command spec, the API will encode for you
+then store a copy of the command specifications and the encoded command for
+ease of use.</p>
+<p>The other API function (defined in <code class="docutils literal notranslate"><span class="pre">gen2_commands.h</span></code>) is to allow
+pre-encoding of the command, thus giving the user flexibility in
+creation of commands. This will still allow you to utilize the gen2
+encoder by yourself if you need to add in something custom:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">bool</span> <span class="p">(</span><span class="o">*</span><span class="n">encode_gen2_command</span><span class="p">)(</span><span class="n">const</span> <span class="n">struct</span> <span class="n">Gen2CommandSpec</span><span class="o">*</span> <span class="n">cmd_spec</span><span class="p">,</span>
+                            <span class="n">struct</span> <span class="n">BitSpan</span><span class="o">*</span>               <span class="n">encoded_command</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>To check what has been added to the buffer at any time, you may use the API:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">struct</span> <span class="n">TxCommandInfo</span><span class="o">*</span> <span class="p">(</span><span class="o">*</span><span class="n">get_local_sequence</span><span class="p">)(</span><span class="n">void</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="step-4-impinj-reader-chip-device-side-management">
+<h2>Step 4 – Impinj Reader Chip device side management<a class="headerlink" href="#step-4-impinj-reader-chip-device-side-management" title="Permalink to this headline">¶</a></h2>
+<p>When the SDK buffer contains all the commands of interest, it is time to write
+it to the device. One uses the API command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">struct</span> <span class="n">Gen2TxCommandManagerError</span> <span class="p">(</span><span class="o">*</span><span class="n">write_sequence</span><span class="p">)(</span><span class="n">void</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>This write the sequence of commands to the device Gen2Tx register. The API also
+takes care of updating all of other registers which are used to control the
+Gen2Tx buffer. This includes the length registers, offsets, transaction ids,
+and txn controls.</p>
+<p>Registers updated:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-Gen2Offsets">Gen2Offsets</a></p></li>
+<li><p><a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-Gen2Lengths">Gen2Lengths</a></p></li>
+<li><p><a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-Gen2TransactionIds">Gen2TransactionIds</a></p></li>
+<li><p><a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-Gen2TxnControls">Gen2TxnControls</a></p></li>
+<li><p><a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-Gen2TxBuffer">Gen2TxBuffer</a></p></li>
+</ul>
+</div></blockquote>
+<p>The <a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-Gen2Offsets">Gen2Offsets</a> register tells the device
+where in the <a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-Gen2TxBuffer">Gen2TxBuffer</a> register
+the command starts. The <a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-Gen2Lengths">Gen2Lengths</a>
+register tells the device how long the command at that offset is.</p>
+<p>Note that since the SDK API commands were used to build the local buffer, the
+SDK is capable of creating the offsets and lengths itself.
+The <a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-Gen2TransactionIds">Gen2TransactionIds</a>
+are an indication to the user of which command is sent
+when. When a command is sent out of the transmitter, the event fifo packet
+notifies the user what happened along with this transaction ID.
+The <a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-Gen2TxnControls">Gen2TxnControls</a>
+control the device as to how each halted or auto access command is
+sent. These controls include what gen2 response type to expect, the rx
+length to look for, etc.  The writing of the sequence to the device,
+however, does not touch the enables for the commands. This is done
+separately, though it can be done before or after updating these
+registers.</p>
+<p>Example:</p>
+<p>For clarity on how a command is stored in the device:
+If index is enabled:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Gen2Offsets</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="n">offset_used</span>
+<span class="n">Gen2Lengths</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="n">length_used</span>
+<span class="n">command_start</span> <span class="o">=</span> <span class="n">Gen2TxBuffer</span><span class="p">[</span><span class="n">offset_used</span><span class="p">]</span>
+<span class="n">command_end</span> <span class="o">=</span> <span class="n">Gen2TxBuffer</span><span class="p">[</span><span class="n">offset_used</span> <span class="o">+</span> <span class="n">length_used</span><span class="p">]</span>
+</pre></div>
+</div>
+</section>
+<section id="step-5-enabling-commands">
+<h2>Step 5 – Enabling commands<a class="headerlink" href="#step-5-enabling-commands" title="Permalink to this headline">¶</a></h2>
+<p>With your sequence in the device, you now want to set the enable registers to
+let the device know which commands to run.
+There are three different enable registers on the device, which enable sending
+commands from the sequence under different situation. The interface allows you
+to load in 10 commands, but only enable a given subset at a time dependent on
+tag, timing, etc.
+The three different registers are:</p>
+<dl class="simple">
+<dt>Registers:</dt><dd><ul class="simple">
+<li><p><a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-Gen2SelectEnable">Gen2SelectEnable</a></p></li>
+<li><p><a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-Gen2AccessEnable">Gen2AccessEnable</a></p></li>
+<li><p><a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-Gen2AutoAccessEnable">Gen2AutoAccessEnable</a></p></li>
+</ul>
+</dd>
+</dl>
+<p>General example:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>Commands 1 through 5 are loaded into the device.</p></li>
+<li><p><a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-Gen2SelectEnable">Gen2SelectEnable</a> sets index 2 to be enabled, indicating that their second
+index in the sequence is a select command.</p></li>
+<li><p><a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-Gen2AccessEnable">Gen2AccessEnable</a> sets index 1 and  3 to be enabled to utilize during a
+halted scenario.</p></li>
+<li><p><a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-Gen2AutoAccessEnable">Gen2AutoAccessEnable</a> sets index 3 and 4 to be enabled for the auto access
+situation. This indicates that index 3 which is already used for halted, should
+also be used for auto access.</p></li>
+<li><p>The <a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-Gen2AccessEnable">Gen2AccessEnable</a> register is update to enable only index 5 since we want
+to change which command in the sequence we send. No update to the sequence needs
+to be made since the commands are pre-loaded.</p></li>
+</ol>
+</div></blockquote>
+<p>There are 3 separate functions used in updating these 3 enable registers:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">struct</span> <span class="n">Gen2TxCommandManagerError</span> <span class="p">(</span><span class="o">*</span><span class="n">write_select_enables</span><span class="p">)(</span>
+    <span class="nb">bool</span> <span class="n">const</span><span class="o">*</span> <span class="n">select_enables</span><span class="p">,</span>
+    <span class="n">uint8_t</span> <span class="n">size</span><span class="p">);</span>
+
+<span class="n">struct</span> <span class="n">Gen2TxCommandManagerError</span> <span class="p">(</span><span class="o">*</span><span class="n">write_halted_enables</span><span class="p">)(</span>
+    <span class="nb">bool</span> <span class="n">const</span><span class="o">*</span> <span class="n">access_enables</span><span class="p">,</span>
+    <span class="n">uint8_t</span> <span class="n">size</span><span class="p">);</span>
+
+<span class="n">struct</span> <span class="n">Gen2TxCommandManagerError</span> <span class="p">(</span><span class="o">*</span><span class="n">write_auto_access_enables</span><span class="p">)(</span>
+    <span class="nb">bool</span> <span class="n">const</span><span class="o">*</span> <span class="n">auto_access_enables</span><span class="p">,</span>
+    <span class="n">uint8_t</span> <span class="n">size</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>The bool pointers indicate that a user is meant to pass in an array of bools
+indicating which indices in the  sequence to enable. The max of this array is
+the the max number of commands. If you exceed this, an errors will be returned.
+If you pass a size less than this, the rest of the bits up to the max will be
+filled with 0s.</p>
+</section>
+<section id="step-6-running-commands">
+<h2>Step 6 – Running commands<a class="headerlink" href="#step-6-running-commands" title="Permalink to this headline">¶</a></h2>
+<p>With the command set up and enabled, all that’s left is to run them at the
+appropriate time. There are different ways, however, to run different commands
+in the sequence.</p>
+<section id="select">
+<h3>Select<a class="headerlink" href="#select" title="Permalink to this headline">¶</a></h3>
+<p>To run the select op, there is a call in the ops layer:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">void</span> <span class="n">send_select</span><span class="p">(</span><span class="n">void</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>This will execute the op assuming no other ops are running.  Another
+way to utilize this is by calling the <code class="docutils literal notranslate"><span class="pre">run_inventory()</span></code> function
+(defined in <code class="docutils literal notranslate"><span class="pre">ex10_inventory.h</span></code>) with the <code class="docutils literal notranslate"><span class="pre">send_selects</span></code> parameter
+passed as <code class="docutils literal notranslate"><span class="pre">true</span></code>. This will also execute the <code class="docutils literal notranslate"><span class="pre">Select</span></code> op before
+starting inventory.</p>
+</section>
+<section id="access">
+<h3>Access<a class="headerlink" href="#access" title="Permalink to this headline">¶</a></h3>
+<p>To run a command during inventory, there are two methods:</p>
+<p>1. If you are halted on a tag, you may set the ‘Go’ bit in the HaltedControl
+register. This tells the device to execute the command sequence as dictated by
+the previously set halted enables. This  ‘Go’ bit can be set from the ops layer
+command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">void</span> <span class="n">send_gen2_halted_sequence</span><span class="p">(</span><span class="n">void</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>2. The other option is through the auto access feature. If you enabled any auto
+access commands they will be sent automatically when a tag is found.</p>
+</section>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="../../_static/logo.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Gen2 Tx Command Manager Usage</a><ul>
+<li><a class="reference internal" href="#step-1-theory-of-operation">Step 1 – Theory Of Operation</a></li>
+<li><a class="reference internal" href="#step-1-setup">Step 1 – Setup</a></li>
+<li><a class="reference internal" href="#step-2-error-management">Step 2 – Error Management</a></li>
+<li><a class="reference internal" href="#step-3-adding-commands">Step 3 – Adding commands</a></li>
+<li><a class="reference internal" href="#step-4-impinj-reader-chip-device-side-management">Step 4 – Impinj Reader Chip device side management</a></li>
+<li><a class="reference internal" href="#step-5-enabling-commands">Step 5 – Enabling commands</a></li>
+<li><a class="reference internal" href="#step-6-running-commands">Step 6 – Running commands</a><ul>
+<li><a class="reference internal" href="#select">Select</a></li>
+<li><a class="reference internal" href="#access">Access</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="yk_firmware_ex10_host_c_reverse_power_detect.html"
+                        title="previous chapter">Reverse Power Threshold Detection</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="yk_firmware_ex10_host_c_api_debugging_aggregate_op_errors.html"
+                        title="next chapter">Debugging Aggregate Op Errors</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="yk_firmware_ex10_host_c_api_debugging_aggregate_op_errors.html" title="Debugging Aggregate Op Errors"
+             >next</a></li>
+        <li class="right" >
+          <a href="yk_firmware_ex10_host_c_reverse_power_detect.html" title="Reverse Power Threshold Detection"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="yk_firmware_ex10_host_c_api.html" >Impinj Reader Chip C Host SDK</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="yk_firmware_ex10_host_c_advanced_topics.html" >Advanced Topics</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Gen2 Tx Command Manager Usage</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Impinj, Inc..
+    </div>
+  </body>
+</html>

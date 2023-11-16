@@ -1,0 +1,151 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Ex10TimeHelpers &#8212; Impinj Reader Chip SDK</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinxdoc.css" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Board Initialization" href="../yk_firmware_ex10_host_c_board_initialization.html" />
+    <link rel="prev" title="Ex10Random" href="ex10_random.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../yk_firmware_ex10_host_c_board_initialization.html" title="Board Initialization"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="ex10_random.html" title="Ex10Random"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../yk_firmware_ex10_host_c_api.html" >Impinj Reader Chip C Host SDK</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="ex10_board_specific.html" accesskey="U">Board Specific Implementation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Ex10TimeHelpers</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="ex10timehelpers">
+<span id="ex10-api-host-c-api-board-ex10-time-helpers"></span><h1>Ex10TimeHelpers<a class="headerlink" href="#ex10timehelpers" title="Permalink to this headline">¶</a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">Ex10TimeHelpers</span></code> are an abstraction that the reader needs to implement
+for various ways get the current time.  This timer needs to implement
+a timer with at least millisecond accuracy.</p>
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv415Ex10TimeHelpers">
+<span id="_CPPv315Ex10TimeHelpers"></span><span id="_CPPv215Ex10TimeHelpers"></span><span id="Ex10TimeHelpers"></span><span class="target" id="struct_ex10_time_helpers"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10TimeHelpers</span></span></span><a class="headerlink" href="#_CPPv415Ex10TimeHelpers" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Helpers for working with board specific timing. </p>
+<p>This API should be used when timing is needed from the host rather than the ex10 device. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N15Ex10TimeHelpers8time_nowE">
+<span id="_CPPv3N15Ex10TimeHelpers8time_nowE"></span><span id="_CPPv2N15Ex10TimeHelpers8time_nowE"></span><span class="target" id="struct_ex10_time_helpers_1a42e24cb79e950618ad6a658ef219102a"></span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">time_now</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N15Ex10TimeHelpers8time_nowE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Grabs the current time to mark as the start of a timer. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>uint32_t The number of milliseconds elapsed since the start of the program. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N15Ex10TimeHelpers12time_elapsedE">
+<span id="_CPPv3N15Ex10TimeHelpers12time_elapsedE"></span><span id="_CPPv2N15Ex10TimeHelpers12time_elapsedE"></span><span class="target" id="struct_ex10_time_helpers_1a66abd3832874c38d19f2acaa372f3135"></span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">time_elapsed</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n"><span class="pre">start_time</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N15Ex10TimeHelpers12time_elapsedE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Returns the time elapsed since the start_time parameter. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>uint32_t The number of milliseconds elapsed since start_time. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N15Ex10TimeHelpers12busy_wait_msE">
+<span id="_CPPv3N15Ex10TimeHelpers12busy_wait_msE"></span><span id="_CPPv2N15Ex10TimeHelpers12busy_wait_msE"></span><span class="target" id="struct_ex10_time_helpers_1ad939cd2c4616401541d47157c92c7133"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">busy_wait_ms</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n"><span class="pre">msec_to_wait</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N15Ex10TimeHelpers12busy_wait_msE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Wait for a specific number of milliseconds. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Param msec_to_wait</dt>
+<dd class="field-odd"><p>The number of milliseconds to wait. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N15Ex10TimeHelpers7wait_msE">
+<span id="_CPPv3N15Ex10TimeHelpers7wait_msE"></span><span id="_CPPv2N15Ex10TimeHelpers7wait_msE"></span><span class="target" id="struct_ex10_time_helpers_1a7327a84a5060cf2d2ecdca1c17980dd0"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">wait_ms</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n"><span class="pre">msec_to_wait</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N15Ex10TimeHelpers7wait_msE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Suspends execution for the specified number of milliseconds. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Param msec_to_wait</dt>
+<dd class="field-odd"><p>The number of milliseconds to wait, will assert if &gt; 1000ms. </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../../../_static/logo.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="ex10_random.html"
+                        title="previous chapter">Ex10Random</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../yk_firmware_ex10_host_c_board_initialization.html"
+                        title="next chapter">Board Initialization</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../yk_firmware_ex10_host_c_board_initialization.html" title="Board Initialization"
+             >next</a></li>
+        <li class="right" >
+          <a href="ex10_random.html" title="Ex10Random"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../yk_firmware_ex10_host_c_api.html" >Impinj Reader Chip C Host SDK</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="ex10_board_specific.html" >Board Specific Implementation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Ex10TimeHelpers</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Impinj, Inc..
+    </div>
+  </body>
+</html>

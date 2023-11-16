@@ -1,0 +1,223 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Impinj Reader Chip SDK Overview &#8212; Impinj Reader Chip SDK</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinxdoc.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Impinj Reader Chip C Host SDK" href="yk_firmware_ex10_host_c_api.html" />
+    <link rel="prev" title="Impinj Reader Chip SDK Release Notes" href="yk_firmware_ex10_release_notes.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="yk_firmware_ex10_host_c_api.html" title="Impinj Reader Chip C Host SDK"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="yk_firmware_ex10_release_notes.html" title="Impinj Reader Chip SDK Release Notes"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Impinj Reader Chip SDK</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Impinj Reader Chip SDK Overview</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="impinj-reader-chip-sdk-overview">
+<span id="ex10-api-overview"></span><h1>Impinj Reader Chip SDK Overview<a class="headerlink" href="#impinj-reader-chip-sdk-overview" title="Permalink to this headline">¶</a></h1>
+<p>The next-generation of Impinj RAIN RFID reader chips
+– Impinj E910, E710, E510 and E310 (“Impinj reader chips”) –
+have an embedded ARM Cortex-M0+ microcontroller that runs RAIN
+application specific firmware provided by Impinj.
+The firmware implements the behavior necessary to operate the RAIN RFID radio, and exposes an interface for communication with a host device.
+The Impinj reader chips embedded microcontroller can only run Impinj provided firmware images and will not execute any other application code.
+The Impinj reader chip exposes a firmware update interface (bootloader) so that newer versions of the firmware can be installed to add new features and bug fixes.
+In addition to the RAIN RFID behavior, the firmware also implements test and calibration functionality, and allows for the non-volatile
+storage of calibration data, as well as stored configurations for RAIN behavior.</p>
+<p>Impinj provides an example implementation of a host library (“Impinj reader chip SDK”)
+designed to communicate with the reader chip. The SDK contains the C host library
+source as well as examples of Gen2 command implementations.
+This document explains how to use the provided host library or reimplement it to
+suit the needs of a custom design.</p>
+<p>The Impinj reader chip SDK source libraries include details on the
+<a class="reference internal" href="yk_firmware_ex10_api_wireline.html#ex10-api-wireline"><span class="std std-ref">wireline communication protocol</span></a>
+for communicating to the Impinj reader chip via the
+<a class="reference internal" href="yk_firmware_ex10_api_wireline.html#ex10-api-wireline-spi"><span class="std std-ref">SPI physical interface</span></a>
+(“Impinj reader chip wireline interface”), as well as a high-level software interface
+<a class="reference internal" href="#ex10-api-host-sdk-overview"><span class="std std-ref">Impinj Reader Chip SDK Overview</span></a>.
+The provided examples utilize the Impinj reader chip host API, on a Raspberry Pi host,
+as part of the Impinj E710 Development Kit. The C host library can be easily ported to
+other hosts. For more information on getting started with the examples provided
+with the Impinj reader chip SDK, please see the
+<a class="reference external" href="https://support.impinj.com/hc/en-us/articles/360011416140">Impinj E710 Development Board User’s Guide</a>
+.</p>
+<section id="host-interaction-model">
+<h2>Host Interaction Model<a class="headerlink" href="#host-interaction-model" title="Permalink to this headline">¶</a></h2>
+<p>The Impinj reader chip and its firmware image implement the lower MAC (LMAC) of a
+RAIN RFID radio. The host is thus expected to implement the upper MAC of the
+RAIN RFID radio, writing configuration to and reading data from the Impinj
+reader chip to implement the desired radio behavior. Host and Impinj reader chip MAC
+responsibilities are summarized below.
+In future versions, additional upper MAC capabilities may be added to the
+Impinj reader chip firmware.</p>
+<p>Host processor (upper MAC) responsibilities:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Closed loop RF front end configuration (PA bias, gain control)</p></li>
+<li><p>RF front end GPIO configuration (antenna, SAW filter selection, PA power gating)</p></li>
+<li><p>Frequency table channel hopping control</p></li>
+<li><p>Inventory parameter configuration (RF mode, Q value, etc.)</p></li>
+<li><p>EventFifo reading and processing</p></li>
+<li><p>Halted radio control</p></li>
+<li><p>Aggregate operation implementation</p></li>
+</ul>
+</div></blockquote>
+<p>Impinj reader chip (lower MAC) responsibilities:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Gen2 operation sequencing (query, ack, etc)</p></li>
+<li><p>Gen2 transmit bit-stream encoding</p></li>
+<li><p>Transmit waveform generation</p></li>
+<li><p>Receive waveform decoding</p></li>
+<li><p>Carrier frequency generation (host configured)</p></li>
+<li><p>RF circuit DAC output and ADC input functionality (host configured)</p></li>
+<li><p>GPIO functionality (host configured)</p></li>
+<li><p>Q variation algorithm</p></li>
+<li><p>Event result storage in FIFO (tag reads, Tx power ramp, etc)</p></li>
+<li><p>Halt on singulated tags</p></li>
+<li><p>Optional regulatory timers (host configured)</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="ex10-api-host-sdk-overview">
+<span id="id1"></span><h2>Impinj Reader Chip SDK Overview<a class="headerlink" href="#ex10-api-host-sdk-overview" title="Permalink to this headline">¶</a></h2>
+<p>The Impinj reader chip comes with a C source library and examples for the reader host device.</p>
+<p>This latest release of the SDK has some major architectural upgrades, allowing a more tailored and optimized developer experience.
+The new architecture provides multiple levels of increasing complexity that the host application developer can choose from when designing a custom host application.
+More rapid development of an application can be achieved by leveraging the supplied ‘use cases’ which provide behavior patterns to build off for various common RFID reader functionality.
+However, lower levels of abstraction for fine control, down to the atomic operations at the modem level are accessible via layers such as the Ex10Ops layer.</p>
+<p>A basic view of these layers is shown in <a class="reference internal" href="#host-sdk-5"><span class="std std-numref">Fig. 1</span></a>.</p>
+<figure class="align-default" id="id2">
+<span id="host-sdk-5"></span><img alt="../../_images/ex10_host_c_core_bd_v2.svg" src="../../_images/ex10_host_c_core_bd_v2.svg" /><figcaption>
+<p><span class="caption-number">Fig. 1 </span><span class="caption-text">Host SDK Overview</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+<p>‘Use cases’ layer provides common high level RFID reader behavior and functionality for a host developer to build off.
+The ‘Use cases’ layer can pick and choose ‘Reader Primitives’ which provide a common toolbox of modules to provide such things as: Power control, Fifo events, calibration, region setting, and inventory.
+The ‘Reader Primitives’ are abstract C modules and provide potential to minimize code size compared to past release examples.
+Lower levels of abstraction for reader operations (Ex10Ops) and protocol layer (Ex10Protocol) access have been combined and is referred to as ‘Ex10 core’.
+While only one ‘use case’ can be loaded at once, it’s possible to dynamically switch multiple modules during run time.</p>
+<p>Previous versions of the SDK included a plethora of examples based on the ‘Ex10_Reader’ interface and helpers.
+We have continued to provide these for backward compatibility but it should be noted that these will be removed in a future release of the SDK.
+While we have refactored and streamlined the code, minimum changes have been made at the example level to maintain familiarity.
+Thus making it trivial for customers that have adopted, and modified previous examples, to upgrade to the latest SDK.</p>
+<p>We have provided updated ‘use case’ versions for many of the examples that were previously provided in past SDK releases.</p>
+<section id="impinj-reader-chip-c-host-sdk-layers-overview">
+<h3>Impinj Reader Chip C Host SDK Layers Overview<a class="headerlink" href="#impinj-reader-chip-c-host-sdk-layers-overview" title="Permalink to this headline">¶</a></h3>
+<p>The <a class="reference internal" href="yk_firmware_ex10_host_c_api.html#ex10-api-host-c-sdk"><span class="std std-ref">Impinj Reader Chip C Host SDK</span></a> provides a high-level
+interface for basic RAIN RFID functionality. It consists of three general layers, with each
+successive layer implementing lower level functionality than the layer above it.
+The layers include: ‘Use cases’, ‘Reader primitives’, and the ‘Ex10 Core’.
+The ‘Ex10 Core’ consists of the ‘Ex10Ops’ and the ‘Ex10Protocol’ at the bottom.
+The ‘Ex10Protocol’ layer interfaces directly with the Impinj reader chip wireline as shown in
+<a class="reference internal" href="#ex10-host-c-api-bd"><span class="std std-numref">Fig. 2</span></a> below.</p>
+<figure class="align-default" id="id3">
+<span id="ex10-host-c-api-bd"></span><img alt="../../_images/ex10_host_c_sdk_bd_v2.svg" src="../../_images/ex10_host_c_sdk_bd_v2.svg" /><figcaption>
+<p><span class="caption-number">Fig. 2 </span><span class="caption-text">Impinj Reader Chip C Host SDK Block Diagram</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+<p>The host library is distributed as a toolbox that is intended to be used to build a reader application on the host.
+The examples distributed with the SDK demonstrate how to assemble the tools to implement a reader on the E710 Development Board (AKA R807 reference design).
+Because the host library is distributed as source, and the wireline specification is provided, host application developers can use the SDK examples as is,
+or modify the SDK at any layer to suit their needs.</p>
+<p>A board library is included and can be modified easily to work with different hosts such as bare metal or RTOS based designs on microcontrollers or application processors.</p>
+</section>
+<section id="impinj-reader-chip-wireline-api-overview">
+<h3>Impinj Reader Chip Wireline API Overview<a class="headerlink" href="#impinj-reader-chip-wireline-api-overview" title="Permalink to this headline">¶</a></h3>
+<p>The <a class="reference internal" href="yk_firmware_ex10_api.html#ex10-api-top"><span class="std std-ref">Impinj Reader Chip Wireline API</span></a> provides a low level
+interface that enables customizations in the implementation of the upper MAC.
+<a class="reference internal" href="#ex10-wireline-bd"><span class="std std-numref">Fig. 3</span></a> shows a block diagram representation of the various
+components that make up the Impinj reader chip wireline API.</p>
+<figure class="align-default" id="id4">
+<span id="ex10-wireline-bd"></span><img alt="../../_images/ex10_wireline_bd.svg" src="../../_images/ex10_wireline_bd.svg" /><figcaption>
+<p><span class="caption-number">Fig. 3 </span><span class="caption-text">Impinj Wireline API Block Diagram</span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+</section>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="../../_static/logo.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Impinj Reader Chip SDK Overview</a><ul>
+<li><a class="reference internal" href="#host-interaction-model">Host Interaction Model</a></li>
+<li><a class="reference internal" href="#ex10-api-host-sdk-overview">Impinj Reader Chip SDK Overview</a><ul>
+<li><a class="reference internal" href="#impinj-reader-chip-c-host-sdk-layers-overview">Impinj Reader Chip C Host SDK Layers Overview</a></li>
+<li><a class="reference internal" href="#impinj-reader-chip-wireline-api-overview">Impinj Reader Chip Wireline API Overview</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="yk_firmware_ex10_release_notes.html"
+                        title="previous chapter">Impinj Reader Chip SDK Release Notes</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="yk_firmware_ex10_host_c_api.html"
+                        title="next chapter">Impinj Reader Chip C Host SDK</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="yk_firmware_ex10_host_c_api.html" title="Impinj Reader Chip C Host SDK"
+             >next</a></li>
+        <li class="right" >
+          <a href="yk_firmware_ex10_release_notes.html" title="Impinj Reader Chip SDK Release Notes"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Impinj Reader Chip SDK</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Impinj Reader Chip SDK Overview</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Impinj, Inc..
+    </div>
+  </body>
+</html>

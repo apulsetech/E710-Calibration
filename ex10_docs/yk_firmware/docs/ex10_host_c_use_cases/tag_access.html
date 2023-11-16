@@ -1,0 +1,230 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Ex10 Tag Access Use Case &#8212; Impinj Reader Chip SDK</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinxdoc.css" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Ex10 Reader Primitives" href="../ex10_host_c_reader_primitives/reader_primitives_layer.html" />
+    <link rel="prev" title="Ex10 Inventory Sequence Use Case" href="inventory_sequence.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../ex10_host_c_reader_primitives/reader_primitives_layer.html" title="Ex10 Reader Primitives"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="inventory_sequence.html" title="Ex10 Inventory Sequence Use Case"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../yk_firmware_ex10_host_c_api.html" >Impinj Reader Chip C Host SDK</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../yk_firmware_ex10_host_c_api_layers.html" >API Layers</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="use_case_layer.html" accesskey="U">Ex10 Use Case Layers</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Ex10 Tag Access Use Case</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="ex10-tag-access-use-case">
+<span id="ex10-api-host-c-api-use-case-tag-access"></span><h1>Ex10 Tag Access Use Case<a class="headerlink" href="#ex10-tag-access-use-case" title="Permalink to this headline">¶</a></h1>
+<p>This <code class="docutils literal notranslate"><span class="pre">Ex10TagAccessUseCase</span></code> allows the user application to halt on singulated
+tags and interact with those tags in the halted state.  This
+use case will call the registered callback when it has singulated a tag and
+has the tag in the halted state.  The callback interacts with the tag in the
+halted state with a sequence of access commands and returns.  The use case
+will continue the inventory sequence until it is able to singulate another
+tag, and call the callback again.  This use case will only run
+one full inventory round and return to the blocking context.  If the
+application wants to run inventory multiple times, it needs to implement that logic.
+The use case will perform regulatory hopping automatically, but when the firmware
+determines that it has inventoried all the tags present, it will end the inventory.
+The use case monitors the event FIFO for inventory done packets to decide when to perform
+regulatory hopping.  While the firmware is halted on a singulated tag the use case will also monitor
+the event FIFO for a regulatory ramp down event, and if it receives one, it will return a result indicating that the tag has been “lost”.</p>
+<p>The tag access callback is a much more sophisticated callback than the tag read
+callbacks above. This callback is intended to interact with the Impinj Reader Chip
+firmware when it is halted on a tag. This means that it needs to setup the TX Buffer for the
+access commands, and then launch them.  It then needs to monitor the Event FIFO
+for the <code class="docutils literal notranslate"><span class="pre">Gen2Transaction</span></code> packets that will come back from the Impinj Reader Chip
+when the access commands have been completed.  It is also responsible for removing
+the packets from the event FIFO stream itself, including the <code class="docutils literal notranslate"><span class="pre">Halted</span></code> packet that
+comes every time the Impinj Reader Chip firmware returns to the halted state.  Then when the callback
+returns, it specifies if the firmware should ACK or NAK the tag when continuing
+to the next slot.  Note that the Tx Buffer can be setup by the application before
+inventory is started if the application knows what access commands to send, and then
+just send the commands in the callback and retrieve the results.  The purpose of the
+call diagram below is to show that the callback function can interact with the
+Impinj Reader Chip while in the callback.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">Ex10TagAccessUseCase</span></code> can also be used with the auto-access commands if they
+have been setup by the application.  In this case the callback needs to know
+what to expect out of the event FIFO and process the events properly, then return.
+Note that if the auto-access command is setup to automatically continue to the
+next slot without halting, the ACK or NAK return code of the halted callback is ignored.</p>
+<p>In some cases where the Impinj Reader Chip firmware has made a decision on what to do, the return code
+of the callback will be ignored.  For example if the tag was successfully
+singulated but the ReqRN command to put the tag into the halted state failed CRC,
+the callback will be called with the <code class="docutils literal notranslate"><span class="pre">TagRead</span></code> packet, but the <code class="docutils literal notranslate"><span class="pre">halted_on_tag</span></code>
+field will not be set, and the firmware will have already continued on to the next
+slot.</p>
+<figure class="align-default">
+<img alt="../../../_images/tag_access_use_case_example.png" src="../../../_images/tag_access_use_case_example.png" />
+</figure>
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv420Ex10TagAccessUseCase">
+<span id="_CPPv320Ex10TagAccessUseCase"></span><span id="_CPPv220Ex10TagAccessUseCase"></span><span id="Ex10TagAccessUseCase"></span><span class="target" id="struct_ex10_tag_access_use_case"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10TagAccessUseCase</span></span></span><a class="headerlink" href="#_CPPv420Ex10TagAccessUseCase" title="Permalink to this definition">¶</a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N20Ex10TagAccessUseCase4initE">
+<span id="_CPPv3N20Ex10TagAccessUseCase4initE"></span><span id="_CPPv2N20Ex10TagAccessUseCase4initE"></span><span class="target" id="struct_ex10_tag_access_use_case_1accf3a5e90c61c8ae26a57546c722a7e1"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">init</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N20Ex10TagAccessUseCase4initE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Initialize the <a class="reference internal" href="#struct_ex10_tag_access_use_case"><span class="std std-ref">Ex10TagAccessUseCase</span></a> object. </p>
+<p>This must be called after the Ex10 core has been initialized </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N20Ex10TagAccessUseCase6deinitE">
+<span id="_CPPv3N20Ex10TagAccessUseCase6deinitE"></span><span id="_CPPv2N20Ex10TagAccessUseCase6deinitE"></span><span class="target" id="struct_ex10_tag_access_use_case_1a2fc7b5403a65c7888e187295fc91eb55"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">deinit</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N20Ex10TagAccessUseCase6deinitE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Release any resources used by the <a class="reference internal" href="#struct_ex10_tag_access_use_case"><span class="std std-ref">Ex10TagAccessUseCase</span></a> object. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>struct <a class="reference internal" href="../ex10_host_c_support/ex10_result.html#struct_ex10_result"><span class="std std-ref">Ex10Result</span></a> Indicates whether the function call passed or failed. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N20Ex10TagAccessUseCase24register_halted_callbackE">
+<span id="_CPPv3N20Ex10TagAccessUseCase24register_halted_callbackE"></span><span id="_CPPv2N20Ex10TagAccessUseCase24register_halted_callbackE"></span><span class="target" id="struct_ex10_tag_access_use_case_1a934681e2cdee121069bd4ee7e83bc149"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">register_halted_callback</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">tag_halted_callback</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../ex10_host_c_support/event_parser.html#_CPPv415EventFifoPacket" title="EventFifoPacket"><span class="n"><span class="pre">EventFifoPacket</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="n"><span class="pre">HaltedCallbackResult</span></span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N20Ex10TagAccessUseCase24register_halted_callbackE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Register a callback that will be called with the tag read reports and will indicate if the LMAC has successfully halted on the tag. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Param tag_halted_callback</dt>
+<dd class="field-odd"><p>Notify the client when a tag is singulated. The corresponding <a class="reference internal" href="../yk_firmware_ex10_host_c_other_types.html#struct_tag_read"><span class="std std-ref">TagRead</span></a> packet also indicates if theLMAC successfully halted on the tag. When this function returns, the LMAC will continue the inventory round to the next tag. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N20Ex10TagAccessUseCase13run_inventoryE">
+<span id="_CPPv3N20Ex10TagAccessUseCase13run_inventoryE"></span><span id="_CPPv2N20Ex10TagAccessUseCase13run_inventoryE"></span><span class="target" id="struct_ex10_tag_access_use_case_1aee55aa95ee743ff13d9f7aa6a60e39f5"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">run_inventory</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="n"><span class="pre">Ex10TagAccessUseCaseParameters</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N20Ex10TagAccessUseCase13run_inventoryE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Run an inventory round and halt on all singulated tags. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Param params</dt>
+<dd class="field-odd"><p>a pointer to the Ex10TagAccessUseCaseParameters structure. </p>
+</dd>
+<dt class="field-even">Return</dt>
+<dd class="field-even"><p>Info about any encountered errors. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N20Ex10TagAccessUseCase23execute_access_commandsE">
+<span id="_CPPv3N20Ex10TagAccessUseCase23execute_access_commandsE"></span><span id="_CPPv2N20Ex10TagAccessUseCase23execute_access_commandsE"></span><span class="target" id="struct_ex10_tag_access_use_case_1afcedbe95a7e14d34c59e197fa93a2fb3"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="n"><span class="pre">TagAccessResult</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">execute_access_commands</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N20Ex10TagAccessUseCase23execute_access_commandsE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Execute Access commands that are enabled. </p>
+<p>Should only be called from the halted callback that was registered below. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N20Ex10TagAccessUseCase15get_fifo_packetE">
+<span id="_CPPv3N20Ex10TagAccessUseCase15get_fifo_packetE"></span><span id="_CPPv2N20Ex10TagAccessUseCase15get_fifo_packetE"></span><span class="target" id="struct_ex10_tag_access_use_case_1ae6179c4ce7278cce803061b67b6030dc"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../ex10_host_c_support/event_parser.html#_CPPv415EventFifoPacket" title="EventFifoPacket"><span class="n"><span class="pre">EventFifoPacket</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_fifo_packet</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N20Ex10TagAccessUseCase15get_fifo_packetE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>A helper function to retrieve the access packet from the event fifo packet. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>This function returns a copy of the access packet received (it is a copy so the buffer can be released) </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N20Ex10TagAccessUseCase18remove_fifo_packetE">
+<span id="_CPPv3N20Ex10TagAccessUseCase18remove_fifo_packetE"></span><span id="_CPPv2N20Ex10TagAccessUseCase18remove_fifo_packetE"></span><span class="target" id="struct_ex10_tag_access_use_case_1a287bef5183731c82f5cdade43d7b170f"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">remove_fifo_packet</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N20Ex10TagAccessUseCase18remove_fifo_packetE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>A helper function to remove packets from the event fifo queue. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N20Ex10TagAccessUseCase20remove_halted_packetE">
+<span id="_CPPv3N20Ex10TagAccessUseCase20remove_halted_packetE"></span><span id="_CPPv2N20Ex10TagAccessUseCase20remove_halted_packetE"></span><span class="target" id="struct_ex10_tag_access_use_case_1a3a27440a129a7fdea0dcb261b65c6b9d"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">remove_halted_packet</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N20Ex10TagAccessUseCase20remove_halted_packetE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>This function verifies that the received Event FIFO packet type is ‘<a class="reference internal" href="../yk_firmware_ex10_host_c_other_types.html#struct_halted"><span class="std std-ref">Halted</span></a>’ and if confirmed, removes the packet data. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns true</dt>
+<dd class="field-odd"><p>Received and removed an ‘<a class="reference internal" href="../yk_firmware_ex10_host_c_other_types.html#struct_halted"><span class="std std-ref">Halted</span></a>’ packet. </p>
+</dd>
+<dt class="field-even">Returns false</dt>
+<dd class="field-even"><p>Expected Gen2 packet was not received or the received response was not as expected. </p>
+</dd>
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>bool Indicates whether removed EventFifo packet is ‘<a class="reference internal" href="../yk_firmware_ex10_host_c_other_types.html#struct_halted"><span class="std std-ref">Halted</span></a>’ type. </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../../../_static/logo.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="inventory_sequence.html"
+                        title="previous chapter">Ex10 Inventory Sequence Use Case</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../ex10_host_c_reader_primitives/reader_primitives_layer.html"
+                        title="next chapter">Ex10 Reader Primitives</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../ex10_host_c_reader_primitives/reader_primitives_layer.html" title="Ex10 Reader Primitives"
+             >next</a></li>
+        <li class="right" >
+          <a href="inventory_sequence.html" title="Ex10 Inventory Sequence Use Case"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../yk_firmware_ex10_host_c_api.html" >Impinj Reader Chip C Host SDK</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../yk_firmware_ex10_host_c_api_layers.html" >API Layers</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="use_case_layer.html" >Ex10 Use Case Layers</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Ex10 Tag Access Use Case</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Impinj, Inc..
+    </div>
+  </body>
+</html>

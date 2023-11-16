@@ -1,0 +1,210 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Debugging Aggregate Op Errors &#8212; Impinj Reader Chip SDK</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinxdoc.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Listen Before Talk General Usage" href="yk_firmware_ex10_host_c_lbt_usage.html" />
+    <link rel="prev" title="Gen2 Tx Command Manager Usage" href="yk_firmware_ex10_host_c_gen2_command_manager_usage.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="yk_firmware_ex10_host_c_lbt_usage.html" title="Listen Before Talk General Usage"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="yk_firmware_ex10_host_c_gen2_command_manager_usage.html" title="Gen2 Tx Command Manager Usage"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="yk_firmware_ex10_host_c_api.html" >Impinj Reader Chip C Host SDK</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="yk_firmware_ex10_host_c_advanced_topics.html" accesskey="U">Advanced Topics</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Debugging Aggregate Op Errors</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="debugging-aggregate-op-errors">
+<span id="id1"></span><h1>Debugging Aggregate Op Errors<a class="headerlink" href="#debugging-aggregate-op-errors" title="Permalink to this headline">¶</a></h1>
+<section id="aggregate-op-errors">
+<h2>Aggregate Op Errors<a class="headerlink" href="#aggregate-op-errors" title="Permalink to this headline">¶</a></h2>
+<p>When the reader chip experiences an error in any op, it sets the error in
+the application register
+<a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-OpsStatus">OpsStatus</a>.
+When an error occurs with the aggregate op, this is the first place to look.</p>
+<section id="debugging-from-ops-status">
+<h3>Debugging from Ops Status<a class="headerlink" href="#debugging-from-ops-status" title="Permalink to this headline">¶</a></h3>
+<p>You should see that the <code class="docutils literal notranslate"><span class="pre">OpId</span></code> field in the register corresponds to the
+aggregate op and hopefully the <code class="docutils literal notranslate"><span class="pre">Busy</span></code> field is 0. This means there is not an
+op currently running. If this is still set, it means one of the following:</p>
+<ul class="simple">
+<li><p>A new op was started after the error</p></li>
+<li><p>The previous op has not yet completed (if an error boiled up, the op should be
+done. This would signal a larger issue such as a hang or an error propagation
+issue.)</p></li>
+</ul>
+<p>If using the Ex10 stack, this analysis is done for you in the protocol layer
+when you call <code class="docutils literal notranslate"><span class="pre">wait_op_completion()</span></code> or <code class="docutils literal notranslate"><span class="pre">wait_op_completion_with_timeout()</span></code>.
+These functions will wait on the <code class="docutils literal notranslate"><span class="pre">Busy</span></code> field to be 0 or time out if there is
+a hang. The user will then get a console message stating the issue in op run.
+This printout will contain the op which was running, if there was a timeout,
+if there was a command error, or if the op returned an error.</p>
+<p>Command errors: If you see a command error in the printout, this means that
+the Ex10 interface experienced an error at the commands layer. This can happen
+due to malformed commands or issues in the SPI line. The <code class="docutils literal notranslate"><span class="pre">command_error</span></code> field
+of <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">OpCompletionStatus</span></code> can be checked against the <code class="docutils literal notranslate"><span class="pre">ResponseCode</span></code> enum.</p>
+<p>Op Errors: The op errors should be cross referenced with the <code class="docutils literal notranslate"><span class="pre">OpsStatus</span></code> enum.
+This enum will give a better idea of what happened in the op. More info on each
+of these can be found in the OpErrors section of the documentation.
+The ones we are specifically interested in for this debug are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ErrorAggregateBufferOverflow</span></code>: This tells us that in creating an aggregate op,
+we have run over the bounds of the op. If you are using the aggregate op builder
+layer, this should not happen (pre-checking is done in the SDK). If the buffer is created without the use of the aggregate op helpers, care should be taken to
+ensure the op does not run over bounds.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ErrorAggregateInnerOpError</span></code>: This lets us know that an error happened when running
+an op which was placed in the aggregate op buffer. This means that the aggregate
+op attempted to run a sub-op, but an error was returned from that sub op.
+When this happens, this inner op error is returned and the error from the sub-op
+is placed into the FIFO.</p></li>
+</ul>
+<p>note:: Errors in sub-ops of the aggregate op get placed into the
+<a class="reference external" href="yk_firmware_ex10_api_event_packets.html#ex10_api_event_packet_aggregate_op_summary">Aggregate Op Summary</a> FIFO message.</p>
+</section>
+<section id="debugging-from-the-aggregate-op-summary">
+<h3>Debugging from the Aggregate Op Summary<a class="headerlink" href="#debugging-from-the-aggregate-op-summary" title="Permalink to this headline">¶</a></h3>
+<p>We begin looking into the fields of the <a class="reference external" href="yk_firmware_ex10_api_event_packets.html#ex10_api_event_packet_aggregate_op_summary">Aggregate Op Summary</a>.
+The first two fields to look at are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">last_inner_op_run</span></code>: This tells us what the last op run was. It is set before the
+op is run, thus if there are any issues in running the op, this will be set to
+the appropriate op causing issues.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">last_inner_op_error</span></code>: This will give the error reported by the op causing issues.</p></li>
+</ul>
+<p>An example of using these two together would be:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">last_inner_op_run</span></code> = <code class="docutils literal notranslate"><span class="pre">OpId.RxRunSjcOp</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">last_inner_op_error</span></code> = <code class="docutils literal notranslate"><span class="pre">OpsStatus.ErrorSjcResidueThresholdExceeded</span></code></p></li>
+</ul>
+<p>Thus letting us know that an error occurred in running SJC, and what that error is.</p>
+<p>In a similar fashion, we can analyze the two fields pertaining to Ex10 command errors
+rather than the op errors.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">last_inner_command_run</span></code>: This tells us what the last Ex10 command to run was.
+It is set before the command is run, thus if there are any issues in running the
+command, this will be set to the appropriate command causing issues. This defaults
+to 0x00 if no commands are run.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">last_inner_command_error</span></code>: This will give the error reported by the command
+which was causing issues.</p></li>
+</ul>
+<p>An example of using these two together would be:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">last_inner_command_run</span></code> = <code class="docutils literal notranslate"><span class="pre">CommandCode.CommandWrite</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">last_inner_command_error</span></code> = <code class="docutils literal notranslate"><span class="pre">ResponseCode.CommandMalformed</span></code></p></li>
+</ul>
+<p>Thus letting us know that a command write failed due to a malformed command in the
+aggregate op buffer. The final index dictated by the FIFO will show the index of the
+command.</p>
+<p>The above information is printed out for the user if using the ex10_helpers
+function <code class="docutils literal notranslate"><span class="pre">print_aggregate_op_errors()</span></code>. This function takes the aggregate op summary
+as an argument, thus you must first retrieve it from the FIFO. This functionality is
+also accessed using the helpers layer <code class="docutils literal notranslate"><span class="pre">discard_packets()</span></code> function and passing in
+true for the <code class="docutils literal notranslate"><span class="pre">debug_aggregate_op</span></code> argument.</p>
+<p>This helper function also prints out other useful information.
+<code class="docutils literal notranslate"><span class="pre">op_run_count</span></code>: Lets us know how many ops ran total in the aggregate op. This
+is useful if running the same sub-op multiple times in the aggregate op, thus
+letting you know which exact call caused the issue.</p>
+<p>In redundant fashion, this information is also given through the
+<code class="docutils literal notranslate"><span class="pre">final_buffer_byte_index</span></code> field. This field tells the user where the aggregate
+op stopped parsing, and thus what the final thing to run was. The helper function
+understands how to parse the buffer, so it will do the following:</p>
+<ol class="arabic simple">
+<li><p>Read the buffer from the device to have a copy of what was run.</p></li>
+<li><p>Look into the buffer at the <code class="docutils literal notranslate"><span class="pre">final_buffer_byte_index</span></code> to see what command
+it corresponds to. This will tell the user exactly what command was the final
+command run as well as all configuration fields used in the command.</p></li>
+<li><p>Parses and prints the entirety of the aggregate op in the form of instructions
+so the user can see all the instructions inserted in the buffer. Note that if
+there is a corrupt command/buffer, this will show where the corruption is
+happening.</p></li>
+</ol>
+</section>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="../../_static/logo.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Debugging Aggregate Op Errors</a><ul>
+<li><a class="reference internal" href="#aggregate-op-errors">Aggregate Op Errors</a><ul>
+<li><a class="reference internal" href="#debugging-from-ops-status">Debugging from Ops Status</a></li>
+<li><a class="reference internal" href="#debugging-from-the-aggregate-op-summary">Debugging from the Aggregate Op Summary</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="yk_firmware_ex10_host_c_gen2_command_manager_usage.html"
+                        title="previous chapter">Gen2 Tx Command Manager Usage</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="yk_firmware_ex10_host_c_lbt_usage.html"
+                        title="next chapter">Listen Before Talk General Usage</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="yk_firmware_ex10_host_c_lbt_usage.html" title="Listen Before Talk General Usage"
+             >next</a></li>
+        <li class="right" >
+          <a href="yk_firmware_ex10_host_c_gen2_command_manager_usage.html" title="Gen2 Tx Command Manager Usage"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="yk_firmware_ex10_host_c_api.html" >Impinj Reader Chip C Host SDK</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="yk_firmware_ex10_host_c_advanced_topics.html" >Advanced Topics</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Debugging Aggregate Op Errors</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Impinj, Inc..
+    </div>
+  </body>
+</html>

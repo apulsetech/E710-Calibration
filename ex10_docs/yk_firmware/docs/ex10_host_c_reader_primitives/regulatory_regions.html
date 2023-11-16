@@ -1,0 +1,942 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Regulatory Regions Structures and Interfaces &#8212; Impinj Reader Chip SDK</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinxdoc.css" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Ex10Calibration" href="calibration.html" />
+    <link rel="prev" title="Ex10EventFifoQueue" href="event_fifo_queue.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="calibration.html" title="Ex10Calibration"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="event_fifo_queue.html" title="Ex10EventFifoQueue"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../yk_firmware_ex10_host_c_api.html" >Impinj Reader Chip C Host SDK</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../yk_firmware_ex10_host_c_api_layers.html" >API Layers</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="reader_primitives_layer.html" accesskey="U">Ex10 Reader Primitives</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Regulatory Regions Structures and Interfaces</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="regulatory-regions-structures-and-interfaces">
+<span id="ex10-api-host-c-api-reader-primitives-regions"></span><h1>Regulatory Regions Structures and Interfaces<a class="headerlink" href="#regulatory-regions-structures-and-interfaces" title="Permalink to this headline">¶</a></h1>
+<p>See <a class="reference internal" href="../yk_firmware_ex10_host_c_regions_usage.html#ex10-api-host-c-regions-usage"><span class="std std-ref">Regions Usage</span></a> in the advanced topics
+for usage specific descriptions.</p>
+<span class="target" id="ex10-api-host-c-api-ex10-region-regulatory"></span><dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv420Ex10RegionRegulatory">
+<span id="_CPPv320Ex10RegionRegulatory"></span><span id="_CPPv220Ex10RegionRegulatory"></span><span id="Ex10RegionRegulatory"></span><span class="target" id="struct_ex10_region_regulatory"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10RegionRegulatory</span></span></span><a class="headerlink" href="#_CPPv420Ex10RegionRegulatory" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Interface to use regulatory information from all regions. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N20Ex10RegionRegulatory10set_regionE">
+<span id="_CPPv3N20Ex10RegionRegulatory10set_regionE"></span><span id="_CPPv2N20Ex10RegionRegulatory10set_regionE"></span><span class="target" id="struct_ex10_region_regulatory_1ae12bb6bd8639a4cf07bda7305253b2e5"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">set_region</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv410Ex10Region" title="Ex10Region"><span class="n"><span class="pre">Ex10Region</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">region_to_use</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N20Ex10RegionRegulatory10set_regionE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Sets the current region information. </p>
+<p>This allows the user to override the region with their own custom values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Param region_to_use</dt>
+<dd class="field-odd"><p>The region info to assign to the regulatory region. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N20Ex10RegionRegulatory10get_regionE">
+<span id="_CPPv3N20Ex10RegionRegulatory10get_regionE"></span><span id="_CPPv2N20Ex10RegionRegulatory10get_regionE"></span><span class="target" id="struct_ex10_region_regulatory_1ad455ea4b45e44681eaad8721156f0adc"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv410Ex10Region" title="Ex10Region"><span class="n"><span class="pre">Ex10Region</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_region</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N20Ex10RegionRegulatory10get_regionE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Returns the currently set region info for the given region. </p>
+<p>This is const such that it can only be changed through the set_region function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>Info for the given region. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N20Ex10RegionRegulatory21get_regulatory_timersE">
+<span id="_CPPv3N20Ex10RegionRegulatory21get_regulatory_timersE"></span><span id="_CPPv2N20Ex10RegionRegulatory21get_regulatory_timersE"></span><span class="target" id="struct_ex10_region_regulatory_1a5e7f112be05a904098e9e5298fb6bd18"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_regulatory_timers</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">channel_index_t</span></span><span class="w"> </span><span class="n"><span class="pre">channel</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n"><span class="pre">time_ms</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv420Ex10RegulatoryTimers" title="Ex10RegulatoryTimers"><span class="n"><span class="pre">Ex10RegulatoryTimers</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">timers</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N20Ex10RegionRegulatory21get_regulatory_timersE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Returns regulatory info for the given channel and region. </p>
+<p>This differs from the basic regulatory info of the region in that the chosen regulatory file can contain logic to alter the regulatory times used for the chosen channel. This logic can be changed in any of the given regions files under the board directory. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>: for info on customizing this logic, look at regulatory_default.c</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Param channel</dt>
+<dd class="field-odd"><p>The channel index to use for the regulatory timers. </p>
+</dd>
+<dt class="field-even">Param time_ms</dt>
+<dd class="field-even"><p>The current time, which can be used to adjust the regulatory timers returned based on the previous start and end calls. </p>
+</dd>
+<dt class="field-odd">Param channel</dt>
+<dd class="field-odd"><p><strong>[out]</strong> The timers pointer where the timers will be placed. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N20Ex10RegionRegulatory26regulatory_timer_set_startE">
+<span id="_CPPv3N20Ex10RegionRegulatory26regulatory_timer_set_startE"></span><span id="_CPPv2N20Ex10RegionRegulatory26regulatory_timer_set_startE"></span><span class="target" id="struct_ex10_region_regulatory_1adf167ecf768bed3800e31209cf424d86"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">regulatory_timer_set_start</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">channel_index_t</span></span><span class="w"> </span><span class="n"><span class="pre">channel</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n"><span class="pre">time_ms</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N20Ex10RegionRegulatory26regulatory_timer_set_startE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Sets the start timer for the current channel. </p>
+<p>Further logic depends on the region specifics.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Param channel</dt>
+<dd class="field-odd"><p>The channel index to use for the time in. </p>
+</dd>
+<dt class="field-even">Param time_ms</dt>
+<dd class="field-even"><p>The time to set as the start time for regulatory. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N20Ex10RegionRegulatory24regulatory_timer_set_endE">
+<span id="_CPPv3N20Ex10RegionRegulatory24regulatory_timer_set_endE"></span><span id="_CPPv2N20Ex10RegionRegulatory24regulatory_timer_set_endE"></span><span class="target" id="struct_ex10_region_regulatory_1a638b474ced5a4e445c0044b66b1a8a77"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">regulatory_timer_set_end</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">channel_index_t</span></span><span class="w"> </span><span class="n"><span class="pre">channel</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n"><span class="pre">time_ms</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N20Ex10RegionRegulatory24regulatory_timer_set_endE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Sets the stop timer for the current channel. </p>
+<p>Further logic depends on the region specifics.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Param channel</dt>
+<dd class="field-odd"><p>The channel index to use for the time in. </p>
+</dd>
+<dt class="field-even">Param time_ms</dt>
+<dd class="field-even"><p>The time to set as the end time for regulatory. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N20Ex10RegionRegulatory22regulatory_timer_clearE">
+<span id="_CPPv3N20Ex10RegionRegulatory22regulatory_timer_clearE"></span><span id="_CPPv2N20Ex10RegionRegulatory22regulatory_timer_clearE"></span><span class="target" id="struct_ex10_region_regulatory_1a663052b7aea88352bab63ba28ea028a4"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">regulatory_timer_clear</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N20Ex10RegionRegulatory22regulatory_timer_clearE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Clears any set timers used in the regulatory region. </p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+<span class="target" id="ex10-api-host-c-api-ex10-region-id"></span><dl class="cpp enum">
+<dt class="sig sig-object cpp" id="_CPPv412Ex10RegionId">
+<span id="_CPPv312Ex10RegionId"></span><span id="_CPPv212Ex10RegionId"></span><span class="target" id="ex10__regulatory_8h_1ae0c3c77e1e4b282df348b9cf7f9c651d"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10RegionId</span></span></span><a class="headerlink" href="#_CPPv412Ex10RegionId" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p><em>Values:</em></p>
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N12Ex10RegionId18REGION_NOT_DEFINEDE">
+<span id="_CPPv3N12Ex10RegionId18REGION_NOT_DEFINEDE"></span><span id="_CPPv2N12Ex10RegionId18REGION_NOT_DEFINEDE"></span><span class="target" id="ex10__regulatory_8h_1ae0c3c77e1e4b282df348b9cf7f9c651dac2d58c6e2be44f218bdc795870d2ed74"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">REGION_NOT_DEFINED</span></span></span><a class="headerlink" href="#_CPPv4N12Ex10RegionId18REGION_NOT_DEFINEDE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N12Ex10RegionId10REGION_FCCE">
+<span id="_CPPv3N12Ex10RegionId10REGION_FCCE"></span><span id="_CPPv2N12Ex10RegionId10REGION_FCCE"></span><span class="target" id="ex10__regulatory_8h_1ae0c3c77e1e4b282df348b9cf7f9c651da8e6731c11a302479bc15c25771e89838"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">REGION_FCC</span></span></span><a class="headerlink" href="#_CPPv4N12Ex10RegionId10REGION_FCCE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N12Ex10RegionId9REGION_HKE">
+<span id="_CPPv3N12Ex10RegionId9REGION_HKE"></span><span id="_CPPv2N12Ex10RegionId9REGION_HKE"></span><span class="target" id="ex10__regulatory_8h_1ae0c3c77e1e4b282df348b9cf7f9c651da251ea66c17f8a7c859c10947ca3ed43b"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">REGION_HK</span></span></span><a class="headerlink" href="#_CPPv4N12Ex10RegionId9REGION_HKE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N12Ex10RegionId13REGION_TAIWANE">
+<span id="_CPPv3N12Ex10RegionId13REGION_TAIWANE"></span><span id="_CPPv2N12Ex10RegionId13REGION_TAIWANE"></span><span class="target" id="ex10__regulatory_8h_1ae0c3c77e1e4b282df348b9cf7f9c651da08054a17aad787fea85dcf3232ce3a46"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">REGION_TAIWAN</span></span></span><a class="headerlink" href="#_CPPv4N12Ex10RegionId13REGION_TAIWANE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N12Ex10RegionId17REGION_ETSI_LOWERE">
+<span id="_CPPv3N12Ex10RegionId17REGION_ETSI_LOWERE"></span><span id="_CPPv2N12Ex10RegionId17REGION_ETSI_LOWERE"></span><span class="target" id="ex10__regulatory_8h_1ae0c3c77e1e4b282df348b9cf7f9c651da3c5af9e3d1a80d1690273ccd610eeef8"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">REGION_ETSI_LOWER</span></span></span><a class="headerlink" href="#_CPPv4N12Ex10RegionId17REGION_ETSI_LOWERE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N12Ex10RegionId17REGION_ETSI_UPPERE">
+<span id="_CPPv3N12Ex10RegionId17REGION_ETSI_UPPERE"></span><span id="_CPPv2N12Ex10RegionId17REGION_ETSI_UPPERE"></span><span class="target" id="ex10__regulatory_8h_1ae0c3c77e1e4b282df348b9cf7f9c651daf3af14943768d90a6deee19f5d4b47e9"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">REGION_ETSI_UPPER</span></span></span><a class="headerlink" href="#_CPPv4N12Ex10RegionId17REGION_ETSI_UPPERE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N12Ex10RegionId12REGION_KOREAE">
+<span id="_CPPv3N12Ex10RegionId12REGION_KOREAE"></span><span id="_CPPv2N12Ex10RegionId12REGION_KOREAE"></span><span class="target" id="ex10__regulatory_8h_1ae0c3c77e1e4b282df348b9cf7f9c651da039330a2b633b0829a0ac96cf3b07bf2"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">REGION_KOREA</span></span></span><a class="headerlink" href="#_CPPv4N12Ex10RegionId12REGION_KOREAE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N12Ex10RegionId15REGION_MALAYSIAE">
+<span id="_CPPv3N12Ex10RegionId15REGION_MALAYSIAE"></span><span id="_CPPv2N12Ex10RegionId15REGION_MALAYSIAE"></span><span class="target" id="ex10__regulatory_8h_1ae0c3c77e1e4b282df348b9cf7f9c651da41ca2ebdfe67ab70ee907f596e91ed21"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">REGION_MALAYSIA</span></span></span><a class="headerlink" href="#_CPPv4N12Ex10RegionId15REGION_MALAYSIAE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N12Ex10RegionId12REGION_CHINAE">
+<span id="_CPPv3N12Ex10RegionId12REGION_CHINAE"></span><span id="_CPPv2N12Ex10RegionId12REGION_CHINAE"></span><span class="target" id="ex10__regulatory_8h_1ae0c3c77e1e4b282df348b9cf7f9c651da27afa6414a216c5f21c76e9f88ff1c61"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">REGION_CHINA</span></span></span><a class="headerlink" href="#_CPPv4N12Ex10RegionId12REGION_CHINAE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N12Ex10RegionId19REGION_SOUTH_AFRICAE">
+<span id="_CPPv3N12Ex10RegionId19REGION_SOUTH_AFRICAE"></span><span id="_CPPv2N12Ex10RegionId19REGION_SOUTH_AFRICAE"></span><span class="target" id="ex10__regulatory_8h_1ae0c3c77e1e4b282df348b9cf7f9c651daeb83e10ae6f525658e2abf8b98b041d4"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">REGION_SOUTH_AFRICA</span></span></span><a class="headerlink" href="#_CPPv4N12Ex10RegionId19REGION_SOUTH_AFRICAE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N12Ex10RegionId13REGION_BRAZILE">
+<span id="_CPPv3N12Ex10RegionId13REGION_BRAZILE"></span><span id="_CPPv2N12Ex10RegionId13REGION_BRAZILE"></span><span class="target" id="ex10__regulatory_8h_1ae0c3c77e1e4b282df348b9cf7f9c651da2fc73b5ae1819a3c0c05472df464ca51"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">REGION_BRAZIL</span></span></span><a class="headerlink" href="#_CPPv4N12Ex10RegionId13REGION_BRAZILE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N12Ex10RegionId15REGION_THAILANDE">
+<span id="_CPPv3N12Ex10RegionId15REGION_THAILANDE"></span><span id="_CPPv2N12Ex10RegionId15REGION_THAILANDE"></span><span class="target" id="ex10__regulatory_8h_1ae0c3c77e1e4b282df348b9cf7f9c651da494b32a6da5798012fc0083e6f2c216a"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">REGION_THAILAND</span></span></span><a class="headerlink" href="#_CPPv4N12Ex10RegionId15REGION_THAILANDE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N12Ex10RegionId16REGION_SINGAPOREE">
+<span id="_CPPv3N12Ex10RegionId16REGION_SINGAPOREE"></span><span id="_CPPv2N12Ex10RegionId16REGION_SINGAPOREE"></span><span class="target" id="ex10__regulatory_8h_1ae0c3c77e1e4b282df348b9cf7f9c651da2ef8cd1780b4963d8718d99d358b66e4"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">REGION_SINGAPORE</span></span></span><a class="headerlink" href="#_CPPv4N12Ex10RegionId16REGION_SINGAPOREE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N12Ex10RegionId16REGION_AUSTRALIAE">
+<span id="_CPPv3N12Ex10RegionId16REGION_AUSTRALIAE"></span><span id="_CPPv2N12Ex10RegionId16REGION_AUSTRALIAE"></span><span class="target" id="ex10__regulatory_8h_1ae0c3c77e1e4b282df348b9cf7f9c651da5788b4723cc48f9564ff4b7ea7640232"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">REGION_AUSTRALIA</span></span></span><a class="headerlink" href="#_CPPv4N12Ex10RegionId16REGION_AUSTRALIAE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N12Ex10RegionId12REGION_INDIAE">
+<span id="_CPPv3N12Ex10RegionId12REGION_INDIAE"></span><span id="_CPPv2N12Ex10RegionId12REGION_INDIAE"></span><span class="target" id="ex10__regulatory_8h_1ae0c3c77e1e4b282df348b9cf7f9c651da703fc443b115cfa85c6d11e949ce8c66"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">REGION_INDIA</span></span></span><a class="headerlink" href="#_CPPv4N12Ex10RegionId12REGION_INDIAE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N12Ex10RegionId14REGION_URUGUAYE">
+<span id="_CPPv3N12Ex10RegionId14REGION_URUGUAYE"></span><span id="_CPPv2N12Ex10RegionId14REGION_URUGUAYE"></span><span class="target" id="ex10__regulatory_8h_1ae0c3c77e1e4b282df348b9cf7f9c651da8c169f284f52d89d4c7a943969fa09a5"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">REGION_URUGUAY</span></span></span><a class="headerlink" href="#_CPPv4N12Ex10RegionId14REGION_URUGUAYE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N12Ex10RegionId14REGION_VIETNAME">
+<span id="_CPPv3N12Ex10RegionId14REGION_VIETNAME"></span><span id="_CPPv2N12Ex10RegionId14REGION_VIETNAME"></span><span class="target" id="ex10__regulatory_8h_1ae0c3c77e1e4b282df348b9cf7f9c651da0cf13aab5bcdbe9d45b9a2b66ada5e63"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">REGION_VIETNAM</span></span></span><a class="headerlink" href="#_CPPv4N12Ex10RegionId14REGION_VIETNAME" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N12Ex10RegionId13REGION_ISRAELE">
+<span id="_CPPv3N12Ex10RegionId13REGION_ISRAELE"></span><span id="_CPPv2N12Ex10RegionId13REGION_ISRAELE"></span><span class="target" id="ex10__regulatory_8h_1ae0c3c77e1e4b282df348b9cf7f9c651da0be8dd0a270c291097ec31928ee0aec6"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">REGION_ISRAEL</span></span></span><a class="headerlink" href="#_CPPv4N12Ex10RegionId13REGION_ISRAELE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N12Ex10RegionId18REGION_PHILIPPINESE">
+<span id="_CPPv3N12Ex10RegionId18REGION_PHILIPPINESE"></span><span id="_CPPv2N12Ex10RegionId18REGION_PHILIPPINESE"></span><span class="target" id="ex10__regulatory_8h_1ae0c3c77e1e4b282df348b9cf7f9c651da673840962f6e9b3b8c40853dc1644dbf"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">REGION_PHILIPPINES</span></span></span><a class="headerlink" href="#_CPPv4N12Ex10RegionId18REGION_PHILIPPINESE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N12Ex10RegionId16REGION_INDONESIAE">
+<span id="_CPPv3N12Ex10RegionId16REGION_INDONESIAE"></span><span id="_CPPv2N12Ex10RegionId16REGION_INDONESIAE"></span><span class="target" id="ex10__regulatory_8h_1ae0c3c77e1e4b282df348b9cf7f9c651da942b909fa4781f4ede50776c41911958"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">REGION_INDONESIA</span></span></span><a class="headerlink" href="#_CPPv4N12Ex10RegionId16REGION_INDONESIAE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N12Ex10RegionId18REGION_NEW_ZEALANDE">
+<span id="_CPPv3N12Ex10RegionId18REGION_NEW_ZEALANDE"></span><span id="_CPPv2N12Ex10RegionId18REGION_NEW_ZEALANDE"></span><span class="target" id="ex10__regulatory_8h_1ae0c3c77e1e4b282df348b9cf7f9c651da11a7bb27b1b2b0ec12d15e8486207e8f"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">REGION_NEW_ZEALAND</span></span></span><a class="headerlink" href="#_CPPv4N12Ex10RegionId18REGION_NEW_ZEALANDE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N12Ex10RegionId13REGION_JAPAN2E">
+<span id="_CPPv3N12Ex10RegionId13REGION_JAPAN2E"></span><span id="_CPPv2N12Ex10RegionId13REGION_JAPAN2E"></span><span class="target" id="ex10__regulatory_8h_1ae0c3c77e1e4b282df348b9cf7f9c651dacdd99af2efcd1ac2e5197ed2253c498f"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">REGION_JAPAN2</span></span></span><a class="headerlink" href="#_CPPv4N12Ex10RegionId13REGION_JAPAN2E" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N12Ex10RegionId11REGION_PERUE">
+<span id="_CPPv3N12Ex10RegionId11REGION_PERUE"></span><span id="_CPPv2N12Ex10RegionId11REGION_PERUE"></span><span class="target" id="ex10__regulatory_8h_1ae0c3c77e1e4b282df348b9cf7f9c651da5e4a610bb6e3ef4ccbb39d786d337586"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">REGION_PERU</span></span></span><a class="headerlink" href="#_CPPv4N12Ex10RegionId11REGION_PERUE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N12Ex10RegionId13REGION_RUSSIAE">
+<span id="_CPPv3N12Ex10RegionId13REGION_RUSSIAE"></span><span id="_CPPv2N12Ex10RegionId13REGION_RUSSIAE"></span><span class="target" id="ex10__regulatory_8h_1ae0c3c77e1e4b282df348b9cf7f9c651da8f50630a89bc5d9c5a762f907221a1db"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">REGION_RUSSIA</span></span></span><a class="headerlink" href="#_CPPv4N12Ex10RegionId13REGION_RUSSIAE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N12Ex10RegionId13REGION_CUSTOME">
+<span id="_CPPv3N12Ex10RegionId13REGION_CUSTOME"></span><span id="_CPPv2N12Ex10RegionId13REGION_CUSTOME"></span><span class="target" id="ex10__regulatory_8h_1ae0c3c77e1e4b282df348b9cf7f9c651da0f995d8f189dd5dd44c0921f9ab3a591"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">REGION_CUSTOM</span></span></span><a class="headerlink" href="#_CPPv4N12Ex10RegionId13REGION_CUSTOME" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<span class="target" id="ex10-api-host-c-api-ex10-regulatory-timers"></span><dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv420Ex10RegulatoryTimers">
+<span id="_CPPv320Ex10RegulatoryTimers"></span><span id="_CPPv220Ex10RegulatoryTimers"></span><span id="Ex10RegulatoryTimers"></span><span class="target" id="struct_ex10_regulatory_timers"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10RegulatoryTimers</span></span></span><a class="headerlink" href="#_CPPv420Ex10RegulatoryTimers" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Defines the channel typical and maximum transmitter dwell times and off times for a region. </p>
+<p><div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Times are in milliseconds </p>
+</div>
+</p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N20Ex10RegulatoryTimers10nominal_msE">
+<span id="_CPPv3N20Ex10RegulatoryTimers10nominal_msE"></span><span id="_CPPv2N20Ex10RegulatoryTimers10nominal_msE"></span><span id="Ex10RegulatoryTimers::nominal_ms__uint16_t"></span><span class="target" id="struct_ex10_regulatory_timers_1ae57fa7e19876a9c59427a8642168457d"></span><span class="n"><span class="pre">uint16_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">nominal_ms</span></span></span><a class="headerlink" href="#_CPPv4N20Ex10RegulatoryTimers10nominal_msE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The typical Tx dwell time during inventory. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N20Ex10RegulatoryTimers11extended_msE">
+<span id="_CPPv3N20Ex10RegulatoryTimers11extended_msE"></span><span id="_CPPv2N20Ex10RegulatoryTimers11extended_msE"></span><span id="Ex10RegulatoryTimers::extended_ms__uint16_t"></span><span class="target" id="struct_ex10_regulatory_timers_1a162f025ec25fd8d7a93bd166ddba4cfa"></span><span class="n"><span class="pre">uint16_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">extended_ms</span></span></span><a class="headerlink" href="#_CPPv4N20Ex10RegulatoryTimers11extended_msE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The maximum expected transmit time when accessing a tag. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N20Ex10RegulatoryTimers13regulatory_msE">
+<span id="_CPPv3N20Ex10RegulatoryTimers13regulatory_msE"></span><span id="_CPPv2N20Ex10RegulatoryTimers13regulatory_msE"></span><span id="Ex10RegulatoryTimers::regulatory_ms__uint16_t"></span><span class="target" id="struct_ex10_regulatory_timers_1ae7fb0b853f9f906d26ae3b9a72426b8d"></span><span class="n"><span class="pre">uint16_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">regulatory_ms</span></span></span><a class="headerlink" href="#_CPPv4N20Ex10RegulatoryTimers13regulatory_msE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The regulatory limit of transmit time. If this timer expires the transmitter will be squelched. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N20Ex10RegulatoryTimers19off_same_channel_msE">
+<span id="_CPPv3N20Ex10RegulatoryTimers19off_same_channel_msE"></span><span id="_CPPv2N20Ex10RegulatoryTimers19off_same_channel_msE"></span><span id="Ex10RegulatoryTimers::off_same_channel_ms__uint16_t"></span><span class="target" id="struct_ex10_regulatory_timers_1a0fdd172b49d604b6136e1fdf94e3b104"></span><span class="n"><span class="pre">uint16_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">off_same_channel_ms</span></span></span><a class="headerlink" href="#_CPPv4N20Ex10RegulatoryTimers19off_same_channel_msE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The minimum transmitter silent time between transitions when staying on the same frequency. </p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+<span class="target" id="ex10-api-host-c-api-ex10-regulatory-channels"></span><dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv422Ex10RegulatoryChannels">
+<span id="_CPPv322Ex10RegulatoryChannels"></span><span id="_CPPv222Ex10RegulatoryChannels"></span><span id="Ex10RegulatoryChannels"></span><span class="target" id="struct_ex10_regulatory_channels"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10RegulatoryChannels</span></span></span><a class="headerlink" href="#_CPPv422Ex10RegulatoryChannels" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Defines the channels which are usable within a specific region. </p>
+<p>If usable is NULL then the channels used are calculated by: start_freq + count * spacing from 0 to the count number. If the usable field is non-NULL then the region uses channel indices pointed to by the field. The size of this channel array is given by count. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N22Ex10RegulatoryChannels14start_freq_khzE">
+<span id="_CPPv3N22Ex10RegulatoryChannels14start_freq_khzE"></span><span id="_CPPv2N22Ex10RegulatoryChannels14start_freq_khzE"></span><span id="Ex10RegulatoryChannels::start_freq_khz__uint32_t"></span><span class="target" id="struct_ex10_regulatory_channels_1a740c9a88f664020820e6c62c735db425"></span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">start_freq_khz</span></span></span><a class="headerlink" href="#_CPPv4N22Ex10RegulatoryChannels14start_freq_khzE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The starting channel frequency [kHz]. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N22Ex10RegulatoryChannels11spacing_khzE">
+<span id="_CPPv3N22Ex10RegulatoryChannels11spacing_khzE"></span><span id="_CPPv2N22Ex10RegulatoryChannels11spacing_khzE"></span><span id="Ex10RegulatoryChannels::spacing_khz__uint32_t"></span><span class="target" id="struct_ex10_regulatory_channels_1a1598771edf076786d7f763d70ed65635"></span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">spacing_khz</span></span></span><a class="headerlink" href="#_CPPv4N22Ex10RegulatoryChannels11spacing_khzE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The spacing between channels [kHz]. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N22Ex10RegulatoryChannels5countE">
+<span id="_CPPv3N22Ex10RegulatoryChannels5countE"></span><span id="_CPPv2N22Ex10RegulatoryChannels5countE"></span><span id="Ex10RegulatoryChannels::count__channel_size_t"></span><span class="target" id="struct_ex10_regulatory_channels_1afa49d45099aed50f006f5d5bbf9c8d6d"></span><span class="n"><span class="pre">channel_size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">count</span></span></span><a class="headerlink" href="#_CPPv4N22Ex10RegulatoryChannels5countE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The number of channels in the plan. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N22Ex10RegulatoryChannels6usableE">
+<span id="_CPPv3N22Ex10RegulatoryChannels6usableE"></span><span id="_CPPv2N22Ex10RegulatoryChannels6usableE"></span><span id="Ex10RegulatoryChannels::usable__channel_index_tCP"></span><span class="target" id="struct_ex10_regulatory_channels_1a34905637bd681c1c2c6072ed25152a31"></span><span class="n"><span class="pre">channel_index_t</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">usable</span></span></span><a class="headerlink" href="#_CPPv4N22Ex10RegulatoryChannels6usableE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Limits the channels within the plan. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N22Ex10RegulatoryChannels12usable_countE">
+<span id="_CPPv3N22Ex10RegulatoryChannels12usable_countE"></span><span id="_CPPv2N22Ex10RegulatoryChannels12usable_countE"></span><span id="Ex10RegulatoryChannels::usable_count__channel_size_t"></span><span class="target" id="struct_ex10_regulatory_channels_1a19a0260f8af4ca3a93b6c91b3d2a3873"></span><span class="n"><span class="pre">channel_size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">usable_count</span></span></span><a class="headerlink" href="#_CPPv4N22Ex10RegulatoryChannels12usable_countE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N22Ex10RegulatoryChannels10random_hopE">
+<span id="_CPPv3N22Ex10RegulatoryChannels10random_hopE"></span><span id="_CPPv2N22Ex10RegulatoryChannels10random_hopE"></span><span id="Ex10RegulatoryChannels::random_hop__b"></span><span class="target" id="struct_ex10_regulatory_channels_1ae42dfa40309f7bba8fe9dfee8ae264b8"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">random_hop</span></span></span><a class="headerlink" href="#_CPPv4N22Ex10RegulatoryChannels10random_hopE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+<span class="target" id="ex10-api-host-c-api-ex10-region"></span><dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv410Ex10Region">
+<span id="_CPPv310Ex10Region"></span><span id="_CPPv210Ex10Region"></span><span id="Ex10Region"></span><span class="target" id="struct_ex10_region"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10Region</span></span></span><a class="headerlink" href="#_CPPv410Ex10Region" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The aggregate regulatory information for a specific region. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N10Ex10Region9region_idE">
+<span id="_CPPv3N10Ex10Region9region_idE"></span><span id="_CPPv2N10Ex10Region9region_idE"></span><span id="Ex10Region::region_id__Ex10RegionId"></span><span class="target" id="struct_ex10_region_1a705eb83de9235dd41d539de05e9d53d7"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv412Ex10RegionId" title="Ex10RegionId"><span class="n"><span class="pre">Ex10RegionId</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">region_id</span></span></span><a class="headerlink" href="#_CPPv4N10Ex10Region9region_idE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N10Ex10Region17regulatory_timersE">
+<span id="_CPPv3N10Ex10Region17regulatory_timersE"></span><span id="_CPPv2N10Ex10Region17regulatory_timersE"></span><span id="Ex10Region::regulatory_timers__Ex10RegulatoryTimers"></span><span class="target" id="struct_ex10_region_1aebbcd40c88cc01b51fb8451b154811f2"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv420Ex10RegulatoryTimers" title="Ex10RegulatoryTimers"><span class="n"><span class="pre">Ex10RegulatoryTimers</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">regulatory_timers</span></span></span><a class="headerlink" href="#_CPPv4N10Ex10Region17regulatory_timersE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N10Ex10Region19regulatory_channelsE">
+<span id="_CPPv3N10Ex10Region19regulatory_channelsE"></span><span id="_CPPv2N10Ex10Region19regulatory_channelsE"></span><span id="Ex10Region::regulatory_channels__Ex10RegulatoryChannels"></span><span class="target" id="struct_ex10_region_1a834bcd41a002888bad148ea10600b633"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv422Ex10RegulatoryChannels" title="Ex10RegulatoryChannels"><span class="n"><span class="pre">Ex10RegulatoryChannels</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">regulatory_channels</span></span></span><a class="headerlink" href="#_CPPv4N10Ex10Region19regulatory_channelsE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N10Ex10Region11pll_dividerE">
+<span id="_CPPv3N10Ex10Region11pll_dividerE"></span><span id="_CPPv2N10Ex10Region11pll_dividerE"></span><span id="Ex10Region::pll_divider__uint32_t"></span><span class="target" id="struct_ex10_region_1a3fb291d1be2d6cbe9c4b863f9d62759f"></span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">pll_divider</span></span></span><a class="headerlink" href="#_CPPv4N10Ex10Region11pll_dividerE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>gets truncated to u8 </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N10Ex10Region9rf_filterE">
+<span id="_CPPv3N10Ex10Region9rf_filterE"></span><span id="_CPPv2N10Ex10Region9rf_filterE"></span><span id="Ex10Region::rf_filter__RfFilter"></span><span class="target" id="struct_ex10_region_1acf102c7720e2d149b66ba320b23ea88e"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><a class="reference internal" href="rf_power.html#_CPPv48RfFilter" title="RfFilter"><span class="n"><span class="pre">RfFilter</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">rf_filter</span></span></span><a class="headerlink" href="#_CPPv4N10Ex10Region9rf_filterE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N10Ex10Region14max_power_cdbmE">
+<span id="_CPPv3N10Ex10Region14max_power_cdbmE"></span><span id="_CPPv2N10Ex10Region14max_power_cdbmE"></span><span id="Ex10Region::max_power_cdbm__int32_t"></span><span class="target" id="struct_ex10_region_1ad218f4b04b051734d91f0a79af02913a"></span><span class="n"><span class="pre">int32_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">max_power_cdbm</span></span></span><a class="headerlink" href="#_CPPv4N10Ex10Region14max_power_cdbmE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>dBm x 100 </p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+<span class="target" id="ex10-api-host-c-api-ex10-regulatory"></span><dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv414Ex10Regulatory">
+<span id="_CPPv314Ex10Regulatory"></span><span id="_CPPv214Ex10Regulatory"></span><span id="Ex10Regulatory"></span><span class="target" id="struct_ex10_regulatory"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10Regulatory</span></span></span><a class="headerlink" href="#_CPPv414Ex10Regulatory" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Regions information interface. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N14Ex10Regulatory10set_regionE">
+<span id="_CPPv3N14Ex10Regulatory10set_regionE"></span><span id="_CPPv2N14Ex10Regulatory10set_regionE"></span><span class="target" id="struct_ex10_regulatory_1a07bc74891f6154da6b5eb35a855e0c0d"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">set_region</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv412Ex10RegionId" title="Ex10RegionId"><span class="n"><span class="pre">Ex10RegionId</span></span></a><span class="w"> </span><span class="n"><span class="pre">region_id</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv410Ex10Region" title="Ex10Region"><span class="n"><span class="pre">Ex10Region</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">region_to_use</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N14Ex10Regulatory10set_regionE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Sets the region_to_use pointer that <a class="reference internal" href="#struct_ex10_regulatory_1a872382939b19dc2dd29c22b8c875057f"><span class="std std-ref">get_region()</span></a> will return. </p>
+<p>This will substitute an alternate set of regulatory parameters for a specific region.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The original region parameters are immutable, are not over-written, and can be restored.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The lifetime of the region_to_use pointer and its contents must be maintained for the duration of the region usage.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Param region_id</dt>
+<dd class="field-odd"><p>The region_id of interest. </p>
+</dd>
+<dt class="field-even">Param region_to_use</dt>
+<dd class="field-even"><p>A pointer to the region information to assign to the region_id. If this pointer value is NULL then the original region parameters are restored. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N14Ex10Regulatory10get_regionE">
+<span id="_CPPv3N14Ex10Regulatory10get_regionE"></span><span id="_CPPv2N14Ex10Regulatory10get_regionE"></span><span class="target" id="struct_ex10_regulatory_1a872382939b19dc2dd29c22b8c875057f"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv410Ex10Region" title="Ex10Region"><span class="n"><span class="pre">Ex10Region</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_region</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv412Ex10RegionId" title="Ex10RegionId"><span class="n"><span class="pre">Ex10RegionId</span></span></a><span class="w"> </span><span class="n"><span class="pre">region_id</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N14Ex10Regulatory10get_regionE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Returns the region information of the passed region enum. </p>
+<p>Used to get information about a region regardless if it is the current region.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If <a class="reference internal" href="#struct_ex10_regulatory_1a07bc74891f6154da6b5eb35a855e0c0d"><span class="std std-ref">set_region()</span></a> has been previously called, then the region pointer previously passed in will be returned.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Param region_id</dt>
+<dd class="field-odd"><p>The region_id of interest.</p>
+</dd>
+<dt class="field-even">Return</dt>
+<dd class="field-even"><p>struct <a class="reference internal" href="#struct_ex10_region"><span class="std std-ref">Ex10Region</span></a> const* A pointer to the Region matching the region requested. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N14Ex10Regulatory21get_regulatory_timersE">
+<span id="_CPPv3N14Ex10Regulatory21get_regulatory_timersE"></span><span id="_CPPv2N14Ex10Regulatory21get_regulatory_timersE"></span><span class="target" id="struct_ex10_regulatory_1abac83d7c37e9283d3aca4c2b1ec725cb"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_regulatory_timers</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv412Ex10RegionId" title="Ex10RegionId"><span class="n"><span class="pre">Ex10RegionId</span></span></a><span class="w"> </span><span class="n"><span class="pre">region_id</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">channel_index_t</span></span><span class="w"> </span><span class="n"><span class="pre">channel</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n"><span class="pre">time_ms</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv420Ex10RegulatoryTimers" title="Ex10RegulatoryTimers"><span class="n"><span class="pre">Ex10RegulatoryTimers</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">timers</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N14Ex10Regulatory21get_regulatory_timersE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Returns the regulatory timers for a given region. </p>
+<p>These timers will be modified using run time information and time spent on other channels. If further regulatory requirements are needed, they can be added to ex10_regulatory.c or the specific region being used.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Param region_id</dt>
+<dd class="field-odd"><p>The region_id of interest. </p>
+</dd>
+<dt class="field-even">Param channel</dt>
+<dd class="field-even"><p>The channel index to use for the regulatory timers. </p>
+</dd>
+<dt class="field-odd">Param time_ms</dt>
+<dd class="field-odd"><p>The current time, which can be used to adjust the regulatory timers returned based on the previous start and end calls. </p>
+</dd>
+<dt class="field-even">Param timers</dt>
+<dd class="field-even"><p><strong>[out]</strong> The timers pointer is set with the timers to use for the passed region_id. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N14Ex10Regulatory26regulatory_timer_set_startE">
+<span id="_CPPv3N14Ex10Regulatory26regulatory_timer_set_startE"></span><span id="_CPPv2N14Ex10Regulatory26regulatory_timer_set_startE"></span><span class="target" id="struct_ex10_regulatory_1ab418d0b765db7f3a570f0daf2c6493f2"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">regulatory_timer_set_start</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv412Ex10RegionId" title="Ex10RegionId"><span class="n"><span class="pre">Ex10RegionId</span></span></a><span class="w"> </span><span class="n"><span class="pre">region_id</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">channel_index_t</span></span><span class="w"> </span><span class="n"><span class="pre">channel</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n"><span class="pre">time_ms</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N14Ex10Regulatory26regulatory_timer_set_startE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Sets the start time for the current channel to be logged and used for regulatory requirements. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Param region_id</dt>
+<dd class="field-odd"><p>The region_id of interest. </p>
+</dd>
+<dt class="field-even">Param channel</dt>
+<dd class="field-even"><p>The channel which we are spending time on. </p>
+</dd>
+<dt class="field-odd">Param time_ms</dt>
+<dd class="field-odd"><p>The current time. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N14Ex10Regulatory24regulatory_timer_set_endE">
+<span id="_CPPv3N14Ex10Regulatory24regulatory_timer_set_endE"></span><span id="_CPPv2N14Ex10Regulatory24regulatory_timer_set_endE"></span><span class="target" id="struct_ex10_regulatory_1a277f8b86c83a6a916e19fb3b080da65a"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">regulatory_timer_set_end</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv412Ex10RegionId" title="Ex10RegionId"><span class="n"><span class="pre">Ex10RegionId</span></span></a><span class="w"> </span><span class="n"><span class="pre">region_id</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">channel_index_t</span></span><span class="w"> </span><span class="n"><span class="pre">channel</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n"><span class="pre">time_ms</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N14Ex10Regulatory24regulatory_timer_set_endE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Sets the end time for the current channel to be logged and used for regulatory requirements. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Param region_id</dt>
+<dd class="field-odd"><p>The region_id of interest. </p>
+</dd>
+<dt class="field-even">Param channel</dt>
+<dd class="field-even"><p>The channel which we are spending time on. </p>
+</dd>
+<dt class="field-odd">Param time_ms</dt>
+<dd class="field-odd"><p>The current time. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N14Ex10Regulatory21calculate_channel_khzE">
+<span id="_CPPv3N14Ex10Regulatory21calculate_channel_khzE"></span><span id="_CPPv2N14Ex10Regulatory21calculate_channel_khzE"></span><span class="target" id="struct_ex10_regulatory_1a82f674ae1679703838fb9697e5413658"></span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">calculate_channel_khz</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv412Ex10RegionId" title="Ex10RegionId"><span class="n"><span class="pre">Ex10RegionId</span></span></a><span class="w"> </span><span class="n"><span class="pre">region_id</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">channel_index_t</span></span><span class="w"> </span><span class="n"><span class="pre">channel</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N14Ex10Regulatory21calculate_channel_khzE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Calculate the frequency in khz from the given region and channel index. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Param region_id</dt>
+<dd class="field-odd"><p>The region to user for channel calculations. </p>
+</dd>
+<dt class="field-even">Param channel</dt>
+<dd class="field-even"><p>The channel index to use with the regulatory info of the passed channel in calculating the frequency.</p>
+</dd>
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>uint16_t The channel index of the passed frequency for the currently set region. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N14Ex10Regulatory23calculate_channel_indexE">
+<span id="_CPPv3N14Ex10Regulatory23calculate_channel_indexE"></span><span id="_CPPv2N14Ex10Regulatory23calculate_channel_indexE"></span><span class="target" id="struct_ex10_regulatory_1a0f3e69c88422ecb207cf4b136dbf1719"></span><span class="n"><span class="pre">channel_index_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">calculate_channel_index</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv412Ex10RegionId" title="Ex10RegionId"><span class="n"><span class="pre">Ex10RegionId</span></span></a><span class="w"> </span><span class="n"><span class="pre">region_id</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n"><span class="pre">frequency_khz</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N14Ex10Regulatory23calculate_channel_indexE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Calculate the channel index in the passed region for a passed frequency. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Param region_id</dt>
+<dd class="field-odd"><p>The region to user for channel calculations. </p>
+</dd>
+<dt class="field-even">Param frequency_khz</dt>
+<dd class="field-even"><p>The frequency in khz to calculate the channel index from.</p>
+</dd>
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>channel_index_t The channel index of the passed frequency for the currently set region. </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+<span class="target" id="ex10-api-host-c-api-ex10-active-region"></span><dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv416Ex10ActiveRegion">
+<span id="_CPPv316Ex10ActiveRegion"></span><span id="_CPPv216Ex10ActiveRegion"></span><span id="Ex10ActiveRegion"></span><span class="target" id="struct_ex10_active_region"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10ActiveRegion</span></span></span><a class="headerlink" href="#_CPPv416Ex10ActiveRegion" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The region programming interface. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N16Ex10ActiveRegion10set_regionE">
+<span id="_CPPv3N16Ex10ActiveRegion10set_regionE"></span><span id="_CPPv2N16Ex10ActiveRegion10set_regionE"></span><span class="target" id="struct_ex10_active_region_1a320c4314e87eb474d68b3f67698f73e0"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">set_region</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv412Ex10RegionId" title="Ex10RegionId"><span class="n"><span class="pre">Ex10RegionId</span></span></a><span class="w"> </span><span class="n"><span class="pre">region_id</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n"><span class="pre">tcxo_freq_khz</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N16Ex10ActiveRegion10set_regionE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Sets the active region to the passed region. </p>
+<p>Load the region parameters from the regions table and builds the region’s frequency channels table. <dl class="simple">
+<dt><strong>See</strong></dt><dd><p>ex10_api/src/regions.c </p>
+</dd>
+</dl>
+</p>
+<dl class="field-list simple">
+<dt class="field-odd">Param region_id</dt>
+<dd class="field-odd"><p>Requested regulatory region enum </p>
+</dd>
+<dt class="field-even">Param tcxo_freq_khz</dt>
+<dd class="field-even"><p>Crystal oscillator frequency used with the Ex10 device. </p>
+</dd>
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>struct <a class="reference internal" href="../ex10_host_c_support/ex10_result.html#struct_ex10_result"><span class="std std-ref">Ex10Result</span></a> Indicates whether the function call passed or failed. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N16Ex10ActiveRegion13get_region_idE">
+<span id="_CPPv3N16Ex10ActiveRegion13get_region_idE"></span><span id="_CPPv2N16Ex10ActiveRegion13get_region_idE"></span><span class="target" id="struct_ex10_active_region_1a8cff814ef0a992c45c8e281f5613de05"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv412Ex10RegionId" title="Ex10RegionId"><span class="n"><span class="pre">Ex10RegionId</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_region_id</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N16Ex10ActiveRegion13get_region_idE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Gets the active region enum. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns REGION_NOT_DEFINED</dt>
+<dd class="field-odd"><p>If current region has not been set. </p>
+</dd>
+<dt class="field-even">Return</dt>
+<dd class="field-even"><p>enum Ex10RegionId The enum of the region which has been set through set_region.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N16Ex10ActiveRegion21update_active_channelE">
+<span id="_CPPv3N16Ex10ActiveRegion21update_active_channelE"></span><span id="_CPPv2N16Ex10ActiveRegion21update_active_channelE"></span><span class="target" id="struct_ex10_active_region_1a74607094fe5dfc2e361facf7ec439542"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">update_active_channel</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N16Ex10ActiveRegion21update_active_channelE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Determine the next channel to use, from the active region hopping table, and store it as the channel to use when next ramping up. </p>
+<p>This channel will be used for the next ramp up event. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N16Ex10ActiveRegion22get_channel_table_sizeE">
+<span id="_CPPv3N16Ex10ActiveRegion22get_channel_table_sizeE"></span><span id="_CPPv2N16Ex10ActiveRegion22get_channel_table_sizeE"></span><span class="target" id="struct_ex10_active_region_1aa3912c097bd56c2699ab4ca5d3fea0fd"></span><span class="n"><span class="pre">channel_size_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_channel_table_size</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N16Ex10ActiveRegion22get_channel_table_sizeE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Get the number of channels within the region channel table. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The initialize_region() function must have been called, otherwise this function will return zero.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>channel_size_t The number of channels in the region’s channel table. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N16Ex10ActiveRegion22get_active_channel_khzE">
+<span id="_CPPv3N16Ex10ActiveRegion22get_active_channel_khzE"></span><span id="_CPPv2N16Ex10ActiveRegion22get_active_channel_khzE"></span><span class="target" id="struct_ex10_active_region_1ac5202f8dd8fdf509ac675c51be1d0de8"></span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_active_channel_khz</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N16Ex10ActiveRegion22get_active_channel_khzE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Gets the frequency used by the current CW ramp cycle. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>current channel frequency (kHz) </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N16Ex10ActiveRegion20get_next_channel_khzE">
+<span id="_CPPv3N16Ex10ActiveRegion20get_next_channel_khzE"></span><span id="_CPPv2N16Ex10ActiveRegion20get_next_channel_khzE"></span><span class="target" id="struct_ex10_active_region_1a8fd4c1acf0a9b1e048ab0dfc813ff962"></span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_next_channel_khz</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N16Ex10ActiveRegion20get_next_channel_khzE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Gets the frequency used by the next channel in the region table This is used as a look ahead to calculate the parameters to pass to the cw_on() function for ramping up on the next channel. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>current channel frequency (kHz) </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N16Ex10ActiveRegion24get_adjacent_channel_khzE">
+<span id="_CPPv3N16Ex10ActiveRegion24get_adjacent_channel_khzE"></span><span id="_CPPv2N16Ex10ActiveRegion24get_adjacent_channel_khzE"></span><span class="target" id="struct_ex10_active_region_1a864416a8a55989f0524a1cb2329668e6"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_adjacent_channel_khz</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">channel_index_t</span></span><span class="w"> </span><span class="n"><span class="pre">channel_index</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">channel_offset_t</span></span><span class="w"> </span><span class="n"><span class="pre">channel_offset</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">adjacent_channel_khz</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N16Ex10ActiveRegion24get_adjacent_channel_khzE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>This function looks at the region channel table and determines the current channel and returns the appropriate frequency of what the adjacent channel is. </p>
+<p>If the channel requested is off the end of the channel list or is a gap larger than the specified distance, a frequency of 0 is returned.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Param channel_index</dt>
+<dd class="field-odd"><p>The index in the hop list to use as the channel</p>
+</dd>
+<dt class="field-even">Param channel_offset</dt>
+<dd class="field-even"><p>The number of channels to move up or down</p>
+</dd>
+<dt class="field-odd">Param uint32_t</dt>
+<dd class="field-odd"><p><strong>[out]</strong> The frequency in kHz of the requested channel. Zero if current region has not been set.</p>
+</dd>
+<dt class="field-even">Return</dt>
+<dd class="field-even"><p>struct <a class="reference internal" href="../ex10_host_c_support/ex10_result.html#struct_ex10_result"><span class="std std-ref">Ex10Result</span></a> Indicates whether the function call passed or failed. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N16Ex10ActiveRegion19get_channel_spacingE">
+<span id="_CPPv3N16Ex10ActiveRegion19get_channel_spacingE"></span><span id="_CPPv2N16Ex10ActiveRegion19get_channel_spacingE"></span><span class="target" id="struct_ex10_active_region_1a616e0bab6363dfe9efe347ecca5f5dae"></span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_channel_spacing</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N16Ex10ActiveRegion19get_channel_spacingE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>This function gets the channel spacing, in kHz, for the region. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns Zero</dt>
+<dd class="field-odd"><p>if current region has not been set. </p>
+</dd>
+<dt class="field-even">Return</dt>
+<dd class="field-even"><p>uint32_t The channel spacing in Khz. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N16Ex10ActiveRegion24get_active_channel_indexE">
+<span id="_CPPv3N16Ex10ActiveRegion24get_active_channel_indexE"></span><span id="_CPPv2N16Ex10ActiveRegion24get_active_channel_indexE"></span><span class="target" id="struct_ex10_active_region_1a36ed0a01488e6d4241249859e715cb0e"></span><span class="n"><span class="pre">channel_index_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_active_channel_index</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N16Ex10ActiveRegion24get_active_channel_indexE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Gets the current channel index in the region table used by the current CW ramp cycle. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N16Ex10ActiveRegion22get_next_channel_indexE">
+<span id="_CPPv3N16Ex10ActiveRegion22get_next_channel_indexE"></span><span id="_CPPv2N16Ex10ActiveRegion22get_next_channel_indexE"></span><span class="target" id="struct_ex10_active_region_1a6f9b99ddbdd0da773bfeea7db36aefe7"></span><span class="n"><span class="pre">channel_index_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_next_channel_index</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N16Ex10ActiveRegion22get_next_channel_indexE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Gets the next channel index in the region table that will be used when the it ramps up next. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N16Ex10ActiveRegion17get_channel_indexE">
+<span id="_CPPv3N16Ex10ActiveRegion17get_channel_indexE"></span><span id="_CPPv2N16Ex10ActiveRegion17get_channel_indexE"></span><span class="target" id="struct_ex10_active_region_1a8bad411504871e2c1072bb1c6097f5a2"></span><span class="n"><span class="pre">channel_index_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_channel_index</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n"><span class="pre">frequency_khz</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N16Ex10ActiveRegion17get_channel_indexE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Look up what the channel index is for a given frequency. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Param frequency_khz</dt>
+<dd class="field-odd"><p>target channel frequency in khz</p>
+</dd>
+<dt class="field-even">Returns -1</dt>
+<dd class="field-even"><p>If the frequency is not contained in the channel table. </p>
+</dd>
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>The channel index of the specified frequency. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N16Ex10ActiveRegion34get_next_channel_regulatory_timersE">
+<span id="_CPPv3N16Ex10ActiveRegion34get_next_channel_regulatory_timersE"></span><span id="_CPPv2N16Ex10ActiveRegion34get_next_channel_regulatory_timersE"></span><span class="target" id="struct_ex10_active_region_1a37d940967f5d6d8713b7fb4a36f799a7"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_next_channel_regulatory_timers</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv420Ex10RegulatoryTimers" title="Ex10RegulatoryTimers"><span class="n"><span class="pre">Ex10RegulatoryTimers</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">timers</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N16Ex10ActiveRegion34get_next_channel_regulatory_timersE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Returns the regulatory dwell times for this region on the next channel. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Param timers</dt>
+<dd class="field-odd"><p><strong>[out]</strong> A struct to hold returned timer information. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N16Ex10ActiveRegion21get_regulatory_timersE">
+<span id="_CPPv3N16Ex10ActiveRegion21get_regulatory_timersE"></span><span id="_CPPv2N16Ex10ActiveRegion21get_regulatory_timersE"></span><span class="target" id="struct_ex10_active_region_1a65ba55f1ed6b8ede6f958811cb7fd825"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_regulatory_timers</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv420Ex10RegulatoryTimers" title="Ex10RegulatoryTimers"><span class="n"><span class="pre">Ex10RegulatoryTimers</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">timers</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N16Ex10ActiveRegion21get_regulatory_timersE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Returns the regulatory dwell times for this region on the current channel. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Param timers</dt>
+<dd class="field-odd"><p><strong>[out]</strong> A struct to hold returned timer information. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N16Ex10ActiveRegion22get_synthesizer_paramsE">
+<span id="_CPPv3N16Ex10ActiveRegion22get_synthesizer_paramsE"></span><span id="_CPPv2N16Ex10ActiveRegion22get_synthesizer_paramsE"></span><span class="target" id="struct_ex10_active_region_1aaa3e7f9245cf9bd5c3a5cde892c561c4"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_synthesizer_params</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n"><span class="pre">freq_khz</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="n"><span class="pre">SynthesizerParams</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">synth_params</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N16Ex10ActiveRegion22get_synthesizer_paramsE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Generates the required synthesizer parameters for the next channel in the active region. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Param freq_khz</dt>
+<dd class="field-odd"><p>The frequency in kHz for calculating the PLL synthesizer parameters. </p>
+</dd>
+<dt class="field-even">Param synth_params</dt>
+<dd class="field-even"><p><strong>[out]</strong> struct to hold returned synthesizer parameters.</p>
+</dd>
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>struct <a class="reference internal" href="../ex10_host_c_support/ex10_result.html#struct_ex10_result"><span class="std std-ref">Ex10Result</span></a> Indicates whether the function call passed or failed. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N16Ex10ActiveRegion29get_synthesizer_frequency_khzE">
+<span id="_CPPv3N16Ex10ActiveRegion29get_synthesizer_frequency_khzE"></span><span id="_CPPv2N16Ex10ActiveRegion29get_synthesizer_frequency_khzE"></span><span class="target" id="struct_ex10_active_region_1a245255555a5ed937dbf158a02eef5cb5"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_synthesizer_frequency_khz</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n"><span class="pre">r_divider_index</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">uint16_t</span></span><span class="w"> </span><span class="n"><span class="pre">n_divider</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">frequency_khz</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N16Ex10ActiveRegion29get_synthesizer_frequency_khzE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Based on the board region settings and the synthesizer params, return the LO synthesizer frequency in kHz. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>r_divider_index references to a R divider value and is not the R divider itself.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Param r_divider_index</dt>
+<dd class="field-odd"><p>These values must match the values enumerated in the documentation RfSynthesizerControl: Parameters for the RF synthesizer <code class="docutils literal notranslate"><span class="pre">Bits</span> <span class="pre">18:16</span> <span class="pre">RDivider</span></code>. </p>
+</dd>
+<dt class="field-even">Param n_divider</dt>
+<dd class="field-even"><p>The synthesizer divisor where: <code class="docutils literal notranslate"><span class="pre">F_LO</span> <span class="pre">=</span> <span class="pre">(FREF</span> <span class="pre">*</span> <span class="pre">NDivider)</span> <span class="pre">/</span> <span class="pre">(RDivider</span> <span class="pre">*</span> <span class="pre">4)</span></code> Where FREF is the TCXO frequency of the board. </p>
+</dd>
+<dt class="field-odd">Param frequency_khz</dt>
+<dd class="field-odd"><p><strong>[out]</strong> The LO synthesizer frequency in kHz. </p>
+</dd>
+<dt class="field-even">Return</dt>
+<dd class="field-even"><p>struct <a class="reference internal" href="../ex10_host_c_support/ex10_result.html#struct_ex10_result"><span class="std std-ref">Ex10Result</span></a> Indicates whether the function call passed or failed. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N16Ex10ActiveRegion13get_rf_filterE">
+<span id="_CPPv3N16Ex10ActiveRegion13get_rf_filterE"></span><span id="_CPPv2N16Ex10ActiveRegion13get_rf_filterE"></span><span class="target" id="struct_ex10_active_region_1a7902dc63d6d58e27ad84d4e85a6f79b3"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><a class="reference internal" href="rf_power.html#_CPPv48RfFilter" title="RfFilter"><span class="n"><span class="pre">RfFilter</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_rf_filter</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N16Ex10ActiveRegion13get_rf_filterE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Returns the filter that should be used for this region. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>an enum value indicating which filter to use </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N16Ex10ActiveRegion17get_pll_r_dividerE">
+<span id="_CPPv3N16Ex10ActiveRegion17get_pll_r_dividerE"></span><span id="_CPPv2N16Ex10ActiveRegion17get_pll_r_dividerE"></span><span class="target" id="struct_ex10_active_region_1aeff0e260764770bae16de4c5d373c113"></span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_pll_r_divider</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N16Ex10ActiveRegion17get_pll_r_dividerE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Get the PLL R divider from the current table. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns Zero</dt>
+<dd class="field-odd"><p>if current region has not been set. </p>
+</dd>
+<dt class="field-even">Return</dt>
+<dd class="field-even"><p>uint32_t The R divider value of this region. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N16Ex10ActiveRegion19calculate_n_dividerE">
+<span id="_CPPv3N16Ex10ActiveRegion19calculate_n_dividerE"></span><span id="_CPPv2N16Ex10ActiveRegion19calculate_n_dividerE"></span><span class="target" id="struct_ex10_active_region_1a8dbdf4334193e40e042fad05a2a3dcd9"></span><span class="n"><span class="pre">uint16_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">calculate_n_divider</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n"><span class="pre">frequency</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n"><span class="pre">r_divider</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N16Ex10ActiveRegion19calculate_n_dividerE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Calculate n_divider using: </p>
+<p><ul class="simple">
+<li><p>The target LO frequency in kHz.</p></li>
+<li><p>The TXCO frequency. This value defined by the symbol <code class="docutils literal notranslate"><span class="pre">TCXO_FREQ_KHZ</span></code> in the file <code class="docutils literal notranslate"><span class="pre">board_spec_constants.h</span></code>.</p></li>
+<li><p>The r_divider value.</p></li>
+</ul>
+</p>
+<dl class="field-list simple">
+<dt class="field-odd">Param frequency</dt>
+<dd class="field-odd"><p>The LO frequency in kHz. </p>
+</dd>
+<dt class="field-even">Param r_divider</dt>
+<dd class="field-even"><p>The PLL R divider value.</p>
+</dd>
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>N divider value for this frequency. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N16Ex10ActiveRegion25calculate_r_divider_indexE">
+<span id="_CPPv3N16Ex10ActiveRegion25calculate_r_divider_indexE"></span><span id="_CPPv2N16Ex10ActiveRegion25calculate_r_divider_indexE"></span><span class="target" id="struct_ex10_active_region_1a4ec3593b9a8c91fb7ec8b1329085087e"></span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">calculate_r_divider_index</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n"><span class="pre">r_divider</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N16Ex10ActiveRegion25calculate_r_divider_indexE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Translate from R divider values to index in the range <code class="docutils literal notranslate"><span class="pre">[0,7]</span></code>. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Param r_divider</dt>
+<dd class="field-odd"><p>PLL R divider value</p>
+</dd>
+<dt class="field-even">Return</dt>
+<dd class="field-even"><p>Index representing the provided R divider value </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N16Ex10ActiveRegion19build_channel_tableE">
+<span id="_CPPv3N16Ex10ActiveRegion19build_channel_tableE"></span><span id="_CPPv2N16Ex10ActiveRegion19build_channel_tableE"></span><span class="target" id="struct_ex10_active_region_1a38500d5db98e248bbd06555307b466df"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">build_channel_table</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv422Ex10RegulatoryChannels" title="Ex10RegulatoryChannels"><span class="n"><span class="pre">Ex10RegulatoryChannels</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">regulatory_channels</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">uint16_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">channel_table</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">channel_size_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">channel_size</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N16Ex10ActiveRegion19build_channel_tableE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>From a struct <a class="reference internal" href="#struct_ex10_regulatory_channels"><span class="std std-ref">Ex10RegulatoryChannels</span></a> build list of channel indices into the channel table. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Param regulatory_channels</dt>
+<dd class="field-odd"><p>Info about the channels used in the region. </p>
+</dd>
+<dt class="field-even">Param channel_table</dt>
+<dd class="field-even"><p><strong>[out]</strong> Based on the channel requirements of the Region this array of channel indices is created.</p>
+</dd>
+<dt class="field-odd">Param channel_size_t</dt>
+<dd class="field-odd"><p><strong>[out]</strong> The number of channels in the table. This value can be used to determine whether the expected channel size matches the size used by call to this routine. </p>
+</dd>
+<dt class="field-even">Return</dt>
+<dd class="field-even"><p>struct <a class="reference internal" href="../ex10_host_c_support/ex10_result.html#struct_ex10_result"><span class="std std-ref">Ex10Result</span></a> Indicates whether the function call passed or failed. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N16Ex10ActiveRegion20set_single_frequencyE">
+<span id="_CPPv3N16Ex10ActiveRegion20set_single_frequencyE"></span><span id="_CPPv2N16Ex10ActiveRegion20set_single_frequencyE"></span><span class="target" id="struct_ex10_active_region_1a2b05586cc96cdec3fa33bc8d62026686"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">set_single_frequency</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n"><span class="pre">frequency_khz</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N16Ex10ActiveRegion20set_single_frequencyE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Sets the region to a copy of the current region but changes the channel list to a single channel of the passed frequency_khz. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Param frequency_khz</dt>
+<dd class="field-odd"><p>The frequency to change to a channel index and to use for the current region. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N16Ex10ActiveRegion25disable_regulatory_timersE">
+<span id="_CPPv3N16Ex10ActiveRegion25disable_regulatory_timersE"></span><span id="_CPPv2N16Ex10ActiveRegion25disable_regulatory_timersE"></span><span class="target" id="struct_ex10_active_region_1aeecfd336058be8720c00d50e8d1f8329"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">disable_regulatory_timers</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N16Ex10ActiveRegion25disable_regulatory_timersE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Disable the regulatory timers for testing purposes. </p>
+<p>Sets the region to use no regulatory timers, i.e. to remain on, when cw is ramped up to power. This is done by setting the regulatory region to have all timer parameters set to zero. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N16Ex10ActiveRegion26reenable_regulatory_timersE">
+<span id="_CPPv3N16Ex10ActiveRegion26reenable_regulatory_timersE"></span><span id="_CPPv2N16Ex10ActiveRegion26reenable_regulatory_timersE"></span><span class="target" id="struct_ex10_active_region_1a4ef97b4006381543268a7ddfa379652b"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">reenable_regulatory_timers</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N16Ex10ActiveRegion26reenable_regulatory_timersE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Enable regulatory timers if they have been turned off. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The default region timers are used. Therefore any other custom timers you may have set will be overriden. </p>
+</div>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N16Ex10ActiveRegion26regulatory_timer_set_startE">
+<span id="_CPPv3N16Ex10ActiveRegion26regulatory_timer_set_startE"></span><span id="_CPPv2N16Ex10ActiveRegion26regulatory_timer_set_startE"></span><span class="target" id="struct_ex10_active_region_1a7e1cac6d757ad8979e1b0655df080ebc"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">regulatory_timer_set_start</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n"><span class="pre">time_ms</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N16Ex10ActiveRegion26regulatory_timer_set_startE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Sets the start time for the current channel to be logged and used for regulatory requirements. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Param time_ms</dt>
+<dd class="field-odd"><p>The current time. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N16Ex10ActiveRegion24regulatory_timer_set_endE">
+<span id="_CPPv3N16Ex10ActiveRegion24regulatory_timer_set_endE"></span><span id="_CPPv2N16Ex10ActiveRegion24regulatory_timer_set_endE"></span><span class="target" id="struct_ex10_active_region_1aaf97c9e65c5a6f594d8f9655545ec332"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">regulatory_timer_set_end</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n"><span class="pre">time_ms</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N16Ex10ActiveRegion24regulatory_timer_set_endE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Sets the end time for the current channel to be logged and used for regulatory requirements. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Param time_ms</dt>
+<dd class="field-odd"><p>The current time. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N16Ex10ActiveRegion28update_channel_time_trackingE">
+<span id="_CPPv3N16Ex10ActiveRegion28update_channel_time_trackingE"></span><span id="_CPPv2N16Ex10ActiveRegion28update_channel_time_trackingE"></span><span class="target" id="struct_ex10_active_region_1a1927f3617f11b3e4592e49da12844cae"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">update_channel_time_tracking</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N16Ex10ActiveRegion28update_channel_time_trackingE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Updates the regulatory region with the proper start and stop time of the previous channel. </p>
+<p>This is only useful when the active region utilizes time tracking of each individual channel. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>: This reads the device registers which show the latest frequency on which the <a class="reference internal" href="../yk_firmware_ex10_host_c_other_types.html#struct_tx_ramp_up"><span class="std std-ref">TxRampUp</span></a> op and <a class="reference internal" href="../yk_firmware_ex10_host_c_other_types.html#struct_tx_ramp_down"><span class="std std-ref">TxRampDown</span></a> op were performed. </p>
+</div>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../../../_static/logo.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="event_fifo_queue.html"
+                        title="previous chapter">Ex10EventFifoQueue</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="calibration.html"
+                        title="next chapter">Ex10Calibration</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="calibration.html" title="Ex10Calibration"
+             >next</a></li>
+        <li class="right" >
+          <a href="event_fifo_queue.html" title="Ex10EventFifoQueue"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../yk_firmware_ex10_host_c_api.html" >Impinj Reader Chip C Host SDK</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../yk_firmware_ex10_host_c_api_layers.html" >API Layers</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="reader_primitives_layer.html" >Ex10 Reader Primitives</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Regulatory Regions Structures and Interfaces</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Impinj, Inc..
+    </div>
+  </body>
+</html>

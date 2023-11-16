@@ -1,0 +1,794 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Ex10Ops Layer &#8212; Impinj Reader Chip SDK</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinxdoc.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Ex10Protocol Layer" href="yk_firmware_ex10_host_c_protocol_layer.html" />
+    <link rel="prev" title="Ex10Test" href="ex10_host_c_reader_primitives/test.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="yk_firmware_ex10_host_c_protocol_layer.html" title="Ex10Protocol Layer"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="ex10_host_c_reader_primitives/test.html" title="Ex10Test"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="yk_firmware_ex10_host_c_api.html" >Impinj Reader Chip C Host SDK</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="yk_firmware_ex10_host_c_api_layers.html" accesskey="U">API Layers</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Ex10Ops Layer</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="ex10ops-layer">
+<span id="ex10-api-host-c-api-ops"></span><h1>Ex10Ops Layer<a class="headerlink" href="#ex10ops-layer" title="Permalink to this headline">¶</a></h1>
+<p>The Ex10Ops layer provides an operation-level interface that allows the user
+to start atomic operations, known as ‘Ops’, on the device.
+<a class="reference internal" href="yk_firmware_ex10_api_operations.html#ex10-api-atomic-operations-label"><span class="std std-ref">Atomic operations</span></a> are fundamental
+actions that can be executed by the Impinj reader chip.
+Some atomic operations produce data in the EventFifo.
+As an example, the StartInventoryRoundOp is an op started through the
+<code class="docutils literal notranslate"><span class="pre">start_inventory_round(...)</span></code> function and will produce an EventFifo packet
+<code class="docutils literal notranslate"><span class="pre">InventoryRoundSummary</span></code>. This function take arguments which are used to set
+up the Ex10 registers before running the op.</p>
+<p><a class="reference external" href="yk_firmware_ex10_api_operations.html#sdk-aggregate-operations">SDK Aggregate Operations</a>
+are an aggregation of atomic operations as well as register writes used to
+set up the op before running. The Ops layer does not wait for these atomic
+operations to complete before returning to allow the user time to perform
+other actions. To ensure an op is complete, higher layers should check the
+OpStatus register or utilize the Ops layer function <code class="docutils literal notranslate"><span class="pre">wait_op_completion</span></code>.
+The Impinj Reader Chip Host Library supports the following operations:</p>
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv47Ex10Ops">
+<span id="_CPPv37Ex10Ops"></span><span id="_CPPv27Ex10Ops"></span><span id="Ex10Ops"></span><span class="target" id="struct_ex10_ops"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10Ops</span></span></span><a class="headerlink" href="#_CPPv47Ex10Ops" title="Permalink to this definition">¶</a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N7Ex10Ops4initE">
+<span id="_CPPv3N7Ex10Ops4initE"></span><span id="_CPPv2N7Ex10Ops4initE"></span><span class="target" id="struct_ex10_ops_1aeaf270c1dc6db3e50473c6cde68abad9"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">init</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N7Ex10Ops4initE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Initialize the Ex10 Ops instance. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N7Ex10Ops7releaseE">
+<span id="_CPPv3N7Ex10Ops7releaseE"></span><span id="_CPPv2N7Ex10Ops7releaseE"></span><span class="target" id="struct_ex10_ops_1a9fcae161e710e1fbaa266c790f1ff953"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">release</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N7Ex10Ops7releaseE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Cleans up dependencies between the SDK and Impinj Reader Chip. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N7Ex10Ops15read_ops_statusE">
+<span id="_CPPv3N7Ex10Ops15read_ops_statusE"></span><span id="_CPPv2N7Ex10Ops15read_ops_statusE"></span><span class="target" id="struct_ex10_ops_1a14a90ee22f17c8205ba83bf385305df8"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="yk_firmware_ex10_host_c_register_accessors.html#_CPPv415OpsStatusFields" title="OpsStatusFields"><span class="n"><span class="pre">OpsStatusFields</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">read_ops_status</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N7Ex10Ops15read_ops_statusE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Read the OpsStatus register. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>struct <a class="reference internal" href="yk_firmware_ex10_host_c_register_accessors.html#struct_ops_status_fields"><span class="std std-ref">OpsStatusFields</span></a> The fields of the ‘OpsStatus’ register. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N7Ex10Ops14start_log_testE">
+<span id="_CPPv3N7Ex10Ops14start_log_testE"></span><span id="_CPPv2N7Ex10Ops14start_log_testE"></span><span class="target" id="struct_ex10_ops_1a5ed6ff1947a59d6e0ad85695b87fe7ff"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">start_log_test</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n"><span class="pre">period</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">uint16_t</span></span><span class="w"> </span><span class="n"><span class="pre">repeat</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N7Ex10Ops14start_log_testE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Start a log test op. </p>
+<p>This op periodically writes a log entry to the debug port. Each log entry consists of a timestamp, followed by a requested number of repetitions of that timestamp and an end-of-line. This op will run until stopped.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Param period</dt>
+<dd class="field-odd"><p>period (milliseconds) of log entries </p>
+</dd>
+<dt class="field-even">Param repeat</dt>
+<dd class="field-even"><p>Number of timestamp repetitions in each log entry</p>
+</dd>
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>struct <a class="reference internal" href="ex10_host_c_support/ex10_result.html#struct_ex10_result"><span class="std std-ref">Ex10Result</span></a> Indicates whether the function call passed or failed. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N7Ex10Ops13set_atest_muxE">
+<span id="_CPPv3N7Ex10Ops13set_atest_muxE"></span><span id="_CPPv2N7Ex10Ops13set_atest_muxE"></span><span class="target" id="struct_ex10_ops_1a64dd6fcdfc06650e7ae38224367c3f8a"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">set_atest_mux</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n"><span class="pre">atest_mux_0</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n"><span class="pre">atest_mux_1</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n"><span class="pre">atest_mux_2</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n"><span class="pre">atest_mux_3</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N7Ex10Ops13set_atest_muxE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Set the ATEST multiplexer channel routings by running the SetATestMuxOp. </p>
+<p>See the documentation for a complete description. <dl class="simple">
+<dt><strong>See</strong></dt><dd><p>ATestMuxAuxDac, </p>
+</dd>
+<dt><strong>See</strong></dt><dd><p>ATestMuxAuxAdc</p>
+</dd>
+</dl>
+</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>struct <a class="reference internal" href="ex10_host_c_support/ex10_result.html#struct_ex10_result"><span class="std std-ref">Ex10Result</span></a> Indicates whether the function call passed or failed. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N7Ex10Ops16route_atest_pga3E">
+<span id="_CPPv3N7Ex10Ops16route_atest_pga3E"></span><span id="_CPPv2N7Ex10Ops16route_atest_pga3E"></span><span class="target" id="struct_ex10_ops_1a0dcf6b4342d372a3c21d948820cc9da8"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">route_atest_pga3</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N7Ex10Ops16route_atest_pga3E" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Route PGA3 to the ATEST bus: (1 &lt;&lt; 4) ATEST 0 ATEST 1 ATEST 2 ATEST 3 RxPga3Q_P RxPga3Q_N RxPga3I_P RxPga3I_N. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>struct <a class="reference internal" href="ex10_host_c_support/ex10_result.html#struct_ex10_result"><span class="std std-ref">Ex10Result</span></a> Indicates whether the function call passed or failed. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N7Ex10Ops15measure_aux_adcE">
+<span id="_CPPv3N7Ex10Ops15measure_aux_adcE"></span><span id="_CPPv2N7Ex10Ops15measure_aux_adcE"></span><span class="target" id="struct_ex10_ops_1a9f48306420632a0b6c0a45c6cd50645b"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">measure_aux_adc</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><a class="reference internal" href="yk_firmware_ex10_host_c_register_accessors.html#_CPPv422AuxAdcResultsAdcResult" title="AuxAdcResultsAdcResult"><span class="n"><span class="pre">AuxAdcResultsAdcResult</span></span></a><span class="w"> </span><span class="n"><span class="pre">adc_channel_start</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n"><span class="pre">num_channels</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N7Ex10Ops15measure_aux_adcE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>This executes the MeasureAdcOp operation which performs AUX ADC for each multiplexer input specified. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Param adc_channel_start</dt>
+<dd class="field-odd"><p>Determines the starting channel on which to begin ADC conversions. </p>
+</dd>
+<dt class="field-even">Param num_channels</dt>
+<dd class="field-even"><p>The number of ADC conversions to perform starting with the adc_channel_start. Each conversion will be performed on the next multiplexer input. The number of channels converted will be limited to be within the valid AuxAdcResults range.</p>
+</dd>
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>struct <a class="reference internal" href="ex10_host_c_support/ex10_result.html#struct_ex10_result"><span class="std std-ref">Ex10Result</span></a> Indicates whether the function call passed or failed. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N7Ex10Ops11set_aux_dacE">
+<span id="_CPPv3N7Ex10Ops11set_aux_dacE"></span><span id="_CPPv2N7Ex10Ops11set_aux_dacE"></span><span class="target" id="struct_ex10_ops_1a0311fbdf70ec945ab862047f9a20e979"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">set_aux_dac</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n"><span class="pre">dac_channel_start</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n"><span class="pre">num_channels</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">uint16_t</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">dac_values</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N7Ex10Ops11set_aux_dacE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>This executes the SetDacOp operation which writes values to the AUX DAC for each channel specified. </p>
+<p>When the SetDacOp has completed the digital to analog conversions will have completed.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>There are 2 AUX DAC channels which can be written.<ul class="simple">
+<li><p>If a channel is omitted from the DAC list then that channel is disabled and its output will be zero.</p></li>
+<li><p>If more channels are set outside the range of the DAC list, then the out of bounds values are ignored.</p></li>
+</ul>
+</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Param dac_channel_start</dt>
+<dd class="field-odd"><p>Determines the starting DAC channel. </p>
+</dd>
+<dt class="field-even">Param num_channels</dt>
+<dd class="field-even"><p>The number of DAC channel conversions to perform. </p>
+</dd>
+<dt class="field-odd">Param dac_values</dt>
+<dd class="field-odd"><p>An array of DAC channel data containing unsigned 10-bit values for conversion. The size of this array must be uint16_t[num_channels].</p>
+</dd>
+<dt class="field-even">Return</dt>
+<dd class="field-even"><p>struct <a class="reference internal" href="ex10_host_c_support/ex10_result.html#struct_ex10_result"><span class="std std-ref">Ex10Result</span></a> Indicates whether the function call passed or failed. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N7Ex10Ops11set_rf_modeE">
+<span id="_CPPv3N7Ex10Ops11set_rf_modeE"></span><span id="_CPPv2N7Ex10Ops11set_rf_modeE"></span><span class="target" id="struct_ex10_ops_1a9fd2ae47dd899ec8ec1319c5be5f1d80"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">set_rf_mode</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="n"><span class="pre">RfModes</span></span><span class="w"> </span><span class="n"><span class="pre">rf_mode</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N7Ex10Ops11set_rf_modeE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>This function executes the SetRfModeOp which will set the Ex10 modem registers for use with a specific RF mode. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Param rf_mode</dt>
+<dd class="field-odd"><p>The requested RF mode.</p>
+</dd>
+<dt class="field-even">Return</dt>
+<dd class="field-even"><p>struct <a class="reference internal" href="ex10_host_c_support/ex10_result.html#struct_ex10_result"><span class="std std-ref">Ex10Result</span></a> Indicates whether the function call passed or failed. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N7Ex10Ops10tx_ramp_upE">
+<span id="_CPPv3N7Ex10Ops10tx_ramp_upE"></span><span id="_CPPv2N7Ex10Ops10tx_ramp_upE"></span><span class="target" id="struct_ex10_ops_1a99d418ffc4d2fc9ac05d249fafa45522"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">tx_ramp_up</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">int32_t</span></span><span class="w"> </span><span class="n"><span class="pre">dc_offset</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N7Ex10Ops10tx_ramp_upE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Enable the transmitter and begin CW transmission. </p>
+<p>Sets a timer for any non-zero regulatory dwell time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Param dc_offset</dt>
+<dd class="field-odd"><p>DC offset of the transmitter in the EX10.</p>
+</dd>
+<dt class="field-even">Return</dt>
+<dd class="field-even"><p>struct <a class="reference internal" href="ex10_host_c_support/ex10_result.html#struct_ex10_result"><span class="std std-ref">Ex10Result</span></a> Indicates whether the function call passed or failed. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N7Ex10Ops12tx_ramp_downE">
+<span id="_CPPv3N7Ex10Ops12tx_ramp_downE"></span><span id="_CPPv2N7Ex10Ops12tx_ramp_downE"></span><span class="target" id="struct_ex10_ops_1aa10c9ca203574f1d1e671b0fbeb92596"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">tx_ramp_down</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N7Ex10Ops12tx_ramp_downE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Disable the transmitter. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>struct <a class="reference internal" href="ex10_host_c_support/ex10_result.html#struct_ex10_result"><span class="std std-ref">Ex10Result</span></a> Indicates whether the function call passed or failed. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N7Ex10Ops18set_tx_coarse_gainE">
+<span id="_CPPv3N7Ex10Ops18set_tx_coarse_gainE"></span><span id="_CPPv2N7Ex10Ops18set_tx_coarse_gainE"></span><span class="target" id="struct_ex10_ops_1ad65379e344de417472ea296f1f89523d"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">set_tx_coarse_gain</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n"><span class="pre">tx_atten</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N7Ex10Ops18set_tx_coarse_gainE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Set the TX coarse gain settings. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Param tx_atten</dt>
+<dd class="field-odd"><p>The CT filter attenuation.</p>
+</dd>
+<dt class="field-even">Return</dt>
+<dd class="field-even"><p>struct <a class="reference internal" href="ex10_host_c_support/ex10_result.html#struct_ex10_result"><span class="std std-ref">Ex10Result</span></a> Indicates whether the function call passed or failed. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N7Ex10Ops16set_tx_fine_gainE">
+<span id="_CPPv3N7Ex10Ops16set_tx_fine_gainE"></span><span id="_CPPv2N7Ex10Ops16set_tx_fine_gainE"></span><span class="target" id="struct_ex10_ops_1aee77b541779f194b00865b8651add0fa"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">set_tx_fine_gain</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">int16_t</span></span><span class="w"> </span><span class="n"><span class="pre">tx_scalar</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N7Ex10Ops16set_tx_fine_gainE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Tx fine gain value. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Param tx_scalar</dt>
+<dd class="field-odd"><p>new fine gain value</p>
+</dd>
+<dt class="field-even">Return</dt>
+<dd class="field-even"><p>struct <a class="reference internal" href="ex10_host_c_support/ex10_result.html#struct_ex10_result"><span class="std std-ref">Ex10Result</span></a> Indicates whether the function call passed or failed. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N7Ex10Ops19radio_power_controlE">
+<span id="_CPPv3N7Ex10Ops19radio_power_controlE"></span><span id="_CPPv2N7Ex10Ops19radio_power_controlE"></span><span class="target" id="struct_ex10_ops_1a46b03cca2934806c044455fb3cc5be8a"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">radio_power_control</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n"><span class="pre">enable</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N7Ex10Ops19radio_power_controlE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Power up/down the LDOs and bias currents for the Ex10 radio by running the RadioPowerControlOp. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Param enable</dt>
+<dd class="field-odd"><p>If true, turns on the Ex10 analog power supplies. If false, turns off the Ex10 analog power supplies.</p>
+</dd>
+<dt class="field-even">Return</dt>
+<dd class="field-even"><p>struct <a class="reference internal" href="ex10_host_c_support/ex10_result.html#struct_ex10_result"><span class="std std-ref">Ex10Result</span></a> Indicates whether the function call passed or failed. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N7Ex10Ops20set_analog_rx_configE">
+<span id="_CPPv3N7Ex10Ops20set_analog_rx_configE"></span><span id="_CPPv2N7Ex10Ops20set_analog_rx_configE"></span><span class="target" id="struct_ex10_ops_1a010c0b67fc7a8062946bc7c877f92179"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">set_analog_rx_config</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="yk_firmware_ex10_host_c_register_accessors.html#_CPPv419RxGainControlFields" title="RxGainControlFields"><span class="n"><span class="pre">RxGainControlFields</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">analog_rx_fields</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N7Ex10Ops20set_analog_rx_configE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Set individual block gain of the receiver. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Param analog_rx_fields</dt>
+<dd class="field-odd"><p>The gain we set the receiver to. This value is stored in a state variable for later retrieval.</p>
+</dd>
+<dt class="field-even">Return</dt>
+<dd class="field-even"><p>struct <a class="reference internal" href="ex10_host_c_support/ex10_result.html#struct_ex10_result"><span class="std std-ref">Ex10Result</span></a> Indicates whether the function call passed or failed. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N7Ex10Ops12measure_rssiE">
+<span id="_CPPv3N7Ex10Ops12measure_rssiE"></span><span id="_CPPv2N7Ex10Ops12measure_rssiE"></span><span class="target" id="struct_ex10_ops_1a865c66597550ba84b950906a8e92c99b"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">measure_rssi</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n"><span class="pre">rssi_count</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N7Ex10Ops12measure_rssiE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Setup and run the op to get the RSSI. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Once run, the RSSI measurements must be retrieved through the event FIFO </p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Param rssi_count</dt>
+<dd class="field-odd"><p>The integration count to used for measurement. The recommended value is 0x0Fu.</p>
+</dd>
+<dt class="field-even">Return</dt>
+<dd class="field-even"><p>struct <a class="reference internal" href="ex10_host_c_support/ex10_result.html#struct_ex10_result"><span class="std std-ref">Ex10Result</span></a> Indicates whether the function call passed or failed. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N7Ex10Ops22run_listen_before_talkE">
+<span id="_CPPv3N7Ex10Ops22run_listen_before_talkE"></span><span id="_CPPv2N7Ex10Ops22run_listen_before_talkE"></span><span class="target" id="struct_ex10_ops_1ad72d747a02b425a03b3984d150d17446"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">run_listen_before_talk</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="yk_firmware_ex10_host_c_register_accessors.html#_CPPv416LbtControlFields" title="LbtControlFields"><span class="n"><span class="pre">LbtControlFields</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">lbt_settings</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="yk_firmware_ex10_host_c_register_accessors.html#_CPPv419RxGainControlFields" title="RxGainControlFields"><span class="n"><span class="pre">RxGainControlFields</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">used_rx_gains</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="yk_firmware_ex10_host_c_register_accessors.html#_CPPv415LbtOffsetFields" title="LbtOffsetFields"><span class="n"><span class="pre">LbtOffsetFields</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">lbt_offsets</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="yk_firmware_ex10_host_c_register_accessors.html#_CPPv426RfSynthesizerControlFields" title="RfSynthesizerControlFields"><span class="n"><span class="pre">RfSynthesizerControlFields</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">rf_synth_control</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n"><span class="pre">rssi_count</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N7Ex10Ops22run_listen_before_talkE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Runs the listen before talk op. </p>
+<p>The op goes through the following steps:<ol class="lowerroman simple">
+<li><p>Sets up the modem and internal low pass filter</p></li>
+<li><p>Set the RF synthesizer using the RF Synth control and offset frequency</p></li>
+<li><p>Run the RSSI measurement.</p></li>
+<li><p>Delay for the user specified time.</p></li>
+<li><p>Repeat 2-4 the number of user specified times using an index incrementing from 0.</p></li>
+</ol>
+</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>: Before running LBT, the host must have run 2 ops: set_gpio, set_analog_rx_config. </p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>: CW must be ramped down before LBT </p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>: The op leaves the synthesizer locked to the last frequency used when done. </p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Param lbt_settings</dt>
+<dd class="field-odd"><p>Controls for the LBT op including the number of rounds to run and the delay between each round. </p>
+</dd>
+<dt class="field-even">Param lbt_offsets</dt>
+<dd class="field-even"><p>The offset frequency to use for each measurement. Note that this is an array which can differ for each measurement. Ensure that each index is set up to the number of measurements needed. If taking 3 measurements, set index 0-2. </p>
+</dd>
+<dt class="field-odd">Param rf_synth_control</dt>
+<dd class="field-odd"><p>The PLL controls to use for each measurement. Note that this is an array which can differ for each measurement. Ensure that each index is set up to the number of measurements needed. If taking 3 measurements, set index 0-2.</p>
+</dd>
+<dt class="field-even">Param rssi_count</dt>
+<dd class="field-even"><p>The integration count to used for the RSSI block</p>
+</dd>
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>struct <a class="reference internal" href="ex10_host_c_support/ex10_result.html#struct_ex10_result"><span class="std std-ref">Ex10Result</span></a> Indicates whether the function call passed or failed.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N7Ex10Ops14start_timer_opE">
+<span id="_CPPv3N7Ex10Ops14start_timer_opE"></span><span id="_CPPv2N7Ex10Ops14start_timer_opE"></span><span class="target" id="struct_ex10_ops_1adf505b6acde29c326db59aa202e8387a"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">start_timer_op</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n"><span class="pre">delay_us</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N7Ex10Ops14start_timer_opE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Run the us timer start op. </p>
+<p>This starts a timer which one can check completion of via the UsTimerWaitOp. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If the op is run while a timer is already started, the current timer will be cancelled and a new one will be started.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Param delay_us</dt>
+<dd class="field-odd"><p>The time in microseconds for the timer to run.</p>
+</dd>
+<dt class="field-even">Return</dt>
+<dd class="field-even"><p>struct <a class="reference internal" href="ex10_host_c_support/ex10_result.html#struct_ex10_result"><span class="std std-ref">Ex10Result</span></a> Indicates whether the function call passed or failed. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N7Ex10Ops13wait_timer_opE">
+<span id="_CPPv3N7Ex10Ops13wait_timer_opE"></span><span id="_CPPv2N7Ex10Ops13wait_timer_opE"></span><span class="target" id="struct_ex10_ops_1a7d2da2132a89d98ae965297a93b44823"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">wait_timer_op</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N7Ex10Ops13wait_timer_opE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Run the us timer wait op. </p>
+<p>This waits for the timer to complete which was started by the UsTimerStartOp.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If the timer is done or no timer was started, the op will return immediately. </p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>struct <a class="reference internal" href="ex10_host_c_support/ex10_result.html#struct_ex10_result"><span class="std std-ref">Ex10Result</span></a> Indicates whether the function call passed or failed.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N7Ex10Ops16lock_synthesizerE">
+<span id="_CPPv3N7Ex10Ops16lock_synthesizerE"></span><span id="_CPPv2N7Ex10Ops16lock_synthesizerE"></span><span class="target" id="struct_ex10_ops_1acc04b36d5373d11c2e6a65518c8d0642"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">lock_synthesizer</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n"><span class="pre">r_divider_index</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">uint16_t</span></span><span class="w"> </span><span class="n"><span class="pre">n_divider</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N7Ex10Ops16lock_synthesizerE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Lock the RF synthesizer to the target frequency. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Param r_divider_index</dt>
+<dd class="field-odd"><p>Index (0-7) of a divider value for RfSynthesizer, divides down from FREF. </p>
+</dd>
+<dt class="field-even">Param n_divider</dt>
+<dd class="field-even"><p>N divider for the RfSynthesizer</p>
+</dd>
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>struct <a class="reference internal" href="ex10_host_c_support/ex10_result.html#struct_ex10_result"><span class="std std-ref">Ex10Result</span></a> Indicates whether the function call passed or failed. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N7Ex10Ops21start_event_fifo_testE">
+<span id="_CPPv3N7Ex10Ops21start_event_fifo_testE"></span><span id="_CPPv2N7Ex10Ops21start_event_fifo_testE"></span><span class="target" id="struct_ex10_ops_1afa67e9267144b16427aa1e38788a356f"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">start_event_fifo_test</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n"><span class="pre">period</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n"><span class="pre">num_words</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N7Ex10Ops21start_event_fifo_testE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Start event FIFO test op. </p>
+<p>This op periodically pushes debug packets into the event FIFO.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Param period</dt>
+<dd class="field-odd"><p>period in milliseconds of event FIFO debug packets </p>
+</dd>
+<dt class="field-even">Param num_words</dt>
+<dd class="field-even"><p>payload size in each event FIFO debug packet</p>
+</dd>
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>struct <a class="reference internal" href="ex10_host_c_support/ex10_result.html#struct_ex10_result"><span class="std std-ref">Ex10Result</span></a> Indicates whether the function call passed or failed. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N7Ex10Ops15enable_sdd_logsE">
+<span id="_CPPv3N7Ex10Ops15enable_sdd_logsE"></span><span id="_CPPv2N7Ex10Ops15enable_sdd_logsE"></span><span class="target" id="struct_ex10_ops_1a46375334142c44fe392fb1676712b340"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">enable_sdd_logs</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="yk_firmware_ex10_host_c_register_accessors.html#_CPPv416LogEnablesFields" title="LogEnablesFields"><span class="n"><span class="pre">LogEnablesFields</span></span></a><span class="w"> </span><span class="n"><span class="pre">enables</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n"><span class="pre">speed_mhz</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N7Ex10Ops15enable_sdd_logsE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Enable the SDD log outputs and log speed. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Param enables</dt>
+<dd class="field-odd"><p>the structure with the individual enables </p>
+</dd>
+<dt class="field-even">Param speed_mhz</dt>
+<dd class="field-even"><p>The speed of the sdd SPI clock (1-24 MHz)</p>
+</dd>
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>struct <a class="reference internal" href="ex10_host_c_support/ex10_result.html#struct_ex10_result"><span class="std std-ref">Ex10Result</span></a> Indicates whether the function call passed or failed. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N7Ex10Ops25send_gen2_halted_sequenceE">
+<span id="_CPPv3N7Ex10Ops25send_gen2_halted_sequenceE"></span><span id="_CPPv2N7Ex10Ops25send_gen2_halted_sequenceE"></span><span class="target" id="struct_ex10_ops_1a4b7fd9ffe451afddbea6452966288dd8"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">send_gen2_halted_sequence</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N7Ex10Ops25send_gen2_halted_sequenceE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Send the enabled Gen2 Access command sequence for halted which are already stored in the Gen2TxBuffer. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The modem MUST be in the halted state. </p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>struct <a class="reference internal" href="ex10_host_c_support/ex10_result.html#struct_ex10_result"><span class="std std-ref">Ex10Result</span></a> Indicates whether the function call passed or failed.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N7Ex10Ops20continue_from_haltedE">
+<span id="_CPPv3N7Ex10Ops20continue_from_haltedE"></span><span id="_CPPv2N7Ex10Ops20continue_from_haltedE"></span><span class="target" id="struct_ex10_ops_1a885baa254230f8c7765dea668c2badb7"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">continue_from_halted</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n"><span class="pre">nak</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N7Ex10Ops20continue_from_haltedE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Release the currently halted on tag and move on to the next. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The modem MUST be in the halted state. </p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Param nak</dt>
+<dd class="field-odd"><p>Indicates whether to nak the tag or not.</p>
+</dd>
+<dt class="field-even">Return</dt>
+<dd class="field-even"><p>struct <a class="reference internal" href="ex10_host_c_support/ex10_result.html#struct_ex10_result"><span class="std std-ref">Ex10Result</span></a> Indicates whether the function call passed or failed.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N7Ex10Ops7run_sjcE">
+<span id="_CPPv3N7Ex10Ops7run_sjcE"></span><span id="_CPPv2N7Ex10Ops7run_sjcE"></span><span class="target" id="struct_ex10_ops_1a95b70c4cc536e249d1ca0f708e463ad9"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">run_sjc</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N7Ex10Ops7run_sjcE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Run the RunRxSjcOp. </p>
+<p>The settings by which the SJC will be configured are set up in the ops init.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>struct <a class="reference internal" href="ex10_host_c_support/ex10_result.html#struct_ex10_result"><span class="std std-ref">Ex10Result</span></a> Indicates whether the function call passed or failed. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N7Ex10Ops18wait_op_completionE">
+<span id="_CPPv3N7Ex10Ops18wait_op_completionE"></span><span id="_CPPv2N7Ex10Ops18wait_op_completionE"></span><span class="target" id="struct_ex10_ops_1a6b57d619391120f9da98aab3c5c8739b"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">wait_op_completion</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N7Ex10Ops18wait_op_completionE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Wait for previously-started op to complete. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>struct <a class="reference internal" href="ex10_host_c_support/ex10_result.html#struct_ex10_result"><span class="std std-ref">Ex10Result</span></a> Indicates whether the function call passed or failed. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N7Ex10Ops31wait_op_completion_with_timeoutE">
+<span id="_CPPv3N7Ex10Ops31wait_op_completion_with_timeoutE"></span><span id="_CPPv2N7Ex10Ops31wait_op_completion_with_timeoutE"></span><span class="target" id="struct_ex10_ops_1adb862b4081439a509a07f885bdeba09e"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">wait_op_completion_with_timeout</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n"><span class="pre">timeout_ms</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N7Ex10Ops31wait_op_completion_with_timeoutE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Wait for previously started op to complete. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Param timeout_ms</dt>
+<dd class="field-odd"><p>Function returns false if the op takes more time than this number of milliseconds.</p>
+</dd>
+<dt class="field-even">Return</dt>
+<dd class="field-even"><p>struct <a class="reference internal" href="ex10_host_c_support/ex10_result.html#struct_ex10_result"><span class="std std-ref">Ex10Result</span></a> Indicates whether the function call passed or failed. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N7Ex10Ops16run_aggregate_opE">
+<span id="_CPPv3N7Ex10Ops16run_aggregate_opE"></span><span id="_CPPv2N7Ex10Ops16run_aggregate_opE"></span><span class="target" id="struct_ex10_ops_1afbda00f0819d08a1c8745e7f74358bc7"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">run_aggregate_op</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N7Ex10Ops16run_aggregate_opE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Run the AggregateOp and waits for the Op to complete. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>struct <a class="reference internal" href="ex10_host_c_support/ex10_result.html#struct_ex10_result"><span class="std std-ref">Ex10Result</span></a> Indicates whether the function call passed or failed. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N7Ex10Ops7stop_opE">
+<span id="_CPPv3N7Ex10Ops7stop_opE"></span><span id="_CPPv2N7Ex10Ops7stop_opE"></span><span class="target" id="struct_ex10_ops_1a2b2af4e34f2953bc6f4ded7e073a60b9"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">stop_op</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N7Ex10Ops7stop_opE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Stop a previously-started op. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>struct <a class="reference internal" href="ex10_host_c_support/ex10_result.html#struct_ex10_result"><span class="std std-ref">Ex10Result</span></a> Indicates whether the function call passed or failed. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N7Ex10Ops8get_gpioE">
+<span id="_CPPv3N7Ex10Ops8get_gpioE"></span><span id="_CPPv2N7Ex10Ops8get_gpioE"></span><span class="target" id="struct_ex10_ops_1aafb1722bb4df8a66b9237b691038c060"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv417GpioControlFields" title="GpioControlFields"><span class="n"><span class="pre">GpioControlFields</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_gpio</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N7Ex10Ops8get_gpioE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Get the current GPIO output levels and enable. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>struct <a class="reference internal" href="#struct_gpio_control_fields"><span class="std std-ref">GpioControlFields</span></a> Bitmasks that represent the current GPIO output levels and enable. Each Ex10 DIGITAL_IO pin is assigned a numeric value represented as (1u &lt;&lt; DIGITAL_IO[N]); </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N7Ex10Ops8set_gpioE">
+<span id="_CPPv3N7Ex10Ops8set_gpioE"></span><span id="_CPPv2N7Ex10Ops8set_gpioE"></span><span class="target" id="struct_ex10_ops_1af1f99c8255f91989c07a76702aa8752c"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">set_gpio</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n"><span class="pre">gpio_levels</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n"><span class="pre">gpio_enables</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N7Ex10Ops8set_gpioE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Set the GPIO levels and enables using the SetGpioOp. </p>
+<p>There are 22 Ex10 GPIOs. Each GPIO can be set as an output by setting the appropriate bit in the gpio level and enable fields. This function uses the SetGpioOp to set the GPIO levels and enables.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Param gpio_levels</dt>
+<dd class="field-odd"><p>A bit-field which sets each GPIO pin output level. </p>
+</dd>
+<dt class="field-even">Param gpio_enables</dt>
+<dd class="field-even"><p>A bit-field which enables each GPIO pin as an output.</p>
+</dd>
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>struct <a class="reference internal" href="ex10_host_c_support/ex10_result.html#struct_ex10_result"><span class="std std-ref">Ex10Result</span></a> Indicates whether the function call passed or failed. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N7Ex10Ops19set_clear_gpio_pinsE">
+<span id="_CPPv3N7Ex10Ops19set_clear_gpio_pinsE"></span><span id="_CPPv2N7Ex10Ops19set_clear_gpio_pinsE"></span><span class="target" id="struct_ex10_ops_1a59b4520c560c2605cd2fce9981642eca"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">set_clear_gpio_pins</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="ex10_board_specific/ex10_gpio.html#_CPPv416GpioPinsSetClear" title="GpioPinsSetClear"><span class="n"><span class="pre">GpioPinsSetClear</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">gpio_pins_set_clear</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N7Ex10Ops19set_clear_gpio_pinsE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Set the GPIO levels and enables using the SetClearGpioPinsOp. </p>
+<p>There are 22 Ex10 GPIOs. Each GPIO can be addressed within each bit-field by setting or clearing the appropriate bit (1u &lt;&lt; pin_number).</p>
+<p>Set the GPIO levels and enable. There are 22 Ex10 GPIOs. The GPIOs are labelled DIGITAL_IO[N] on the Imping Reader Chip schematic.</p>
+<p><dl class="simple">
+<dt><strong>See</strong></dt><dd><p>struct <a class="reference internal" href="ex10_board_specific/ex10_gpio.html#struct_gpio_pins_set_clear"><span class="std std-ref">GpioPinsSetClear</span></a></p>
+</dd>
+</dl>
+</p>
+<dl class="field-list simple">
+<dt class="field-odd">Param gpio_pins_set_clear</dt>
+<dd class="field-odd"><p>The GPIO pin bit-fields to set and clear. </p>
+</dd>
+<dt class="field-even">Return</dt>
+<dd class="field-even"><p>struct <a class="reference internal" href="ex10_host_c_support/ex10_result.html#struct_ex10_result"><span class="std std-ref">Ex10Result</span></a> Indicates whether the function call passed or failed. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N7Ex10Ops21start_inventory_roundE">
+<span id="_CPPv3N7Ex10Ops21start_inventory_roundE"></span><span id="_CPPv2N7Ex10Ops21start_inventory_roundE"></span><span class="target" id="struct_ex10_ops_1a18fc76923273416d75292d57f3275ef6"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">start_inventory_round</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="yk_firmware_ex10_host_c_register_accessors.html#_CPPv427InventoryRoundControlFields" title="InventoryRoundControlFields"><span class="n"><span class="pre">InventoryRoundControlFields</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">configs</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="yk_firmware_ex10_host_c_register_accessors.html#_CPPv429InventoryRoundControl_2Fields" title="InventoryRoundControl_2Fields"><span class="n"><span class="pre">InventoryRoundControl_2Fields</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">configs_2</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N7Ex10Ops21start_inventory_roundE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Start a single inventory round by running the StartInventoryRoundOp. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Param configs</dt>
+<dd class="field-odd"><p>inventory round configuration</p>
+</dd>
+<dt class="field-even">Return</dt>
+<dd class="field-even"><p>struct <a class="reference internal" href="ex10_host_c_support/ex10_result.html#struct_ex10_result"><span class="std std-ref">Ex10Result</span></a> Indicates whether the function call passed or failed. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N7Ex10Ops10start_prbsE">
+<span id="_CPPv3N7Ex10Ops10start_prbsE"></span><span id="_CPPv2N7Ex10Ops10start_prbsE"></span><span class="target" id="struct_ex10_ops_1af24215b8ee884ef94ac7e2d13c1242dd"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">start_prbs</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N7Ex10Ops10start_prbsE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Enable PRBS modulation. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>struct <a class="reference internal" href="ex10_host_c_support/ex10_result.html#struct_ex10_result"><span class="std std-ref">Ex10Result</span></a> Indicates whether the function call passed or failed. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N7Ex10Ops26start_hpf_override_test_opE">
+<span id="_CPPv3N7Ex10Ops26start_hpf_override_test_opE"></span><span id="_CPPv2N7Ex10Ops26start_hpf_override_test_opE"></span><span class="target" id="struct_ex10_ops_1a4033e3b4bb0597e3e1d0fe0839913930"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">start_hpf_override_test_op</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="yk_firmware_ex10_host_c_register_accessors.html#_CPPv425HpfOverrideSettingsFields" title="HpfOverrideSettingsFields"><span class="n"><span class="pre">HpfOverrideSettingsFields</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">hpf_settings</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N7Ex10Ops26start_hpf_override_test_opE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Set the HPF override settings and run the HPF override test op. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Param struct</dt>
+<dd class="field-odd"><p><a class="reference internal" href="yk_firmware_ex10_host_c_register_accessors.html#struct_hpf_override_settings_fields"><span class="std std-ref">HpfOverrideSettingsFields</span></a> Ex10 receiver HPF (high-pass filter) override setting. For details, see HpfOverrideSettings register documentation.</p>
+</dd>
+<dt class="field-even">Return</dt>
+<dd class="field-even"><p>struct <a class="reference internal" href="ex10_host_c_support/ex10_result.html#struct_ex10_result"><span class="std std-ref">Ex10Result</span></a> Indicates whether the function call passed or failed. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N7Ex10Ops14run_etsi_burstE">
+<span id="_CPPv3N7Ex10Ops14run_etsi_burstE"></span><span id="_CPPv2N7Ex10Ops14run_etsi_burstE"></span><span class="target" id="struct_ex10_ops_1a3597b943a56cdeae08e4bf76e60ff998"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">run_etsi_burst</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N7Ex10Ops14run_etsi_burstE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Start the ETSI burst Op. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>struct <a class="reference internal" href="ex10_host_c_support/ex10_result.html#struct_ex10_result"><span class="std std-ref">Ex10Result</span></a> Indicates whether the function call passed or failed. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N7Ex10Ops14start_ber_testE">
+<span id="_CPPv3N7Ex10Ops14start_ber_testE"></span><span id="_CPPv2N7Ex10Ops14start_ber_testE"></span><span class="target" id="struct_ex10_ops_1a5d9cda96725880d497f47877e16eb8f1"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">start_ber_test</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">uint16_t</span></span><span class="w"> </span><span class="n"><span class="pre">num_bits</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">uint16_t</span></span><span class="w"> </span><span class="n"><span class="pre">num_packets</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n"><span class="pre">delimiter_only</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N7Ex10Ops14start_ber_testE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Enable the Ber Test. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Param num_bits</dt>
+<dd class="field-odd"><p>The number of bits to send </p>
+</dd>
+<dt class="field-even">Param num_packets</dt>
+<dd class="field-even"><p>The number of packets to transmit </p>
+</dd>
+<dt class="field-odd">Param delimiter_only</dt>
+<dd class="field-odd"><p>Determine whether to use a delimiter only instead of a full query</p>
+</dd>
+<dt class="field-even">Return</dt>
+<dd class="field-even"><p>struct <a class="reference internal" href="ex10_host_c_support/ex10_result.html#struct_ex10_result"><span class="std std-ref">Ex10Result</span></a> Indicates whether the function call passed or failed. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N7Ex10Ops11send_selectE">
+<span id="_CPPv3N7Ex10Ops11send_selectE"></span><span id="_CPPv2N7Ex10Ops11send_selectE"></span><span class="target" id="struct_ex10_ops_1a0e6294c4ab12e62be779f085248f9c5a"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">send_select</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N7Ex10Ops11send_selectE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Run the SendSelectOp. </p>
+<p>The op will look through the Gen2SelectEnable register and begin send all enabled commands from the gen2 tx buffer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>struct <a class="reference internal" href="ex10_host_c_support/ex10_result.html#struct_ex10_result"><span class="std std-ref">Ex10Result</span></a> Indicates whether the function call passed or failed. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N7Ex10Ops15get_device_timeE">
+<span id="_CPPv3N7Ex10Ops15get_device_timeE"></span><span id="_CPPv2N7Ex10Ops15get_device_timeE"></span><span class="target" id="struct_ex10_ops_1a3a753968f8e6d9bb9aa8f2fb3e04605a"></span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_device_time</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N7Ex10Ops15get_device_timeE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return the current 32 bit time (microseconds) since start from the device. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N7Ex10Ops22run_power_control_loopE">
+<span id="_CPPv3N7Ex10Ops22run_power_control_loopE"></span><span id="_CPPv2N7Ex10Ops22run_power_control_loopE"></span><span class="target" id="struct_ex10_ops_1a6497ded7bef1fe13b38ab713a7a9690f"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">run_power_control_loop</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv412PowerConfigs" title="PowerConfigs"><span class="n"><span class="pre">PowerConfigs</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">power_config</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N7Ex10Ops22run_power_control_loopE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Run the power control loop to attempt to reach desired Tx power. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>struct <a class="reference internal" href="ex10_host_c_support/ex10_result.html#struct_ex10_result"><span class="std std-ref">Ex10Result</span></a> Indicates whether the function call passed or failed. </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv417GpioControlFields">
+<span id="_CPPv317GpioControlFields"></span><span id="_CPPv217GpioControlFields"></span><span id="GpioControlFields"></span><span class="target" id="struct_gpio_control_fields"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">GpioControlFields</span></span></span><a class="headerlink" href="#_CPPv417GpioControlFields" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Used to control and read the GPIO outputs. </p>
+<p>Each Ex10 DIGITAL_IO pin is assigned a numeric value represented as (1u &lt;&lt; DIGITAL_IO[N]); </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N17GpioControlFields13output_enableE">
+<span id="_CPPv3N17GpioControlFields13output_enableE"></span><span id="_CPPv2N17GpioControlFields13output_enableE"></span><span id="GpioControlFields::output_enable__uint32_t"></span><span class="target" id="struct_gpio_control_fields_1abda63adc28b57bfd0f0d99d7239f090b"></span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">output_enable</span></span></span><a class="headerlink" href="#_CPPv4N17GpioControlFields13output_enableE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Set and get the GPIO pins output enable states. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N17GpioControlFields12output_levelE">
+<span id="_CPPv3N17GpioControlFields12output_levelE"></span><span id="_CPPv2N17GpioControlFields12output_levelE"></span><span id="GpioControlFields::output_level__uint32_t"></span><span class="target" id="struct_gpio_control_fields_1a4b41319cc3d6d092f86ae3ff6bf6a869"></span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">output_level</span></span></span><a class="headerlink" href="#_CPPv4N17GpioControlFields12output_levelE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Set and get the GPIO pins output level states. </p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv412PowerConfigs">
+<span id="_CPPv312PowerConfigs"></span><span id="_CPPv212PowerConfigs"></span><span id="PowerConfigs"></span><span class="target" id="struct_power_configs"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">PowerConfigs</span></span></span><a class="headerlink" href="#_CPPv412PowerConfigs" title="Permalink to this definition">¶</a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N12PowerConfigs8tx_attenE">
+<span id="_CPPv3N12PowerConfigs8tx_attenE"></span><span id="_CPPv2N12PowerConfigs8tx_attenE"></span><span id="PowerConfigs::tx_atten__uint8_t"></span><span class="target" id="struct_power_configs_1a97303002378514e4e422d3bc00b93a59"></span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">tx_atten</span></span></span><a class="headerlink" href="#_CPPv4N12PowerConfigs8tx_attenE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N12PowerConfigs9tx_scalarE">
+<span id="_CPPv3N12PowerConfigs9tx_scalarE"></span><span id="_CPPv2N12PowerConfigs9tx_scalarE"></span><span id="PowerConfigs::tx_scalar__int16_t"></span><span class="target" id="struct_power_configs_1a45758e633ff0f4f7c437e5f0314bd2d4"></span><span class="n"><span class="pre">int16_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">tx_scalar</span></span></span><a class="headerlink" href="#_CPPv4N12PowerConfigs9tx_scalarE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N12PowerConfigs9dc_offsetE">
+<span id="_CPPv3N12PowerConfigs9dc_offsetE"></span><span id="_CPPv2N12PowerConfigs9dc_offsetE"></span><span id="PowerConfigs::dc_offset__int32_t"></span><span class="target" id="struct_power_configs_1a19b57c853aeabbed537c995b04d33313"></span><span class="n"><span class="pre">int32_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dc_offset</span></span></span><a class="headerlink" href="#_CPPv4N12PowerConfigs9dc_offsetE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N12PowerConfigs10adc_targetE">
+<span id="_CPPv3N12PowerConfigs10adc_targetE"></span><span id="_CPPv2N12PowerConfigs10adc_targetE"></span><span id="PowerConfigs::adc_target__uint16_t"></span><span class="target" id="struct_power_configs_1aee51b4d6176fae9a032cc384c6790c60"></span><span class="n"><span class="pre">uint16_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">adc_target</span></span></span><a class="headerlink" href="#_CPPv4N12PowerConfigs10adc_targetE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N12PowerConfigs19loop_stop_thresholdE">
+<span id="_CPPv3N12PowerConfigs19loop_stop_thresholdE"></span><span id="_CPPv2N12PowerConfigs19loop_stop_thresholdE"></span><span id="PowerConfigs::loop_stop_threshold__uint16_t"></span><span class="target" id="struct_power_configs_1aacabee581ad9ebdca8ddb900792efa86"></span><span class="n"><span class="pre">uint16_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">loop_stop_threshold</span></span></span><a class="headerlink" href="#_CPPv4N12PowerConfigs19loop_stop_thresholdE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N12PowerConfigs18op_error_thresholdE">
+<span id="_CPPv3N12PowerConfigs18op_error_thresholdE"></span><span id="_CPPv2N12PowerConfigs18op_error_thresholdE"></span><span id="PowerConfigs::op_error_threshold__uint16_t"></span><span class="target" id="struct_power_configs_1a9ccdad8f3122e48e555324bb09b1884c"></span><span class="n"><span class="pre">uint16_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">op_error_threshold</span></span></span><a class="headerlink" href="#_CPPv4N12PowerConfigs18op_error_thresholdE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N12PowerConfigs17loop_gain_divisorE">
+<span id="_CPPv3N12PowerConfigs17loop_gain_divisorE"></span><span id="_CPPv2N12PowerConfigs17loop_gain_divisorE"></span><span id="PowerConfigs::loop_gain_divisor__uint16_t"></span><span class="target" id="struct_power_configs_1a03954cd715f6d4b04d5247b990229d4f"></span><span class="n"><span class="pre">uint16_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">loop_gain_divisor</span></span></span><a class="headerlink" href="#_CPPv4N12PowerConfigs17loop_gain_divisorE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N12PowerConfigs14max_iterationsE">
+<span id="_CPPv3N12PowerConfigs14max_iterationsE"></span><span id="_CPPv2N12PowerConfigs14max_iterationsE"></span><span id="PowerConfigs::max_iterations__uint32_t"></span><span class="target" id="struct_power_configs_1acdb2323b38c1b98de6d0d3025bba86bb"></span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">max_iterations</span></span></span><a class="headerlink" href="#_CPPv4N12PowerConfigs14max_iterationsE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N12PowerConfigs18power_detector_adcE">
+<span id="_CPPv3N12PowerConfigs18power_detector_adcE"></span><span id="_CPPv2N12PowerConfigs18power_detector_adcE"></span><span id="PowerConfigs::power_detector_adc__AuxAdcControlChannelEnableBits"></span><span class="target" id="struct_power_configs_1a011cb546d08c7469439efcf392baec92"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><a class="reference internal" href="yk_firmware_ex10_host_c_register_accessors.html#_CPPv430AuxAdcControlChannelEnableBits" title="AuxAdcControlChannelEnableBits"><span class="n"><span class="pre">AuxAdcControlChannelEnableBits</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">power_detector_adc</span></span></span><a class="headerlink" href="#_CPPv4N12PowerConfigs18power_detector_adcE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="../../_static/logo.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="ex10_host_c_reader_primitives/test.html"
+                        title="previous chapter">Ex10Test</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="yk_firmware_ex10_host_c_protocol_layer.html"
+                        title="next chapter">Ex10Protocol Layer</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="yk_firmware_ex10_host_c_protocol_layer.html" title="Ex10Protocol Layer"
+             >next</a></li>
+        <li class="right" >
+          <a href="ex10_host_c_reader_primitives/test.html" title="Ex10Test"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="yk_firmware_ex10_host_c_api.html" >Impinj Reader Chip C Host SDK</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="yk_firmware_ex10_host_c_api_layers.html" >API Layers</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Ex10Ops Layer</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Impinj, Inc..
+    </div>
+  </body>
+</html>

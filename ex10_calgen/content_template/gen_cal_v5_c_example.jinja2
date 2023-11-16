@@ -1,0 +1,42 @@
+{#-############################################################################}
+{#-                  IMPINJ CONFIDENTIAL AND PROPRIETARY                      #}
+{#-                                                                           #}
+{#- This source code is the property of Impinj, Inc. Your use of this source  #}
+{#- code in whole or in part is subject to your applicable license terms      #}
+{#- from Impinj.                                                              #}
+{#- Contact support@impinj.com for a copy of the applicable Impinj license    #}
+{#- terms.                                                                    #}
+{#-                                                                           #}
+{#- (c) Copyright 2022 - 2023 Impinj, Inc. All rights reserved.               #}
+{#-                                                                           #}
+{#-############################################################################}
+{%- for parameter in parameters_list %}
+    {%- if parameter.use_this_decl == True %}
+        {%- set cal_name = {'name' : parameter.name_band_agnostic} %}
+    ex10_ex_printf("{{cal_name['name']}}:\n");
+        {%- for field in parameter.fields %}
+            {%- if field.num_entries > 1  %}
+    ex10_ex_printf("    {{field.name_snake}}:");
+    for (size_t idx = 0u; idx < {{field.num_entries}}u; ++idx)
+    {
+                {%- if field.resolve_as == 'float' %}
+        ex10_ex_printf(" %f,", calibration->{{parameter.name_snake}}.{{field.name_snake}}[idx]);
+                {%- elif field.resolve_as == 'short' %}
+        ex10_ex_printf(" %h,", calibration->{{parameter.name_snake}}.{{field.name_snake}}[idx]);
+                {%- else %}
+        ex10_ex_printf(" %d,", calibration->{{parameter.name_snake}}.{{field.name_snake}}[idx]);
+                {%- endif %}
+    }
+    ex10_ex_printf("\n");
+            {%- else %}
+                {%- if field.resolve_as == 'float' %}
+    ex10_ex_printf("    {{field.name_snake}}: %f\n", calibration->{{parameter.name_snake}}.{{field.name_snake}});
+                {%- elif field.resolve_as == 'short' %}
+    ex10_ex_printf("    {{field.name_snake}}: %h\n", calibration->{{parameter.name_snake}}.{{field.name_snake}});
+                {%- else %}
+    ex10_ex_printf("    {{field.name_snake}}: %d\n", calibration->{{parameter.name_snake}}.{{field.name_snake}});
+                {%- endif %}
+            {%- endif %}
+        {%- endfor %}
+    {%- endif %}
+{%- endfor %}

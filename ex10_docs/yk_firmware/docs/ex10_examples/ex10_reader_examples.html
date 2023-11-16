@@ -1,0 +1,234 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Legacy Ex10Reader Examples &#8212; Impinj Reader Chip SDK</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinxdoc.css" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Misc Examples" href="misc_examples.html" />
+    <link rel="prev" title="Use Case Examples" href="use_case_examples.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="misc_examples.html" title="Misc Examples"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="use_case_examples.html" title="Use Case Examples"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../yk_firmware_ex10_host_c_api.html" >Impinj Reader Chip C Host SDK</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="examples.html" accesskey="U">Impinj Reader Chip SDK Examples</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Legacy Ex10Reader Examples</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="legacy-ex10reader-examples">
+<span id="ex10-api-host-ex10-reader-examples"></span><h1>Legacy Ex10Reader Examples<a class="headerlink" href="#legacy-ex10reader-examples" title="Permalink to this headline">¶</a></h1>
+<p>The legacy Ex10Reader examples are located in the <code class="docutils literal notranslate"><span class="pre">ex10_c_dev_kit/examples</span></code> directory
+in the SDK bundle.  These are examples that were originally built with the
+SDK version 1.2 Ex10Reader.  These are here in case the user has developed their
+system on the Ex10Reader based stack and wishes to continue to use this legacy
+interface.</p>
+<section id="access-read-write">
+<h2>Access Read Write<a class="headerlink" href="#access-read-write" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">access_read_write_example.c</span></code></p>
+</div></blockquote>
+<p>The access read write example uses the <a class="reference internal" href="../yk_firmware_ex10_host_c_reader_layer.html#struct_ex10_reader"><span class="std std-ref">Ex10Reader</span></a> to singulate a tag, and then writes a random number to the tag user memory. </p>
+</section>
+<section id="authenticate-m775">
+<h2>Authenticate M775<a class="headerlink" href="#authenticate-m775" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">authenticate_m775_example.c</span></code></p>
+</div></blockquote>
+<p>The authenticate M775 example uses the <a class="reference internal" href="../yk_firmware_ex10_host_c_reader_layer.html#struct_ex10_reader"><span class="std std-ref">Ex10Reader</span></a> to singulate a tag and do the authenticate sequence. </p>
+</section>
+<section id="auto-access-read-write">
+<h2>Auto Access Read Write<a class="headerlink" href="#auto-access-read-write" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">auto_access_read_write_example.c</span></code></p>
+</div></blockquote>
+<p>The auto access read write example shows how to do an auto access sequence using the <a class="reference internal" href="../yk_firmware_ex10_host_c_reader_layer.html#struct_ex10_reader"><span class="std std-ref">Ex10Reader</span></a> </p>
+</section>
+<section id="continuous-inventory">
+<h2>Continuous Inventory<a class="headerlink" href="#continuous-inventory" title="Permalink to this headline">¶</a></h2>
+<p>The continuous inventory examples have multiple examples that are similar but show
+how the different features are used.</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">continuous_inventory_example.c</span></code></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">continuous_inventory_stops_example.c</span></code></div>
+</div>
+</div></blockquote>
+<p>The continuous inventory example below is optimized for faster read rates. This example calls continuous_inventory() helper function, which calls continuous_inventory() function from the <a class="reference internal" href="../yk_firmware_ex10_host_c_reader_layer.html#struct_ex10_reader"><span class="std std-ref">Ex10Reader</span></a> layer. Meaning the SDK is responsible for starting each inventory round, allowing faster read rates. For better performance, this example is currently not configured to print each inventoried EPC. This can be changed by using the ‘verbose’ inventory configuration parameter. The inventory example below is optimized for approximately 256 tags in FOV. To adjust dynamic Q algorithm for other tag populations, the following parameters should be updated:</p>
+<p><ul class="simple">
+<li><p>initial_q</p></li>
+<li><p>max_q</p></li>
+<li><p>min_q</p></li>
+<li><p>min_q_cycles</p></li>
+<li><p>max_queries_since_valid_epc</p></li>
+</ul>
+</p>
+<p>For additional details regarding these parameters please refer to ‘InventoryRoundControl’ and ‘InventoryRoundControl_2’ registers descriptions in the Ex10 Reader Chip SDK documentation. </p>
+</section>
+<section id="insert-event-fifo">
+<h2>Insert Event FIFO<a class="headerlink" href="#insert-event-fifo" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">insert_event_fifo_example.c</span></code></p>
+</div></blockquote>
+<p>The insert event fifo example shows how to insert an event in the event FIFO stream from the host. </p>
+</section>
+<section id="inventory-example">
+<h2>Inventory Example<a class="headerlink" href="#inventory-example" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">inventory_example.c</span></code></p>
+</div></blockquote>
+<p>This example calls simple_inventory() helper function, which repeatedly calls inventory() function from the <a class="reference internal" href="../yk_firmware_ex10_host_c_reader_layer.html#struct_ex10_reader"><span class="std std-ref">Ex10Reader</span></a> layer. Meaning the application layer is responsible for starting each inventory round, allowing closer control over Ex10 inventory operation. The inventory example below is optimized for approximately 256 tags in FOV. To adjust dynamic Q algorithm for other tag populations, the following parameters should be updated:</p>
+<p><ul class="simple">
+<li><p>initial_q</p></li>
+<li><p>max_q</p></li>
+<li><p>min_q</p></li>
+<li><p>min_q_cycles</p></li>
+<li><p>max_queries_since_valid_epc</p></li>
+</ul>
+</p>
+<p>For additional details regarding these parameters please refer to ‘InventoryRoundControl’ and ‘InventoryRoundControl_2’ registers descriptions in the Ex10 Reader Chip SDK documentation. </p>
+</section>
+<section id="inventory-fixed-q-example">
+<h2>Inventory Fixed Q Example<a class="headerlink" href="#inventory-fixed-q-example" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">inventory_fixed_q_example.c</span></code></p>
+</div></blockquote>
+<p>The inventory example below uses ‘fixed q’ test mode and is not optimized for read rate. </p>
+</section>
+<section id="listen-before-talk-continuous-inventory">
+<h2>Listen Before Talk Continuous Inventory<a class="headerlink" href="#listen-before-talk-continuous-inventory" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">lbt_continuous_inventory_example.c</span></code></p>
+</div></blockquote>
+<p>The inventory example below demonstrates continuous inventory using Listen Before Talk (LBT). This example calls the continuous_inventory_lbt() lbt helper function, which assigns an LBT-specific pre-ramp callback to check and then kicks off normal continuous inventory. The pre-ramp check will look for passing LBT RSSI values. If the values are over acceptable values, the continuous inventory will halt.</p>
+<p><ul class="simple">
+<li><p>lbt_offset_khz: The LBT offset to use when measuring RSSI.</p></li>
+<li><p>rssi_count_exp: The RSSI integration count to use in the HW RSSI block.</p></li>
+<li><p>passes_required: The number of good RSSI values needed in a row for overall LBT success.</p></li>
+</ul>
+</p>
+<p>This example requires a single pass for example’s sake of not knowing the user operating environment. Adjust the number of passes according to user need.</p>
+<p><ul class="simple">
+<li><p>lbt_pass_threshold_cdbm: The threshold to fall below where the call will be added to the consecutive run count.</p></li>
+<li><p>max_lbt_tries: the max number of times to check RSSI while attempting to getconsecutive good RSSI values. </p></li>
+</ul>
+</p>
+</section>
+<section id="protected-mode">
+<h2>Protected Mode<a class="headerlink" href="#protected-mode" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">protected_mode_example.c</span></code></p>
+</div></blockquote>
+<p>This example shows how to use the protected mode on an Impinj tag that supports protected mode.</p>
+<p><ul class="simple">
+<li><p>This example assumes a single tag on antenna port one.</p></li>
+<li><p>This example assumes a starting password of all 0s </p></li>
+</ul>
+</p>
+</section>
+<section id="regions-usage">
+<h2>Regions Usage<a class="headerlink" href="#regions-usage" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">regions_usage_example.c</span></code></p>
+</div></blockquote>
+<p>This example shows how to manipulate the regions module and generate custom regions, or direct the SDK to run on specific channels </p>
+</section>
+<section id="select-usage">
+<h2>Select Usage<a class="headerlink" href="#select-usage" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">select_command_example.c</span></code></p>
+</div></blockquote>
+<p>This example shows how to use select commands with the inventory features of the <a class="reference internal" href="../yk_firmware_ex10_host_c_reader_layer.html#struct_ex10_reader"><span class="std std-ref">Ex10Reader</span></a> </p>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../../../_static/logo.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Legacy Ex10Reader Examples</a><ul>
+<li><a class="reference internal" href="#access-read-write">Access Read Write</a></li>
+<li><a class="reference internal" href="#authenticate-m775">Authenticate M775</a></li>
+<li><a class="reference internal" href="#auto-access-read-write">Auto Access Read Write</a></li>
+<li><a class="reference internal" href="#continuous-inventory">Continuous Inventory</a></li>
+<li><a class="reference internal" href="#insert-event-fifo">Insert Event FIFO</a></li>
+<li><a class="reference internal" href="#inventory-example">Inventory Example</a></li>
+<li><a class="reference internal" href="#inventory-fixed-q-example">Inventory Fixed Q Example</a></li>
+<li><a class="reference internal" href="#listen-before-talk-continuous-inventory">Listen Before Talk Continuous Inventory</a></li>
+<li><a class="reference internal" href="#protected-mode">Protected Mode</a></li>
+<li><a class="reference internal" href="#regions-usage">Regions Usage</a></li>
+<li><a class="reference internal" href="#select-usage">Select Usage</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="use_case_examples.html"
+                        title="previous chapter">Use Case Examples</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="misc_examples.html"
+                        title="next chapter">Misc Examples</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="misc_examples.html" title="Misc Examples"
+             >next</a></li>
+        <li class="right" >
+          <a href="use_case_examples.html" title="Use Case Examples"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../yk_firmware_ex10_host_c_api.html" >Impinj Reader Chip C Host SDK</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="examples.html" >Impinj Reader Chip SDK Examples</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Legacy Ex10Reader Examples</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Impinj, Inc..
+    </div>
+  </body>
+</html>

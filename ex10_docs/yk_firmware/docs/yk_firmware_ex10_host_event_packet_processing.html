@@ -1,0 +1,437 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Impinj Reader Chip SDK Event Packet Processing &#8212; Impinj Reader Chip SDK</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinxdoc.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Impinj Reader Chip SDK Examples" href="ex10_examples/examples.html" />
+    <link rel="prev" title="Legacy Ex10Reader Layer" href="yk_firmware_ex10_host_c_reader_layer.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="ex10_examples/examples.html" title="Impinj Reader Chip SDK Examples"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="yk_firmware_ex10_host_c_reader_layer.html" title="Legacy Ex10Reader Layer"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="yk_firmware_ex10_host_c_api.html" accesskey="U">Impinj Reader Chip C Host SDK</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Impinj Reader Chip SDK Event Packet Processing</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="impinj-reader-chip-sdk-event-packet-processing">
+<span id="ex10-api-host-event-packet-processing"></span><h1>Impinj Reader Chip SDK Event Packet Processing<a class="headerlink" href="#impinj-reader-chip-sdk-event-packet-processing" title="Permalink to this headline">¶</a></h1>
+<p>The EventFifo is a buffer internal to the Impinj reader chip which is 4096 bytes in length.
+As the reader chip is engaged in reader activity it will append
+<a class="reference internal" href="yk_firmware_ex10_api_event_packets.html#ex10-api-event-packets"><span class="std std-ref">EventFifo Packets</span></a> to this buffer.</p>
+<p>The Impinj reader chip SDK provides an implementation for reading the
+EventFifo using the <a class="reference internal" href="yk_firmware_ex10_api_messages.html#ex10-api-read-fifo"><span class="std std-ref">ReadFifo</span></a> command and interpreting the
+packets to implement RAIN RFID reader functionality.</p>
+<section id="impinj-reader-chip-sdk-interrupt-handling">
+<h2>Impinj Reader Chip SDK Interrupt Handling<a class="headerlink" href="#impinj-reader-chip-sdk-interrupt-handling" title="Permalink to this headline">¶</a></h2>
+<p>The Impinj reader chip SDK utilizes a POSIX thread to dispatch the interrupt
+processing within the C library Ex10Protocol interface and
+implementation.  Typically the <a class="reference internal" href="ex10_host_c_use_cases/use_case_layer.html#ex10-api-host-c-api-use-case"><span class="std std-ref">Use Case</span></a>
+layer will register a callback that will be called by the Ex10Protocol layer
+and will process the EventFifo packets.</p>
+<p>The Impinj reader chip will assert an interrupt with a falling edge.  In the R807 reference
+design this is connected to the RPi GPIO pin 25, enumerated as <code class="docutils literal notranslate"><span class="pre">IRQ_N</span></code> in the
+<code class="docutils literal notranslate"><span class="pre">board/e710_ref_design/gpio_driver.c</span></code>. A thread, which waits on the IRQ_N line
+assertion (low), runs within the function <code class="docutils literal notranslate"><span class="pre">static</span> <span class="pre">void*</span> <span class="pre">irq_n_monitor(void*)</span></code>. When IRQ_N
+asserts low, the thread wakes up and calls the registered call back. In the Impinj reader
+chip SDK the callback will be the Ex10Protocol layer function <code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">interrupt_handler(void)</span></code>.
+If the reader implemented does not use POSIX threads, then a standard interrupt
+context can be setup for this functionality.</p>
+<p>The Impinj reader chip SDK has two threads that both access the host interface to
+communicate with the Impinj reader chip.
+The <a class="reference external" href="ex10_board_specific/ex10_gpio.html#_CPPv417Ex10GpioInterface">struct Ex10GpioInterface</a>
+has an interface function <a class="reference external" href="ex10_board_specific/ex10_gpio.html#_CPPv4N17Ex10GpioInterface10irq_enableE">void irq_enable(bool enable)</a>
+which is used as a mutex to guard against simultaneous access to the
+<a class="reference external" href="ex10_board_specific/ex10_host_interface.html#_CPPv413HostInterface">host interface (SPI driver)</a>.</p>
+</section>
+<section id="ex10protocol">
+<h2><a class="reference internal" href="yk_firmware_ex10_host_c_protocol_layer.html#ex10-api-host-c-api-protocol"><span class="std std-ref">Ex10Protocol</span></a><a class="headerlink" href="#ex10protocol" title="Permalink to this headline">¶</a></h2>
+<p>As mentioned in the previous section, interrupts within the Impinj reader chip SDK are processed
+within an interrupt context thread, which is triggered by the interrupt IRQ_N pin being asserted low.</p>
+<p>The Impinj reader chip SDK interrupt handling has two callbacks associated with it.  The
+first callback is called for every interrupt which is registered with the
+<code class="docutils literal notranslate"><span class="pre">Ex10Protocol</span></code> <code class="docutils literal notranslate"><span class="pre">register_interrrupt_callback()</span></code> function.  This callback is always
+called for any interrupt generated by the Impinj reader chip.  This callback is responsible
+for evaluating the status word that it is passed as a parameter, and then deciding if
+an EventFifo read should be done.  If it returns <cite>true</cite> then an EventFifo read is performed
+and the resulting buffer is passed to the second callback which is registered with the <code class="docutils literal notranslate"><span class="pre">Ex10Protocol</span></code>
+<code class="docutils literal notranslate"><span class="pre">register_fifo_data_callback()</span></code> function.  Typically the use case layer that is installed
+will register a callback for both of these functions.  If no callbacks are installed, then
+the interrupts will be cleared, and the EventFifo will NOT be read, so an EventFifo backup
+can happen.</p>
+<section id="interrupt-handler">
+<h3>Interrupt Handler<a class="headerlink" href="#interrupt-handler" title="Permalink to this headline">¶</a></h3>
+<p>The function that is called in Ex10Protocol object, is the static
+function <code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">interrupt_handler(void)</span></code>. Here, a multiple register
+<a class="reference internal" href="yk_firmware_ex10_api_messages.html#ex10-api-read"><span class="std std-ref">Read</span></a> command, is performed across the following registers:</p>
+<blockquote>
+<div><ul>
+<li><p><a class="reference external" href="yk_firmware_ex10_api_common_address_map.html#address-entry-Status">Status</a></p>
+<blockquote>
+<div><p>The <a class="reference external" href="yk_firmware_ex10_api_common_address_map.html#address-entry-Status">Status</a>
+register is read to ensure that the interrupt is being handled within the application
+context. If it is not, then the function is exited without further processing.
+The Impinj reader chip does not trigger interrupts within the bootloader execution context.</p>
+</div></blockquote>
+</li>
+<li><p><a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-InterruptStatus">InterruptStatus</a></p>
+<blockquote>
+<div><p>Read to determine the source of the interrupt.</p>
+</div></blockquote>
+</li>
+<li><p><a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-EventFifoNumBytes">EventFifoNumBytes</a></p>
+<blockquote>
+<div><p>Determines the number of bytes that can be read from the EventFifo buffer.</p>
+</div></blockquote>
+</li>
+</ul>
+</div></blockquote>
+<p>Note here that the read clears the interrupt, so this context handles all interrupt
+types.</p>
+<p>If the interrupt_callback function as mentioned above returns <cite>true</cite> the <a class="reference internal" href="yk_firmware_ex10_api_messages.html#ex10-api-read-fifo"><span class="std std-ref">ReadFifo</span></a>
+command is executed This is called through the <code class="docutils literal notranslate"><span class="pre">static</span> <span class="pre">struct</span> <span class="pre">FifoBufferNode*</span> <span class="pre">read_event_fifo(size_t</span> <span class="pre">fifo_num_bytes)</span></code>
+function within the Ex10Protocol object.</p>
+</section>
+<section id="the-eventfifo-buffer-pool">
+<h3>The EventFifo Buffer Pool<a class="headerlink" href="#the-eventfifo-buffer-pool" title="Permalink to this headline">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">read_event_fifo()</span></code> function will first attempt to acquire a
+<a class="reference external" href="yk_firmware_ex10_host_c_other_types.html#_CPPv414FifoBufferNode">struct FifoBufferNode</a>
+from the free list. It is into this structure that EventFifo packets will be read.
+If a
+<a class="reference external" href="yk_firmware_ex10_host_c_other_types.html#_CPPv414FifoBufferNode">struct FifoBufferNode</a>
+cannot be acquired, i.e. there are no free buffers available in
+the free buffer pool, then further processing using the <a class="reference internal" href="yk_firmware_ex10_api_messages.html#ex10-api-read-fifo"><span class="std std-ref">ReadFifo</span></a>
+command cannot proceed. In this case a NULL pointer is returned to indicate
+this out of memory condition. The host has stalled the reader chip acquisition of data.</p>
+<p>The Ex10Protocol implementation of EventFifo reading requires that the destination
+buffer structures be capable of reading all bytes from the reader chip EventFifo in a
+contiguous manner. This simplifies the EventFifo packet parsing since packets
+do not straddle non-contiguous memory boundaries.</p>
+</section>
+<section id="reading-the-eventfifo">
+<h3>Reading the EventFifo<a class="headerlink" href="#reading-the-eventfifo" title="Permalink to this headline">¶</a></h3>
+<p>The Impinj reader chip maximum response buffer length is 1024 bytes and the reader chip EventFifo
+buffer size is 4096 in length. Therefore, reading all of the data within the
+EventFifo buffer may require multiple <a class="reference internal" href="yk_firmware_ex10_api_messages.html#ex10-api-read-fifo"><span class="std std-ref">ReadFifo</span></a> command
+operations.</p>
+<p>The commands layer
+<a class="reference external" href="yk_firmware_ex10_host_c_protocol_layer.html#_CPPv4N12Ex10Commands9read_fifoE">read_fifo()</a>
+function, performs multiple <a class="reference internal" href="yk_firmware_ex10_api_messages.html#ex10-api-read-fifo"><span class="std std-ref">ReadFifo</span></a> command operations into a single call
+until the EventFifo has been completely read into the destination
+<a class="reference external" href="yk_firmware_ex10_host_c_other_types.html#_CPPv414FifoBufferNode">struct FifoBufferNode</a>
+buffer.</p>
+<p>The number of bytes waiting to be read from the EventFifo is obtained by reading
+the <a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-EventFifoNumBytes">EventFifoNumBytes</a>
+register.</p>
+<p>The <a class="reference internal" href="yk_firmware_ex10_api_messages.html#ex10-api-read-fifo"><span class="std std-ref">ReadFifo</span></a> command format is one
+<a class="reference internal" href="yk_firmware_ex10_api_messages.html#ex10-api-response-codes"><span class="std std-ref">ResponseCode</span></a> byte followed by
+up to 1023 bytes from the EventFifo for a total of up to 1024 bytes per
+transaction. To efficiently combine the events into contiguous data packets, and
+to maintain 32-bit packet alignment, the
+<a class="reference external" href="yk_firmware_ex10_host_c_other_types.html#_CPPv4N14FifoBufferNode9fifo_dataE">struct FifoBufferNode::fifo_data</a>
+is allocated
+to the maximum EventFifo buffer size (4096 bytes) plus an extra 4 bytes. This
+allows for the <a class="reference internal" href="yk_firmware_ex10_api_messages.html#ex10-api-response-codes"><span class="std std-ref">ResponseCode</span></a> to be placed in the
+byte preceding the first EventFifo packet, which must be 32-bit aligned.</p>
+<p>The manner in which the commands layer
+<a class="reference external" href="yk_firmware_ex10_host_c_protocol_layer.html#_CPPv4N12Ex10Commands9read_fifoE">read_fifo()</a>
+function receives the <a class="reference internal" href="yk_firmware_ex10_api_messages.html#ex10-api-read-fifo"><span class="std std-ref">ReadFifo</span></a> response and packs it into the
+<a class="reference external" href="yk_firmware_ex10_host_c_other_types.html#_CPPv414FifoBufferNode">struct FifoBufferNode</a>
+buffer is illustrated below:</p>
+<figure class="align-default">
+<img alt="../../_images/event_fifo-response.svg" src="../../_images/event_fifo-response.svg" /></figure>
+<p>The response is read into the
+<a class="reference external" href="yk_firmware_ex10_host_c_other_types.html#_CPPv4N14FifoBufferNode9fifo_dataE">struct FifoBufferNode::fifo_data</a>
+member with the <a class="reference internal" href="yk_firmware_ex10_api_messages.html#ex10-api-response-codes"><span class="std std-ref">ResponseCode</span></a> placed in the byte
+preceding the 32-bit aligned point in the buffer.</p>
+<p>The EventFifo packets begin with the 32-bit alignment point in the buffer and
+continue for the length of the response buffer. The following
+<a class="reference internal" href="yk_firmware_ex10_api_messages.html#ex10-api-read-fifo"><span class="std std-ref">ReadFifo</span></a> command will place its response, starting
+with the <a class="reference internal" href="yk_firmware_ex10_api_messages.html#ex10-api-response-codes"><span class="std std-ref">ResponseCode</span></a>, overwriting the last
+byte of the last response previously captured. Once the response has been received,
+the response code can be checked for success, and then the byte value that was
+overwritten from the previous response restored. This is the function of the
+<code class="docutils literal notranslate"><span class="pre">restore_byte</span></code> value within the <code class="docutils literal notranslate"><span class="pre">command_read_fifo()</span></code> function.</p>
+<p>Once all bytes within the EventFifo have been read, the <code class="docutils literal notranslate"><span class="pre">command_read_fifo()</span></code>
+function returns with a ResponseCode value which is an aggregate of all responses
+received from the <a class="reference internal" href="yk_firmware_ex10_api_messages.html#ex10-api-read-fifo"><span class="std std-ref">ReadFifo</span></a> command.</p>
+</section>
+<section id="registered-eventfifo-notifications">
+<h3>Registered EventFifo Notifications<a class="headerlink" href="#registered-eventfifo-notifications" title="Permalink to this headline">¶</a></h3>
+<p>Once the Impinj reader chip EventFifo buffer has been completely read and is empty, if there
+is a registered callback, then the filled <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">FifoBufferNode</span></code> is passed
+up to the next layer in the protocol stack via a const pointer.
+In the Impinj reader chip SDK the next layer up is typically the use case object.
+The reception of EventFifo data is performed within the interrupt thread context.
+It is the callbacks responsibility to return the EventFifo buffer to the
+free list when processing is complete.</p>
+<p>If there is no registered EventFifo callback then the <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">FifoBufferNode</span></code>
+is returned to the free list.</p>
+</section>
+</section>
+<section id="use-case-layer">
+<h2><a class="reference internal" href="ex10_host_c_use_cases/use_case_layer.html#ex10-api-host-c-api-use-case"><span class="std std-ref">Use Case Layer</span></a><a class="headerlink" href="#use-case-layer" title="Permalink to this headline">¶</a></h2>
+<p>The use case layer is typically the layer that registers its callbacks to process
+the interrupts generated by the SDK.  The use case knows what interrupts are
+enabled in the Impinj reader chip, and how to appropriately respond to them.
+Typically the use cases will read trigger an EventFifo read and will process
+the EventFifo packets.  There may be some immediate real time processing of
+the packets in the interrupt context, and then will pass the EventFifo buffer
+that was read from the Impinj reader chip to its main context thread through
+the <a class="reference internal" href="ex10_host_c_reader_primitives/event_fifo_queue.html#ex10-api-host-c-api-reader-primitives-event-fifo-queue"><span class="std std-ref">Ex10EventFifoQueue</span></a>
+reader primitive.  Then the use case will process the packet as is necessary.</p>
+</section>
+<section id="ex10eventfifoqueue-packet-interface">
+<h2>Ex10EventFifoQueue Packet Interface<a class="headerlink" href="#ex10eventfifoqueue-packet-interface" title="Permalink to this headline">¶</a></h2>
+<p>The Ex10EventFifoQueue provides the following functions for examining and iterating
+through the packet buffers queued into the Ex10EventFifoQueue object:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><cite>struct EventFifoPacket const* packet_peek(void)</cite></p></li>
+<li><p><cite>void packet_remove(void)</cite></p></li>
+<li><p><cite>bool Ex10Reader::packets_available(void)</cite></p></li>
+</ul>
+</div></blockquote>
+<p>The use case main thread, i.e. the main application, calls these functions
+to read and iterate through the EventFifo packets contained within the Ex10EventFifoQueue’s
+list of
+<a class="reference external" href="yk_firmware_ex10_host_c_other_types.html#_CPPv414FifoBufferNode">struct FifoBufferNode</a>
+nodes.</p>
+<p>The <a class="reference external" href="yk_firmware_ex10_host_c_other_types.html#_CPPv415EventFifoPacket">struct EventFifoPacket</a>
+contains two pointers:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>The <a class="reference external" href="yk_firmware_ex10_host_c_other_types.html#_CPPv4N15EventFifoPacket11static_dataE">static data</a></p></li>
+<li><p>The <a class="reference external" href="yk_firmware_ex10_host_c_other_types.html#_CPPv4N15EventFifoPacket12dynamic_dataE">dynamic data</a></p></li>
+</ul>
+</div></blockquote>
+<p>These pointers are valid until the function
+<a class="reference external" href="yk_firmware_ex10_host_c_reader_layer.html#_CPPv4N10Ex10Reader13packet_removeE">packet_remove()</a>
+is called. Once
+<a class="reference external" href="yk_firmware_ex10_host_c_reader_layer.html#_CPPv4N10Ex10Reader13packet_removeE">packet_remove()</a>
+has been called, the pointers which the
+<a class="reference external" href="yk_firmware_ex10_host_c_other_types.html#_CPPv415EventFifoPacket">struct EventFifoPacket</a>
+is pointing to will be invalid.
+Therefore, the
+<a class="reference external" href="yk_firmware_ex10_host_c_other_types.html#_CPPv415EventFifoPacket">struct EventFifoPacket</a>
+must only be used while the associated memory, contained within the
+<a class="reference external" href="yk_firmware_ex10_host_c_other_types.html#_CPPv414FifoBufferNode">struct FifoBufferNode</a>
+is valid.</p>
+<p>The following sequence diagram illustrates the life cycle of EventFifo packets and the
+<a class="reference external" href="yk_firmware_ex10_host_c_other_types.html#_CPPv414FifoBufferNode">struct FifoBufferNode</a>
+that contain them.</p>
+<figure class="align-default">
+<img alt="../../_images/event_fifo-sequence.svg" src="../../_images/event_fifo-sequence.svg" /></figure>
+</section>
+<section id="multi-threaded-access-to-the-eventfifo-linked-lists">
+<h2>Multi-threaded access to the EventFifo linked lists<a class="headerlink" href="#multi-threaded-access-to-the-eventfifo-linked-lists" title="Permalink to this headline">¶</a></h2>
+<p>In the sequence diagram a horizontal line labelled <strong>Execution Context</strong> illustrates the
+two different tasks of execution. In the Impinj Reader C SDK these tasks are POSIX threads
+which execute at the same thread priority. The means that the threads can preempt each other.</p>
+<p>The threads access two independent lists of
+<a class="reference external" href="yk_firmware_ex10_host_c_other_types.html#_CPPv414FifoBufferNode">struct FifoBufferNode</a>
+instances.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>The event fifo buffer free list, which is contained within the Ex10Protocol module
+as the private static
+<a class="reference external" href="yk_firmware_ex10_host_c_other_types.html#_CPPv414FifoBufferList">struct FifoBufferList</a>
+instance <code class="docutils literal notranslate"><span class="pre">_fifo_buffer_list</span></code>. This object in the sequence diagram is noted by the lifeline
+object <code class="docutils literal notranslate"><span class="pre">FifoBufferFreeList</span></code>.</p></li>
+<li><p>The event fifo buffer list, which is contained within the Ex10EventFifoQueue module
+struct <code class="docutils literal notranslate"><span class="pre">fifo_buffer_list</span></code>, instantiated as <code class="docutils literal notranslate"><span class="pre">fifo_buffer_list</span></code>.</p></li>
+</ul>
+</div></blockquote>
+<p>To prevent the independent threads from accessing the FifoBufferList simultaneously, each list
+is guarded by its own POISX mutex (mutual exclusion object).</p>
+<p>To further illustrate the point of FifoBuffer lists access:</p>
+<blockquote>
+<div><ul>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">FifoBufferFreeList</span></code>, once initialized, contains all of the
+<a class="reference external" href="yk_firmware_ex10_host_c_other_types.html#_CPPv414FifoBufferNode">struct FifoBufferNode</a>
+instances statically allocated by the linker. Initialization is performed in the module
+<code class="docutils literal notranslate"><span class="pre">fifo_buffer_list.c</span></code>, function <code class="docutils literal notranslate"><span class="pre">fifo_buffer_list_init()</span></code>.</p></li>
+<li><p>Interrupts from the Impinj Reader Chip are serviced using the <a class="reference internal" href="yk_firmware_ex10_api_messages.html#ex10-api-read-fifo"><span class="std std-ref">ReadFifo</span></a>
+command within the interrupt execution context. This portion of the sequence diagram is
+above the <strong>Execution Context</strong> boundary line.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Free list nodes of type
+<a class="reference external" href="yk_firmware_ex10_host_c_other_types.html#_CPPv414FifoBufferNode">struct FifoBufferNode</a>
+are popped from the free list.</p></li>
+<li><p>EventFifo packets are read from the Impinj Reader Chip into the
+<a class="reference external" href="yk_firmware_ex10_host_c_other_types.html#_CPPv414FifoBufferNode">struct FifoBufferNode</a>
+memory.</p></li>
+<li><p>The <a class="reference external" href="yk_firmware_ex10_host_c_other_types.html#_CPPv414FifoBufferNode">struct FifoBufferNode</a>
+<code class="docutils literal notranslate"><span class="pre">fifo_data</span></code> member is set to <em>span</em> the contiguous EventFifo read from the Impinj Reader Chip:</p>
+<ul>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">fifo_data.data</span></code> member points to the start of the EventFifo data.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">fifo_data.length</span></code> member contains the EventFifo byte count.</p></li>
+</ul>
+</li>
+<li><p>The callback functions contained within the <a class="reference internal" href="yk_firmware_ex10_host_c_protocol_layer.html#ex10-api-host-c-api-protocol"><span class="std std-ref">Ex10Protocol</span></a>
+is invoked allowing the registered event fifo callback access to the contiguous EventFifo data
+contained within the
+<a class="reference external" href="yk_firmware_ex10_host_c_other_types.html#_CPPv414FifoBufferNode">struct FifoBufferNode</a>
+instance.</p></li>
+<li><p>The registered event fifo callback  receives the callback notifications within the POSIX
+thread which handles interrupts and pushes the
+<a class="reference external" href="yk_firmware_ex10_host_c_other_types.html#_CPPv414FifoBufferNode">struct FifoBufferNode</a>
+objects onto the back of its list of nodes to process.</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>When the use case client context reads EventFifo data from the Ex10EventFifoQueue, it does so
+within the context of the client POSIX thread of execution. In the sequence diagram this
+execution context is below the <strong>Execution Context</strong> boundary line.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>The use case layer uses the <a class="reference external" href="yk_firmware_ex10_host_c_other_types.html#_CPPv414FifoBufferNode">struct FifoBufferNode</a>
+member <code class="docutils literal notranslate"><span class="pre">fifo_data.data</span></code>, to iterate through the contiguous EventFifo data.
+EventFifo packet iteration is implemented in the use case as a private function which utilizes the
+<a class="reference external" href="yk_firmware_ex10_host_c_other_types.html#_CPPv4N15Ex10EventParser18parse_event_packetE">Ex10EventParser.parse_event_packet()</a>
+function to iterate and parse the next packet in the EventFifo contiguous data.</p></li>
+<li><p>When the iteration across the EventFifo data is complete for the
+<a class="reference external" href="yk_firmware_ex10_host_c_other_types.html#_CPPv414FifoBufferNode">struct FifoBufferNode</a>
+instance, the contained data has been successfully consumed by the client via the
+use case layer interface.</p></li>
+<li><p>The <a class="reference external" href="yk_firmware_ex10_host_c_other_types.html#_CPPv414FifoBufferNode">struct FifoBufferNode</a>
+is released to the free list in the use case private function
+<code class="docutils literal notranslate"><span class="pre">event_fifo_buffer_pop()</span></code>. This private function pops the <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">FifoBufferNode</span></code> from
+the Ex10EventFifoQueue list and pushes it onto the <code class="docutils literal notranslate"><span class="pre">FifoBufferFreeList</span></code>.</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</div></blockquote>
+<p>The motivation for using one mutex per <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">EventFifoBufferNode</span></code> list instance is to minimize the duration of the
+mutex being locked. If a single mutex were used to guard both lists then the use case layer may have
+been unnecessarily blocked from using its private list while waiting for the interrupt processing task
+to complete working with the free list.</p>
+<section id="interrupt-based-locks-in-non-operating-system-designs">
+<h3>Interrupt based locks in non-operating system designs<a class="headerlink" href="#interrupt-based-locks-in-non-operating-system-designs" title="Permalink to this headline">¶</a></h3>
+<p>If no operating system is used then all execution context within the microcontroller is being performed
+within the context of an ISR (interrupt service routine). Stated another way: code is executed because
+a program address entry, within the interrupt vector table, is being called as a result of an interrupt event.
+This holds true for what is sometimes referred to as the “main task”; i.e. the code executed as a result of
+the RESET event.</p>
+</section>
+<section id="eventfifo-isr-priority-client-reader-isr-priority">
+<h3>EventFifo ISR priority &gt; client/reader ISR priority<a class="headerlink" href="#eventfifo-isr-priority-client-reader-isr-priority" title="Permalink to this headline">¶</a></h3>
+<p>If the ISR processing the EventFifo interrupt is at a higher priority than the client/reader ISR
+then the use case ISR must disable interrupts to provide an effective lock on the shared linked
+list objects. This will prevent the client ISR from being preempted by the interrupt ISR during list
+push and pop operations. The EventFifo ISR, being a higher priority than the client ISR,
+will not be preempted by the client. No additional locking mechanism is required within the EventFifo
+ISR execution context.</p>
+</section>
+<section id="eventfifo-isr-priority-use-case-isr-priority">
+<h3>EventFifo ISR priority = use case ISR priority<a class="headerlink" href="#eventfifo-isr-priority-use-case-isr-priority" title="Permalink to this headline">¶</a></h3>
+<p>If the client ISR and the EventFifo ISR are at the same priority, then both ISRs must disable interrupts
+prior to accessing the shared linked list objects.</p>
+</section>
+<section id="id24">
+<h3>EventFifo ISR priority &lt; use case ISR priority<a class="headerlink" href="#id24" title="Permalink to this headline">¶</a></h3>
+<p>It is not recommended that the EventFifo ISR be at a lower priority than the use case ISR.</p>
+<p>To disable interrupts on the ARM Cortex-M family of CPUs see
+<a class="reference external" href="https://developer.arm.com/documentation/dui0662/b/The-Cortex-M0--Instruction-Set/Miscellaneous-instructions/CPS">The ARM Instruction Set</a>.</p>
+</section>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="../../_static/logo.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Impinj Reader Chip SDK Event Packet Processing</a><ul>
+<li><a class="reference internal" href="#impinj-reader-chip-sdk-interrupt-handling">Impinj Reader Chip SDK Interrupt Handling</a></li>
+<li><a class="reference internal" href="#ex10protocol"><span class="xref std std-ref">Ex10Protocol</span></a><ul>
+<li><a class="reference internal" href="#interrupt-handler">Interrupt Handler</a></li>
+<li><a class="reference internal" href="#the-eventfifo-buffer-pool">The EventFifo Buffer Pool</a></li>
+<li><a class="reference internal" href="#reading-the-eventfifo">Reading the EventFifo</a></li>
+<li><a class="reference internal" href="#registered-eventfifo-notifications">Registered EventFifo Notifications</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#use-case-layer"><span class="xref std std-ref">Use Case Layer</span></a></li>
+<li><a class="reference internal" href="#ex10eventfifoqueue-packet-interface">Ex10EventFifoQueue Packet Interface</a></li>
+<li><a class="reference internal" href="#multi-threaded-access-to-the-eventfifo-linked-lists">Multi-threaded access to the EventFifo linked lists</a><ul>
+<li><a class="reference internal" href="#interrupt-based-locks-in-non-operating-system-designs">Interrupt based locks in non-operating system designs</a></li>
+<li><a class="reference internal" href="#eventfifo-isr-priority-client-reader-isr-priority">EventFifo ISR priority &gt; client/reader ISR priority</a></li>
+<li><a class="reference internal" href="#eventfifo-isr-priority-use-case-isr-priority">EventFifo ISR priority = use case ISR priority</a></li>
+<li><a class="reference internal" href="#id24">EventFifo ISR priority &lt; use case ISR priority</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="yk_firmware_ex10_host_c_reader_layer.html"
+                        title="previous chapter">Legacy Ex10Reader Layer</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="ex10_examples/examples.html"
+                        title="next chapter">Impinj Reader Chip SDK Examples</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="ex10_examples/examples.html" title="Impinj Reader Chip SDK Examples"
+             >next</a></li>
+        <li class="right" >
+          <a href="yk_firmware_ex10_host_c_reader_layer.html" title="Legacy Ex10Reader Layer"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="yk_firmware_ex10_host_c_api.html" >Impinj Reader Chip C Host SDK</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Impinj Reader Chip SDK Event Packet Processing</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Impinj, Inc..
+    </div>
+  </body>
+</html>

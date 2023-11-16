@@ -1,0 +1,221 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Adding py2c code &#8212; Impinj Reader Chip SDK</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinxdoc.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <link rel="search" title="Search" href="../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="nav-item nav-item-0"><a href="index.html">Impinj Reader Chip SDK</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Adding py2c code</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="adding-py2c-code">
+<h1>Adding py2c code<a class="headerlink" href="#adding-py2c-code" title="Permalink to this headline">¶</a></h1>
+<p>So you want to add to py2c. First off I commend you, second, get your will in order.</p>
+<section id="glossary">
+<h2>Glossary<a class="headerlink" href="#glossary" title="Permalink to this headline">¶</a></h2>
+<p>ctypes - a python library which allows python to use c-like structures and speak to c dlls
+<a class="reference external" href="https://docs.python.org/3/library/ctypes.html">https://docs.python.org/3/library/ctypes.html</a></p>
+<dl class="simple">
+<dt>py2c - an Impinj-specific term which includes:</dt><dd><ol class="arabic simple">
+<li><p>wrapper for ctypes to add functionality</p></li>
+<li><p>wrapper for ctypes to add look and act more pythonic</p></li>
+<li><p>autogen which parses the C SDK (relies on the clang parser),
+knows how to convert the language into a ctypes parsable format,
+and spits out py2c code.</p></li>
+</ol>
+</dd>
+</dl>
+</section>
+<section id="adding-data-structure">
+<h2>Adding Data Structure<a class="headerlink" href="#adding-data-structure" title="Permalink to this headline">¶</a></h2>
+<p>Refer to step 3 in the ‘Adding External C Global Functions’ section</p>
+</section>
+<section id="adding-external-c-global-functions">
+<h2>Adding External C Global Functions<a class="headerlink" href="#adding-external-c-global-functions" title="Permalink to this headline">¶</a></h2>
+<p>Many times in the the CSDK you may need to create a new global
+function, whether that be a getter…
+get_ex10_reader()
+… or just a helper function…
+board_init()
+When the CSDK is compiled, a dll is created in the form of the .so
+file for usage with python. These global functions will be compled
+into the so to call through py2c. To properly use your function with
+the so, there are a couple of steps. Not everything is
+autogenned/automated in order to keep from including things which we
+did not intend to include.</p>
+<p>NOTE: This hand inclusion is somewhat outdated from a time when
+internal and external code was all lumped together and not parsable.
+With the new directory structure, could change.</p>
+<section id="long-winded">
+<h3>Long winded<a class="headerlink" href="#long-winded" title="Permalink to this headline">¶</a></h3>
+<p>The steps to get your global function added are as follows.</p>
+<blockquote>
+<div><ol class="arabic">
+<li><p>go to dev_kit/ex10_dev_kit/py2c_interface/py2c_python_wrapper.py under
+the __init__ function. ctypes requires knowledge of the expected args and return
+type for so symbols. We add the return type at this step. Below is an example of
+what to add to the bottom of the __init__ function.
+py2c_so.get_ex10_antenna_disconnect.restype = ctypes.POINTER(Ex10AntennaDisconnect)
+Here you see we are grabbing the so, pointing to a function/symbol, and telling
+ctypes the return type aka the restype. The return here is a pointer to a struct
+named ‘Ex10AntennaDisconnect’.</p></li>
+<li><p>You could call the function at this point, but py2c wraps the symbol to intercept
+the python calls. Go to the function __getattr__. When you call the py2c library
+with a function name, this function intercepts the call, takes the name, and
+attempts to get the named symbol from the so with…
+getattr(self.py2c_so, name)
+Using this intercept, the py2c library can insert functionality to individual
+calls. Most of the calls use ‘GetGenericIntercept’ which on init stores the symbol
+and on __call__ (when one uses braces to call the function –&gt; function()) the
+intercept will dereference the returned pointer with .contents
+This is purely saving tedium and giving back a pythonic class instead of a ctypes
+pointer. If special functionality is needed, further logic can be added, but for
+the simple case, add a line
+to…
+def __getattr__(self, name):
+… such as…</p>
+<blockquote>
+<div><dl class="simple">
+<dt>elif name == ‘get_ex10_antenna_disconnect’:</dt><dd><p>ret_val = GetGenericIntercept(ret_val)</p>
+</dd>
+</dl>
+</div></blockquote>
+</li>
+<li><p>go to yk_firmware/autogen/c2x/gen_c2python_hand_picked.py
+In step 1 we showed how to add a return type. In that example, the return type was
+‘struct Ex10AntennaDisconnect’, which needs to be a known type to py2c. This type
+will be autogenned in ctypes format, but only if told to do so. Instead of
+including every type, only types included in a certain list will be autogenned.
+This offers cleanliness, security, but most importantly ordered inclusion in case
+one type needs a previously defined one. Add your data structure to be autogenned
+in this file. Keep in mind the order of inclusion in the lists.
+Also note the different lists for different types.
+enums_of_interest is for enums
+structs_of_interest is for structs
+structs_of_interest has an expansion which happened down the road because ‘insert
+good reason here’.
+You can insert into the structs_of_interest with a tuple.
+EX: (‘Ex10WriteFormat’, True, False),
+In the tuple:
+- arg [0] is the name of the data structure
+- arg [1] determines if you want the datastructure to be packed. This is an argument</p>
+<blockquote>
+<div><p>you will need if the corresponding c structure is bitpacked.</p>
+</div></blockquote>
+<ul class="simple">
+<li><p>arg [2] is if the data structure is actually a union.</p></li>
+</ul>
+</li>
+<li><p>If there are any other args you need in calling your function or within the return
+type that require a ctypes definition, don’t forget to autogen them.</p></li>
+</ol>
+</div></blockquote>
+</section>
+<section id="tldr">
+<h3>TLDR<a class="headerlink" href="#tldr" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>py2c_so.get_ex10_antenna_disconnect.restype = ctypes.POINTER(Ex10AntennaDisconnect)</p></li>
+<li><dl class="simple">
+<dt>elif name == ‘get_ex10_antenna_disconnect’:</dt><dd><p>ret_val = GetGenericIntercept(ret_val)</p>
+</dd>
+</dl>
+</li>
+<li><p>yk_firmwar/autogen/c2x/gen_c2python_hand_picked.py</p></li>
+</ol>
+</div></blockquote>
+</section>
+</section>
+<section id="id1">
+<h2>Adding External C Global Functions<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>go to dev_kit/ex10_dev_kit/py2c_interface/py2c_python_internal.py and follow the rest of step 1</p></li>
+<li><p>go to dev_kit/ex10_dev_kit/py2c_interface/py2c_python_internal.py and follow the rest of step 2</p></li>
+<li><p>go to yk_firmware/autogen/c2x/gen_c2python_internal_wrapper.py and follow the rest of step 3</p></li>
+<li><p>go to yk_firmware/autogen/c2x/gen_c2python_internal_wrapper.py and follow the rest of step 4</p></li>
+</ol>
+</div></blockquote>
+</section>
+<section id="if-you-suspect-the-so-does-not-contain-your-symbol">
+<h2>If you suspect the .so does not contain your symbol<a class="headerlink" href="#if-you-suspect-the-so-does-not-contain-your-symbol" title="Permalink to this headline">¶</a></h2>
+<p>Sometimes you may see an error indicating that the .so doesn’t contain you symbol.
+Run the linux command nm -a path_to_so/py2c.so
+<a class="reference external" href="https://man7.org/linux/man-pages/man1/nm.1.html">https://man7.org/linux/man-pages/man1/nm.1.html</a>
+The nm with -a will list all symbols in a dll. You can search the output of this to ensure
+your function is in the so to be used.</p>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="../../_static/logo.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Adding py2c code</a><ul>
+<li><a class="reference internal" href="#glossary">Glossary</a></li>
+<li><a class="reference internal" href="#adding-data-structure">Adding Data Structure</a></li>
+<li><a class="reference internal" href="#adding-external-c-global-functions">Adding External C Global Functions</a><ul>
+<li><a class="reference internal" href="#long-winded">Long winded</a></li>
+<li><a class="reference internal" href="#tldr">TLDR</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id1">Adding External C Global Functions</a></li>
+<li><a class="reference internal" href="#if-you-suspect-the-so-does-not-contain-your-symbol">If you suspect the .so does not contain your symbol</a></li>
+</ul>
+</li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="nav-item nav-item-0"><a href="index.html">Impinj Reader Chip SDK</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Adding py2c code</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Impinj, Inc..
+    </div>
+  </body>
+</html>

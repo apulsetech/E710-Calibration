@@ -1,0 +1,416 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Ex10Helpers &#8212; Impinj Reader Chip SDK</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinxdoc.css" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Ex10Print" href="ex10_print.html" />
+    <link rel="prev" title="Ex10 Utils" href="utils.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="ex10_print.html" title="Ex10Print"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="utils.html" title="Ex10 Utils"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../yk_firmware_ex10_host_c_api.html" >Impinj Reader Chip C Host SDK</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../yk_firmware_ex10_host_c_api_layers.html" >API Layers</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="support_modules.html" accesskey="U">Ex10 Support Modules</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Ex10Helpers</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="ex10helpers">
+<span id="ex10-api-host-c-api-helpers"></span><h1>Ex10Helpers<a class="headerlink" href="#ex10helpers" title="Permalink to this headline">¶</a></h1>
+<p>These Ex10Helper functions are a group of functions that are common code.
+Note that if the application includes this structure to call any of these
+functions, all of the functions will be included in the application code.</p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-enums">Enums</p>
+<dl class="cpp enum">
+<dt class="sig sig-object cpp" id="_CPPv422InventoryHelperReturns">
+<span id="_CPPv322InventoryHelperReturns"></span><span id="_CPPv222InventoryHelperReturns"></span><span class="target" id="ex10__helpers_8h_1a72c1aeb2e20eff87a4d741231571dbad"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">InventoryHelperReturns</span></span></span><a class="headerlink" href="#_CPPv422InventoryHelperReturns" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>This enum details the different reasons for return when using ‘simple_inventory’ or ‘continuous_inventory’. </p>
+<p><em>Values:</em></p>
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N22InventoryHelperReturns16InvHelperSuccessE">
+<span id="_CPPv3N22InventoryHelperReturns16InvHelperSuccessE"></span><span id="_CPPv2N22InventoryHelperReturns16InvHelperSuccessE"></span><span class="target" id="ex10__helpers_8h_1a72c1aeb2e20eff87a4d741231571dbada1e98c4e9b20389ad7dc2f7d1e42900d4"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">InvHelperSuccess</span></span></span><a class="headerlink" href="#_CPPv4N22InventoryHelperReturns16InvHelperSuccessE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N22InventoryHelperReturns22InvHelperOpStatusErrorE">
+<span id="_CPPv3N22InventoryHelperReturns22InvHelperOpStatusErrorE"></span><span id="_CPPv2N22InventoryHelperReturns22InvHelperOpStatusErrorE"></span><span class="target" id="ex10__helpers_8h_1a72c1aeb2e20eff87a4d741231571dbada8bc4b3d2bf16f8cc05b2c67cd91d3759"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">InvHelperOpStatusError</span></span></span><a class="headerlink" href="#_CPPv4N22InventoryHelperReturns22InvHelperOpStatusErrorE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N22InventoryHelperReturns23InvHelperStopConditionsE">
+<span id="_CPPv3N22InventoryHelperReturns23InvHelperStopConditionsE"></span><span id="_CPPv2N22InventoryHelperReturns23InvHelperStopConditionsE"></span><span class="target" id="ex10__helpers_8h_1a72c1aeb2e20eff87a4d741231571dbada431ce0cc973a3c8e65bb60dd067c3b37"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">InvHelperStopConditions</span></span></span><a class="headerlink" href="#_CPPv4N22InventoryHelperReturns23InvHelperStopConditionsE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N22InventoryHelperReturns16InvHelperTimeoutE">
+<span id="_CPPv3N22InventoryHelperReturns16InvHelperTimeoutE"></span><span id="_CPPv2N22InventoryHelperReturns16InvHelperTimeoutE"></span><span class="target" id="ex10__helpers_8h_1a72c1aeb2e20eff87a4d741231571dbadac50cddb86d1ce8bff12caeb1604bf062"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">InvHelperTimeout</span></span></span><a class="headerlink" href="#_CPPv4N22InventoryHelperReturns16InvHelperTimeoutE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-functions">Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv416get_ex10_helpersv">
+<span id="_CPPv316get_ex10_helpersv"></span><span id="_CPPv216get_ex10_helpersv"></span><span id="get_ex10_helpers__void"></span><span class="target" id="ex10__helpers_8h_1a6bbb09b699edc0b83252cb72b3793d0a"></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv411Ex10Helpers" title="Ex10Helpers"><span class="n"><span class="pre">Ex10Helpers</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_ex10_helpers</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">void</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416get_ex10_helpersv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv415InfoFromPackets">
+<span id="_CPPv315InfoFromPackets"></span><span id="_CPPv215InfoFromPackets"></span><span id="InfoFromPackets"></span><span class="target" id="struct_info_from_packets"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">InfoFromPackets</span></span></span><a class="headerlink" href="#_CPPv415InfoFromPackets" title="Permalink to this definition">¶</a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N15InfoFromPackets17gen2_transactionsE">
+<span id="_CPPv3N15InfoFromPackets17gen2_transactionsE"></span><span id="_CPPv2N15InfoFromPackets17gen2_transactionsE"></span><span id="InfoFromPackets::gen2_transactions__s"></span><span class="target" id="struct_info_from_packets_1a28f67a9a9ee044289f94bd65122a8924"></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">gen2_transactions</span></span></span><a class="headerlink" href="#_CPPv4N15InfoFromPackets17gen2_transactionsE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N15InfoFromPackets18total_singulationsE">
+<span id="_CPPv3N15InfoFromPackets18total_singulationsE"></span><span id="_CPPv2N15InfoFromPackets18total_singulationsE"></span><span id="InfoFromPackets::total_singulations__s"></span><span class="target" id="struct_info_from_packets_1ab1eb3a04a89296a3b9245eb70bd00bef"></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">total_singulations</span></span></span><a class="headerlink" href="#_CPPv4N15InfoFromPackets18total_singulationsE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N15InfoFromPackets15total_tid_countE">
+<span id="_CPPv3N15InfoFromPackets15total_tid_countE"></span><span id="_CPPv2N15InfoFromPackets15total_tid_countE"></span><span id="InfoFromPackets::total_tid_count__s"></span><span class="target" id="struct_info_from_packets_1a3b5b415e556800a1f49c95b9e2a6a16a"></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">total_tid_count</span></span></span><a class="headerlink" href="#_CPPv4N15InfoFromPackets15total_tid_countE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N15InfoFromPackets12times_haltedE">
+<span id="_CPPv3N15InfoFromPackets12times_haltedE"></span><span id="_CPPv2N15InfoFromPackets12times_haltedE"></span><span id="InfoFromPackets::times_halted__s"></span><span class="target" id="struct_info_from_packets_1aee712da6d543f36ac3e670a5aeaa0c17"></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">times_halted</span></span></span><a class="headerlink" href="#_CPPv4N15InfoFromPackets12times_haltedE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N15InfoFromPackets10access_tagE">
+<span id="_CPPv3N15InfoFromPackets10access_tagE"></span><span id="_CPPv2N15InfoFromPackets10access_tagE"></span><span id="InfoFromPackets::access_tag__TagReadData"></span><span class="target" id="struct_info_from_packets_1ae127a54e315d00757ae3f5f9e3ffc41a"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="event_parser.html#_CPPv411TagReadData" title="TagReadData"><span class="n"><span class="pre">TagReadData</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">access_tag</span></span></span><a class="headerlink" href="#_CPPv4N15InfoFromPackets10access_tagE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv421InventoryHelperParams">
+<span id="_CPPv321InventoryHelperParams"></span><span id="_CPPv221InventoryHelperParams"></span><span id="InventoryHelperParams"></span><span class="target" id="struct_inventory_helper_params"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">InventoryHelperParams</span></span></span><a class="headerlink" href="#_CPPv421InventoryHelperParams" title="Permalink to this definition">¶</a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N21InventoryHelperParams7antennaE">
+<span id="_CPPv3N21InventoryHelperParams7antennaE"></span><span id="_CPPv2N21InventoryHelperParams7antennaE"></span><span id="InventoryHelperParams::antenna__uint8_tC"></span><span class="target" id="struct_inventory_helper_params_1a81d813b5bfb3279619ee78ad692ec537"></span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">antenna</span></span></span><a class="headerlink" href="#_CPPv4N21InventoryHelperParams7antennaE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N21InventoryHelperParams7rf_modeE">
+<span id="_CPPv3N21InventoryHelperParams7rf_modeE"></span><span id="_CPPv2N21InventoryHelperParams7rf_modeE"></span><span id="InventoryHelperParams::rf_mode__RfModesC"></span><span class="target" id="struct_inventory_helper_params_1a1b2a5dc09eed13fdb09815589a90ff8e"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="n"><span class="pre">RfModes</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">rf_mode</span></span></span><a class="headerlink" href="#_CPPv4N21InventoryHelperParams7rf_modeE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N21InventoryHelperParams13tx_power_cdbmE">
+<span id="_CPPv3N21InventoryHelperParams13tx_power_cdbmE"></span><span id="_CPPv2N21InventoryHelperParams13tx_power_cdbmE"></span><span id="InventoryHelperParams::tx_power_cdbm__int16_tC"></span><span class="target" id="struct_inventory_helper_params_1a77bf23a589e2eef64d1904a16e841e46"></span><span class="n"><span class="pre">int16_t</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">tx_power_cdbm</span></span></span><a class="headerlink" href="#_CPPv4N21InventoryHelperParams13tx_power_cdbmE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N21InventoryHelperParams16inventory_configE">
+<span id="_CPPv3N21InventoryHelperParams16inventory_configE"></span><span id="_CPPv2N21InventoryHelperParams16inventory_configE"></span><span id="InventoryHelperParams::inventory_config__InventoryRoundControlFieldsP"></span><span class="target" id="struct_inventory_helper_params_1ad6040202b90a46b4b81b5c6f2142b326"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../yk_firmware_ex10_host_c_register_accessors.html#_CPPv427InventoryRoundControlFields" title="InventoryRoundControlFields"><span class="n"><span class="pre">InventoryRoundControlFields</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">inventory_config</span></span></span><a class="headerlink" href="#_CPPv4N21InventoryHelperParams16inventory_configE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N21InventoryHelperParams18inventory_config_2E">
+<span id="_CPPv3N21InventoryHelperParams18inventory_config_2E"></span><span id="_CPPv2N21InventoryHelperParams18inventory_config_2E"></span><span id="InventoryHelperParams::inventory_config_2__InventoryRoundControl_2FieldsCP"></span><span class="target" id="struct_inventory_helper_params_1af5376942971ca7d8a1c7a1e05dc3b3cf"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../yk_firmware_ex10_host_c_register_accessors.html#_CPPv429InventoryRoundControl_2Fields" title="InventoryRoundControl_2Fields"><span class="n"><span class="pre">InventoryRoundControl_2Fields</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">inventory_config_2</span></span></span><a class="headerlink" href="#_CPPv4N21InventoryHelperParams18inventory_config_2E" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N21InventoryHelperParams12send_selectsE">
+<span id="_CPPv3N21InventoryHelperParams12send_selectsE"></span><span id="_CPPv2N21InventoryHelperParams12send_selectsE"></span><span id="InventoryHelperParams::send_selects__bC"></span><span class="target" id="struct_inventory_helper_params_1ad75a15642a0a44ee314b230c6d91eba8"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">send_selects</span></span></span><a class="headerlink" href="#_CPPv4N21InventoryHelperParams12send_selectsE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N21InventoryHelperParams9remain_onE">
+<span id="_CPPv3N21InventoryHelperParams9remain_onE"></span><span id="_CPPv2N21InventoryHelperParams9remain_onE"></span><span id="InventoryHelperParams::remain_on__bC"></span><span class="target" id="struct_inventory_helper_params_1a22b551b8c702494f76220fbae54c38f7"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">remain_on</span></span></span><a class="headerlink" href="#_CPPv4N21InventoryHelperParams9remain_onE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N21InventoryHelperParams11dual_targetE">
+<span id="_CPPv3N21InventoryHelperParams11dual_targetE"></span><span id="_CPPv2N21InventoryHelperParams11dual_targetE"></span><span id="InventoryHelperParams::dual_target__bC"></span><span class="target" id="struct_inventory_helper_params_1a5df10a58dc52d6f8129f35cf9307edc7"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dual_target</span></span></span><a class="headerlink" href="#_CPPv4N21InventoryHelperParams11dual_targetE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N21InventoryHelperParams21inventory_duration_msE">
+<span id="_CPPv3N21InventoryHelperParams21inventory_duration_msE"></span><span id="_CPPv2N21InventoryHelperParams21inventory_duration_msE"></span><span id="InventoryHelperParams::inventory_duration_ms__uint32_tC"></span><span class="target" id="struct_inventory_helper_params_1a71bdea890a36c6e8855d98b80c225497"></span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">inventory_duration_ms</span></span></span><a class="headerlink" href="#_CPPv4N21InventoryHelperParams21inventory_duration_msE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N21InventoryHelperParams11packet_infoE">
+<span id="_CPPv3N21InventoryHelperParams11packet_infoE"></span><span id="_CPPv2N21InventoryHelperParams11packet_infoE"></span><span id="InventoryHelperParams::packet_info__InfoFromPacketsP"></span><span class="target" id="struct_inventory_helper_params_1abfb405d07b7ea9dcd114524874ce2d14"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv415InfoFromPackets" title="InfoFromPackets"><span class="n"><span class="pre">InfoFromPackets</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">packet_info</span></span></span><a class="headerlink" href="#_CPPv4N21InventoryHelperParams11packet_infoE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N21InventoryHelperParams7verboseE">
+<span id="_CPPv3N21InventoryHelperParams7verboseE"></span><span id="_CPPv2N21InventoryHelperParams7verboseE"></span><span id="InventoryHelperParams::verbose__bC"></span><span class="target" id="struct_inventory_helper_params_1a26ad1ddfc109709f08f3a42885f9c3a9"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">verbose</span></span></span><a class="headerlink" href="#_CPPv4N21InventoryHelperParams7verboseE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv425ContInventoryHelperParams">
+<span id="_CPPv325ContInventoryHelperParams"></span><span id="_CPPv225ContInventoryHelperParams"></span><span id="ContInventoryHelperParams"></span><span class="target" id="struct_cont_inventory_helper_params"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ContInventoryHelperParams</span></span></span><a class="headerlink" href="#_CPPv425ContInventoryHelperParams" title="Permalink to this definition">¶</a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N25ContInventoryHelperParams16inventory_paramsE">
+<span id="_CPPv3N25ContInventoryHelperParams16inventory_paramsE"></span><span id="_CPPv2N25ContInventoryHelperParams16inventory_paramsE"></span><span id="ContInventoryHelperParams::inventory_params__InventoryHelperParamsP"></span><span class="target" id="struct_cont_inventory_helper_params_1aef28d88c0a59fc79ff349cc296de6558"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv421InventoryHelperParams" title="InventoryHelperParams"><span class="n"><span class="pre">InventoryHelperParams</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">inventory_params</span></span></span><a class="headerlink" href="#_CPPv4N25ContInventoryHelperParams16inventory_paramsE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N25ContInventoryHelperParams15stop_conditionsE">
+<span id="_CPPv3N25ContInventoryHelperParams15stop_conditionsE"></span><span id="_CPPv2N25ContInventoryHelperParams15stop_conditionsE"></span><span id="ContInventoryHelperParams::stop_conditions__StopConditionsCP"></span><span class="target" id="struct_cont_inventory_helper_params_1a0355c6d374656323f22bb86ac50c2417"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../yk_firmware_ex10_host_c_reader_layer.html#_CPPv414StopConditions" title="StopConditions"><span class="n"><span class="pre">StopConditions</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">stop_conditions</span></span></span><a class="headerlink" href="#_CPPv4N25ContInventoryHelperParams15stop_conditionsE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N25ContInventoryHelperParams14summary_packetE">
+<span id="_CPPv3N25ContInventoryHelperParams14summary_packetE"></span><span id="_CPPv2N25ContInventoryHelperParams14summary_packetE"></span><span id="ContInventoryHelperParams::summary_packet__ContinuousInventorySummaryP"></span><span class="target" id="struct_cont_inventory_helper_params_1a38ced5ab7fc03f04dffae57c072bf1c8"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="event_parser.html#_CPPv4N15EventPacketType26ContinuousInventorySummaryE" title="ContinuousInventorySummary"><span class="n"><span class="pre">ContinuousInventorySummary</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">summary_packet</span></span></span><a class="headerlink" href="#_CPPv4N25ContInventoryHelperParams14summary_packetE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv411Ex10Helpers">
+<span id="_CPPv311Ex10Helpers"></span><span id="_CPPv211Ex10Helpers"></span><span id="Ex10Helpers"></span><span class="target" id="struct_ex10_helpers"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10Helpers</span></span></span><a class="headerlink" href="#_CPPv411Ex10Helpers" title="Permalink to this definition">¶</a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N11Ex10Helpers27print_command_result_fieldsE">
+<span id="_CPPv3N11Ex10Helpers27print_command_result_fieldsE"></span><span id="_CPPv2N11Ex10Helpers27print_command_result_fieldsE"></span><span class="target" id="struct_ex10_helpers_1af5961f72bc578bca8f213ce3d69361ed"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">print_command_result_fields</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../yk_firmware_ex10_host_c_register_accessors.html#_CPPv419CommandResultFields" title="CommandResultFields"><span class="n"><span class="pre">CommandResultFields</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">error</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N11Ex10Helpers27print_command_result_fieldsE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Print the contents of the struct <a class="reference internal" href="../yk_firmware_ex10_host_c_register_accessors.html#struct_command_result_fields"><span class="std std-ref">CommandResultFields</span></a>. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N11Ex10Helpers16check_gen2_errorE">
+<span id="_CPPv3N11Ex10Helpers16check_gen2_errorE"></span><span id="_CPPv2N11Ex10Helpers16check_gen2_errorE"></span><span class="target" id="struct_ex10_helpers_1ae003f487580cbe85ec45ca1fe63851b9"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">check_gen2_error</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="gen2_commands.html#_CPPv49Gen2Reply" title="Gen2Reply"><span class="n"><span class="pre">Gen2Reply</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">reply</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N11Ex10Helpers16check_gen2_errorE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Checks the <a class="reference internal" href="gen2_commands.html#struct_gen2_reply"><span class="std std-ref">Gen2Reply</span></a> for error and prints an error message. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N11Ex10Helpers25print_aggregate_op_errorsE">
+<span id="_CPPv3N11Ex10Helpers25print_aggregate_op_errorsE"></span><span id="_CPPv2N11Ex10Helpers25print_aggregate_op_errorsE"></span><span class="target" id="struct_ex10_helpers_1a5c7c0bb029dcc15e0194c6c8c7ce6f5f"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">print_aggregate_op_errors</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="event_parser.html#_CPPv4N15EventPacketType18AggregateOpSummaryE" title="AggregateOpSummary"><span class="n"><span class="pre">AggregateOpSummary</span></span></a><span class="w"> </span><span class="n"><span class="pre">agg_summary</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N11Ex10Helpers25print_aggregate_op_errorsE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Prints out useful debug around the aggregate op buffer. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N11Ex10Helpers15discard_packetsE">
+<span id="_CPPv3N11Ex10Helpers15discard_packetsE"></span><span id="_CPPv2N11Ex10Helpers15discard_packetsE"></span><span class="target" id="struct_ex10_helpers_1a4f59af37734d855300ff0d0b99bfbe06"></span><span class="n"><span class="pre">ssize_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">discard_packets</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n"><span class="pre">print_packets</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n"><span class="pre">flush_packets</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n"><span class="pre">debug_aggregate_op</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N11Ex10Helpers15discard_packetsE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Purge FIFO of remaining packets. </p>
+<p>Print summary of each packet </p>
+<dl class="field-list simple">
+<dt class="field-odd">Param print_packets</dt>
+<dd class="field-odd"><p>Print each packet purged from the EventFifo queue. </p>
+</dd>
+<dt class="field-even">Param flush_packets</dt>
+<dd class="field-even"><p>Uses the InsertFifoEvent command, with the Trigger Interrupt flag set, to trigger an ReadFifo command, allowing the host to receive all pending EventFifo data held by the Reader Chip. </p>
+</dd>
+<dt class="field-odd">Param debug_aggregate_op</dt>
+<dd class="field-odd"><p>Provides detailed information about an AggregateOp failure, if an <a class="reference internal" href="../yk_firmware_ex10_host_c_other_types.html#struct_aggregate_op_summary"><span class="std std-ref">AggregateOpSummary</span></a> packet is encountered in the dumped packet stream.</p>
+</dd>
+<dt class="field-even">Returns -1</dt>
+<dd class="field-even"><p>Indicates an error occurred when emptying the FIFO. </p>
+</dd>
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>ssize_t On success, the number of EventFifo packets discarded. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N11Ex10Helpers16inventory_haltedE">
+<span id="_CPPv3N11Ex10Helpers16inventory_haltedE"></span><span id="_CPPv2N11Ex10Helpers16inventory_haltedE"></span><span class="target" id="struct_ex10_helpers_1ae523b7b5c19c97e34b012a91ffda989e"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">inventory_halted</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N11Ex10Helpers16inventory_haltedE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Check if inventory round is halted on a tag. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N11Ex10Helpers23clear_info_from_packetsE">
+<span id="_CPPv3N11Ex10Helpers23clear_info_from_packetsE"></span><span id="_CPPv2N11Ex10Helpers23clear_info_from_packetsE"></span><span class="target" id="struct_ex10_helpers_1a8044eb10feb34baa53b34ac942cee0b9"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">clear_info_from_packets</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv415InfoFromPackets" title="InfoFromPackets"><span class="n"><span class="pre">InfoFromPackets</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">return_info</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N11Ex10Helpers23clear_info_from_packetsE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Clears the state of the passed struct which stores state collected from event fifo packets. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Param return_info</dt>
+<dd class="field-odd"><p>The accumulated inventory state. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N11Ex10Helpers15examine_packetsE">
+<span id="_CPPv3N11Ex10Helpers15examine_packetsE"></span><span id="_CPPv2N11Ex10Helpers15examine_packetsE"></span><span class="target" id="struct_ex10_helpers_1ac0358a66ef746bf85cae81e1eb0177c7"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">examine_packets</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="event_parser.html#_CPPv415EventFifoPacket" title="EventFifoPacket"><span class="n"><span class="pre">EventFifoPacket</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">packet</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv415InfoFromPackets" title="InfoFromPackets"><span class="n"><span class="pre">InfoFromPackets</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">return_info</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N11Ex10Helpers15examine_packetsE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>When iterating through EventFifo packets, this function can be used to accumulate the inventory state stored in the <a class="reference internal" href="#struct_info_from_packets"><span class="std std-ref">InfoFromPackets</span></a> struct. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If the EventFifo packet is of type <a class="reference internal" href="../yk_firmware_ex10_host_c_other_types.html#struct_tag_read"><span class="std std-ref">TagRead</span></a> then the return_info-&gt;access_tag values are filled in. </p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Param packet</dt>
+<dd class="field-odd"><p>The EventFifo packet to examine. </p>
+</dd>
+<dt class="field-even">Param return_info</dt>
+<dd class="field-even"><p>The accumulated inventory state. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N11Ex10Helpers16deep_copy_packetE">
+<span id="_CPPv3N11Ex10Helpers16deep_copy_packetE"></span><span id="_CPPv2N11Ex10Helpers16deep_copy_packetE"></span><span class="target" id="struct_ex10_helpers_1a6c0856b93d1a7ceb8a059d2360ebea13"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">deep_copy_packet</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="event_parser.html#_CPPv415EventFifoPacket" title="EventFifoPacket"><span class="n"><span class="pre">EventFifoPacket</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">dst</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="event_parser.html#_CPPv415EventFifoPacket" title="EventFifoPacket"><span class="n"><span class="pre">EventFifoPacket</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">src</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N11Ex10Helpers16deep_copy_packetE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Perform a deep copy of an EventFifo packet from one <a class="reference internal" href="../yk_firmware_ex10_host_c_other_types.html#struct_event_fifo_packet"><span class="std std-ref">EventFifoPacket</span></a> struct to another. </p>
+<p>The caller is responsible for the backing memory of the destination’s pointers and lengths</p>
+<dl class="field-list simple">
+<dt class="field-odd">Param dst</dt>
+<dd class="field-odd"><p>The pointer to the destination packet </p>
+</dd>
+<dt class="field-even">Param src</dt>
+<dd class="field-even"><p>The pointer to the source packet </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N11Ex10Helpers16simple_inventoryE">
+<span id="_CPPv3N11Ex10Helpers16simple_inventoryE"></span><span id="_CPPv2N11Ex10Helpers16simple_inventoryE"></span><span class="target" id="struct_ex10_helpers_1ae00de56eb44625fb0c76015193ecc88d"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv422InventoryHelperReturns" title="InventoryHelperReturns"><span class="n"><span class="pre">InventoryHelperReturns</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">simple_inventory</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv421InventoryHelperParams" title="InventoryHelperParams"><span class="n"><span class="pre">InventoryHelperParams</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">ihp</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N11Ex10Helpers16simple_inventoryE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Run inventory rounds until a timeout or halted. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N11Ex10Helpers20continuous_inventoryE">
+<span id="_CPPv3N11Ex10Helpers20continuous_inventoryE"></span><span id="_CPPv2N11Ex10Helpers20continuous_inventoryE"></span><span class="target" id="struct_ex10_helpers_1a0429672af8b3be6138ee6979e846fa30"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv422InventoryHelperReturns" title="InventoryHelperReturns"><span class="n"><span class="pre">InventoryHelperReturns</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">continuous_inventory</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv425ContInventoryHelperParams" title="ContInventoryHelperParams"><span class="n"><span class="pre">ContInventoryHelperParams</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">cihp</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N11Ex10Helpers20continuous_inventoryE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Run continuous inventory until a stop condition is met or halted. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N11Ex10Helpers18copy_tag_read_dataE">
+<span id="_CPPv3N11Ex10Helpers18copy_tag_read_dataE"></span><span id="_CPPv2N11Ex10Helpers18copy_tag_read_dataE"></span><span class="target" id="struct_ex10_helpers_1a4c3f9c7b03edba5f5ff95874e6477a28"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">copy_tag_read_data</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="event_parser.html#_CPPv411TagReadData" title="TagReadData"><span class="n"><span class="pre">TagReadData</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">dst</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="event_parser.html#_CPPv413TagReadFields" title="TagReadFields"><span class="n"><span class="pre">TagReadFields</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">src</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N11Ex10Helpers18copy_tag_read_dataE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Copy the EventFifo <a class="reference internal" href="../yk_firmware_ex10_host_c_other_types.html#struct_tag_read"><span class="std std-ref">TagRead</span></a> extracted data into the destination type struct <a class="reference internal" href="../yk_firmware_ex10_host_c_other_types.html#struct_tag_read_data"><span class="std std-ref">TagReadData</span></a>. </p>
+<p>The struct <a class="reference internal" href="../yk_firmware_ex10_host_c_other_types.html#struct_tag_read_fields"><span class="std std-ref">TagReadFields</span></a> contains data pointers into the relevant fields of the EventFifo <a class="reference internal" href="../yk_firmware_ex10_host_c_other_types.html#struct_tag_read"><span class="std std-ref">TagRead</span></a> packet, allowing for easy data extraction. The EventFifo packet will be deleted when the function <a class="reference internal" href="../yk_firmware_ex10_host_c_reader_layer.html#struct_ex10_reader_1a5422a8ec579b28dc1e1ce5810e0ffc69"><span class="std std-ref">Ex10Reader.packet_remove()</span></a> function is called, which releases the EventFifo memory back to the pool for reuse. The struct <a class="reference internal" href="../yk_firmware_ex10_host_c_other_types.html#struct_tag_read"><span class="std std-ref">TagRead</span></a> provides a destination for the <a class="reference internal" href="../yk_firmware_ex10_host_c_other_types.html#struct_tag_read"><span class="std std-ref">TagRead</span></a> data, allowing the client to use the tag data beyond the lifetime of the EventFifo <a class="reference internal" href="../yk_firmware_ex10_host_c_other_types.html#struct_tag_read"><span class="std std-ref">TagRead</span></a> packet.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns true</dt>
+<dd class="field-odd"><p>indicates that the tag was copied without error. </p>
+</dd>
+<dt class="field-even">Returns false</dt>
+<dd class="field-even"><p>indicates that either the EPC or the TID length was larger than the struct <a class="reference internal" href="../yk_firmware_ex10_host_c_other_types.html#struct_tag_read_data"><span class="std std-ref">TagReadData</span></a> allocation. To determine which copy failed, the destination length fields should be compared with the source length fields. </p>
+</dd>
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>bool Indicates whether the copy operation was successful. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N11Ex10Helpers24get_remain_reason_stringE">
+<span id="_CPPv3N11Ex10Helpers24get_remain_reason_stringE"></span><span id="_CPPv2N11Ex10Helpers24get_remain_reason_stringE"></span><span class="target" id="struct_ex10_helpers_1a98d2004311a9dac46013e9cb713f6847"></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_remain_reason_string</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="n"><span class="pre">RemainReason</span></span><span class="w"> </span><span class="n"><span class="pre">remain_reason</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N11Ex10Helpers24get_remain_reason_stringE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Translate from RemainReason enum to a human-readable string. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N11Ex10Helpers10swap_bytesE">
+<span id="_CPPv3N11Ex10Helpers10swap_bytesE"></span><span id="_CPPv2N11Ex10Helpers10swap_bytesE"></span><span class="target" id="struct_ex10_helpers_1a2a526f5fb5e5c6f13e92956dff84e282"></span><span class="n"><span class="pre">uint16_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">swap_bytes</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">uint16_t</span></span><span class="w"> </span><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N11Ex10Helpers10swap_bytesE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Swaps the two bytes of a uint16_t. Useful for correcting endian-ness of uint16_t values reported from the (big-endian) Gen2 tag. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N11Ex10Helpers23read_rssi_value_from_opE">
+<span id="_CPPv3N11Ex10Helpers23read_rssi_value_from_opE"></span><span id="_CPPv2N11Ex10Helpers23read_rssi_value_from_opE"></span><span class="target" id="struct_ex10_helpers_1afaf27eb4fefb978656d6590cc590920e"></span><span class="n"><span class="pre">uint16_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">read_rssi_value_from_op</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n"><span class="pre">rssi_count</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N11Ex10Helpers23read_rssi_value_from_opE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Runs the MeasureRssiOp, waits for the event fifo corresponding to the op finishing, and returns the log2 Rssi reported back. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N11Ex10Helpers26send_single_halted_commandE">
+<span id="_CPPv3N11Ex10Helpers26send_single_halted_commandE"></span><span id="_CPPv2N11Ex10Helpers26send_single_halted_commandE"></span><span class="target" id="struct_ex10_helpers_1a39e091566ddac1ab29abdfc449aa775b"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">send_single_halted_command</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="gen2_commands.html#_CPPv415Gen2CommandSpec" title="Gen2CommandSpec"><span class="n"><span class="pre">Gen2CommandSpec</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">cmd_spec</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N11Ex10Helpers26send_single_halted_commandE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Clears the gen2 buffer, adds a new command, and immediately sends it. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N11Ex10Helpers8fill_u32E">
+<span id="_CPPv3N11Ex10Helpers8fill_u32E"></span><span id="_CPPv2N11Ex10Helpers8fill_u32E"></span><span class="target" id="struct_ex10_helpers_1a1b748a4b1e3f7689e92486a4159fb05f"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">fill_u32</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">dest</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n"><span class="pre">count</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N11Ex10Helpers8fill_u32E" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Starting a a memory address, begins filling in the same u32 word given in value count number of times. </p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../../../_static/logo.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="utils.html"
+                        title="previous chapter">Ex10 Utils</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="ex10_print.html"
+                        title="next chapter">Ex10Print</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="ex10_print.html" title="Ex10Print"
+             >next</a></li>
+        <li class="right" >
+          <a href="utils.html" title="Ex10 Utils"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../yk_firmware_ex10_host_c_api.html" >Impinj Reader Chip C Host SDK</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../yk_firmware_ex10_host_c_api_layers.html" >API Layers</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="support_modules.html" >Ex10 Support Modules</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Ex10Helpers</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Impinj, Inc..
+    </div>
+  </body>
+</html>

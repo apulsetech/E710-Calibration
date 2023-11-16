@@ -1,0 +1,159 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Tx Power Droop Compensation &#8212; Impinj Reader Chip SDK</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinxdoc.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Reverse Power Threshold Detection" href="yk_firmware_ex10_host_c_reverse_power_detect.html" />
+    <link rel="prev" title="Inventory Round Q/Target Behavior for Continuous Inventory" href="yk_firmware_ex10_host_c_q_target.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="yk_firmware_ex10_host_c_reverse_power_detect.html" title="Reverse Power Threshold Detection"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="yk_firmware_ex10_host_c_q_target.html" title="Inventory Round Q/Target Behavior for Continuous Inventory"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="yk_firmware_ex10_host_c_api.html" >Impinj Reader Chip C Host SDK</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="yk_firmware_ex10_host_c_advanced_topics.html" accesskey="U">Advanced Topics</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Tx Power Droop Compensation</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="tx-power-droop-compensation">
+<h1>Tx Power Droop Compensation<a class="headerlink" href="#tx-power-droop-compensation" title="Permalink to this headline">¶</a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<p>When RF power is ramped up, the <a class="reference external" href="yk_firmware_ex10_api_operations.html#powercontrolloopop">PowerControlLoopOp</a>,
+adjusts the <a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-TxFineGain">TxFineGain</a>
+to reach the desired power.  As the transmitter amplifier heats up, however,
+the transmitted power lowers.</p>
+<p>To compensate for the reduced power, after the power control Op reaches the target
+power, the Tx power is periodically measured with the AUX ADC and the Tx fine gain is
+adjusted in 0.1 dB increments to better reach the desired power.</p>
+<p>This reduced power has a greater impact on reading tags for regulatory regions
+that have long channel dwell time such as ETSI which can transmit for several
+seconds between channel hops.  Regions with more frequent ramp-down/ramp-ups
+at channel hops will more frequently run the power control loop op and will be
+able to stay closer to the desired RF power target as the transmitter’s temperature
+increases.</p>
+</section>
+<section id="implementation">
+<h2>Implementation<a class="headerlink" href="#implementation" title="Permalink to this headline">¶</a></h2>
+<p>After Tx RF power is ramped up, a periodic power-monitoring timer is started.
+The interval register determines the frequency of the power check.
+By default the power is checked every 25ms, which is set in ex10_api/ex10_reader.c.</p>
+<p>If the Tx power as measured at the AUX ADC power detector is below the target
+- threshold, the Tx Fine Gain is increased by 0.1 dB and is decreased by the same
+amount if the measured power is above target + threshold.</p>
+</section>
+<section id="example">
+<h2>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
+<figure class="align-default" id="id1">
+<img alt="../../_images/droop_compensation_example.svg" src="../../_images/droop_compensation_example.svg" /><figcaption>
+<p><span class="caption-number">Fig. 5 </span><span class="caption-text">Power droop compensation example</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+</section>
+<section id="limitations">
+<h2>Limitations<a class="headerlink" href="#limitations" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Single ADC channel limitation</p></li>
+</ul>
+<p>The power measurement must be done during Continuous Wave (CW), when the transmitter
+is not actively modulating.  In cases when the transmitter does not pause, for example
+the <a class="reference external" href="yk_firmware_ex10_api_operations.html#runprbsdataop">RunPrbsDataOp</a>,
+droop compensation is not performed.</p>
+<p>Using an external power detector is possible for this single ADC channel as configured
+in the <a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-AuxAdcControl">AuxAdcControl</a> register.</p>
+</section>
+<section id="sdd">
+<h2>SDD<a class="headerlink" href="#sdd" title="Permalink to this headline">¶</a></h2>
+<p>Debug data for droop compensation can be enabled by setting .power_control_trace_logs
+in LogEnablesFields enable_sdd_logs() to ‘true’.  The PowerControlLoop debug packet
+has an additional ‘source’ field which will be set to ‘SourceControlLoopOp’ during
+transmitter power ramp up and set to ‘SourceDroopCompensation’ each time a Tx fine
+gain adjustment for droop compensation is done.</p>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="../../_static/logo.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Tx Power Droop Compensation</a><ul>
+<li><a class="reference internal" href="#overview">Overview</a></li>
+<li><a class="reference internal" href="#implementation">Implementation</a></li>
+<li><a class="reference internal" href="#example">Example</a></li>
+<li><a class="reference internal" href="#limitations">Limitations</a></li>
+<li><a class="reference internal" href="#sdd">SDD</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="yk_firmware_ex10_host_c_q_target.html"
+                        title="previous chapter">Inventory Round Q/Target Behavior for Continuous Inventory</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="yk_firmware_ex10_host_c_reverse_power_detect.html"
+                        title="next chapter">Reverse Power Threshold Detection</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="yk_firmware_ex10_host_c_reverse_power_detect.html" title="Reverse Power Threshold Detection"
+             >next</a></li>
+        <li class="right" >
+          <a href="yk_firmware_ex10_host_c_q_target.html" title="Inventory Round Q/Target Behavior for Continuous Inventory"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="yk_firmware_ex10_host_c_api.html" >Impinj Reader Chip C Host SDK</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="yk_firmware_ex10_host_c_advanced_topics.html" >Advanced Topics</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Tx Power Droop Compensation</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Impinj, Inc..
+    </div>
+  </body>
+</html>

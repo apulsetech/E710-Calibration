@@ -1,0 +1,136 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Drop Query &#8212; Impinj Reader Chip SDK</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinxdoc.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Ex10PowerModes" href="yk_firmware_ex10_host_c_power_modes_layer.html" />
+    <link rel="prev" title="Autoset" href="yk_firmware_ex10_host_c_autoset_modes.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="yk_firmware_ex10_host_c_power_modes_layer.html" title="Ex10PowerModes"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="yk_firmware_ex10_host_c_autoset_modes.html" title="Autoset"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="yk_firmware_ex10_host_c_api.html" >Impinj Reader Chip C Host SDK</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="yk_firmware_ex10_host_c_advanced_topics.html" accesskey="U">Advanced Topics</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Drop Query</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="drop-query">
+<h1>Drop Query<a class="headerlink" href="#drop-query" title="Permalink to this headline">¶</a></h1>
+<p>The drop query feature is a feature that will lower the transmit power
+for the initial Query command that starts an inventory round.  This feature
+will work with any of the existing inventory round features and an example
+use case is described below.  There are two parameters that control this
+feature and they are located in the
+<a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-DropQueryControl">DropQueryControl</a>
+register.  The first field is the DropPower field which sets the number of cdB to
+drop the power from the existing power level.  This field has a range from 0 to 200 where 0
+the feature is disabled, and at 200 the power will be dropped by 2 dB.  The
+power drop is limited to 200 cdB so if the user enters a value greater than 200,
+a value of 200 cdB will be used.  The second field is the DropDwell field that
+controls the amount of time to dwell at that lower power state before sending the
+Query command.  If the DropPower field is set to 0 it will disable the feature.
+So if DropPower is 0 but DropDwell is not the feature will still be disabled
+(to dwell time will be observed).  These registers default to 0 at reset which
+means that this feature is disabled by default.</p>
+<p>Note that the drop query feature has only been verified on FM0 modes, which are
+modes 11, 102, 103, 202, and 302.  It is not recommended to use this feature on
+any other modes.</p>
+<p>Below is an illustration of the drop query feature.  It starts with the transmitter
+transmitting CW at the power the device was ramped to.  Then it drops the power
+of the transmitter and dwells there, then emits the Query command and restores the
+transmitter’s output to the original power for the RN16 to be received.  Then it continues
+on with the inventory round as normal.</p>
+<figure class="align-default">
+<img alt="../../_images/drop_query_illustration.png" src="../../_images/drop_query_illustration.png" />
+</figure>
+<p>This feature can be useful in environments where there is a significant portion of
+the population of tags in the field of view that are on the edge of sensitivity.
+This is especially true for tags that are on the edge of the TX sensitivity because
+they will try to participate in the inventory round, but can’t complete the transaction
+and move to the other target state.  Since they do not move to the other target state
+they will try to participate and collide with other tags after every QueryAdj and
+cause the LMAC to continue to try to read them until it has not seen a valid EPC
+after the defined number of queries.</p>
+<p>The drop query feature then allows the user to lower the power for just the Query
+portion of the inventory round, so those fringe tags will not see the original Query
+and will not participate in the inventory round. This allows the LMAC to move all of
+the stronger tags over to the other target and stop quicker.  This method can be
+especially useful if the host wants to use a fast mode to move the easy to read
+tags over to the other target, then switch to a more sensitive mode for the
+harder to read tags.</p>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="../../_static/logo.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="yk_firmware_ex10_host_c_autoset_modes.html"
+                        title="previous chapter">Autoset</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="yk_firmware_ex10_host_c_power_modes_layer.html"
+                        title="next chapter">Ex10PowerModes</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="yk_firmware_ex10_host_c_power_modes_layer.html" title="Ex10PowerModes"
+             >next</a></li>
+        <li class="right" >
+          <a href="yk_firmware_ex10_host_c_autoset_modes.html" title="Autoset"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="yk_firmware_ex10_host_c_api.html" >Impinj Reader Chip C Host SDK</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="yk_firmware_ex10_host_c_advanced_topics.html" >Advanced Topics</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Drop Query</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Impinj, Inc..
+    </div>
+  </body>
+</html>

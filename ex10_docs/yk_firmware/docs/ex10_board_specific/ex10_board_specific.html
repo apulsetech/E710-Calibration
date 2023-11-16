@@ -1,0 +1,122 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Board Specific Implementation &#8212; Impinj Reader Chip SDK</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinxdoc.css" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Board Spec Constants" href="board_spec_constants.html" />
+    <link rel="prev" title="Python SDK usage" href="../yk_firmware_ex10_host_python_usage.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="board_spec_constants.html" title="Board Spec Constants"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="../yk_firmware_ex10_host_python_usage.html" title="Python SDK usage"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../yk_firmware_ex10_host_c_api.html" accesskey="U">Impinj Reader Chip C Host SDK</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Board Specific Implementation</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="board-specific-implementation">
+<span id="ex10-api-host-c-api-board-specific"></span><h1>Board Specific Implementation<a class="headerlink" href="#board-specific-implementation" title="Permalink to this headline">¶</a></h1>
+<p>The board specific interfaces and constants, listed below, need to be changed
+based on CPU selection and connections to the Impinj reader chip. Board specific
+implementations are organized in the <em>ex10_c_dev_kit/board</em> directory. To add support
+for a new board, create a new board directory within <em>ex10_c_dev_kit/board</em> and implement
+the interface defined in the header files in the <em>ex10_c_dev_kit/board</em> directory.
+The Impinj E710 Development Board can be used as a reference and is found in the
+<em>ex10_c_dev_kit/board/e710_ref_design</em> directory.</p>
+<p>This board specific layer is attempting to define a set of resources that the SDK
+defines that are used to interact with the Impinj reader chip, or control other
+aspects of the reader.  A good example of this is the GPIO interface described below,
+as it has a setter for an antenna but it only takes an 8-bit number, and assumes
+that the board implementation knows how to decode that value to set the correct
+antenna.  This could include setting one or more of the GPIO pins on the Impinj
+reader chip to a certain state, or could communicate with an external antenna
+mux through some other means, or some combination of both.  To accommodate this
+flexibility it accepts the 8-bit number and then returns the GPIO pins to
+set (if any).  The intention is to give the flexibility to the person
+implementing the reader around the Impinj reader chip, and not have the SDK
+make any assumptions about the environment, such as the number of antennas.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="board_spec_constants.html">Board Spec Constants</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ex10_board_spec.html">Ex10BoardSpec</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ex10_driver_list.html">Ex10DriverList</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ex10_gpio.html">GPIO Abstractions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ex10_host_interface.html">Ex10HostInterface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ex10_random.html">Ex10Random</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ex10_time.html">Ex10TimeHelpers</a></li>
+</ul>
+</div>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../../../_static/logo.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../yk_firmware_ex10_host_python_usage.html"
+                        title="previous chapter">Python SDK usage</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="board_spec_constants.html"
+                        title="next chapter">Board Spec Constants</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="board_spec_constants.html" title="Board Spec Constants"
+             >next</a></li>
+        <li class="right" >
+          <a href="../yk_firmware_ex10_host_python_usage.html" title="Python SDK usage"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../yk_firmware_ex10_host_c_api.html" >Impinj Reader Chip C Host SDK</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Board Specific Implementation</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Impinj, Inc..
+    </div>
+  </body>
+</html>

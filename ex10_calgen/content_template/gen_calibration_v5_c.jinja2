@@ -1,0 +1,46 @@
+{#-############################################################################}
+{#-                  IMPINJ CONFIDENTIAL AND PROPRIETARY                      #}
+{#-                                                                           #}
+{#- This source code is the property of Impinj, Inc. Your use of this source  #}
+{#- code in whole or in part is subject to your applicable license terms      #}
+{#- from Impinj.                                                              #}
+{#- Contact support@impinj.com for a copy of the applicable Impinj license    #}
+{#- terms.                                                                    #}
+{#-                                                                           #}
+{#- (c) Copyright 2022 - 2023 Impinj, Inc. All rights reserved.               #}
+{#-                                                                           #}
+{#-############################################################################}
+static struct Ex10CalibrationParamsV5 calibration_parameters;
+
+static struct Ex10CalibrationParamsV5 const calibration_parameters_default =
+{
+{%- for parameter in parameters_list %}
+    .{{parameter.name_snake}} = {
+    {%- for field in parameter.fields %}
+    {%- if field.num_entries > 1  %}
+        .{{field.name_snake}} = { {{field.init_value}} },
+    {%- else %}
+        .{{field.name_snake}} = {{field.init_value}},
+    {%- endif %}
+    {%- endfor %}
+    },
+{%- endfor %}
+};
+
+struct CalibrationOffset
+{
+    uint16_t  const source;
+    uintptr_t const destination;
+    size_t    const length;
+};
+
+static struct CalibrationOffset const offset_table[] =
+{
+{%- for parameter in parameters_list %}
+    {
+        .source      = {{'{:3d}'.format(parameter.address)}},
+        .destination = offsetof(struct Ex10CalibrationParamsV5, {{parameter.name_snake}}),
+        .length      = sizeof(calibration_parameters.{{parameter.name_snake}})
+    },
+{%- endfor %}
+};

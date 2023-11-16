@@ -1,0 +1,257 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Regulatory Regions Usage &#8212; Impinj Reader Chip SDK</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinxdoc.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Calibration Customization Using CalGen" href="yk_firmware_ex10_calgen.html" />
+    <link rel="prev" title="Listen Before Talk General Usage" href="yk_firmware_ex10_host_c_lbt_usage.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="yk_firmware_ex10_calgen.html" title="Calibration Customization Using CalGen"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="yk_firmware_ex10_host_c_lbt_usage.html" title="Listen Before Talk General Usage"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="yk_firmware_ex10_host_c_api.html" >Impinj Reader Chip C Host SDK</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="yk_firmware_ex10_host_c_advanced_topics.html" accesskey="U">Advanced Topics</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Regulatory Regions Usage</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="regulatory-regions-usage">
+<span id="ex10-api-host-c-regions-usage"></span><h1>Regulatory Regions Usage<a class="headerlink" href="#regulatory-regions-usage" title="Permalink to this headline">¶</a></h1>
+<p>A class diagram helps illustrate the interfaces and relationships among the regions
+and regulatory software units.</p>
+<figure class="align-default">
+<img alt="../../_images/ex10_regulatory_class.svg" src="../../_images/ex10_regulatory_class.svg" /></figure>
+<p>Note: To view the embedded images, it may be necessary to open the image in its
+own browser window.</p>
+<p>Note: The class diagram takes liberty with <code class="docutils literal notranslate"><span class="pre">Ex10RegionRegulatory</span></code> containing
+the <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">Ex10Region</span></code> data. In reality the data containment is within each
+of the <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">ExRegulatoryRegion</span></code> instantiations; i.e. their <code class="docutils literal notranslate"><span class="pre">.c</span></code> files.</p>
+<section id="ex10regionregulatory">
+<h2>Ex10RegionRegulatory<a class="headerlink" href="#ex10regionregulatory" title="Permalink to this headline">¶</a></h2>
+<p>C SDK References:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><a class="reference internal" href="ex10_host_c_reader_primitives/regulatory_regions.html#ex10-api-host-c-api-ex10-region-regulatory"><span class="std std-ref">Ex10RegionRegulatory</span></a></p></li>
+<li><p><a class="reference internal" href="ex10_host_c_reader_primitives/regulatory_regions.html#ex10-api-host-c-api-ex10-region"><span class="std std-ref">Ex10Region</span></a></p></li>
+<li><p><a class="reference internal" href="ex10_host_c_reader_primitives/regulatory_regions.html#ex10-api-host-c-api-ex10-region-id"><span class="std std-ref">Ex10RegionId</span></a></p></li>
+<li><p><a class="reference internal" href="ex10_host_c_reader_primitives/regulatory_regions.html#ex10-api-host-c-api-ex10-regulatory-timers"><span class="std std-ref">Ex10RegulatoryTimers</span></a></p></li>
+<li><p><a class="reference internal" href="ex10_host_c_reader_primitives/regulatory_regions.html#ex10-api-host-c-api-ex10-regulatory-channels"><span class="std std-ref">Ex10RegulatoryChannels</span></a></p></li>
+</ul>
+</div></blockquote>
+<p>At the base of the class diagram is the <code class="docutils literal notranslate"><span class="pre">Ex10RegionRegulatory</span></code> interface.
+This polymorphic interface is instantiated by a number of implemented regions
+contained within the SDK. If a new region were to be created, it could be added
+to the list of <code class="docutils literal notranslate"><span class="pre">.c</span></code> modules, each of which instantiates the <code class="docutils literal notranslate"><span class="pre">Ex10RegionRegulatory</span></code>
+interface. Each <code class="docutils literal notranslate"><span class="pre">Ex10RegionRegulatory</span></code> object contains the minimum set of
+parameters required to define a region’s regulatory requirements.</p>
+<p>To instantiate the region regulatory parameters, each <code class="docutils literal notranslate"><span class="pre">Ex10RegionRegulatory</span></code>
+contains a <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">Ex10Region</span></code> object, which in turn is composed of</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">enum</span> <span class="pre">Ex10RegionId</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">Ex10RegulatoryTimers</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">Ex10RegulatoryChannels</span></code></p></li>
+</ul>
+<p>These parameters are instantiated within each <code class="docutils literal notranslate"><span class="pre">.c</span></code> file as a <code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">struct</span> <span class="pre">Ex10Region</span></code>.
+These parameters are accessed via the <code class="docutils literal notranslate"><span class="pre">Ex10RegionRegulatory</span></code> functional interface.</p>
+</section>
+<section id="ex10regulatory">
+<h2>Ex10Regulatory<a class="headerlink" href="#ex10regulatory" title="Permalink to this headline">¶</a></h2>
+<p>C SDK References:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><a class="reference internal" href="ex10_host_c_reader_primitives/regulatory_regions.html#ex10-api-host-c-api-ex10-regulatory"><span class="std std-ref">Ex10Regulatory</span></a></p></li>
+</ul>
+</div></blockquote>
+<p>The <code class="docutils literal notranslate"><span class="pre">Ex10Regulatory</span></code> unit serves as a factory of known <code class="docutils literal notranslate"><span class="pre">Ex10RegulatoryRegion</span></code>
+objects. If a new <code class="docutils literal notranslate"><span class="pre">Ex10RegionRegulatory</span></code> object were to be added to the list of
+SDK supplied regions, then the <code class="docutils literal notranslate"><span class="pre">enum</span> <span class="pre">Ex10RegionId</span></code> would need to be updated and
+the new object instance added to the <code class="docutils literal notranslate"><span class="pre">Ex10Regulatory.get_region_layer()</span></code> function.</p>
+<p>Other functions within the <code class="docutils literal notranslate"><span class="pre">Ex10Regulatory</span></code> interface allow for easily accessing
+the region specific parameters.</p>
+<p>The parameters used for a specific region can be changed and restored
+by calling the <code class="docutils literal notranslate"><span class="pre">Ex10Regulatory.set_region()</span></code> function. See the C SDK reference
+above for details.</p>
+</section>
+<section id="ex10activeregion">
+<h2>Ex10ActiveRegion<a class="headerlink" href="#ex10activeregion" title="Permalink to this headline">¶</a></h2>
+<p>C SDK References:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><a class="reference internal" href="ex10_host_c_reader_primitives/regulatory_regions.html#ex10-api-host-c-api-ex10-active-region"><span class="std std-ref">Ex10ActiveRegion</span></a></p></li>
+</ul>
+</div></blockquote>
+<p>The <code class="docutils literal notranslate"><span class="pre">Ex10ActiveRegion</span></code> unit contains references to the <code class="docutils literal notranslate"><span class="pre">Ex10RegionRegulatory</span></code>
+object that is selected for use during tag inventory operations.</p>
+<p>The active region is set by calling the <code class="docutils literal notranslate"><span class="pre">Ex10ActiveRegion.set_region()</span></code> function.
+Once this call has been made, a region and its parameters will be used by the rest of the SDK.
+Until the <code class="docutils literal notranslate"><span class="pre">Ex10ActiveRegion.set_region()</span></code> function is called, there is no region
+set as active, and the SDK will not be capable of performing tag operations.</p>
+<p>The user can directly manipulate region parameters via the <code class="docutils literal notranslate"><span class="pre">Ex10Regulatory</span></code> interface.
+This allows the user to set up future regions or modify existing regions which may get loaded
+into the active regions at a later time.</p>
+</section>
+<section id="how-the-sdk-uses-regions">
+<h2>How the SDK uses regions<a class="headerlink" href="#how-the-sdk-uses-regions" title="Permalink to this headline">¶</a></h2>
+<section id="board-initialization">
+<h3>Board Initialization<a class="headerlink" href="#board-initialization" title="Permalink to this headline">¶</a></h3>
+<p>The following sequence diagram illustrates how the regulatory regions are
+initialized and may be changed during Ex10 operation:</p>
+<figure class="align-default">
+<img alt="../../_images/regions_usage_getters_setters.svg" src="../../_images/regions_usage_getters_setters.svg" /></figure>
+<p>While it is typical that the region is set once at board initialization, the region
+may be set at any time. This is illustrated in the sequence diagram.
+First, during board initialization, the region is set to FCC. Then later, the
+region is set to Japan2.</p>
+<p>Note: <code class="docutils literal notranslate"><span class="pre">TCXO_FREQ_KHZ</span></code> is a board-specific constant. The reference design uses 24,000 kHz.</p>
+</section>
+<section id="inventory-start">
+<h3>Inventory Start<a class="headerlink" href="#inventory-start" title="Permalink to this headline">¶</a></h3>
+<p>The following sequence diagram illustrates how the SDK uses the <code class="docutils literal notranslate"><span class="pre">Ex10ActiveRegion</span></code>
+module when starting an inventory:</p>
+<figure class="align-default">
+<img alt="../../_images/regions_usage_inventory_start.svg" src="../../_images/regions_usage_inventory_start.svg" /></figure>
+<p>When starting an inventory, the <code class="docutils literal notranslate"><span class="pre">Ex10ActiveRegion</span></code> calls <code class="docutils literal notranslate"><span class="pre">Ex10ActiveRegion.update_channel_time_tracking()</span></code>.
+This in turn calls through to the <code class="docutils literal notranslate"><span class="pre">Ex10RegionRegulatory</span></code> unit contained within the <code class="docutils literal notranslate"><span class="pre">Ex10Regulatory</span></code> unit,
+and updates the dwell time start/stop/total counters internal to the <code class="docutils literal notranslate"><span class="pre">Ex10RegionRegulatory</span></code> instance.</p>
+<p>These start/stop/total counters can be accessed, and are useful within the context of
+the ETSI, India, Japan2, and Russia regions, where long dwell times are permitted
+and channel off times are non-zero. The start/stop/total time counter values are
+maintained in these <code class="docutils literal notranslate"><span class="pre">Ex10RegionRegulatory</span></code> implementations, but not in regions
+with zero channel off times (i.e. FCC).</p>
+<p><code class="docutils literal notranslate"><span class="pre">Ex10RegionRegulatory</span></code> instances could be modified to optimize channel dwell time
+usage by modifying the <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">Ex10RegulatoryTimers</span></code> returned when the function
+<code class="docutils literal notranslate"><span class="pre">Ex10RegionRegulatory.get_regulatory_timers()</span></code> is called.</p>
+<p>When <code class="docutils literal notranslate"><span class="pre">Ex10RfPower.build_cw_configs()</span></code> is called, the <code class="docutils literal notranslate"><span class="pre">Ex10ActiveRegion</span></code> is used to
+assemble the regulatory timers and the channel’s LO and PLL synthesizer parameters.</p>
+</section>
+</section>
+<section id="modularity-notes">
+<h2>Modularity Notes<a class="headerlink" href="#modularity-notes" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>If the user does not need to use certain regions:</p>
+<ul>
+<li><p>Remove the unused <code class="docutils literal notranslate"><span class="pre">Ex10RegionRegulatory</span></code> implementation <code class="docutils literal notranslate"><span class="pre">.c</span></code> files from
+the <code class="docutils literal notranslate"><span class="pre">src/CMakeLists.txt</span></code>.</p></li>
+<li><p>Remove the unused values from the <code class="docutils literal notranslate"><span class="pre">enum</span> <span class="pre">Ex10RegionId</span></code> found in <code class="docutils literal notranslate"><span class="pre">ex10_regulatory.h</span></code>.</p></li>
+<li><p>Remove the unused <code class="docutils literal notranslate"><span class="pre">enum</span> <span class="pre">Ex10RegionId</span></code> values from the <code class="docutils literal notranslate"><span class="pre">Ex10Regulatory.get_region_layer()</span></code>
+implementation in <code class="docutils literal notranslate"><span class="pre">ex10_regulatory.c</span></code>.</p></li>
+</ul>
+</li>
+<li><p>If a given region requires specific logic for regulatory functionality, the
+implementation of a specific <code class="docutils literal notranslate"><span class="pre">Ex10RegionRegulatory</span></code> structure can be changed.</p></li>
+<li><p>The regions files are designed to be customizable, based on user needs.</p></li>
+</ul>
+</section>
+<section id="version-1-2-0">
+<h2>Version 1.2.0<a class="headerlink" href="#version-1-2-0" title="Permalink to this headline">¶</a></h2>
+<p>The general usage is similar on the top level to allow for easy plug-in with
+existing code. The changes are:</p>
+<ul class="simple">
+<li><p>The Regions class changed to <code class="docutils literal notranslate"><span class="pre">Ex10ActiveRegion</span></code> to better reflect that this is the
+active region of operation.</p></li>
+<li><p>Regions <code class="docutils literal notranslate"><span class="pre">init()</span></code> function changed names to <code class="docutils literal notranslate"><span class="pre">Ex10ActiveRegion.set_region()</span></code>.</p></li>
+<li><p>The regions now use <code class="docutils literal notranslate"><span class="pre">enum</span> <span class="pre">RegionId</span></code> to identify regions instead of ASCII strings.
+The <code class="docutils literal notranslate"><span class="pre">Ex10DefaultRegionNames</span></code> interface is provided to translate from ASCII strings
+to <code class="docutils literal notranslate"><span class="pre">enum</span> <span class="pre">RegionId</span></code> values.</p></li>
+</ul>
+</section>
+<section id="board-timing-compensation">
+<h2>Board Timing Compensation:<a class="headerlink" href="#board-timing-compensation" title="Permalink to this headline">¶</a></h2>
+<p>When setting regulatory timers, the nominal times match the regulatory channel dwell time.
+Due to hardware latency in turning off the transmitter, there is an overshoot past the
+regulatory dwell time. The <code class="docutils literal notranslate"><span class="pre">Ex10Regulatory</span></code> subtracts a board specific value
+<code class="docutils literal notranslate"><span class="pre">board_regulatory_overshoot_ms</span></code> from the nominal timer to account for this overshoot.</p>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="../../_static/logo.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Regulatory Regions Usage</a><ul>
+<li><a class="reference internal" href="#ex10regionregulatory">Ex10RegionRegulatory</a></li>
+<li><a class="reference internal" href="#ex10regulatory">Ex10Regulatory</a></li>
+<li><a class="reference internal" href="#ex10activeregion">Ex10ActiveRegion</a></li>
+<li><a class="reference internal" href="#how-the-sdk-uses-regions">How the SDK uses regions</a><ul>
+<li><a class="reference internal" href="#board-initialization">Board Initialization</a></li>
+<li><a class="reference internal" href="#inventory-start">Inventory Start</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#modularity-notes">Modularity Notes</a></li>
+<li><a class="reference internal" href="#version-1-2-0">Version 1.2.0</a></li>
+<li><a class="reference internal" href="#board-timing-compensation">Board Timing Compensation:</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="yk_firmware_ex10_host_c_lbt_usage.html"
+                        title="previous chapter">Listen Before Talk General Usage</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="yk_firmware_ex10_calgen.html"
+                        title="next chapter">Calibration Customization Using CalGen</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="yk_firmware_ex10_calgen.html" title="Calibration Customization Using CalGen"
+             >next</a></li>
+        <li class="right" >
+          <a href="yk_firmware_ex10_host_c_lbt_usage.html" title="Listen Before Talk General Usage"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="yk_firmware_ex10_host_c_api.html" >Impinj Reader Chip C Host SDK</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="yk_firmware_ex10_host_c_advanced_topics.html" >Advanced Topics</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Regulatory Regions Usage</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Impinj, Inc..
+    </div>
+  </body>
+</html>

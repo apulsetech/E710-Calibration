@@ -1,0 +1,36 @@
+{#-############################################################################}
+{#-                  IMPINJ CONFIDENTIAL AND PROPRIETARY                      #}
+{#-                                                                           #}
+{#- This source code is the property of Impinj, Inc. Your use of this source  #}
+{#- code in whole or in part is subject to your applicable license terms      #}
+{#- from Impinj.                                                              #}
+{#- Contact support@impinj.com for a copy of the applicable Impinj license    #}
+{#- terms.                                                                    #}
+{#-                                                                           #}
+{#- (c) Copyright 2022 - 2023 Impinj, Inc. All rights reserved.               #}
+{#-                                                                           #}
+{#-############################################################################}
+#pragma pack(push)
+{%- for parameter in parameters_list %}
+    {%- if parameter.use_this_decl == True %}
+struct {{parameter.name_band_agnostic}}V5 {
+        {%- for field in parameter.fields %}
+            {%- if field.num_entries > 1  %}
+    {{field.resolve_as}} {{field.name_snake}}[{{field.num_entries}}u];
+            {%- else %}
+    {{field.resolve_as}} {{field.name_snake}};
+            {%- endif %}
+        {%- endfor %}
+};
+static_assert(sizeof(struct {{parameter.name_band_agnostic}}V5) == {{parameter.length}},
+              "Size of packet header not packed properly");
+    {%- endif %}
+{%- endfor %}
+#pragma pack(pop)
+
+struct Ex10CalibrationParamsV5 {
+{%- for parameter in parameters_list %}
+    {%- set cal_name = {'name' : parameter.name_band_agnostic+'V5'} %}
+    struct {{cal_name['name'].ljust(parameters_name_len_max+3)}} {{parameter.name_snake}};
+{%- endfor %}
+};

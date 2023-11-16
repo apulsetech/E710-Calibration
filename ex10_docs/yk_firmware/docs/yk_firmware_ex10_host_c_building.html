@@ -1,0 +1,358 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Building the C SDK sources &#8212; Impinj Reader Chip SDK</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinxdoc.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Python SDK usage" href="yk_firmware_ex10_host_python_usage.html" />
+    <link rel="prev" title="Impinj Reader Chip C Host SDK" href="yk_firmware_ex10_host_c_api.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="yk_firmware_ex10_host_python_usage.html" title="Python SDK usage"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="yk_firmware_ex10_host_c_api.html" title="Impinj Reader Chip C Host SDK"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="yk_firmware_ex10_host_c_api.html" accesskey="U">Impinj Reader Chip C Host SDK</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Building the C SDK sources</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="building-the-c-sdk-sources">
+<span id="ex10-api-host-c-building"></span><h1>Building the C SDK sources<a class="headerlink" href="#building-the-c-sdk-sources" title="Permalink to this headline">¶</a></h1>
+<p>Version 2 of the Impinj Reader Chip SDK uses <a class="reference external" href="https://cmake.org/">CMake</a> to build the
+C language sources. This is a change from to initial release of the SDK which used
+<a class="reference external" href="https://www.gnu.org/software/make/">GNU Make</a>.</p>
+<p>The Impinj Reader Chip Reference Design comes with a Raspberry Pi <strong>Buster</strong> release.
+The most up to date CMake version on Buster is 3.16. However, CMake version 3.13 is
+the original version on the <strong>Buster</strong> release. Users are encouraged to update CMake
+to the 3.16 release.</p>
+<section id="build-quick-start-using-python">
+<h2>Build Quick Start: using python<a class="headerlink" href="#build-quick-start-using-python" title="Permalink to this headline">¶</a></h2>
+<p>A python script is included in the python SDK that can be used to execute builds
+in the C SDK <code class="docutils literal notranslate"><span class="pre">ex10_c_dev_kit</span></code>. This python script allows the user to easily build
+the C SDK without being knowledgeable about CMake command line syntax.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>The python script is <code class="docutils literal notranslate"><span class="pre">ex10_c_dev_kit/build_c_sdk.py</span></code>.</p></li>
+<li><p>The python script should be executed from the directory <code class="docutils literal notranslate"><span class="pre">ex10_c_dev_kit</span></code>.</p></li>
+</ul>
+</div></blockquote>
+<p>Therefore, the easiest means for building the C SDK source code, without being concerned
+about CMake details is:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span><span class="nb">cd</span> ex10_c_dev_kit
+<span class="gp">$ </span>python build_c_sdk.py
+</pre></div>
+</div>
+<p>When using the basic SDK delivered by Impinj, the output bin files will be under the
+build/e710_ref_design/ folder.</p>
+<section id="python-build-c-sdk-py-options">
+<h3>Python <code class="docutils literal notranslate"><span class="pre">build_c_sdk.py</span></code> options<a class="headerlink" href="#python-build-c-sdk-py-options" title="Permalink to this headline">¶</a></h3>
+<p>The options described here, as well as additional options, may be obtained using the
+<code class="docutils literal notranslate"><span class="pre">--help</span></code> option on the <code class="docutils literal notranslate"><span class="pre">build_c_sdk.py</span></code> command line.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>python build_c_sdk.py --help
+</pre></div>
+</div>
+<p>The key C SDK build options, as built by the <code class="docutils literal notranslate"><span class="pre">build_c_sdk.py</span></code> script, are:</p>
+<blockquote>
+<div><table class="colwidths-given docutils align-default" id="id2">
+<caption><span class="caption-number">Table 2 </span><span class="caption-text">build_c_sdk.py options</span><a class="headerlink" href="#id2" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Property</p></th>
+<th class="head"><p>Option</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Toolchain</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">--toolchain</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">board/e710_ref_design/</span></code> <code class="docutils literal notranslate"><span class="pre">Toolchain-gcc-linux.cmake</span></code></p></td>
+<td><p>The toolchain file contains compiler options specific to the
+target CPU and operating system.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Board Target</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">--board-target</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">e710_ref_design</span></code></p></td>
+<td><p>The customer may specify their board by modifying the build script, or
+specifying the board target on the command line, or running the CMake
+<a class="reference internal" href="#cmake-details"><span class="std std-ref">command directly</span></a>.</p></td>
+</tr>
+<tr class="row-even"><td><p>Build Targets</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">--build-targets</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">libs</span></code> and <code class="docutils literal notranslate"><span class="pre">examples</span></code></p></td>
+<td><p>A full list of targets can be obtained by using the <code class="docutils literal notranslate"><span class="pre">--build-targets</span> <span class="pre">help</span></code>
+option. By specifying a specific example as a build target, significant time
+can be saved during successive build iterations.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Build Type</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">--build-type</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Release</span></code></p></td>
+<td><p>By default <code class="docutils literal notranslate"><span class="pre">Release</span></code> builds, with symbols, are built.
+The <code class="docutils literal notranslate"><span class="pre">Debug</span></code> build type is useful when running a debugger such as gdb.
+The <code class="docutils literal notranslate"><span class="pre">Coverage</span></code> build type contains <code class="docutils literal notranslate"><span class="pre">gcov</span></code> profiling information.</p></td>
+</tr>
+<tr class="row-even"><td><p>Installing <code class="docutils literal notranslate"><span class="pre">lib_py2c.so</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">--install-py2c</span></code></p></td>
+<td><p>Not installed</p></td>
+<td><p>This option informs the <code class="docutils literal notranslate"><span class="pre">build_c_sdk.py</span></code> script to copy the built <code class="docutils literal notranslate"><span class="pre">lib_py2c.so</span></code>
+shared library into the location <code class="docutils literal notranslate"><span class="pre">ex10_dev_kit/py2c_interface/lib_py2c.so</span></code>.
+Once built and copied, the Python SDK may be used.</p></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</section>
+</section>
+<section id="cmake-details">
+<h2>CMake details<a class="headerlink" href="#cmake-details" title="Permalink to this headline">¶</a></h2>
+<section id="overview">
+<h3>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="https://cmake.org/">CMake</a> is a build system generator. In the Impinj Reader Chip
+C SDK, CMake is used to generate Makefiles. These generated Makefiles can then be used
+to build the artifact binaries.</p>
+<p>CMake performs builds in 2 steps:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>Configure the build system. In CMake jargon this step is call generation since
+Makefiles for executing the build are generated in this step.</p></li>
+<li><p>Build the artifacts.</p></li>
+</ol>
+</div></blockquote>
+</section>
+<section id="configuration-generating-the-makefiles">
+<h3>Configuration: Generating the Makefiles<a class="headerlink" href="#configuration-generating-the-makefiles" title="Permalink to this headline">¶</a></h3>
+<p>Since all of the C SDK source files are contained within the directory <code class="docutils literal notranslate"><span class="pre">ex10_c_dev_kit</span></code>
+directory, then this is where the top level <code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code> also resides.
+Working within the <code class="docutils literal notranslate"><span class="pre">ex10_c_dev_kit</span></code> sub-directory the build configuration is initiated
+using the following command:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>cmake -D <span class="nv">CMAKE_TOOLCHAIN_FILE</span><span class="o">=</span>board/e710_ref_design/Toolchain-gcc-linux.cmake -D <span class="nv">CMAKE_BUILD_TYPE</span><span class="o">=</span>Release -S . -B ./build
+</pre></div>
+</div>
+<p>This command will generate the set of Makefiles used to build the C SDK binaries
+into the artifact directory <code class="docutils literal notranslate"><span class="pre">yk_design/dev_kit/ex10_c_dev_kit/build</span></code>.</p>
+<dl>
+<dt>Notes:</dt><dd><ol class="arabic">
+<li><p>The build will refuse to configure if a tool chain is not specified.</p></li>
+<li><p>The toolchain file is only read the first time the project is configured.
+Once configured, the tool chain file is ignored and you will see the following warning:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">CMake Warning:</span>
+<span class="go">    Manually-specified variables were not used by the project:</span>
+<span class="go">        MAKE_TOOLCHAIN_FILE</span>
+</pre></div>
+</div>
+<p>This is the expected behavior.</p>
+</li>
+<li><p>If changes to the toolchain are made, then the built artifacts should be
+completely removed before attempting to configure or build again.
+Otherwise the changes to the toolchain file are ignored.</p></li>
+</ol>
+</dd>
+</dl>
+</section>
+<section id="building-the-artifacts">
+<h3>Building the Artifacts<a class="headerlink" href="#building-the-artifacts" title="Permalink to this headline">¶</a></h3>
+<p>Once the Makefiles are generated, the generic CMake command to build all artifacts is:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>cmake --build ./build
+</pre></div>
+</div>
+<p>Note that this command builds the target <code class="docutils literal notranslate"><span class="pre">all</span></code>; i.e. all artifacts.</p>
+<p>To speed up the build significantly:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>cmake --build ./build --parallel <span class="k">$(</span>nproc<span class="k">)</span>
+</pre></div>
+</div>
+<p>This will build the artifacts in parallel using the number of processors available on
+the build machine to perform the build.</p>
+</section>
+<section id="building-specific-targets">
+<h3>Building specific targets<a class="headerlink" href="#building-specific-targets" title="Permalink to this headline">¶</a></h3>
+<p>By default, CMake builds the target <code class="docutils literal notranslate"><span class="pre">all</span></code>.
+The build scope can be limited to specific targets.</p>
+<p>Targets of interest are:</p>
+<table class="colwidths-given docutils align-default" id="id3">
+<caption><span class="caption-number">Table 3 </span><span class="caption-text">Targets of Interest</span><a class="headerlink" href="#id3" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 75%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Target</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">help</span></code></p></td>
+<td><p>Lists all targets. During the development/debug cycle you can reduce build time
+by specifying just the target you are interested in.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">all</span></code></p></td>
+<td><p>Builds all of the artifacts; both libraries and executables.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">clean</span></code></p></td>
+<td><p>Forces a rebuild of all executables without changing the configuration.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">libs</span></code></p></td>
+<td><p>Builds the host, board and shared object libraries.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">examples</span></code></p></td>
+<td><p>Build the C SDK examples.</p></td>
+</tr>
+</tbody>
+</table>
+<p>A typical command line to build the specific targets <code class="docutils literal notranslate"><span class="pre">libs</span></code> and <code class="docutils literal notranslate"><span class="pre">examples</span></code>:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>cmake --build ./build --parallel <span class="k">$(</span>nproc<span class="k">)</span> --target libs examples
+</pre></div>
+</div>
+</section>
+<section id="build-types">
+<h3>Build types<a class="headerlink" href="#build-types" title="Permalink to this headline">¶</a></h3>
+<p>The following build types can be specified within the Impinj Reader Chip C SDK:</p>
+<table class="colwidths-given docutils align-default" id="id5">
+<caption><span class="caption-number">Table 5 </span><span class="caption-text">C SDK Build Types</span><a class="headerlink" href="#id5" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 60%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Build Type</p></th>
+<th class="head"><p>gcc/g++ flags</p></th>
+<th class="head"><p>Comments</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Unspecified</p></td>
+<td><p>Same as <code class="docutils literal notranslate"><span class="pre">Release</span></code></p></td>
+<td><p>The default build type is <code class="docutils literal notranslate"><span class="pre">Release</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Release</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">-O3</span> <span class="pre">-g</span> <span class="pre">-NDEBUG</span></code></p></td>
+<td><p>A speed optimized build of the code.
+Note that debug symbols are not stripped from the built artifacts.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Debug</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">-O0</span> <span class="pre">-g</span></code></p></td>
+<td><p>Useful when attaching a debugger such as <code class="docutils literal notranslate"><span class="pre">gdb</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Coverage</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">-O0</span> <span class="pre">-g</span> <span class="pre">--coverage</span> <span class="pre">-fprofile-abs-path</span></code></p></td>
+<td><p>Produces binaries that can provide code execution coverage using <code class="docutils literal notranslate"><span class="pre">lcov</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Profile</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">-pg</span> <span class="pre">-fno-reorder-functions</span></code></p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="build-verbosity">
+<h3>Build verbosity<a class="headerlink" href="#build-verbosity" title="Permalink to this headline">¶</a></h3>
+<p>When building the project, the full compile, linker, etc. commands are displayed
+when the VERBOSE variable is set:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>cmake --build ./build --target examples --verbose
+</pre></div>
+</div>
+<dl class="simple">
+<dt>Note: Building with the verbose variable set is useful for examining the command line</dt><dd><p>during source compilation. It is recommended that during this type of build,
+the <code class="docutils literal notranslate"><span class="pre">--parallel</span></code> count be set to <code class="docutils literal notranslate"><span class="pre">1</span></code> (the default) so that the console output
+is easier to read.</p>
+</dd>
+</dl>
+</section>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="../../_static/logo.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Building the C SDK sources</a><ul>
+<li><a class="reference internal" href="#build-quick-start-using-python">Build Quick Start: using python</a><ul>
+<li><a class="reference internal" href="#python-build-c-sdk-py-options">Python <code class="docutils literal notranslate"><span class="pre">build_c_sdk.py</span></code> options</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#cmake-details">CMake details</a><ul>
+<li><a class="reference internal" href="#overview">Overview</a></li>
+<li><a class="reference internal" href="#configuration-generating-the-makefiles">Configuration: Generating the Makefiles</a></li>
+<li><a class="reference internal" href="#building-the-artifacts">Building the Artifacts</a></li>
+<li><a class="reference internal" href="#building-specific-targets">Building specific targets</a></li>
+<li><a class="reference internal" href="#build-types">Build types</a></li>
+<li><a class="reference internal" href="#build-verbosity">Build verbosity</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="yk_firmware_ex10_host_c_api.html"
+                        title="previous chapter">Impinj Reader Chip C Host SDK</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="yk_firmware_ex10_host_python_usage.html"
+                        title="next chapter">Python SDK usage</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="yk_firmware_ex10_host_python_usage.html" title="Python SDK usage"
+             >next</a></li>
+        <li class="right" >
+          <a href="yk_firmware_ex10_host_c_api.html" title="Impinj Reader Chip C Host SDK"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="yk_firmware_ex10_host_c_api.html" >Impinj Reader Chip C Host SDK</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Building the C SDK sources</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Impinj, Inc..
+    </div>
+  </body>
+</html>

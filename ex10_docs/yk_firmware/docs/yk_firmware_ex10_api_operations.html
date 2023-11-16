@@ -1,0 +1,2428 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Operations &#8212; Impinj Reader Chip SDK</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinxdoc.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="EventFifo Packets" href="yk_firmware_ex10_api_event_packets.html" />
+    <link rel="prev" title="Application Address Map" href="yk_firmware_ex10_api_application_address_map.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="yk_firmware_ex10_api_event_packets.html" title="EventFifo Packets"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="yk_firmware_ex10_api_application_address_map.html" title="Application Address Map"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="yk_firmware_ex10_api.html" accesskey="U">Impinj Reader Chip Wireline API</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Operations</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="operations">
+<span id="ex10-api-operations-label"></span><h1>Operations<a class="headerlink" href="#operations" title="Permalink to this headline">¶</a></h1>
+<p>The primary method to request the Impinj reader chip perform a task is via the set of
+operations. They will generally follow the form of:</p>
+<ol class="arabic simple">
+<li><p>The host writes parameters into the register map</p></li>
+<li><p>The host initiates the start of the operation.</p></li>
+<li><p>The host waits for or is notified that the operations has completed.</p></li>
+</ol>
+<p>The operations which can be executed are enumerated within the Impinj reader chip
+application register
+<a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-OpsControl">OpsControl</a>
+field <code class="docutils literal notranslate"><span class="pre">OpId</span></code>.</p>
+<p>If an operation fails, an error code is enumerated within the Impinj reader chip
+application register
+<a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-OpsStatus">OpsStatus</a>
+field ‘Error’.</p>
+<section id="atomic-operations">
+<span id="ex10-api-atomic-operations-label"></span><h2>Atomic Operations<a class="headerlink" href="#atomic-operations" title="Permalink to this headline">¶</a></h2>
+<p>Atomic operations are the most basic operations that the Impinj reader chip can execute.
+They perform fundamental tasks within the modem.</p>
+<blockquote>
+<div><ul>
+<li><p>Operations are initiated by writing the appropriate OpId to the
+<a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-OpsControl">OpsControl</a>
+register. While the operation is in progress the application register
+<a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-OpsStatus">OpsStatus</a>
+field ‘Busy’ will be asserted with logic value one.</p></li>
+<li><p>The operation can be monitored by:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Reading the
+<a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-OpsStatus">OpsStatus</a>
+register.</p></li>
+<li><p>Observing the reader chip interrupt line IRQ_N.</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>When the operation has completed</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>The IRQ_N line will be asserted low; provided that the
+<a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-InterruptMask">InterruptMask</a>
+field OpDone was enabled.</p></li>
+<li><p>The <a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-OpsStatus">OpsStatus</a>
+register field Busy will be deasserted to zero.</p></li>
+<li><p>The <a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-OpsStatus">OpsStatus</a>
+register field Error will contain the value ‘None’ (zero) if the
+operation completed successfully. The Error field will be non-zero if
+a failure occurred.</p></li>
+<li><p>The <a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-OpsStatus">OpsStatus</a>
+register field OpId will contain the most recent op run, from the
+time at which it starts. This allows the host to verify which op may
+have caused a run-time error condition.</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</div></blockquote>
+<section id="idle">
+<span id="idle-0xa0"></span><h3>Idle (0xA0)<a class="headerlink" href="#idle" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>When the Impinj reader chip
+<a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-OpsControl">OpsControl</a>
+register field OpId contains the <a class="reference internal" href="#idle">Idle</a> value it indicates that no operation
+is active. A new operation may be started from the <a class="reference internal" href="#idle">Idle</a> state.</p>
+<p>OpId: 0xA0</p>
+<dl class="simple">
+<dt>Configuration registers:</dt><dd><ul class="simple">
+<li><p>None</p></li>
+</ul>
+</dd>
+<dt>Prerequisites:</dt><dd><ul class="simple">
+<li><p>None</p></li>
+</ul>
+</dd>
+<dt>Errors:</dt><dd><ul class="simple">
+<li><p>None</p></li>
+</ul>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+<section id="logtestop-0xa1">
+<span id="logtestop"></span><h3>LogTestOp (0xA1)<a class="headerlink" href="#logtestop-0xa1" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>The LogTestOp will initiate a test sequence that will
+periodically write log entries to the debug port as described in the
+LogTestPeriod and LogTestWordRepeat registers. This operation will
+complete when the host writes the <a class="reference internal" href="#idle">Idle</a> operation code to the
+<a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-OpsControl">OpsControl</a>
+register.</p>
+<p>OpId: 0xA1</p>
+<dl class="simple">
+<dt>Configuration registers:</dt><dd><ul class="simple">
+<li><p><a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-LogTestPeriod">LogTestPeriod</a></p></li>
+<li><p><a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-LogTestWordRepeat">LogTestWordRepeat</a></p></li>
+</ul>
+</dd>
+<dt>Prerequisites:</dt><dd><ul class="simple">
+<li><p>None</p></li>
+</ul>
+</dd>
+<dt>Errors:</dt><dd><ul class="simple">
+<li><p>None</p></li>
+</ul>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+<section id="measureadcop-0xa2">
+<span id="measureadcop"></span><h3>MeasureAdcOp (0xA2)<a class="headerlink" href="#measureadcop-0xa2" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>The MeasureAdcOp initiates an auxiliary ADC measurement of the
+channels configured in the AuxAdcControl register. Measurements are
+performed asynchronously and results are stored in the
+<a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-AuxAdcResults">AuxAdcResults</a>
+register. This operation will complete after all configured channels
+have been converted.</p>
+<p>OpId: 0xA2</p>
+<dl class="simple">
+<dt>Configuration register:</dt><dd><ul class="simple">
+<li><p><a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-AuxAdcControl">AuxAdcControl</a></p></li>
+</ul>
+</dd>
+<dt>Prerequisites:</dt><dd><ul class="simple">
+<li><p><a class="reference internal" href="#radiopowercontrolop">RadioPowerControlOp</a></p></li>
+</ul>
+</dd>
+<dt>Errors:</dt><dd><ul class="simple">
+<li><p>None</p></li>
+</ul>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+<section id="txrampupop-0xa3">
+<span id="txrampupop"></span><h3>TxRampUpOp (0xA3)<a class="headerlink" href="#txrampupop-0xa3" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>The TxRampUpOp applies the DC offset and regulatory timer
+values before enabling the transmitter. Specifically the DcOffset
+register, NominalStopTime, ExtendedStopTime and RegulatoryStopTime
+registers are applied. This operation will complete after the
+transmitter has been enabled.</p>
+<p>OpId: 0xA3</p>
+<dl>
+<dt>Configuration registers:</dt><dd><ul class="simple">
+<li><p><a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-DcOffset">DcOffset</a></p></li>
+<li><p><a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-NominalStopTime">NominalStopTime</a></p></li>
+<li><p><a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-ExtendedStopTime">ExtendedStopTime</a></p></li>
+<li><p><a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-RegulatoryStopTime">RegulatoryStopTime</a></p></li>
+</ul>
+</dd>
+<dt>Prerequisites:</dt><dd><ul class="simple">
+<li><p><a class="reference internal" href="#locksynthesizerop">LockSynthesizerOp</a></p></li>
+</ul>
+</dd>
+<dt>Errors:</dt><dd><ul>
+<li><p>RadioPowerNotEnabled</p>
+<p>The RadioPowerControlOp has either not been run, or
+has been run to turn power off. Run the RadioPowerControlOp
+op after setting the power to true in the <a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-AnalogEnable">AnalogEnable</a>
+register.</p>
+</li>
+<li><p>InvalidTxState</p>
+<p>The transmitter is not in a valid state to ramp up.
+To ramp up, the transmitter must be Ramped Down to
+the <a class="reference internal" href="#idle">Idle</a> state.</p>
+</li>
+<li><p>EventFailedToSend</p>
+<p>The EventFifo was too full to insert info on the ramp up.</p>
+</li>
+</ul>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+<section id="txrampdownop-0xa4">
+<span id="txrampdownop"></span><h3>TxRampDownOp (0xA4)<a class="headerlink" href="#txrampdownop-0xa4" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>The TxRampDownOp will disable regulatory timers before
+disabling the transmitter. This operation will complete after the
+transmitter has been disabled.</p>
+<p>OpId: 0xA4</p>
+<dl>
+<dt>Configuration registers:</dt><dd><ul class="simple">
+<li><p>None</p></li>
+</ul>
+</dd>
+<dt>Prerequisites:</dt><dd><ul class="simple">
+<li><p>None</p></li>
+</ul>
+</dd>
+<dt>Errors:</dt><dd><ul>
+<li><p>EventFailedToSend</p>
+<p>The EventFifo was too full to insert info on the ramp down.</p>
+</li>
+</ul>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+<section id="settxcoarsegainop-0xa5">
+<span id="settxcoarsegainop"></span><h3>SetTxCoarseGainOp (0xA5)<a class="headerlink" href="#settxcoarsegainop-0xa5" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>The SetTxCoarseGainOp will apply the coarse gain settings
+described in the TxCoarseGain register. This operation will complete
+after the TxCoarseGain register setting has been applied.</p>
+<p>OpId: 0xA5</p>
+<dl>
+<dt>Configuration register:</dt><dd><ul class="simple">
+<li><p><a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-TxCoarseGain">TxCoarseGain</a></p></li>
+</ul>
+</dd>
+<dt>Prerequisites:</dt><dd><ul class="simple">
+<li><p>None</p></li>
+</ul>
+</dd>
+<dt>Errors:</dt><dd><ul>
+<li><p>InvalidParameter:</p>
+<p>The transmitter attenuation (TxCoarseGain) value is not within the valid
+range of [0 … 30].</p>
+</li>
+</ul>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+<section id="settxfinegainop-0xa6">
+<span id="settxfinegainop"></span><h3>SetTxFineGainOp (0xA6)<a class="headerlink" href="#settxfinegainop-0xa6" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>The SetTxFineGainOp will apply the fine gain settings described
+in the TxFineGain register. This operation will complete after the
+TxFineGain register setting has been applied.</p>
+<p>OpId: 0xA6</p>
+<dl class="simple">
+<dt>Configuration register:</dt><dd><ul class="simple">
+<li><p><a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-TxFineGain">TxFineGain</a></p></li>
+</ul>
+</dd>
+<dt>Prerequisites:</dt><dd><ul class="simple">
+<li><p>None</p></li>
+</ul>
+</dd>
+<dt>Errors:</dt><dd><ul class="simple">
+<li><p>None</p></li>
+</ul>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+<section id="radiopowercontrolop-0xa7">
+<span id="radiopowercontrolop"></span><h3>RadioPowerControlOp (0xA7)<a class="headerlink" href="#radiopowercontrolop-0xa7" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>The RadioPowerControlOp will apply settings described in the
+AnalogEnable register. Specifically, analog blocks in the RF
+synthesizer, transmitter and receiver are affected. This operation
+will complete when all blocks have been enabled.</p>
+<p>OpId: 0xA7</p>
+<dl class="simple">
+<dt>Configuration register:</dt><dd><ul class="simple">
+<li><p><a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-AnalogEnable">AnalogEnable</a></p></li>
+</ul>
+</dd>
+<dt>Prerequisite:</dt><dd><ul class="simple">
+<li><p>None</p></li>
+</ul>
+</dd>
+<dt>Errors:</dt><dd><ul class="simple">
+<li><p>None</p></li>
+</ul>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+<section id="setrfmodeop-0xa8">
+<span id="setrfmodeop"></span><h3>SetRFModeOp (0xA8)<a class="headerlink" href="#setrfmodeop-0xa8" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>The SetRFModeOp will apply the RF mode setting described in the RfMode
+register. The RF mode (AKA reader mode or link profile) will impact many
+aspects of reader performance, including tag read rate, receive
+sensitivity, and regulatory performance. The RF mode should be selected
+based on a number of factors, including the regulatory region the reader
+is being operated in, along with the intended use case, for example
+transition detection, deep scan, or dense reader environment operation.</p>
+<p>For more details on selecting an appropriate RF mode, see the Impinj
+support article here: <a class="reference external" href="https://impinj.zendesk.com/hc/en-us/articles/4408250378387">https://impinj.zendesk.com/hc/en-us/articles/4408250378387</a></p>
+<p>Note: Some RF modes are listed multiple times. This is because Impinj has
+implemented a new RF Mode numbering system in v1.1.
+Any two modes with the same parameters and performance numbers are
+functionally identical, with one small exception.
+The newer 3-digit reader modes all use a newer transmit waveform
+(wavetable/LUT) with improved dense reader performance. Because the
+transmit waveform has changed, devices that were certified with the older
+reader modes should be re-certified with regulatory bodies.</p>
+<p>Supported RF modes are enumerated in the following table. The “Region…”
+columns describe which regulatory regions each mode is designed to achieve
+certification in, which is controlled by the forward link parameters.
+Some of these modes may not have optimal reverse link parameters for those regions.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 11%" />
+<col style="width: 13%" />
+<col style="width: 19%" />
+<col style="width: 6%" />
+<col style="width: 9%" />
+<col style="width: 9%" />
+<col style="width: 14%" />
+<col style="width: 5%" />
+<col style="width: 5%" />
+<col style="width: 5%" />
+<col style="width: 5%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Reader Mode ID</p></th>
+<th class="head"><p>Mode Optimization</p></th>
+<th class="head"><dl class="simple">
+<dt>Typical Optimized Read Rate</dt><dd><p>(tags/s)</p>
+</dd>
+</dl>
+</th>
+<th class="head"><p>Region
+FCC</p></th>
+<th class="head"><p>Region
+ETSI Upper</p></th>
+<th class="head"><p>Region
+ETSI Lower</p></th>
+<th class="head"><p>Region
+China, Japan, Korea</p></th>
+<th class="head"><p>SKU
+E910</p></th>
+<th class="head"><p>SKU
+E710</p></th>
+<th class="head"><p>SKU
+E510</p></th>
+<th class="head"><p>SKU
+E310</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>103</p></td>
+<td><p>FCC Read Rate</p></td>
+<td><p>1000</p></td>
+<td><p>Yes</p></td>
+<td><p>No</p></td>
+<td><p>No</p></td>
+<td><p>No</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>No</p></td>
+<td><p>No</p></td>
+</tr>
+<tr class="row-odd"><td><p>11</p></td>
+<td><p>ETSI UB Read Rate</p></td>
+<td><p>800</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>No</p></td>
+<td><p>No</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>No</p></td>
+<td><p>No</p></td>
+</tr>
+<tr class="row-even"><td><p>102, 302</p></td>
+<td><p>ETSI UB Read Rate</p></td>
+<td><p>800</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>No</p></td>
+<td><p>No</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>No</p></td>
+<td><p>No</p></td>
+</tr>
+<tr class="row-odd"><td><p>120</p></td>
+<td><p>FCC Hybrid</p></td>
+<td><p>700</p></td>
+<td><p>Yes</p></td>
+<td><p>No</p></td>
+<td><p>No</p></td>
+<td><p>No</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>No</p></td>
+</tr>
+<tr class="row-even"><td><p>203</p></td>
+<td><p>Japan Read Rate</p></td>
+<td><p>600</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>No</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>No</p></td>
+<td><p>No</p></td>
+</tr>
+<tr class="row-odd"><td><p>1</p></td>
+<td><p>ETSI UB Hybrid</p></td>
+<td><p>550</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>No</p></td>
+<td><p>No</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>No</p></td>
+</tr>
+<tr class="row-even"><td><p>124, 323</p></td>
+<td><p>ETSI UB Hybrid</p></td>
+<td><p>550</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>No</p></td>
+<td><p>No</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>No</p></td>
+</tr>
+<tr class="row-odd"><td><p>202</p></td>
+<td><p>ETSI LB Read Rate *</p></td>
+<td><p>500</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>No</p></td>
+<td><p>No</p></td>
+</tr>
+<tr class="row-even"><td><p>226</p></td>
+<td><p>Japan Hybrid</p></td>
+<td><p>500</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>No</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>No</p></td>
+</tr>
+<tr class="row-odd"><td><p>15</p></td>
+<td><p>ETSI UB DRM</p></td>
+<td><p>400</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>No</p></td>
+<td><p>No</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>No</p></td>
+</tr>
+<tr class="row-even"><td><p>147, 344</p></td>
+<td><p>ETSI UB DRM</p></td>
+<td><p>400</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>No</p></td>
+<td><p>No</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>No</p></td>
+</tr>
+<tr class="row-odd"><td><p>148, 345</p></td>
+<td><p>ETSI UB Hybrid</p></td>
+<td><p>400</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>No</p></td>
+<td><p>No</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>No</p></td>
+</tr>
+<tr class="row-even"><td><p>225</p></td>
+<td><p>ETSI LB Hybrid</p></td>
+<td><p>400</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>No</p></td>
+</tr>
+<tr class="row-odd"><td><p>12</p></td>
+<td><p>ETSI LB Hybrid</p></td>
+<td><p>300</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-even"><td><p>125, 223, 325</p></td>
+<td><p>ETSI LB Hybrid</p></td>
+<td><p>300</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-odd"><td><p>3</p></td>
+<td><p>ETSI LB Hybrid</p></td>
+<td><p>250</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-even"><td><p>123, 222, 324</p></td>
+<td><p>ETSI LB Hybrid</p></td>
+<td><p>250</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-odd"><td><p>5</p></td>
+<td><p>ETSI LB DRM</p></td>
+<td><p>200</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-even"><td><p>141, 241, 342</p></td>
+<td><p>ETSI LB DRM</p></td>
+<td><p>200</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-odd"><td><p>7</p></td>
+<td><p>FCC DRM</p></td>
+<td><p>150</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-even"><td><p>146, 244, 343</p></td>
+<td><p>FCC DRM</p></td>
+<td><p>150</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-odd"><td><p>13</p></td>
+<td><p>Sensitivity</p></td>
+<td><p>50</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-even"><td><p>185, 285, 382</p></td>
+<td><p>Sensitivity</p></td>
+<td><p>50</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<blockquote id="rfmodefootnote-mode202">
+<div><p>* Impinj has measured performance gaps in RF mode 202,
+especially in the ETSI Lower frequency band and at long distances. Impinj is
+actively troubleshooting and will update firmware to improve performance when we
+are confident in a fix. Partners should test this mode themselves and decide if
+it is useful for their end customers in its current state.</p>
+<p>The table below shows detailed parameters of the supported RF modes:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 13%" />
+<col style="width: 15%" />
+<col style="width: 19%" />
+<col style="width: 9%" />
+<col style="width: 5%" />
+<col style="width: 9%" />
+<col style="width: 8%" />
+<col style="width: 22%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Reader Mode ID</p></th>
+<th class="head"><p>Mode Optimization</p></th>
+<th class="head"><p>Forward Link Modulation</p></th>
+<th class="head"><p>Tari (us)</p></th>
+<th class="head"><p>PIE</p></th>
+<th class="head"><p>BLF (KHz)</p></th>
+<th class="head"><p>Miller #</p></th>
+<th class="head"><dl class="simple">
+<dt>Typical Optimized Read Rate</dt><dd><p>(tags/s)</p>
+</dd>
+</dl>
+</th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>103</p></td>
+<td><p>FCC Read Rate</p></td>
+<td><p>DSB</p></td>
+<td><p>6.25</p></td>
+<td><p>1.5</p></td>
+<td><p>640</p></td>
+<td><p>1</p></td>
+<td><p>1000</p></td>
+</tr>
+<tr class="row-odd"><td><p>11</p></td>
+<td><p>ETSI UB Read Rate</p></td>
+<td><p>PR_ASK</p></td>
+<td><p>7.5</p></td>
+<td><p>2</p></td>
+<td><p>640</p></td>
+<td><p>1</p></td>
+<td><p>800</p></td>
+</tr>
+<tr class="row-even"><td><p>102, 302</p></td>
+<td><p>ETSI UB Read Rate</p></td>
+<td><p>PR_ASK</p></td>
+<td><p>7.5</p></td>
+<td><p>2</p></td>
+<td><p>640</p></td>
+<td><p>1</p></td>
+<td><p>800</p></td>
+</tr>
+<tr class="row-odd"><td><p>120</p></td>
+<td><p>FCC Hybrid</p></td>
+<td><p>DSB</p></td>
+<td><p>6.25</p></td>
+<td><p>1.5</p></td>
+<td><p>640</p></td>
+<td><p>2</p></td>
+<td><p>700</p></td>
+</tr>
+<tr class="row-even"><td><p>203</p></td>
+<td><p>Japan Read Rate</p></td>
+<td><p>PR_ASK</p></td>
+<td><p>12.5</p></td>
+<td><p>1.5</p></td>
+<td><p>426</p></td>
+<td><p>1</p></td>
+<td><p>600</p></td>
+</tr>
+<tr class="row-odd"><td><p>1</p></td>
+<td><p>ETSI UB Hybrid</p></td>
+<td><p>PR_ASK</p></td>
+<td><p>7.5</p></td>
+<td><p>2</p></td>
+<td><p>640</p></td>
+<td><p>2</p></td>
+<td><p>550</p></td>
+</tr>
+<tr class="row-even"><td><p>124, 323</p></td>
+<td><p>ETSI UB Hybrid</p></td>
+<td><p>PR_ASK</p></td>
+<td><p>7.5</p></td>
+<td><p>2</p></td>
+<td><p>640</p></td>
+<td><p>2</p></td>
+<td><p>550</p></td>
+</tr>
+<tr class="row-odd"><td><p>202</p></td>
+<td><p>ETSI LB Read Rate *</p></td>
+<td><p>PR_ASK</p></td>
+<td><p>15</p></td>
+<td><p>2</p></td>
+<td><p>426</p></td>
+<td><p>1</p></td>
+<td><p>500</p></td>
+</tr>
+<tr class="row-even"><td><p>226</p></td>
+<td><p>Japan Hybrid</p></td>
+<td><p>PR_ASK</p></td>
+<td><p>12.5</p></td>
+<td><p>1.5</p></td>
+<td><p>426</p></td>
+<td><p>2</p></td>
+<td><p>500</p></td>
+</tr>
+<tr class="row-odd"><td><p>15</p></td>
+<td><p>ETSI UB DRM</p></td>
+<td><p>PR_ASK</p></td>
+<td><p>7.5</p></td>
+<td><p>2</p></td>
+<td><p>640</p></td>
+<td><p>4</p></td>
+<td><p>400</p></td>
+</tr>
+<tr class="row-even"><td><p>147, 344</p></td>
+<td><p>ETSI UB DRM</p></td>
+<td><p>PR_ASK</p></td>
+<td><p>7.5</p></td>
+<td><p>2</p></td>
+<td><p>640</p></td>
+<td><p>4</p></td>
+<td><p>400</p></td>
+</tr>
+<tr class="row-odd"><td><p>148, 345</p></td>
+<td><p>ETSI UB Hybrid</p></td>
+<td><p>PR_ASK</p></td>
+<td><p>7.5</p></td>
+<td><p>1.5</p></td>
+<td><p>640</p></td>
+<td><p>4</p></td>
+<td><p>400</p></td>
+</tr>
+<tr class="row-even"><td><p>225</p></td>
+<td><p>ETSI LB Hybrid</p></td>
+<td><p>PR_ASK</p></td>
+<td><p>15</p></td>
+<td><p>2</p></td>
+<td><p>426</p></td>
+<td><p>2</p></td>
+<td><p>400</p></td>
+</tr>
+<tr class="row-odd"><td><p>12</p></td>
+<td><p>ETSI LB Hybrid</p></td>
+<td><p>PR_ASK</p></td>
+<td><p>15</p></td>
+<td><p>2</p></td>
+<td><p>320</p></td>
+<td><p>2</p></td>
+<td><p>300</p></td>
+</tr>
+<tr class="row-even"><td><p>125, 223, 325</p></td>
+<td><p>ETSI LB Hybrid</p></td>
+<td><p>PR_ASK</p></td>
+<td><p>15</p></td>
+<td><p>2</p></td>
+<td><p>320</p></td>
+<td><p>2</p></td>
+<td><p>300</p></td>
+</tr>
+<tr class="row-odd"><td><p>3</p></td>
+<td><p>ETSI LB Hybrid</p></td>
+<td><p>PR_ASK</p></td>
+<td><p>20</p></td>
+<td><p>2</p></td>
+<td><p>320</p></td>
+<td><p>2</p></td>
+<td><p>250</p></td>
+</tr>
+<tr class="row-even"><td><p>123, 222, 324</p></td>
+<td><p>ETSI LB Hybrid</p></td>
+<td><p>PR_ASK</p></td>
+<td><p>20</p></td>
+<td><p>2</p></td>
+<td><p>320</p></td>
+<td><p>2</p></td>
+<td><p>250</p></td>
+</tr>
+<tr class="row-odd"><td><p>5</p></td>
+<td><p>ETSI LB DRM</p></td>
+<td><p>PR_ASK</p></td>
+<td><p>20</p></td>
+<td><p>2</p></td>
+<td><p>320</p></td>
+<td><p>4</p></td>
+<td><p>200</p></td>
+</tr>
+<tr class="row-even"><td><p>141, 241, 342</p></td>
+<td><p>ETSI LB DRM</p></td>
+<td><p>PR_ASK</p></td>
+<td><p>20</p></td>
+<td><p>2</p></td>
+<td><p>320</p></td>
+<td><p>4</p></td>
+<td><p>200</p></td>
+</tr>
+<tr class="row-odd"><td><p>7</p></td>
+<td><p>FCC DRM</p></td>
+<td><p>PR_ASK</p></td>
+<td><p>20</p></td>
+<td><p>2</p></td>
+<td><p>250</p></td>
+<td><p>4</p></td>
+<td><p>150</p></td>
+</tr>
+<tr class="row-even"><td><p>146, 244, 343</p></td>
+<td><p>FCC DRM</p></td>
+<td><p>PR_ASK</p></td>
+<td><p>20</p></td>
+<td><p>2</p></td>
+<td><p>250</p></td>
+<td><p>4</p></td>
+<td><p>150</p></td>
+</tr>
+<tr class="row-odd"><td><p>13</p></td>
+<td><p>Sensitivity</p></td>
+<td><p>PR_ASK</p></td>
+<td><p>20</p></td>
+<td><p>2</p></td>
+<td><p>160</p></td>
+<td><p>8</p></td>
+<td><p>50</p></td>
+</tr>
+<tr class="row-even"><td><p>185, 285, 382</p></td>
+<td><p>Sensitivity</p></td>
+<td><p>PR_ASK</p></td>
+<td><p>20</p></td>
+<td><p>2</p></td>
+<td><p>160</p></td>
+<td><p>8</p></td>
+<td><p>50</p></td>
+</tr>
+</tbody>
+</table>
+<p>This operation will complete after the RF Mode setting has been
+updated in the modem.</p>
+<p>OpId: 0xA8</p>
+<dl>
+<dt>Configuration register:</dt><dd><ul class="simple">
+<li><p><a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-RfMode">RfMode</a>
+Should be set to one of the RF Mode column values.</p></li>
+</ul>
+</dd>
+<dt>Prerequisites:</dt><dd><ul class="simple">
+<li><p>None</p></li>
+</ul>
+</dd>
+<dt>Errors:</dt><dd><ul>
+<li><p>InvalidTxState</p>
+<p>The transmitter is not in a valid state to change modes.
+To change modes the transmitter must be either Ramped Down or
+transmitting CW, and not currently modulating the carrier.</p>
+</li>
+<li><p>kInvalidParameter</p>
+<p>The requested RF mode is not supported for the device SKU.</p>
+</li>
+</ul>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+<section id="setrxgainop-0xa9">
+<span id="setrxgainop"></span><h3>SetRxGainOp (0xA9)<a class="headerlink" href="#setrxgainop-0xa9" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>The SetRxGainOp allows the host to set the receiver analog gain settings.
+These values will be applied during all reader operations. Note that the
+<a class="reference internal" href="#rxrunsjcop">RxRunSjcOp</a> also sets the receiver gain stages in the very same way.</p>
+<ul class="simple">
+<li><p>The <a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-SjcGainControl">SjcGainControl</a>
+settings are active during the SJC operation.</p></li>
+<li><p>The <a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-RxGainControl">RxGainControl</a>
+settings are active during normal reader operation.</p></li>
+</ul>
+<p>The host can modify the RxGainControl.RxAtten value, that was set by the
+<a class="reference internal" href="#rxrunsjcop">RxRunSjcOp</a>, once the RxRunSjcOp has completed.</p>
+<p>This will degrade performance and is not recommended.
+It is important that the SJC solution’s RxAtten value be used during reader
+operations to achieve optimal receiver sensitivity.</p>
+<p>OpId: 0xA9</p>
+<dl class="simple">
+<dt>Configuration register:</dt><dd><ul class="simple">
+<li><p><a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-RxGainControl">RxGainControl</a></p></li>
+</ul>
+</dd>
+<dt>Prerequisites:</dt><dd><ul class="simple">
+<li><p>None</p></li>
+</ul>
+</dd>
+<dt>Errors:</dt><dd><ul class="simple">
+<li><p>None</p></li>
+</ul>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+<section id="locksynthesizerop-0xaa">
+<span id="locksynthesizerop"></span><h3>LockSynthesizerOp (0xAA)<a class="headerlink" href="#locksynthesizerop-0xaa" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>The LockSynthesizerOp applies the configuration described in index 0 of
+the RfSynthesizerControl register to the RF synthesizer. This operation
+will complete after the synthesizer tuning procedure has completed.</p>
+<p>OpId: 0xAA</p>
+<dl>
+<dt>Configuration register:</dt><dd><ul class="simple">
+<li><p><a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-RfSynthesizerControl">RfSynthesizerControl</a></p></li>
+</ul>
+</dd>
+<dt>Prerequisites:</dt><dd><ul class="simple">
+<li><p><a class="reference internal" href="#radiopowercontrolop">RadioPowerControlOp</a></p></li>
+<li><p><a class="reference internal" href="#txrampdownop">TxRampDownOp</a></p></li>
+</ul>
+</dd>
+<dt>Errors:</dt><dd><ul>
+<li><p>InvalidParam</p>
+<p>The programmed divider values (R, N) or the loop filter type
+were invalid.</p>
+</li>
+<li><p>NoLock</p>
+<p>The synthesizer failed to lock the LO to its expected frequency.</p>
+</li>
+</ul>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+<section id="eventfifotestop-0xab">
+<span id="eventfifotestop"></span><h3>EventFifoTestOp (0xAB)<a class="headerlink" href="#eventfifotestop-0xab" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>The EventFifoTestOp will initiate a test sequence that will
+periodically add test packets to the EventFifo, as described in the
+EventFifoTestPeriod and EventFifoTestPayloadNumWords registers. This
+operation will complete when the host writes a different operation code
+to the <a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-OpsControl">OpsControl</a>
+register.</p>
+<p>OpId: 0xAB</p>
+<dl class="simple">
+<dt>Configuration registers:</dt><dd><ul class="simple">
+<li><p><a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-EventFifoTestPeriod">EventFifoTestPeriod</a></p></li>
+<li><p><a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-EventFifoTestPayloadNumWords">EventFifoTestPayloadNumWords</a></p></li>
+</ul>
+</dd>
+<dt>Prerequisites:</dt><dd><ul class="simple">
+<li><p>None</p></li>
+</ul>
+</dd>
+<dt>Errors:</dt><dd><ul class="simple">
+<li><p>None</p></li>
+</ul>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+<section id="rxrunsjcop-0xac">
+<span id="rxrunsjcop"></span><h3>RxRunSjcOp (0xAC)<a class="headerlink" href="#rxrunsjcop-0xac" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>Once the transmitter is ramped up to its expected Tx power level the
+RxRunSjcOp is invoked. The RxRunSjcOp finds the CDAC I,Q values which
+minimize the LO output feeding back into the receive chain.</p>
+</div></blockquote>
+<section id="sjc-coarse-scan">
+<h4>SJC Coarse Scan<a class="headerlink" href="#sjc-coarse-scan" title="Permalink to this headline">¶</a></h4>
+<blockquote>
+<div><p>To begin the start of the SJC solution a coarse scan is initiated.
+During the coarse scan, the
+<a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-SjcGainControl">SjcGainControl</a>
+register field RxAtten is set to its maximum value of 12 dB if the
+SjcGainControl register field FixedRxAtten is not set and if the scan is centered
+at the CDAC origin (0, 0).</p>
+<p>Starting the solution scan with the maximum attenuation serves two purposes:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>To allow for the largest LO signal reflections to be accounted for.</p></li>
+<li><p>The decrease the number of steps during the coarse scan search.</p></li>
+</ul>
+</div></blockquote>
+<p>The coarse scan begins by setting the CDAC I, Q range to
+<code class="docutils literal notranslate"><span class="pre">[(-60,</span> <span class="pre">-60)</span> <span class="pre">...</span> <span class="pre">(+60,</span> <span class="pre">+60)]</span></code> with a step size of <code class="docutils literal notranslate"><span class="pre">8</span></code>,
+The range of the initial coarse scan is under the control of the host through
+the use of the
+<a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-SjcCdacI">SjcCdacI</a>
+and
+<a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-SjcCdacQ">SjcCdacQ</a>
+registers. The SjcCdacI and SjcCdacQ registers allow for the setting of the center
+of the scan and the symmetric double-sided limits for the scan.
+The CDAC limit values of +/- 60 provide a search across the
+entire CDAC plane.</p>
+<p>There are some register settings which are specific to the coarse
+scan operation:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-SjcControl">SjcControl</a>
+register field <code class="docutils literal notranslate"><span class="pre">SampleAverageCoarse</span></code>.
+This field determines how many receiver I, Q samples are measured during
+the coarse scan search. Note that due to the large step size during the
+coarse scan, the internal Rx switching transients will have an effect on
+spectral purity of the transmitted signal. This value must be set to a
+small value to ensure compliance with the Gen2 transmit mask requirements.</p></li>
+<li><p><a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-SjcControl">SjcControl</a>
+register field <code class="docutils literal notranslate"><span class="pre">FixedRxAtten</span></code>.</p></li>
+</ul>
+</div></blockquote>
+<p>If <code class="docutils literal notranslate"><span class="pre">FixedRxAtten</span></code> is not set to a zero <code class="docutils literal notranslate"><span class="pre">0</span></code> then the reader chip will not change
+the RxAtten value when searching for the solution. Instead it will
+use the value stored in the SjcGainControl register.</p>
+<p>Setting the register SjcGainControl field <code class="docutils literal notranslate"><span class="pre">RxAtten</span></code> with the <code class="docutils literal notranslate"><span class="pre">FixedRxAtten</span></code>
+set to zero informs the Impinj reader chip that the RxAtten value is a target value
+when finding the solution. The reader chip will attempt to find a suitable
+result with that attenuation setting. However, if the reflected Tx
+power into the receiver is too large, then the reader chip will use a higher
+RxAtten value.</p>
+<p>If the scan is symmetric and centered at (0, 0) then the initial coarse
+scan requires sample_count number of samples:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sample_count</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">limit</span> <span class="o">/</span> <span class="n">step_size</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">^</span> <span class="mi">2</span>
+</pre></div>
+</div>
+<p>For a symmetric scan with a limit value of 60 and step size 8, centered
+at (0, 0) the number of samples in the coarse scan is 256 samples.</p>
+</div></blockquote>
+</section>
+<section id="sjc-fine-scan">
+<h4>SJC Fine Scan<a class="headerlink" href="#sjc-fine-scan" title="Permalink to this headline">¶</a></h4>
+<blockquote>
+<div><p>Once the initial coarse scan is complete, the Impinj reader chip will perform successive
+fine scan operations. Each fine scan iteration reduces the scan step size by
+1/2 if the RxAtten value was not changed during the start of a scan. If the
+attenuation was changed from the previous iteration, or the coarse scan,
+then the step is not decreased. The reason being that the decrease
+in the RxAtten value provided an inherent scaling in step size by 1/2
+based on the decreased attenuation.</p>
+<p>In either case the fine scan will perform a scan across the range defined by
+a square centered at the CDAC center, +/- 2 * the scan step size.
+Therefore each fine scan requires 5 * 5 = 25 measurement points.</p>
+<p>Each fine scan without an attenuation change is reduced recursively by 1/2
+until the step size is zero.
+At that point the final CDAC solution is found which has the best carrier
+cancellation.</p>
+<p>A typical set of fine scans required to complete the SJC carrier
+cancellation solution contains the step sizes 8, 4, 2, 1. Each scan requiring
+25 measurement points. The SjcControl.SampleAverageZoom register value is used when
+taking the fine scan SJC residue measurements.</p>
+<p>The total number points required for each SJC solution is:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">256</span> <span class="o">+</span> <span class="mi">4</span> <span class="o">*</span> <span class="mi">25</span> <span class="o">=</span> <span class="mi">356</span>
+</pre></div>
+</div>
+<p>Using the typical values for
+<a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-SjcControl">sample averaging</a>
+, the SJC residue measurement times are:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">SampleAverageCoarse</span>  <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">residue</span> <span class="n">measurement</span> <span class="n">time</span><span class="p">:</span> <span class="mf">3.7</span> <span class="n">usec</span>
+<span class="n">SampleAverageFine</span>    <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="n">residue</span> <span class="n">measurement</span> <span class="n">time</span><span class="p">:</span> <span class="mf">6.0</span> <span class="n">usec</span>
+<span class="n">SjcControl</span><span class="o">.</span><span class="n">Decimator</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">disabled</span>
+</pre></div>
+</div>
+<p>The number of samples averaged during each coarse scan I,Q residue
+measurement is <code class="docutils literal notranslate"><span class="pre">2^1</span> <span class="pre">=</span> <span class="pre">2</span></code>. During the fine scan the number of samples averaged
+is <code class="docutils literal notranslate"><span class="pre">2^5</span> <span class="pre">=</span> <span class="pre">16</span></code>.</p>
+<p>The <a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-SjcControl">SjcControl.Decimator</a>
+register value can provide an additional level of low pass filtering for all SJC residue
+measurements. It also introduces additional measurement delay and therefore
+is normally disabled. Its usage will also degrade Gen2 mask performance.</p>
+<p>The total measurement time for the SJC solution is:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">256</span> <span class="o">*</span> <span class="mf">4.3</span> <span class="n">usec</span> <span class="o">=</span> <span class="mi">1100</span> <span class="n">usec</span> <span class="p">(</span><span class="n">coarse</span> <span class="n">scan</span><span class="p">)</span>
+<span class="mi">100</span> <span class="o">*</span> <span class="mf">6.7</span> <span class="n">usec</span> <span class="o">=</span>  <span class="mi">670</span> <span class="n">usec</span> <span class="p">(</span><span class="n">fine</span>   <span class="n">scan</span><span class="p">)</span>
+<span class="n">Total</span> <span class="n">SJC</span> <span class="n">time</span> <span class="o">=</span> <span class="mi">1770</span> <span class="n">usec</span>
+</pre></div>
+</div>
+<p>Settling time values should be left at their default values:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">SjcInitialSettlingTime</span> <span class="o">=</span> <span class="mi">5</span> <span class="n">usec</span>
+<span class="n">SjcResidueSettlingTime</span> <span class="o">=</span> <span class="mi">1</span> <span class="n">usec</span>
+</pre></div>
+</div>
+<p>These settings for sample averaging are based on measured receiver performance.</p>
+</div></blockquote>
+</section>
+<section id="rxrunsjcop-completion">
+<h4>RxRunSjcOp Completion<a class="headerlink" href="#rxrunsjcop-completion" title="Permalink to this headline">¶</a></h4>
+<blockquote>
+<div><p>Upon completion of the RxRunSjcOp the results may be read from
+the
+<a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-SjcResultI">SjcResultI</a>
+,
+<a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-SjcResultQ">SjcResultQ</a>
+registers, or from the EventFifo <a class="reference external" href="yk_firmware_ex10_api_event_packets.html#ex10_api_event_packet_sjc_measurement">sjc_measurement</a>
+packet.</p>
+<p>The SjcResult I,Q registers contain the CDAC I,Q values at which best carrier
+cancellation was performed. The EventFifo sjc_measurement packet contains the same
+information in the <code class="docutils literal notranslate"><span class="pre">cdac_i</span></code> and <code class="docutils literal notranslate"><span class="pre">cdac_q</span></code> fields.</p>
+<p>The SjcResult registers and the EventFifo sjc_measurement packet contain the measured
+I,Q channel residue values at the SJC solution.</p>
+<p>Attempting to read the SjcResult I, Q registers before the RxRunSjcOp has completed will result
+in indeterminate values. Since the SjcResult registers and the EventFifo sjc_measurement packet
+contain the same data, it is recommended that to obtain the SJC solution, the host use the
+EventFifo packet method. The EventFifo stream will need to be processed by the host and the SJC
+solution can be obtained as part of that processing.</p>
+<p>The
+<a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-RxGainControl">RxGainControl.RxAtten</a>
+register will contain the receiver attenuation value which was used to find
+the SJC solution. The value stored after the RxRunSjcOp is performed will be
+the value used during normal operation.</p>
+<p>Note: This value may be modified by the host controller. This is not recommended
+and will result in degraded receiver sensitivity since the SJC solution was
+found using a specific RxAtten value.</p>
+<p>OpId: 0xAC</p>
+<dl class="simple">
+<dt>Configuration register:</dt><dd><ul class="simple">
+<li><p><a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-SjcControl">SjcControl</a></p></li>
+<li><p><a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-SjcGainControl">SjcGainControl</a></p></li>
+<li><p><a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-SjcInitialSettlingTime">SjcInitialSettlingTime</a></p></li>
+<li><p><a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-SjcResidueSettlingTime">SjcResidueSettlingTime</a></p></li>
+<li><p><a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-SjcCdacI">SjcCdacI</a></p></li>
+<li><p><a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-SjcCdacQ">SjcCdacQ</a></p></li>
+<li><p><a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-SjcResidueThreshold">SjcResidueThreshold</a></p></li>
+</ul>
+</dd>
+<dt>Results register:</dt><dd><ul class="simple">
+<li><p><a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-SjcResultI">SjcResultI</a></p></li>
+<li><p><a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-SjcResultQ">SjcResultQ</a></p></li>
+<li><p><a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-RxGainControl">RxGainControl</a></p></li>
+</ul>
+</dd>
+<dt>Prerequisites:</dt><dd><ul class="simple">
+<li><p><a class="reference internal" href="#powercontrolloopop">PowerControlLoopOp</a></p></li>
+</ul>
+</dd>
+</dl>
+</div></blockquote>
+<blockquote id="rxrunsjcop-errors">
+<div><p>Errors:</p>
+<blockquote>
+<div><ul>
+<li><p>InvalidTxState</p>
+<p>The transmitter is not in a valid state to run SJC.
+The transmitter must be transmitting CW, and not modulating the carrier.</p>
+</li>
+<li><p>SjcCdacRangeError</p>
+<p>When running the RxRunSjcOp a solution was found outside the CDAC range allowed for the SKU.
+The resulting SJC CDAC I,Q values have been limited to the valid range of the reader SKU.</p>
+<p>This error condition is also noted as flags value ‘6’ in the
+<a class="reference external" href="yk_firmware_ex10_api_event_packets.html#ex10_api_event_packet_sjc_measurement">sjc_measurement</a>
+EventFifo packet.</p>
+</li>
+<li><p>SjcResidueThresholdExceeded</p>
+<p>When the measure SJC residue signal magnitude exceeds the value programmed in the register
+<a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-SjcResidueThreshold">SjcResidueThreshold</a>.</p>
+<p>This error condition is also noted as flags value ‘7’ in the
+<a class="reference external" href="yk_firmware_ex10_api_event_packets.html#ex10_api_event_packet_sjc_measurement">sjc_measurement</a>
+EventFifo packet.</p>
+</li>
+<li><p>EventFailedToSend</p>
+<p>When the RxRunSjcOp completes, but there is insufficient room in the EventFifo
+to emplace the sjc_measurement packet.</p>
+</li>
+</ul>
+</div></blockquote>
+</div></blockquote>
+</section>
+</section>
+<section id="setgpioop-0xad">
+<span id="setgpioop"></span><h3>SetGpioOp (0xAD)<a class="headerlink" href="#setgpioop-0xad" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>The SetGpioOp applies the GPIO configuration described in the
+GpioOutputEnable register. The GPIO configuration is applied synchronously
+and the operation will complete immediately after.</p>
+<p>OpId: 0xAD</p>
+<dl class="simple">
+<dt>Configuration register:</dt><dd><ul class="simple">
+<li><p><a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-GpioOutputEnable">GpioOutputEnable</a></p></li>
+<li><p><a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-GpioOutputLevel">GpioOutputLevel</a></p></li>
+</ul>
+</dd>
+<dt>Prerequisites:</dt><dd><ul class="simple">
+<li><p>None</p></li>
+</ul>
+</dd>
+<dt>Errors:</dt><dd><ul class="simple">
+<li><p>None</p></li>
+</ul>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+<section id="setcleargpiopinsop-0xae">
+<span id="setcleargpiopinsop"></span><h3>SetClearGpioPinsOp (0xAE)<a class="headerlink" href="#setcleargpiopinsop-0xae" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>The SetClearGpioPinsOp allows each GPIO to be configured as an output and
+its level set independently. Each GPIO pin is identified by its bit within
+the 32-bit configuration registers (below). Each pin enable and level may
+be set, without changing other pin settings, using SetClearGpioPinOp.</p>
+<p>Once the SetClearGpioPinsOp has been run the following GPIO registers are updated
+to reflect the updated state of the GPIO settings:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-GpioOutputEnable">GpioOutputEnable</a></p></li>
+<li><p><a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-GpioOutputLevel">GpioOutputLevel</a></p></li>
+</ul>
+</div></blockquote>
+<p>The configuration registers (below) are write-only.</p>
+<p>OpId: 0xAE</p>
+<p>Configuration register:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-GpioOutputLevelSet">GpioOutputLevelSet</a></p></li>
+<li><p><a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-GpioOutputLevelClear">GpioOutputLevelClear</a></p></li>
+<li><p><a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-GpioOutputEnableSet">GpioOutputEnableSet</a></p></li>
+<li><p><a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-GpioOutputEnableClear">GpioOutputEnableClear</a></p></li>
+</ul>
+</div></blockquote>
+<dl class="simple">
+<dt>Prerequisites:</dt><dd><ul class="simple">
+<li><p>None</p></li>
+</ul>
+</dd>
+<dt>Errors:</dt><dd><ul class="simple">
+<li><p>None</p></li>
+</ul>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+<section id="startinventoryroundop-0xb0">
+<span id="startinventoryroundop"></span><h3>StartInventoryRoundOp (0xB0)<a class="headerlink" href="#startinventoryroundop-0xb0" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>Run a single inventory round as described in the InventoryRoundControl
+register. The radio should be configured and transmit power ramped up
+before starting this operation. This operation will complete when the
+host writes the <a class="reference internal" href="#idle">Idle</a> code to the
+<a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-OpsControl">OpsControl</a>
+register or when the inventory round completes.</p>
+<p>OpId: 0xB0</p>
+<dl>
+<dt>Configuration register:</dt><dd><ul class="simple">
+<li><p><a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-InventoryRoundControl">InventoryRoundControl</a></p></li>
+<li><p><a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-InventoryRoundControl_2">InventoryRoundControl_2</a></p></li>
+</ul>
+</dd>
+<dt>Prerequisites:</dt><dd><ul class="simple">
+<li><p><a class="reference internal" href="#cwon">CwOn</a> aggregate operation</p></li>
+</ul>
+</dd>
+<dt>Errors:</dt><dd><ul>
+<li><p>InvalidParameter</p>
+<p>One of the register fields within the ‘InventoryRoundControl’
+register contained an invalid field value.</p>
+</li>
+<li><p>EventFailedToSend</p>
+<p>The EventFifo was too full to insert the op summary</p>
+</li>
+</ul>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+<section id="runprbsdataop-0xb1">
+<span id="runprbsdataop"></span><h3>RunPrbsDataOp (0xB1)<a class="headerlink" href="#runprbsdataop-0xb1" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>The RunPrbsDataOp initiates the transmission of a pseudorandom
+binary sequence for transmitter testing purposes. The radio should be
+ramped up and transmitting CW before starting this operation.
+This operation will complete when the host writes the <a class="reference internal" href="#idle">Idle</a> code to
+the OpsControl register or the regulatory timer expires.</p>
+<p>OpId: 0xB1</p>
+<dl>
+<dt>Configuration register:</dt><dd><ul class="simple">
+<li><p>None</p></li>
+</ul>
+</dd>
+<dt>Prerequisites:</dt><dd><ul class="simple">
+<li><p><a class="reference internal" href="#cwon">CwOn</a> aggregate operation</p></li>
+</ul>
+</dd>
+<dt>Errors:</dt><dd><ul>
+<li><p>InvalidTxState</p>
+<p>The transmitter is not in a valid state to run PRBS.
+The transmitter must be transmitting CW, and not
+currently modulating the carrier.</p>
+</li>
+</ul>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+<section id="sendselectop-0xb2">
+<span id="sendselectop"></span><h3>SendSelectOp (0xB2)<a class="headerlink" href="#sendselectop-0xb2" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>The SendSelectOp initiates a Gen2 select command transaction
+that is defined in the Gen2TxBuffer and described in the
+Gen2SelectEnable, Gen2Offsets and Gen2Lengths registers. This operation
+will automatically generate and append the CRC16 to the transaction.
+The radio should be configured and transmit power ramped up before
+starting this operation. This operation will complete when all enabled
+select transactions have completed and EventFifo packets have been
+added to the EventFifo.</p>
+<p>OpId: 0xB2</p>
+<dl>
+<dt>Configuration registers:</dt><dd><ul class="simple">
+<li><p><a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-Gen2TxBuffer">Gen2TxBuffer</a></p></li>
+<li><p><a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-Gen2SelectEnable">Gen2SelectEnable</a></p></li>
+<li><p><a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-Gen2Offsets">Gen2Offsets</a></p></li>
+<li><p><a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-Gen2Lengths">Gen2Lengths</a></p></li>
+<li><p><a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-Gen2TransactionIds">Gen2TransactionIds</a></p></li>
+</ul>
+</dd>
+<dt>Prerequisites:</dt><dd><ul class="simple">
+<li><p><a class="reference internal" href="#cwon">CwOn</a> aggregate operation</p></li>
+</ul>
+</dd>
+<dt>Errors:</dt><dd><ul>
+<li><p>InvalidParameter</p>
+<p>The user has set a bad mode into the rf mode register…
+<a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-RfMode">RfMode</a>
+This mode information is needed to properly send a select</p>
+</li>
+<li><p>EventFailedToSend</p>
+<p>The EventFifo was too full to insert info on one of the selects which attempted to send.</p>
+</li>
+<li><p>InvalidTxState</p>
+<p>The transmitter is not properly ramped up and a select can not be sent out.</p>
+</li>
+<li><p>UnsupportedCommand</p>
+<p>The user attempted to send a select command which is unsupported by the Ex10 device. Contact
+Impinj for more information.</p>
+</li>
+</ul>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+<section id="setdacop-0xb3">
+<span id="setdacop"></span><h3>SetDacOp (0xB3)<a class="headerlink" href="#setdacop-0xb3" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>There are two AUX DAC channels within the Impinj reader chip which can be controlled by
+the host. Each channel can be enabled or disabled via the AuxDacControl
+register. The DAC conversion value is set using the AuxDacSettings registers.
+Once these register values have been set by the host the SetDacOp
+will perform the digital to analog conversions for each channel.</p>
+<p>If a channel is disabled via the AuxDacControl register then its output
+value will be set to zero.</p>
+<p>The AUX DAC channels’ analog outputs may be routed to the ANA_TEST pins
+using the <a class="reference internal" href="#setatestmuxop">SetATestMuxOp</a>.</p>
+<p>OpId: 0xB3</p>
+<dl class="simple">
+<dt>Configuration register:</dt><dd><ul class="simple">
+<li><p><a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-AuxDacControl">AuxDacControl</a></p></li>
+<li><p><a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-AuxDacSettings">AuxDacSettings</a></p></li>
+</ul>
+</dd>
+<dt>Prerequisites:</dt><dd><ul class="simple">
+<li><p>None</p></li>
+</ul>
+</dd>
+<dt>Errors:</dt><dd><ul class="simple">
+<li><p>None</p></li>
+</ul>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+<section id="setatestmuxop-0xb4">
+<span id="setatestmuxop"></span><h3>SetATestMuxOp (0xB4)<a class="headerlink" href="#setatestmuxop-0xb4" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>The SetATestMuxOp allows the host to control the multiplexing of internal
+test signals to the ANA_TEST pins on the Impinj reader chip (also called the ATEST bus).
+There are 4 ANA_TEST pins which can have AUX DAC and AUX ADC signals routed:</p>
+</div></blockquote>
+<p>Note: The ATEST bus is a bus used by Impinj for testing purposes.
+Setting the parameters to values other than these enumerated values will
+likely result in incorrect device operation and may damage the device.</p>
+<table class="colwidths-given docutils align-default" id="id65">
+<caption><span class="caption-number">Table 41 </span><span class="caption-text">ANA_TEST signal multiplexing</span><a class="headerlink" href="#id65" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>ANA_TEST0</p></th>
+<th class="head"><p>ANA_TEST1</p></th>
+<th class="head"><p>ANA_TEST2</p></th>
+<th class="head"><p>ANA_TEST3</p></th>
+<th class="head"><p>Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Disable</p></td>
+<td><p>Disable</p></td>
+<td><p>Disable</p></td>
+<td><p>Disable</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-odd"><td><p>InternalRes</p></td>
+<td><p>InternalRes</p></td>
+<td><p>AuxDac1Out</p></td>
+<td><p>AuxDac0Out</p></td>
+<td><p>(1 &lt;&lt; 19)</p></td>
+</tr>
+<tr class="row-even"><td><p>AuxAdcMux_08</p></td>
+<td><p>AuxAdcMux_09</p></td>
+<td><p>AuxAdcMux_10</p></td>
+<td><p>AuxAdcMux_11</p></td>
+<td><p>(1 &lt;&lt; 20)</p></td>
+</tr>
+</tbody>
+</table>
+<p>OpId: 0xB4</p>
+<dl class="simple">
+<dt>Configuration register:</dt><dd><ul class="simple">
+<li><p><a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-ATestMux">ATestMux</a></p></li>
+</ul>
+</dd>
+<dt>Prerequisites:</dt><dd><ul class="simple">
+<li><p>None</p></li>
+</ul>
+</dd>
+<dt>Errors:</dt><dd><ul class="simple">
+<li><p>None</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+<section id="powercontrolloopop-0xb5">
+<span id="powercontrolloopop"></span><h3>PowerControlLoopOp (0xB5)<a class="headerlink" href="#powercontrolloopop-0xb5" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>The PowerControlLoopOp runs a control loop to attempt to reach the desired output power.</p>
+<p>Step 1: Check if the <a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-PowerControlLoopAuxAdcControl">PowerControlLoopAuxAdcControl</a>
+contains a valid ADC to use for measurements</p>
+<p>Step 2: Take the ADC measurement from the ADC specified by
+<a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-PowerControlLoopAuxAdcControl">PowerControlLoopAuxAdcControl</a>,
+and calculate error from <a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-PowerControlLoopAdcTarget">PowerControlLoopAdcTarget</a>.
+If SDD debug is enabled, extra information about the control loop is printed out. This includes
+printouts of all parameters for each loop in the power control loop.
+The parameters printed are the power control registers as well as the values set into the tx
+fine gain register. This is a good way to debug what is happening at each step. The SDD
+stream prints the data out in real time to give the current ADC values and error for each
+iteration.</p>
+<p>Step 3: Check if the current ADC threshold error exceeds the allowed error. Check if the
+control loop has completed less than the allowed iterations. If both conditions are
+met, continue into the control loop. If the conditions are not met, jump to the
+“finish_power_control” step. If
+<a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-PowerControlLoopMaxIterations">PowerControlLoopMaxIterations</a>
+== 0, the control loop is run until the error is met.
+<a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-PowerControlLoopAdcThresholds">PowerControlLoopAdcThresholds</a>
+== 0 is an allowed value.</p>
+<p>Step 4: Each pass through the loop we modify the TxScalar. Our starting value is given by the user as. Note that this tx fine gain value is set in the hardware through the tx fine gain op, which is a prerequisite of this op.
+<a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-TxFineGain">TxFineGain</a>.
+Each round through the loop we modify this value based on the
+<a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-PowerControlLoopGainDivisor">PowerControlLoopGainDivisor</a>.
+With this value modified we do bounds checking to ensure the TxScalar fits within +/-2047.
+If outside the accepted range, we set the value to the appropriate limit. Jump back to step 2.
+Note that by changing this value as the op progresses, the starting value the next time the
+op is called will be closer to the proper value, thus subsequent calls to the op have the
+potential to take less time. A user may read this register out at any time to see these changes.</p>
+<p>Step 5: The power control loop is done, so the final Tx fine gain value is written to the
+<a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-TxFineGain">TxFineGain</a>
+register for faster convergence on the next op run. When finished, a power control loop
+summary EventFifo packet is sent out. This contains information about the control loop
+run including whether the max iterations were run or the target power was achieved.
+All parameters will be optionally sent to the SDD stream.</p>
+<p>OpId: 0xB5</p>
+<dl>
+<dt>Configuration register:</dt><dd><ul class="simple">
+<li><p><a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-PowerControlLoopAuxAdcControl">PowerControlLoopAuxAdcControl</a></p></li>
+<li><p><a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-PowerControlLoopGainDivisor">PowerControlLoopGainDivisor</a></p></li>
+<li><p><a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-PowerControlLoopMaxIterations">PowerControlLoopMaxIterations</a></p></li>
+<li><p><a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-TxFineGain">TxFineGain</a></p></li>
+<li><p><a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-PowerControlLoopAdcTarget">PowerControlLoopAdcTarget</a></p></li>
+<li><p><a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-PowerControlLoopAdcThresholds">PowerControlLoopAdcThresholds</a></p></li>
+</ul>
+</dd>
+<dt>Prerequisites:</dt><dd><ul class="simple">
+<li><p><a class="reference internal" href="#setgpioop">SetGpioOp</a></p></li>
+<li><p><a class="reference internal" href="#radiopowercontrolop">RadioPowerControlOp</a></p></li>
+<li><p><a class="reference internal" href="#locksynthesizerop">LockSynthesizerOp</a></p></li>
+<li><p><a class="reference internal" href="#setrfmodeop">SetRfModeOp</a></p></li>
+<li><p><a class="reference internal" href="#settxcoarsegainop">SetTxCoarseGainOp</a></p></li>
+<li><p><a class="reference internal" href="#settxfinegainop">SetTxFineGainOp</a></p></li>
+<li><p><a class="reference internal" href="#txrampupop">TxRampUpOp</a></p></li>
+</ul>
+</dd>
+<dt>Errors:</dt><dd><ul>
+<li><p>InvalidParameter</p>
+<p>The selected ADC is not allowed for power control.
+The LoopGainDivisor was set to 0</p>
+</li>
+<li><p>PowerControlTargetFailed</p>
+<p>The PowerControlLoopOp did not reach the desired power within the max iterations.</p>
+</li>
+<li><p>EventFailedToSend</p>
+<p>The EventFifo was too full to insert the op summary</p>
+</li>
+</ul>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+<section id="measurerssiop-0xb6">
+<span id="measurerssiop"></span><h3>MeasureRssiOp (0xB6)<a class="headerlink" href="#measurerssiop-0xb6" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>The MeasureRssiOp will configure the RSSI Block in the Ex10Device through to measure
+the RSSI and will set the results to the user registers when the counter reaches the
+configured value. The counts over which the RSSI block will integrate is controlled
+through the MeasureRssiCount register.
+The linear RSSI will be placed in the MeasuredRssiLinear register and the log2 RSSI
+will be placed in the MeasuredRssiLog2 register. Both of these registers have an array
+of values, which operate as a FILO buffer. The most recent measurement will always be
+at index 0 and old measurements will rotate to the back each time the op is run. These
+register buffers are shared with <a class="reference internal" href="#listenbeforetalkop">ListenBeforeTalkOp</a>.</p>
+<p>OpId: 0xB6</p>
+<dl class="simple">
+<dt>Configuration register:</dt><dd><ul class="simple">
+<li><p><a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-MeasureRssiCount">MeasureRssiCount</a></p></li>
+</ul>
+</dd>
+<dt>Prerequisite:</dt><dd><ul class="simple">
+<li><p><a class="reference internal" href="#setgpioop">SetGpioOp</a></p></li>
+<li><p><a class="reference internal" href="#locksynthesizerop">LockSynthesizerOp</a></p></li>
+<li><p><a class="reference internal" href="#setrfmodeop">SetRfModeOp</a></p></li>
+</ul>
+</dd>
+<dt>Errors:</dt><dd><ul class="simple">
+<li><p>None</p></li>
+</ul>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+<section id="ustimerstartop-0xb7">
+<span id="ustimerstartop"></span><h3>UsTimerStartOp (0xB7)<a class="headerlink" href="#ustimerstartop-0xb7" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>The UsTimerStartOp is used to start a timer for a user-configured number of microseconds.
+This delay time is specified in the DelayUs register. If the register has value 0, no
+timer will be started.
+Starting the op before a previous timer has expired will cancel the previous timer and
+start a new one.
+Once the timer is started and before it returns, the op will send out a TimerStart SDD log
+if configured to do so.</p>
+<p>OpId: 0xB7</p>
+<dl class="simple">
+<dt>Configuration registers:</dt><dd><ul class="simple">
+<li><p><a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-DelayUs">DelayUs</a></p></li>
+</ul>
+</dd>
+<dt>Prerequisites:</dt><dd><ul class="simple">
+<li><p>NA</p></li>
+</ul>
+</dd>
+<dt>Errors:</dt><dd><ul class="simple">
+<li><p>NA</p></li>
+</ul>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+<section id="ustimerwaitop-0xb8">
+<span id="ustimerwaitop"></span><h3>UsTimerWaitOp (0xB8)<a class="headerlink" href="#ustimerwaitop-0xb8" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>The UsTimerWaitOp is used to wait for the completion of the delay started by
+running UsTimerStartOp.
+Once the timer is finished and before it returns, the op will send out a
+TimerWaitCompletion SDD log if configured to do so.
+Note: If no timer is running because it has expired, or was never started, the
+op will complete immediately after any required SDD logging.</p>
+<p>OpId: 0xB8</p>
+<dl class="simple">
+<dt>Configuration registers:</dt><dd><ul class="simple">
+<li><p>NA</p></li>
+</ul>
+</dd>
+<dt>Prerequisites:</dt><dd><ul class="simple">
+<li><p>NA</p></li>
+</ul>
+</dd>
+<dt>Errors:</dt><dd><ul class="simple">
+<li><p>NA</p></li>
+</ul>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+<section id="aggregateop-0xb9">
+<span id="aggregateop"></span><h3>AggregateOp (0xB9)<a class="headerlink" href="#aggregateop-0xb9" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>The AggregateOp is used to execute a sequence of instructions.
+The instruction set is enumerated by the
+<a class="reference external" href="ex10_host_c_support/aggregate_op_builder.html#_CPPv426AggregateOpInstructionType">enum AggregateOpInstructionType</a>,
+which is used by the C SDK
+<a class="reference internal" href="ex10_host_c_support/aggregate_operations.html#ex10-api-cw-on-aggregate-operations-label"><span class="std std-ref">Ex10AggregateOpBuilder</span></a>,
+to build and write to the
+<a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-AggregateOpBuffer">AggregateOpBuffer</a>.</p>
+<p>Each <code class="docutils literal notranslate"><span class="pre">enum</span> <span class="pre">AggregateOpInstructionType</span></code> value is associated with one member of the
+<a class="reference external" href="ex10_host_c_support/aggregate_op_builder.html#_CPPv424AggregateInstructionData">union AggregateInstructionData</a>
+members.</p>
+<p>When the AggregateOp is run, the instructions written to the
+<a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-AggregateOpBuffer">AggregateOpBuffer</a>,
+are executed, starting from the first byte (i.e. index 0) of the
+<a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-AggregateOpBuffer">AggregateOpBuffer</a>,
+in ascending order.</p>
+<p>The client must write a set of instructions into the
+<a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-AggregateOpBuffer">AggregateOpBuffer</a>
+prior to running the AggregateOp.</p>
+<p>The AggregateOp instruction set,
+as enumerated by <code class="docutils literal notranslate"><span class="pre">enum</span> <span class="pre">AggregateOpInstructionType</span></code> is shown below:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">InstructionTypeWrite</span> <span class="pre">(0x02)</span></code>:</p>
+<p>The AggregateOp instruction <code class="docutils literal notranslate"><span class="pre">InstructionTypeWrite</span></code> is similar to the
+Ex10 Command <a class="reference internal" href="yk_firmware_ex10_api_messages.html#ex10-api-write"><span class="std std-ref">Write</span></a>, and has the same format:</p>
+<table class="colwidths-given docutils align-default" id="id66">
+<caption><span class="caption-number">Table 42 </span><span class="caption-text">InstructionTypeWrite</span><a class="headerlink" href="#id66" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 60%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Field</p></th>
+<th class="head"><p>Size (bytes)</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">instruction_type</span></code></p></td>
+<td><p>1</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">InstructionTypeWrite</span></code> : 0x02</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">address</span></code></p></td>
+<td><p>2</p></td>
+<td><p>The starting address for the write operation.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">length</span></code></p></td>
+<td><p>2</p></td>
+<td><p>The number of bytes that will be written to the specified address location.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">data</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">length</span></code> number of bytes</p></td>
+<td><p>The payload of data that will be written to the specified address location.</p></td>
+</tr>
+</tbody>
+</table>
+<p>Unlike the Ex10 Command Write, the <code class="docutils literal notranslate"><span class="pre">InstructionTypeWrite</span></code> instruction can only accept
+a single address to write per instruction.</p>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">InstructionTypeReset</span> <span class="pre">(0x08)</span></code>:</p>
+<p>The AggregateOp instruction <code class="docutils literal notranslate"><span class="pre">InstructionTypeReset</span></code> format is the same as the Ex10 Command
+<a class="reference internal" href="yk_firmware_ex10_api_messages.html#ex10-api-reset"><span class="std std-ref">Reset</span></a>. The functionality is also the same: The Ex10 device will
+be reset.</p>
+<table class="colwidths-given docutils align-default" id="id67">
+<caption><span class="caption-number">Table 43 </span><span class="caption-text">InstructionTypeReset</span><a class="headerlink" href="#id67" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 60%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Field</p></th>
+<th class="head"><p>Size (bytes)</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">instruction_type</span></code></p></td>
+<td><p>1</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">InstructionTypeReset</span></code> : 0x08</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">destination</span></code></p></td>
+<td><p>1</p></td>
+<td><p>Where to go when the reset completes. Possible values are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">1</span></code>: Bootloader</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">2</span></code>: Application</p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">InstructionTypeInsertFifoEvent</span> <span class="pre">(0x0E)</span></code>:</p>
+<p>The AggregateOp instruction <code class="docutils literal notranslate"><span class="pre">InstructionTypeInsertFifoEvent</span></code> has the same
+format as the Ex10 Command <a class="reference internal" href="yk_firmware_ex10_api_messages.html#ex10-api-insert-fifo-event"><span class="std std-ref">InsertFifoEvent</span></a>, and has the same
+functionality as the Ex10 Command InsertFifoEvent with one exception:</p>
+<ul class="simple">
+<li><p>The InsertFifoEvent command can be used with a NULL packet by sending only
+the Command Code and the <code class="docutils literal notranslate"><span class="pre">Trigger</span> <span class="pre">Interrupt</span></code> field.</p></li>
+<li><p>The AggregateOp instruction <code class="docutils literal notranslate"><span class="pre">InstructionTypeInsertFifoEvent</span></code> cannot determine
+the instruction length if the packet is NULL.</p></li>
+</ul>
+<p>To work around this exception, an EventFifo packet can be sent with its
+static and dynamic data length set to zero. This empty packet will not be
+inserted into the Ex10 EventFifo, but an <code class="docutils literal notranslate"><span class="pre">IRQ_N</span></code> falling edge will be generated.</p>
+<table class="colwidths-given docutils align-default" id="id68">
+<caption><span class="caption-number">Table 44 </span><span class="caption-text">InstructionTypeInsertFifoEvent</span><a class="headerlink" href="#id68" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 60%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Field</p></th>
+<th class="head"><p>Size (bytes)</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">instruction_type</span></code></p></td>
+<td><p>1</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">InstructionTypeInsertFifoEvent</span></code> : 0x0E</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">trigger_irq</span></code></p></td>
+<td><p>1</p></td>
+<td><p>Force the Impinj reader chip to trigger the EventFifo threshold interrupt.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">packet</span></code></p></td>
+<td><p>variable</p></td>
+<td><p>See <a class="reference internal" href="yk_firmware_ex10_api_event_packets.html#ex10-api-event-packets"><span class="std std-ref">EventFifo Packet</span></a> for the details
+of EventFifo packet formation.</p></td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">InstructionTypeRunOp</span> <span class="pre">(0x30)</span></code>:</p>
+<p>Runs the specified Op and waits for the Op to complete.
+If an error occurs when the specified Op is run, then
+the AggregateOp will indicate the failure within the resulting EventFifo packet
+<a class="reference external" href="yk_firmware_ex10_api_event_packets.html#ex10_api_event_packet_aggregate_op_summary">aggregate_op_summary</a>.
+Execution of the AggregateOp instructions will halt on an error.</p>
+<table class="colwidths-given docutils align-default" id="id69">
+<caption><span class="caption-number">Table 45 </span><span class="caption-text">InstructionTypeRunOp</span><a class="headerlink" href="#id69" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 60%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Field</p></th>
+<th class="head"><p>Size (bytes)</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">instruction_type</span></code></p></td>
+<td><p>1</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">InstructionTypeRunOp</span></code> : 0x30</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">op_id</span></code></p></td>
+<td><p>1</p></td>
+<td><p>The OpId to run.</p></td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">InstructionTypeGotoIndex</span> <span class="pre">(0x31)</span></code>:</p>
+<p>Jumps to the instruction, and continues execution, at the index specified within the
+<a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-AggregateOpBuffer">AggregateOpBuffer</a>.</p>
+<table class="colwidths-given docutils align-default" id="id70">
+<caption><span class="caption-number">Table 46 </span><span class="caption-text">InstructionTypeGotoIndex</span><a class="headerlink" href="#id70" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 60%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Field</p></th>
+<th class="head"><p>Size (bytes)</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">instruction_type</span></code></p></td>
+<td><p>1</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">InstructionTypeGotoIndex</span></code> : 0x31</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">jump_index</span></code></p></td>
+<td><p>2</p></td>
+<td><p>Indicates the offset within the
+<a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-AggregateOpBuffer">AggregateOpBuffer</a>
+to continue AggregateOp instruction execution.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">repeat_count</span></code></p></td>
+<td><p>1</p></td>
+<td><p>Indicates the number of times the <code class="docutils literal notranslate"><span class="pre">InstructionTypeGotoIndex</span></code> should repeat before
+continuing into the following instruction.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">0x00</span></code> indicates the loop will never execute.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">0xFF</span></code> indicates the loop will execute forever or until <a class="reference internal" href="#idle">Idle</a> is written to
+<a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-OpsControl">OpsControl</a>.</p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">InstructionTypeExitInstruction</span> <span class="pre">(0x32)</span></code>:</p>
+<p>Exits the op at the current index. This stops any further commands from being
+parsed. This instruction <strong>must</strong> be placed as the last instruction in the
+AggregateOpBuffer to tell the op not to parse extra commands. Without this, the
+next index will be parsed, which may be unintended or will be invalid and force
+a InvalidParameter return value.</p>
+<p>The user writes their instructions to run into the AggregateOp buffer, and upon
+executing the op, the op will execute all loaded actions.</p>
+<table class="colwidths-given docutils align-default" id="id71">
+<caption><span class="caption-number">Table 47 </span><span class="caption-text">InstructionTypeExitInstruction</span><a class="headerlink" href="#id71" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 60%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Field</p></th>
+<th class="head"><p>Size (bytes)</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">instruction_type</span></code></p></td>
+<td><p>1</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">InstructionTypeExitInstruction</span></code> : 0x32</p></td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">InstructionTypeIdentifier</span> <span class="pre">(0x33)</span></code>:</p>
+<p>This allows for a user-supplied numeric value to be set in the EventFifo packet
+<a class="reference external" href="yk_firmware_ex10_api_event_packets.html#ex10_api_event_packet_aggregate_op_summary">aggregate_op_summary</a>
+field <code class="docutils literal notranslate"><span class="pre">identifier</span></code>.</p>
+<p>If multiple <code class="docutils literal notranslate"><span class="pre">InstructionTypeIdentifier</span></code> instructions are contained within the
+<a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-AggregateOpBuffer">AggregateOpBuffer</a>
+then the last <code class="docutils literal notranslate"><span class="pre">InstructionTypeIdentifier</span></code> executed prior to AggregateOp completion,
+or error encountered will be set in the EventFifo packet
+<a class="reference external" href="yk_firmware_ex10_api_event_packets.html#ex10_api_event_packet_aggregate_op_summary">aggregate_op_summary</a>.</p>
+<p>If no <code class="docutils literal notranslate"><span class="pre">InstructionTypeIdentifier</span></code> instructions are contained within the
+<a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-AggregateOpBuffer">AggregateOpBuffer</a>
+then the value of the EventFifo packet
+<a class="reference external" href="yk_firmware_ex10_api_event_packets.html#ex10_api_event_packet_aggregate_op_summary">aggregate_op_summary</a>
+field <code class="docutils literal notranslate"><span class="pre">identifier</span></code> will be zero.</p>
+<table class="colwidths-given docutils align-default" id="id72">
+<caption><span class="caption-number">Table 48 </span><span class="caption-text">InstructionTypeIdentifier</span><a class="headerlink" href="#id72" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 60%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Field</p></th>
+<th class="head"><p>Size (bytes)</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">instruction_type</span></code></p></td>
+<td><p>1</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">InstructionTypeIdentifier</span></code> : 0x33</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">identifier</span></code></p></td>
+<td><p>2</p></td>
+<td><p>A user-supplied value that will be inserted into the EventFifo packet <a class="reference external" href="yk_firmware_ex10_api_event_packets.html#ex10_api_event_packet_aggregate_op_summary">aggregate_op_summary</a>.</p></td>
+</tr>
+</tbody>
+</table>
+</li>
+</ul>
+<p>OpId: 0xB9</p>
+<dl class="simple">
+<dt>Configuration registers:</dt><dd><ul class="simple">
+<li><p><a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-AggregateOpBuffer">AggregateOpBuffer</a></p></li>
+</ul>
+</dd>
+<dt>Prerequisites:</dt><dd><ul class="simple">
+<li><p>NA</p></li>
+</ul>
+</dd>
+</dl>
+<p>Errors:</p>
+<blockquote>
+<div><p>For information on how to debug errors in the AggregateOp, please see <a class="reference external" href="yk_firmware_ex10_host_c_api_debugging_aggregate_op_errors.html">AggregateOp Debug</a>
+The errors for this op are:</p>
+<blockquote>
+<div><ul>
+<li><p>AggregateBufferOverflow:</p>
+<p>The op has run off the end of the AggregateOp buffer. If this occurs, you have run
+off the end of the buffer without finding an exit instruction. You may have tried to load
+too many commands and the exit instruction did not make it in.</p>
+</li>
+<li><p>AggregateInnerOpError:</p>
+<p>An inner op was parsed from the AggregateOp buffer and run. During this run of the inner
+op, an error occurred. The AggregateOp will return with this error to signal the user to
+check the EventFifo for further info on the failure. The EventFifo packet to check is
+<a class="reference external" href="yk_firmware_ex10_api_event_packets.html#ex10_api_event_packet_aggregate_op_summary">aggregate_op_summary</a>.
+The EventFifo will contain a field showing the op that failed as well as what the error code
+from the op was.</p>
+</li>
+<li><p>AggregateEx10CommandError:</p>
+<p>When the AggregateOp ran an Ex10 command which was contained in the buffer, it returned an error.
+This error can be seen in the EventFifo packet
+<a class="reference external" href="yk_firmware_ex10_api_event_packets.html#ex10_api_event_packet_aggregate_op_summary">aggregate_op_summary</a>.
+The EventFifo will contain a field showing the command that failed as well as what the error
+code from the command was.</p>
+</li>
+<li><p>InvalidParameter:</p>
+<p>The AggregateOp buffer has been configured incorrectly. This will happen
+if an unsupported command is loaded into the buffer. You may have used an incorrect
+instruction code, attempted to use a nested AggregateOp run, jumped to an incorrect index,
+or not loaded an exit instruction. This error will also occur if the reset instruction was used with an inappropriate argument for the reset location.
+For more info on debugging AggregateOp errors:
+<a class="reference internal" href="yk_firmware_ex10_host_c_api_debugging_aggregate_op_errors.html#debugging-aggregate-op-errors"><span class="std std-ref">Debugging AggregateOp Errors</span></a></p>
+</li>
+</ul>
+</div></blockquote>
+</div></blockquote>
+</div></blockquote>
+</section>
+<section id="listenbeforetalkop-0xba">
+<span id="listenbeforetalkop"></span><h3>ListenBeforeTalkOp (0xBA)<a class="headerlink" href="#listenbeforetalkop-0xba" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>The following dictates how the Listen Before Talk Op works. For an example of configuring the
+registers, see <a class="reference external" href="yk_firmware_ex10_host_c_lbt_usage.html">LBT Usage</a>
+The ListenBeforeTalkOp is used to measure the RSSI at a given channel before
+ramping up. The op is capable of running up to 5 back-to-back measurements
+without user intervention. This means 5 measurements with differing configurable
+settings. The number of measurements to make can be set in the NumRssiMeasurements
+field of <a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-LbtControl">LbtControl</a>.</p>
+<p>Flow:</p>
+<ul class="simple">
+<li><p>Modem configuration for LBT</p></li>
+<li><p>Configure custom analog Rx gain</p></li>
+<li><p><a class="reference internal" href="#locksynthesizerop">LockSynthesizerOp</a> (User designated ramp frequency + LBT offset)</p></li>
+<li><p><a class="reference internal" href="#measurerssiop">MeasureRssiOp</a></p></li>
+<li><p>User-configurable delay</p></li>
+<li><p>Looping</p></li>
+<li><p>Restore previous modem settings (keeps synthesizer settings)</p></li>
+</ul>
+<ol class="arabic">
+<li><p>The current modem configuration state is saved before LBT and restored
+when LBT is complete to maintain user configurations.</p></li>
+<li><p>The analog Rx gain settings are chosen.
+Normally, specific settings for LBT are used. Any user settings will be
+restored after LBT finishes. The LBT settings are as follows:</p>
+<ul class="simple">
+<li><p>RxAtten = k__12_dB</p></li>
+<li><p>Pga1Gain = k_12_dB</p></li>
+<li><p>Pga2Gain = k__6_dB</p></li>
+<li><p>Pga3Gain = k_18_dB</p></li>
+<li><p>Pga2Bypass = false</p></li>
+<li><p>MixerGain = k_20p7_dB</p></li>
+<li><p>Pga1RinMode = false</p></li>
+<li><p>MixerBandwidth = true</p></li>
+</ul>
+<p>It is also possible to override these LBT settings if you use the register <a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-LbtControl">LbtControl</a>.
+By setting the Override field to true, the op will use the user defined settings
+placed in <a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-RxGainControl">RxGainControl</a>.</p>
+</li>
+<li><p>The op takes user configuration to run the lock synthesizer op through
+<a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-RfSynthesizerControl">RfSynthesizerControl</a>
+It uses these frequency settings along with the LBT offset to determine at which
+frequency to measure RSSI. The offset can be found in <a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-LbtOffset">LbtOffset</a>.
+We lock the synthesizer to the frequency of interest (FOI) plus the offset (note
+that the offset can be positive or negative).
+These PLL settings and offset frequency can vary from measurement to measurement.
+Both registers are arrays, and each index in the array corresponds to the measurement
+index. Measurement 0 will always use index 0 of these registers. The index increments
+up by 1 to NumRssiMeasurements.
+Note that this uses the same sub process as the <a class="reference internal" href="#locksynthesizerop">LockSynthesizerOp</a>, thus the same EventFifo
+events and SDD logs will be emitted.
+Note: After running LBT, the synthesizer will still be locked to the offset frequency, thus
+the lock synthesizer op still needs to be run.</p></li>
+<li><p>The LPF is set to 100kHz for LBT and Dynamic Rx Gain. This is normally set as part
+of ramp up or during SJC, but is specifically set to 100kHz for LBT.</p></li>
+<li><p>The RSSI is measured and the results are placed in the MeasuredRssiLinear and
+MeasuredRssiLog2 registers. Each subsequent measurement will be placed in the
+current index of the registers (0…NumRssiMeasurements).</p></li>
+<li><p>The user may configure a delay after each measurement before proceeding. This
+delay can be found in the LbtControl register.</p></li>
+<li><p>The above steps from 3-6 will be repeated up to the number of times specified in the
+LbtControlRegister. The PLL settings and LBT offset can be changed for each round if needed.</p></li>
+</ol>
+<p>OpId: 0xBA</p>
+<p>Configuration registers:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-LbtOffset">LbtOffset</a></p></li>
+<li><p><a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-RfSynthesizerControl">RfSynthesizerControl</a></p></li>
+<li><p><a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-MeasureRssiCount">MeasureRssiCount</a></p></li>
+<li><p><a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-RxGainControl">RxGainControl</a></p></li>
+<li><p><a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-LbtControl">LbtControl</a></p></li>
+</ul>
+</div></blockquote>
+<p>Prerequisites:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><a class="reference internal" href="#radiopowercontrolop">RadioPowerControlOp</a></p></li>
+<li><p><a class="reference internal" href="#setgpioop">SetGpioOp</a></p></li>
+</ul>
+</div></blockquote>
+<dl>
+<dt>Errors:</dt><dd><p>The errors encountered when running this operation can be the result of one of the
+sub-operations used within this operation. These could come from MeasureRssiOp or
+<a class="reference internal" href="#locksynthesizerop">LockSynthesizerOp</a>.</p>
+<ul>
+<li><p>InvalidParam</p>
+<p>When starting the op, if CW is already on, or the RF mode has not been set.
+Also when running the lock synthesizer op, the programmed divider values (R, N) or
+the loop filter type were invalid.</p>
+</li>
+<li><p>NoLock</p>
+<p>The synthesizer failed to lock the LO to its expected frequency.</p>
+</li>
+</ul>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+<section id="bertestop-0xc0">
+<span id="bertestop"></span><h3>BerTestOp (0xC0)<a class="headerlink" href="#bertestop-0xc0" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>The BerTestOp executes the Bit Error Rate (BER) Test.</p>
+<p>OpId: 0xC0</p>
+<dl>
+<dt>Configuration register:</dt><dd><ul class="simple">
+<li><p><a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-BerControl">BerControl</a></p></li>
+<li><p><a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-BerMode">BerMode</a></p></li>
+</ul>
+</dd>
+<dt>Prerequisites:</dt><dd><ul class="simple">
+<li><p><a class="reference internal" href="#cwon">CwOn</a> aggregate operation</p></li>
+</ul>
+</dd>
+<dt>Errors:</dt><dd><ul>
+<li><p>InvalidTxState</p>
+<p>The transmitter is not in a valid state to run BER.
+The transmitter must be transmitting CW, and not currently
+modulating the carrier.</p>
+</li>
+<li><p>InvalidParameter</p>
+<p>The RF mode is not valid for use with BER.</p>
+</li>
+<li><p>BerRxHung</p>
+<p>A hang was detected in the receiver and the op was
+cancelled.</p>
+</li>
+</ul>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+<section id="etsiburstop-0xc1">
+<span id="etsiburstop"></span><h3>EtsiBurstOp (0xC1)<a class="headerlink" href="#etsiburstop-0xc1" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>The EtsiBurstOp is used during testing to repeatedly ramp up
+and ramp down the transmitter with the applied modulation so that the
+demodulated waveform can be measured. The time between ramp down and
+the subsequent ramp up is determined by the user setting of the
+EtsiBurstOffTime register.</p>
+<p>This operation executes the following operations as part of its
+execution:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><a class="reference internal" href="#settxcoarsegainop">SetTxCoarseGainOp</a></p></li>
+<li><p><a class="reference internal" href="#txrampupop">TxRampUpOp</a></p></li>
+<li><p><a class="reference internal" href="#powercontrolloopop">PowerControlLoopOp</a></p></li>
+<li><p><a class="reference internal" href="#setrxgainop">SetRxGainOp</a></p></li>
+<li><p><a class="reference internal" href="#rxrunsjcop">RxRunSjcOp</a></p></li>
+<li><p><a class="reference internal" href="#startinventoryroundop">StartInventoryRoundOp</a></p></li>
+<li><p><a class="reference internal" href="#txrampdownop">TxRampDownOp</a></p></li>
+</ul>
+</div></blockquote>
+<p>OpId: 0xC1</p>
+<dl class="simple">
+<dt>Configuration registers:</dt><dd><ul class="simple">
+<li><p><a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-EtsiBurstOffTime">EtsiBurstOffTime</a></p></li>
+</ul>
+</dd>
+<dt>Prerequisites:</dt><dd><ul class="simple">
+<li><p><a class="reference internal" href="#setgpioop">SetGpioOp</a></p></li>
+<li><p><a class="reference internal" href="#radiopowercontrolop">RadioPowerControlOp</a></p></li>
+<li><p><a class="reference internal" href="#locksynthesizerop">LockSynthesizerOp</a></p></li>
+<li><p><a class="reference internal" href="#setrfmodeop">SetRfModeOp</a></p></li>
+<li><p><a class="reference internal" href="#settxcoarsegainop">SetTxCoarseGainOp</a></p></li>
+<li><p><a class="reference internal" href="#powercontrolloopop">PowerControlLoopOp</a></p></li>
+</ul>
+</dd>
+<dt>Errors:</dt><dd><p>The errors encountered when running this operation will be the
+result of one of the sub-operations executed within this operation.</p>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+<section id="hpfoverridetestop-0xc2">
+<span id="hpfoverridetestop"></span><h3>HpfOverrideTestOp (0xC2)<a class="headerlink" href="#hpfoverridetestop-0xc2" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>The HpfOverrideTestOp is used to override the Ex10 receiver high-pass filter (HPF).
+This filter is normally managed internally through 2 other ops:
+<a class="reference internal" href="#setrfmodeop">SetRfModeOp</a> and <a class="reference internal" href="#rxrunsjcop">RxRunSjcOp</a>.
+This is an Op for testing, which allows one to override the receiver HPF settings at
+any time. Note, however, that if the other Ops run after utilizing this test
+Op, there could be unknown interactions and the HPF settings are then not to
+be trusted.
+After utilizing this test Op, a device reset should be done before
+entering into normal operating mode.</p>
+<p>The HPF override settings are defined in the <a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-HpfOverrideSettings">HpfOverrideSettings</a>
+register. The available settings are:</p>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 75%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>HPF Setting</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">HpfModeBypass</span></code></p></td>
+<td><p>DC Bypass the HPF.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">HpfModeFctTestMode</span></code></p></td>
+<td><div class="line-block">
+<div class="line">Overrides the High-pass filter for use in FCT.</div>
+<div class="line">The same as <code class="docutils literal notranslate"><span class="pre">HpfMode500Ohm</span></code>, with polarity and LVDS disabled.</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">HpfMode2000Ohm</span></code></p></td>
+<td><p>HPF enabled, 2000 ohm series resistance.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">HpfMode500Ohm</span></code></p></td>
+<td><p>HPF enabled, 500 ohm series resistance.</p></td>
+</tr>
+</tbody>
+</table>
+<p>OpId: 0xC2</p>
+<dl>
+<dt>Configuration registers:</dt><dd><ul class="simple">
+<li><p><a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-HpfOverrideSettings">HpfOverrideSettings</a></p></li>
+</ul>
+</dd>
+<dt>Prerequisites:</dt><dd><ul class="simple">
+<li><p>NA</p></li>
+</ul>
+</dd>
+<dt>Errors:</dt><dd><ul>
+<li><p>InvalidParameter:</p>
+<p>The mode set into the <a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-HpfOverrideSettings">HpfOverrideSettings</a>
+register is not a valid mode for setting the HPF.</p>
+</li>
+</ul>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+</section>
+<section id="sdk-aggregate-operations">
+<h2>SDK Aggregate Operations<a class="headerlink" href="#sdk-aggregate-operations" title="Permalink to this headline">¶</a></h2>
+<p>SDK aggregate operations are a collection of atomic operations that perform a
+specified procedure of operations in order to complete a described high level
+behavior. These SDK aggregate operations are not to be confused with the
+AggregateOp operation usable by the Ex10 device. These SDK aggregations
+are a collection of device operations run together to perform common
+tasks. They may or may not use the AggregateOp device op.</p>
+<dl class="simple">
+<dt>The implementation of the SDK aggregate operations are found in:</dt><dd><ul class="simple">
+<li><p>ex10_c_dev_kit/include/ex10_api/ex10_ops.h,
+ex10_c_dev_kit/src/ex10_api/ex10_ops.c</p></li>
+</ul>
+</dd>
+</dl>
+<section id="cwon">
+<h3>CwOn<a class="headerlink" href="#cwon" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>CwOn is an aggregate operation that will ramp up
+the transmitter, adjust output power based on forward power
+measurements at the LO port and prepare the receiver. This operation
+will complete after all atomic operations have completed.</p>
+<dl class="simple">
+<dt>Atomic operations used:</dt><dd><ul class="simple">
+<li><p><a class="reference internal" href="#setgpioop">SetGpioOp</a></p></li>
+<li><p><a class="reference internal" href="#locksynthesizerop">LockSynthesizerOp</a></p></li>
+<li><p><a class="reference internal" href="#setrfmodeop">SetRfModeOp</a></p></li>
+<li><p><a class="reference internal" href="#settxcoarsegainop">SetTxCoarseGainOp</a></p></li>
+<li><p><a class="reference internal" href="#settxfinegainop">SetTxFineGainOp</a></p></li>
+<li><p><a class="reference internal" href="#txrampupop">TxRampUpOp</a></p></li>
+<li><p><a class="reference internal" href="#powercontrolloopop">PowerControlLoopOp</a></p></li>
+<li><p><a class="reference internal" href="#rxrunsjcop">RxRunSjcOp</a></p></li>
+</ul>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+<section id="cwoff">
+<h3>CwOff<a class="headerlink" href="#cwoff" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>CwOff is an aggregate operation that will ramp down
+the transmitter and turn off the radio. This operation will complete
+after all atomic operations have completed.</p>
+<dl class="simple">
+<dt>Atomic operations used:</dt><dd><ul class="simple">
+<li><p><a class="reference internal" href="#txrampdownop">TxRampDownOp</a></p></li>
+<li><p><a class="reference internal" href="#radiopowercontrolop">RadioPowerControlOp</a></p></li>
+</ul>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+<section id="ramptransmitpower">
+<h3>RampTransmitPower<a class="headerlink" href="#ramptransmitpower" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>RampTransmitPower is an aggregate operation that ramps
+the transmitter to a target output power and adjusts power output based
+on forward power feedback measurements at the LO port. This operation
+will complete after all atomic operations have completed and the power
+feedback control loop algorithm has finished.
+If an ADC target value of 0 is specified, the <a class="reference internal" href="#powercontrolloopop">PowerControlLoopOp</a> is not run.</p>
+<dl class="simple">
+<dt>Atomic operations used:</dt><dd><ul class="simple">
+<li><p><a class="reference internal" href="#settxcoarsegainop">SetTxCoarseGainOp</a></p></li>
+<li><p><a class="reference internal" href="#settxfinegainop">SetTxFineGainOp</a></p></li>
+<li><p><a class="reference internal" href="#txrampupop">TxRampUpOp</a></p></li>
+<li><p><a class="reference internal" href="#powercontrolloopop">PowerControlLoopOp</a></p></li>
+</ul>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+<section id="startetsiburst">
+<h3>StartEtsiBurst<a class="headerlink" href="#startetsiburst" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>StartEtsiBurst is an aggregate operation that prepares for running the ETSI
+burst op. It ramps up and down once with the required parameters to set up
+the Ex10 device before kicking off the op.</p>
+<dl class="simple">
+<dt>Atomic operations used:</dt><dd><ul class="simple">
+<li><p><a class="reference internal" href="#setgpioop">SetGpioOp</a></p></li>
+<li><p><a class="reference internal" href="#locksynthesizerop">LockSynthesizerOp</a></p></li>
+<li><p><a class="reference internal" href="#setrfmodeop">SetRfModeOp</a></p></li>
+<li><p><a class="reference internal" href="#settxcoarsegainop">SetTxCoarseGainOp</a></p></li>
+<li><p><a class="reference internal" href="#settxfinegainop">SetTxFineGainOp</a></p></li>
+<li><p><a class="reference internal" href="#txrampupop">TxRampUpOp</a></p></li>
+<li><p><a class="reference internal" href="#powercontrolloopop">PowerControlLoopOp</a></p></li>
+<li><p><a class="reference internal" href="#txrampdownop">TxRampDownOp</a></p></li>
+</ul>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+<section id="inventory">
+<h3>Inventory<a class="headerlink" href="#inventory" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>Inventory is an aggregate operation that ramps up
+power, adjusts output power based on forward power measurements at the
+LO port, runs the SJC and starts an inventory round. This operation
+will complete after all atomic operations have completed.</p>
+<dl class="simple">
+<dt>Operations used:</dt><dd><ul class="simple">
+<li><p><a class="reference internal" href="#cwon">CwOn</a></p></li>
+<li><p><a class="reference internal" href="#startinventoryroundop">StartInventoryRoundOp</a></p></li>
+</ul>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="../../_static/logo.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Operations</a><ul>
+<li><a class="reference internal" href="#atomic-operations">Atomic Operations</a><ul>
+<li><a class="reference internal" href="#idle">Idle (0xA0)</a></li>
+<li><a class="reference internal" href="#logtestop-0xa1">LogTestOp (0xA1)</a></li>
+<li><a class="reference internal" href="#measureadcop-0xa2">MeasureAdcOp (0xA2)</a></li>
+<li><a class="reference internal" href="#txrampupop-0xa3">TxRampUpOp (0xA3)</a></li>
+<li><a class="reference internal" href="#txrampdownop-0xa4">TxRampDownOp (0xA4)</a></li>
+<li><a class="reference internal" href="#settxcoarsegainop-0xa5">SetTxCoarseGainOp (0xA5)</a></li>
+<li><a class="reference internal" href="#settxfinegainop-0xa6">SetTxFineGainOp (0xA6)</a></li>
+<li><a class="reference internal" href="#radiopowercontrolop-0xa7">RadioPowerControlOp (0xA7)</a></li>
+<li><a class="reference internal" href="#setrfmodeop-0xa8">SetRFModeOp (0xA8)</a></li>
+<li><a class="reference internal" href="#setrxgainop-0xa9">SetRxGainOp (0xA9)</a></li>
+<li><a class="reference internal" href="#locksynthesizerop-0xaa">LockSynthesizerOp (0xAA)</a></li>
+<li><a class="reference internal" href="#eventfifotestop-0xab">EventFifoTestOp (0xAB)</a></li>
+<li><a class="reference internal" href="#rxrunsjcop-0xac">RxRunSjcOp (0xAC)</a><ul>
+<li><a class="reference internal" href="#sjc-coarse-scan">SJC Coarse Scan</a></li>
+<li><a class="reference internal" href="#sjc-fine-scan">SJC Fine Scan</a></li>
+<li><a class="reference internal" href="#rxrunsjcop-completion">RxRunSjcOp Completion</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#setgpioop-0xad">SetGpioOp (0xAD)</a></li>
+<li><a class="reference internal" href="#setcleargpiopinsop-0xae">SetClearGpioPinsOp (0xAE)</a></li>
+<li><a class="reference internal" href="#startinventoryroundop-0xb0">StartInventoryRoundOp (0xB0)</a></li>
+<li><a class="reference internal" href="#runprbsdataop-0xb1">RunPrbsDataOp (0xB1)</a></li>
+<li><a class="reference internal" href="#sendselectop-0xb2">SendSelectOp (0xB2)</a></li>
+<li><a class="reference internal" href="#setdacop-0xb3">SetDacOp (0xB3)</a></li>
+<li><a class="reference internal" href="#setatestmuxop-0xb4">SetATestMuxOp (0xB4)</a></li>
+<li><a class="reference internal" href="#powercontrolloopop-0xb5">PowerControlLoopOp (0xB5)</a></li>
+<li><a class="reference internal" href="#measurerssiop-0xb6">MeasureRssiOp (0xB6)</a></li>
+<li><a class="reference internal" href="#ustimerstartop-0xb7">UsTimerStartOp (0xB7)</a></li>
+<li><a class="reference internal" href="#ustimerwaitop-0xb8">UsTimerWaitOp (0xB8)</a></li>
+<li><a class="reference internal" href="#aggregateop-0xb9">AggregateOp (0xB9)</a></li>
+<li><a class="reference internal" href="#listenbeforetalkop-0xba">ListenBeforeTalkOp (0xBA)</a></li>
+<li><a class="reference internal" href="#bertestop-0xc0">BerTestOp (0xC0)</a></li>
+<li><a class="reference internal" href="#etsiburstop-0xc1">EtsiBurstOp (0xC1)</a></li>
+<li><a class="reference internal" href="#hpfoverridetestop-0xc2">HpfOverrideTestOp (0xC2)</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#sdk-aggregate-operations">SDK Aggregate Operations</a><ul>
+<li><a class="reference internal" href="#cwon">CwOn</a></li>
+<li><a class="reference internal" href="#cwoff">CwOff</a></li>
+<li><a class="reference internal" href="#ramptransmitpower">RampTransmitPower</a></li>
+<li><a class="reference internal" href="#startetsiburst">StartEtsiBurst</a></li>
+<li><a class="reference internal" href="#inventory">Inventory</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="yk_firmware_ex10_api_application_address_map.html"
+                        title="previous chapter">Application Address Map</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="yk_firmware_ex10_api_event_packets.html"
+                        title="next chapter">EventFifo Packets</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="yk_firmware_ex10_api_event_packets.html" title="EventFifo Packets"
+             >next</a></li>
+        <li class="right" >
+          <a href="yk_firmware_ex10_api_application_address_map.html" title="Application Address Map"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="yk_firmware_ex10_api.html" >Impinj Reader Chip Wireline API</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Operations</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Impinj, Inc..
+    </div>
+  </body>
+</html>

@@ -1,0 +1,53 @@
+{#-############################################################################}
+{#-                  IMPINJ CONFIDENTIAL AND PROPRIETARY                      #}
+{#-                                                                           #}
+{#- This source code is the property of Impinj, Inc. Your use of this source  #}
+{#- code in whole or in part is subject to your applicable license terms      #}
+{#- from Impinj.                                                              #}
+{#- Contact support@impinj.com for a copy of the applicable Impinj license    #}
+{#- terms.                                                                    #}
+{#-                                                                           #}
+{#- (c) Copyright 2022 - 2023 Impinj, Inc. All rights reserved.               #}
+{#-                                                                           #}
+{#-############################################################################}
+{%- for parameter in parameters_list %}
+    {%- if parameter.use_this_decl == True %}
+class {{parameter.name_band_agnostic}}V5(Structure):
+    _fields_ = [
+        {%- for field in parameter.fields %}
+            {%- set ret_type = {'name' : ''} %}
+            {%- if field.resolve_as == 'float' %}
+                {%- if ret_type.update({'name': 'c_float'}) %} {%- endif %}
+            {%- elif field.resolve_as == 'uint8_t' %}
+                {%- if ret_type.update({'name': 'c_uint8'}) %} {%- endif %}
+            {%- elif field.resolve_as == 'int8_t' %}
+                {%- if ret_type.update({'name': 'c_int8'}) %} {%- endif %}
+            {%- elif field.resolve_as == 'uint16_t' %}
+                {%- if ret_type.update({'name': 'c_uint16'}) %} {%- endif %}
+            {%- elif field.resolve_as == 'int16_t' %}
+                {%- if ret_type.update({'name': 'c_int16'}) %} {%- endif %}
+            {%- elif field.resolve_as == 'uint32_t' %}
+                {%- if ret_type.update({'name': 'c_uint32'}) %} {%- endif %}
+            {%- elif field.resolve_as == 'int32_t' %}
+                {%- if ret_type.update({'name': 'c_int32'}) %} {%- endif %}
+            {%- elif field.resolve_as == 'double' %}
+                {%- if ret_type.update({'name': 'c_double'}) %} {%- endif %}
+            {%- endif %}
+
+            {%- if field.num_entries > 1  %}
+        ('{{field.name_snake}}', {{ret_type['name']}} * {{field.num_entries}}),
+            {%- else %}
+        ('{{field.name_snake}}', {{ret_type['name']}}),
+            {%- endif %}
+        {%- endfor %}
+    ]
+    {%- endif %}
+{%- endfor %}
+
+class Ex10CalibrationParamsV5(Structure):
+    _fields_ = [
+{%- for parameter in parameters_list %}
+    {%- set cal_name = {'name' : parameter.name_band_agnostic+'V5'} %}
+        ('{{parameter.name_snake}}', {{cal_name['name']}}),
+{%- endfor %}
+    ]

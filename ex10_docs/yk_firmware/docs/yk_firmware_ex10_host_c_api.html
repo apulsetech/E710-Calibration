@@ -1,0 +1,187 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Impinj Reader Chip C Host SDK &#8212; Impinj Reader Chip SDK</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinxdoc.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Building the C SDK sources" href="yk_firmware_ex10_host_c_building.html" />
+    <link rel="prev" title="Impinj Reader Chip SDK Overview" href="yk_firmware_ex10_overview.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="yk_firmware_ex10_host_c_building.html" title="Building the C SDK sources"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="yk_firmware_ex10_overview.html" title="Impinj Reader Chip SDK Overview"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Impinj Reader Chip SDK</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Impinj Reader Chip C Host SDK</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="impinj-reader-chip-c-host-sdk">
+<span id="ex10-api-host-c-sdk"></span><h1>Impinj Reader Chip C Host SDK<a class="headerlink" href="#impinj-reader-chip-c-host-sdk" title="Permalink to this headline">¶</a></h1>
+<p>The host C library is made up of several C source files, implementing different aspects
+of the Impinj reader chip upper MAC. This host C library is used in the implementation
+of the provided C code examples.</p>
+<p>Previous releases of the SDK provided a host API that consisted of a monolithic layer called the ‘Ex10Reader’ that, along with its helper functions, provided a plethora of examples.
+However these examples, and helpers, made a lot of assumptions about the HW platform, and thus were difficult to separate and build from, as well as resulting in unoptimized code size.
+While we still provide this approach for backward compatibility reasons, we recommend moving to our new, more customizable, and optimized, approach we call ‘Use Cases’.</p>
+<p>The new ‘Use cases’ approach provides several common ‘use case’ examples, or behaviors, from which a developer can build their application around.
+‘Use cases’ are more easily tailored to improve the developer experience, providing more control, and reduce code size.</p>
+<p>The ‘Use Case’ layer, is a collection of common reader behavior patterns to begin building your application.
+It exposes an interface that implements highly integrated RAIN RFID functionality that are targeting
+specific scenarios, such as running inventory continuously, or singulating tags and interacting with the tag.</p>
+<p>The host library also consists of a collection modules organized into the following groups:’Reader Primitives’, ‘Ex10 Core’ and ‘Ex10 Support’.</p>
+<p>The ‘Reader Primitives’ is a collection of modules that implement specific RAIN RFID primitives such as: ramping up power, or running inventory rounds.
+Only the necessary primitives required to implement a ‘use case’ are required and thus reduce overall code size.</p>
+<p>The ‘Ex10 Core’ is a collection of modules required for communication with the Impinj reader chip, which includes modules from ‘Ex10Ops’ and ‘Ex10Protocol’.</p>
+<p>The ‘Ex10 Support’ is a collection of modules includes a ramp module manager that is leveraged by the ‘Ex10RFPower’ reader primitive.
+Several support modules are included to provide functionality such as antenna disconnect and Listen before talk (LBT).
+There is also an example combining both antenna disconnect and LBT modules, which is referred to as a ‘super module’ example.</p>
+<p>Other support modules are included to perform various diverse tasks such as command line parsing, aggregate operations and a printf wrapper.</p>
+<p>The interface exposed by the ‘Use Case’ layer is called the ‘Impinj reader chip host API’.</p>
+<p>The interface exposed by the Impinj reader chip is called the ‘Impinj reader chip wireline’.</p>
+<p>The relationship mapping for the new ‘use case’ architecture is shown in the figure below.
+The diagram highlights the different module categories: ‘Reader Primitives’, ‘Ex10 Support’ and ‘Ex10 Core’.
+The diagram also shows the relationship between these different module categories, along with module names to allow easier search.</p>
+<figure class="align-default" id="id1">
+<img alt="../../_images/ex10_api_overview_bd_v2.svg" src="../../_images/ex10_api_overview_bd_v2.svg" /><figcaption>
+<p><span class="caption-number">Fig. 4 </span><span class="caption-text">Impinj Reader Chip Host Library Architecture Map</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="yk_firmware_ex10_host_c_building.html">Building the C SDK sources</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="yk_firmware_ex10_host_c_building.html#build-quick-start-using-python">Build Quick Start: using python</a></li>
+<li class="toctree-l2"><a class="reference internal" href="yk_firmware_ex10_host_c_building.html#cmake-details">CMake details</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="yk_firmware_ex10_host_python_usage.html">Python SDK usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="yk_firmware_ex10_host_python_usage.html#setting-up-the-python-virtual-environment">Setting up the Python virtual environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="yk_firmware_ex10_host_python_usage.html#running-python-sdk-examples">Running Python SDK examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ex10_board_specific/ex10_board_specific.html">Board Specific Implementation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ex10_board_specific/board_spec_constants.html">Board Spec Constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ex10_board_specific/ex10_board_spec.html">Ex10BoardSpec</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ex10_board_specific/ex10_driver_list.html">Ex10DriverList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ex10_board_specific/ex10_gpio.html">GPIO Abstractions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ex10_board_specific/ex10_host_interface.html">Ex10HostInterface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ex10_board_specific/ex10_random.html">Ex10Random</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ex10_board_specific/ex10_time.html">Ex10TimeHelpers</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="yk_firmware_ex10_host_c_board_initialization.html">Board Initialization</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="yk_firmware_ex10_host_c_board_initialization.html#ex10-board-core">Ex10 Board Core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="yk_firmware_ex10_host_c_board_initialization.html#ex10-get-ex10-module-methodology">Ex10 get_ex10_module methodology</a></li>
+<li class="toctree-l2"><a class="reference internal" href="yk_firmware_ex10_host_c_board_initialization.html#normal-operations">Normal Operations</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="yk_firmware_ex10_host_c_api_layers.html">API Layers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ex10_host_c_use_cases/use_case_layer.html">Ex10 Use Case Layers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ex10_host_c_reader_primitives/reader_primitives_layer.html">Ex10 Reader Primitives</a></li>
+<li class="toctree-l2"><a class="reference internal" href="yk_firmware_ex10_host_c_ops_layer.html">Ex10Ops Layer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="yk_firmware_ex10_host_c_protocol_layer.html">Ex10Protocol Layer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ex10_host_c_support/support_modules.html">Ex10 Support Modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="yk_firmware_ex10_host_c_reader_layer.html">Legacy Ex10Reader Layer</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="yk_firmware_ex10_host_event_packet_processing.html">Impinj Reader Chip SDK Event Packet Processing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="yk_firmware_ex10_host_event_packet_processing.html#impinj-reader-chip-sdk-interrupt-handling">Impinj Reader Chip SDK Interrupt Handling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="yk_firmware_ex10_host_event_packet_processing.html#ex10protocol"><span class="xref std std-ref">Ex10Protocol</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="yk_firmware_ex10_host_event_packet_processing.html#use-case-layer"><span class="xref std std-ref">Use Case Layer</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="yk_firmware_ex10_host_event_packet_processing.html#ex10eventfifoqueue-packet-interface">Ex10EventFifoQueue Packet Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="yk_firmware_ex10_host_event_packet_processing.html#multi-threaded-access-to-the-eventfifo-linked-lists">Multi-threaded access to the EventFifo linked lists</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ex10_examples/examples.html">Impinj Reader Chip SDK Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ex10_examples/use_case_examples.html">Use Case Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ex10_examples/ex10_reader_examples.html">Legacy Ex10Reader Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ex10_examples/misc_examples.html">Misc Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="yk_firmware_ex10_host_c_advanced_topics.html">Advanced Topics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="yk_firmware_ex10_host_c_autoset_modes.html">Autoset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="yk_firmware_ex10_host_c_drop_query.html">Drop Query</a></li>
+<li class="toctree-l2"><a class="reference internal" href="yk_firmware_ex10_host_c_power_modes_layer.html">Ex10PowerModes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="yk_firmware_ex10_host_c_sjc_accessor.html">Ex10SjcAccessor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="yk_firmware_ex10_host_c_q_target.html">Inventory Round Q/Target Behavior for Continuous Inventory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="yk_firmware_power_droop_compensation.html">Tx Power Droop Compensation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="yk_firmware_ex10_host_c_reverse_power_detect.html">Reverse Power Threshold Detection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="yk_firmware_ex10_host_c_gen2_command_manager_usage.html">Gen2 Tx Command Manager Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="yk_firmware_ex10_host_c_api_debugging_aggregate_op_errors.html">Debugging Aggregate Op Errors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="yk_firmware_ex10_host_c_lbt_usage.html">Listen Before Talk General Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="yk_firmware_ex10_host_c_regions_usage.html">Regulatory Regions Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="yk_firmware_ex10_calgen.html">Calibration Customization Using CalGen</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="../../_static/logo.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="yk_firmware_ex10_overview.html"
+                        title="previous chapter">Impinj Reader Chip SDK Overview</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="yk_firmware_ex10_host_c_building.html"
+                        title="next chapter">Building the C SDK sources</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="yk_firmware_ex10_host_c_building.html" title="Building the C SDK sources"
+             >next</a></li>
+        <li class="right" >
+          <a href="yk_firmware_ex10_overview.html" title="Impinj Reader Chip SDK Overview"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Impinj Reader Chip SDK</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Impinj Reader Chip C Host SDK</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Impinj, Inc..
+    </div>
+  </body>
+</html>

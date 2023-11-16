@@ -1,0 +1,172 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Impinj Reader Chip Wireline API &#8212; Impinj Reader Chip SDK</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinxdoc.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Wireline" href="yk_firmware_ex10_api_wireline.html" />
+    <link rel="prev" title="Calibration Customization Using CalGen" href="yk_firmware_ex10_calgen.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="yk_firmware_ex10_api_wireline.html" title="Wireline"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="yk_firmware_ex10_calgen.html" title="Calibration Customization Using CalGen"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Impinj Reader Chip SDK</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Impinj Reader Chip Wireline API</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="impinj-reader-chip-wireline-api">
+<span id="ex10-api-top"></span><h1>Impinj Reader Chip Wireline API<a class="headerlink" href="#impinj-reader-chip-wireline-api" title="Permalink to this headline">¶</a></h1>
+<p>The Impinj RAIN RFID reader chips (“<strong>Impinj reader chips</strong>”) have an integrated
+Cortex-M0+ microcontroller with embedded firmware that implements the GS1 UHF
+Gen2 RAIN protocol. A host processor communicates with the Impinj reader chip via
+Serial Peripheral Interface (SPI). The Impinj reader chip wireline API provides a
+low-level interface across the entire Impinj reader chip family of products including
+the Impinj E910, E710, E510 and E310. The Impinj reader chip
+wireline API is comprised of the 5 components listed below and shown in
+<a class="reference internal" href="#ex10-wireline-bd-2"><span class="std std-numref">Fig. 7</span></a>:</p>
+<dl class="simple">
+<dt><strong>Wireline</strong></dt><dd><p>Message framing and flow control</p>
+</dd>
+<dt><strong>Messages</strong></dt><dd><p>The set of messages transported over the wireline</p>
+</dd>
+<dt><strong>Address Map</strong></dt><dd><p>Most of the configuration and status is accessed in this address map via the
+<a class="reference internal" href="yk_firmware_ex10_api_messages.html#ex10-api-read"><span class="std std-ref">Read</span></a> and <a class="reference internal" href="yk_firmware_ex10_api_messages.html#ex10-api-write"><span class="std std-ref">Write</span></a> messages</p>
+</dd>
+<dt><strong>Operations</strong></dt><dd><p>These are the actions that can be done with the Impinj reader chip. They are initiated
+via writes to the address map and will generate interrupts to the host when
+complete. Some operations will produce data in the EventFifo.</p>
+</dd>
+<dt><strong>FIFOs</strong></dt><dd><p>Some data are streamed back to the user in FIFOs, for example tag reports.</p>
+</dd>
+</dl>
+<figure class="align-default" id="id1">
+<span id="ex10-wireline-bd-2"></span><img alt="../../_images/ex10_wireline_bd.svg" src="../../_images/ex10_wireline_bd.svg" /><figcaption>
+<p><span class="caption-number">Fig. 7 </span><span class="caption-text">Impinj Wireline API Block Diagram</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="yk_firmware_ex10_api_wireline.html">Wireline</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="yk_firmware_ex10_api_wireline.html#bootloader-and-application-contexts">Bootloader and Application Contexts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="yk_firmware_ex10_api_wireline.html#power-up-sequencing">Power-Up Sequencing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="yk_firmware_ex10_api_wireline.html#power-down-sequencing">Power-Down Sequencing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="yk_firmware_ex10_api_wireline.html#resetting-into-the-bootloader">Resetting into the Bootloader</a></li>
+<li class="toctree-l2"><a class="reference internal" href="yk_firmware_ex10_api_wireline.html#resetting-into-the-application">Resetting into the Application</a></li>
+<li class="toctree-l2"><a class="reference internal" href="yk_firmware_ex10_api_wireline.html#spi">SPI</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="yk_firmware_ex10_api_messages.html">Messages</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="yk_firmware_ex10_api_messages.html#commands">Commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="yk_firmware_ex10_api_messages.html#responsecodes">ResponseCodes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="yk_firmware_ex10_api_messages.html#command-details">Command Details</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="yk_firmware_ex10_api_common_address_map.html">Common Address Map</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="yk_firmware_ex10_api_common_address_map.html#common_address_map_summary">Address Map Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="yk_firmware_ex10_api_bootloader_address_map.html">Bootloader Address Map</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="yk_firmware_ex10_api_bootloader_address_map.html#bootloader-only_address_map_summary">Address Map Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="yk_firmware_ex10_api_application_address_map.html">Application Address Map</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="yk_firmware_ex10_api_application_address_map.html#application-only_address_map_summary">Address Map Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="yk_firmware_ex10_api_operations.html">Operations</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="yk_firmware_ex10_api_operations.html#atomic-operations">Atomic Operations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="yk_firmware_ex10_api_operations.html#sdk-aggregate-operations">SDK Aggregate Operations</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="yk_firmware_ex10_api_event_packets.html">EventFifo Packets</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="yk_firmware_ex10_api_event_packets.html#ex10-api-fifo-packet-summary">Packet Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="yk_firmware_ex10_api_access.html">LMAC Access Operations</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="yk_firmware_ex10_api_access.html#common-access-select-controls">Common Access/Select Controls</a></li>
+<li class="toctree-l2"><a class="reference internal" href="yk_firmware_ex10_api_access.html#auto-access">Auto-Access</a></li>
+<li class="toctree-l2"><a class="reference internal" href="yk_firmware_ex10_api_access.html#halted-state">Halted State</a></li>
+<li class="toctree-l2"><a class="reference internal" href="yk_firmware_ex10_api_access.html#auto-access-and-halted-state-interactions">Auto-Access and Halted State Interactions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="yk_firmware_ex10_api_access.html#access-commands">Access Commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="yk_firmware_ex10_api_access.html#id12">Gen2TxnControls</a></li>
+<li class="toctree-l2"><a class="reference internal" href="yk_firmware_ex10_api_access.html#gen2-transaction-event">gen2_transaction Event</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="yk_firmware_ex10_api_stored_settings.html">Application Stored Settings</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="yk_firmware_ex10_api_stored_settings.html#error-handling">Error Handling</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="../../_static/logo.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="yk_firmware_ex10_calgen.html"
+                        title="previous chapter">Calibration Customization Using CalGen</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="yk_firmware_ex10_api_wireline.html"
+                        title="next chapter">Wireline</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="yk_firmware_ex10_api_wireline.html" title="Wireline"
+             >next</a></li>
+        <li class="right" >
+          <a href="yk_firmware_ex10_calgen.html" title="Calibration Customization Using CalGen"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Impinj Reader Chip SDK</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Impinj Reader Chip Wireline API</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Impinj, Inc..
+    </div>
+  </body>
+</html>

@@ -1,0 +1,351 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Ex10RFPower &#8212; Impinj Reader Chip SDK</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinxdoc.css" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Ex10Inventory" href="inventory.html" />
+    <link rel="prev" title="The Ex10 Core" href="core.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="inventory.html" title="Ex10Inventory"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="core.html" title="The Ex10 Core"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../yk_firmware_ex10_host_c_api.html" >Impinj Reader Chip C Host SDK</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../yk_firmware_ex10_host_c_api_layers.html" >API Layers</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="reader_primitives_layer.html" accesskey="U">Ex10 Reader Primitives</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Ex10RFPower</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="ex10rfpower">
+<span id="ex10-api-host-c-api-reader-primitives-rf-power"></span><h1>Ex10RFPower<a class="headerlink" href="#ex10rfpower" title="Permalink to this headline">¶</a></h1>
+<p>The Ex10RFPower primitive is a module that is used to control the
+transmitter of the Impinj Reader chip for RFID operations.  It provides
+an API that can build the <code class="docutils literal notranslate"><span class="pre">CwConfig</span></code> settings, and then command
+pass those settings to the <code class="docutils literal notranslate"><span class="pre">cw_on()</span></code> function to command the
+Impinj reader chip to ramp up on a channel.  And then be able to
+check the current state of the transmitter to see if the Impinj
+reader chip is currently ramped up.</p>
+<p>It also provides some additional support features such as making
+general AuxAdc measurements and reading the Impinj reader chips
+current temperature.</p>
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv411Ex10RfPower">
+<span id="_CPPv311Ex10RfPower"></span><span id="_CPPv211Ex10RfPower"></span><span id="Ex10RfPower"></span><span class="target" id="struct_ex10_rf_power"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10RfPower</span></span></span><a class="headerlink" href="#_CPPv411Ex10RfPower" title="Permalink to this definition">¶</a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N11Ex10RfPower9init_ex10E">
+<span id="_CPPv3N11Ex10RfPower9init_ex10E"></span><span id="_CPPv2N11Ex10RfPower9init_ex10E"></span><span class="target" id="struct_ex10_rf_power_1ad0e36888f7e944157d9e309c8a5d74cc"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">init_ex10</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N11Ex10RfPower9init_ex10E" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Initialize the Impinj Reader Chip RF power. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N11Ex10RfPower12get_cw_is_onE">
+<span id="_CPPv3N11Ex10RfPower12get_cw_is_onE"></span><span id="_CPPv2N11Ex10RfPower12get_cw_is_onE"></span><span class="target" id="struct_ex10_rf_power_1a6384a5c24042034b8c23f6652caf2195"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_cw_is_on</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N11Ex10RfPower12get_cw_is_onE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return whether or not CW is currently on. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Param cw_is_on</dt>
+<dd class="field-odd"><p>A bool of whether CW is currently on. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N11Ex10RfPower21stop_op_and_ramp_downE">
+<span id="_CPPv3N11Ex10RfPower21stop_op_and_ramp_downE"></span><span id="_CPPv2N11Ex10RfPower21stop_op_and_ramp_downE"></span><span class="target" id="struct_ex10_rf_power_1af5caf168f5599ed0f098d7d6e25e3813"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">stop_op_and_ramp_down</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N11Ex10RfPower21stop_op_and_ramp_downE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Blindly stop any running op (such as inventory) and then ramp down the transmitter. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N11Ex10RfPower6cw_offE">
+<span id="_CPPv3N11Ex10RfPower6cw_offE"></span><span id="_CPPv2N11Ex10RfPower6cw_offE"></span><span class="target" id="struct_ex10_rf_power_1a2775a1d8415a4c978b74146b91b7f7cb"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">cw_off</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N11Ex10RfPower6cw_offE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Ramp down and turn off the radio transmitter. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The radio remains powered on but the transmitter is stopped. </p>
+</div>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N11Ex10RfPower24measure_and_read_aux_adcE">
+<span id="_CPPv3N11Ex10RfPower24measure_and_read_aux_adcE"></span><span id="_CPPv2N11Ex10RfPower24measure_and_read_aux_adcE"></span><span class="target" id="struct_ex10_rf_power_1ad2be7ecbb043219d56546c4443b7e48e"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">measure_and_read_aux_adc</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><a class="reference internal" href="../yk_firmware_ex10_host_c_register_accessors.html#_CPPv422AuxAdcResultsAdcResult" title="AuxAdcResultsAdcResult"><span class="n"><span class="pre">AuxAdcResultsAdcResult</span></span></a><span class="w"> </span><span class="n"><span class="pre">adc_channel_start</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n"><span class="pre">num_channels</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">uint16_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">adc_results</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N11Ex10RfPower24measure_and_read_aux_adcE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>This executes the MeasureAdcOp operation which performs AUX ADC for each multiplexer input specified. </p>
+<p>Once the conversions are completed the ADC results are placed in the adc_results output parameter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Param adc_channel_start</dt>
+<dd class="field-odd"><p>Determines the starting channel on which to begin ADC conversions. </p>
+</dd>
+<dt class="field-even">Param num_channels</dt>
+<dd class="field-even"><p>The number of ADC conversions to perform starting with the adc_channel_start. Each conversion will be performed on the next multiplexer input. The number of channels converted will be limited to be within the valid AuxAdcResults range.</p>
+</dd>
+<dt class="field-odd">Param adc_results</dt>
+<dd class="field-odd"><p>[out] The array into which of ADC conversion results will be contained. The adc_results must be able to fit num_channels conversion results. </p>
+</dd>
+<dt class="field-even">Return</dt>
+<dd class="field-even"><p>Info about any encountered errors. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N11Ex10RfPower32measure_and_read_adc_temperatureE">
+<span id="_CPPv3N11Ex10RfPower32measure_and_read_adc_temperatureE"></span><span id="_CPPv2N11Ex10RfPower32measure_and_read_adc_temperatureE"></span><span class="target" id="struct_ex10_rf_power_1a7432c96bb90e76d6ff372bc768e088ef"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">measure_and_read_adc_temperature</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">uint16_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">temp_adc</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N11Ex10RfPower32measure_and_read_adc_temperatureE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>This executes the MeasureAdcOp specifying the read of a single channel starting at the AdcTemperature channel. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Param temp_adc</dt>
+<dd class="field-odd"><p>[out] The uint16_t pointer where the temperature ADC is placed.</p>
+</dd>
+<dt class="field-even">Return</dt>
+<dd class="field-even"><p>Info about any encountered errors. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N11Ex10RfPower11set_rf_modeE">
+<span id="_CPPv3N11Ex10RfPower11set_rf_modeE"></span><span id="_CPPv2N11Ex10RfPower11set_rf_modeE"></span><span class="target" id="struct_ex10_rf_power_1a1841fb362d596085f90b483382b45cce"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">set_rf_mode</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="n"><span class="pre">RfModes</span></span><span class="w"> </span><span class="n"><span class="pre">rf_mode</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N11Ex10RfPower11set_rf_modeE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>This sets the RF Mode in the Ex10 device modem and sets the approprate gpio for the DRM mode. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N11Ex10RfPower16build_cw_configsE">
+<span id="_CPPv3N11Ex10RfPower16build_cw_configsE"></span><span id="_CPPv2N11Ex10RfPower16build_cw_configsE"></span><span class="target" id="struct_ex10_rf_power_1af7833bc569cedf008b6eda3054c3aad7"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">build_cw_configs</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n"><span class="pre">antenna</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="n"><span class="pre">RfModes</span></span><span class="w"> </span><span class="n"><span class="pre">rf_mode</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">int16_t</span></span><span class="w"> </span><span class="n"><span class="pre">tx_power_cdbm</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">uint16_t</span></span><span class="w"> </span><span class="n"><span class="pre">temperature_adc</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n"><span class="pre">temp_comp_enabled</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv48CwConfig" title="CwConfig"><span class="n"><span class="pre">CwConfig</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">cw_config</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N11Ex10RfPower16build_cw_configsE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Builds the configuration to use for cw_on. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Left out dual target on purpose - should be handled by calling code based on inventory parameters </p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Param antenna</dt>
+<dd class="field-odd"><p>The antenna to transmit on. </p>
+</dd>
+<dt class="field-even">Param rf_mode</dt>
+<dd class="field-even"><p>An Ex10 RF Mode to be used for this round. </p>
+</dd>
+<dt class="field-odd">Param tx_power_cdbm</dt>
+<dd class="field-odd"><p>Target transmit power level in cdBm (100th’s of a dbm). Example: 2,950 = 29.5 dBm. </p>
+</dd>
+<dt class="field-even">Param cw_config</dt>
+<dd class="field-even"><p>Configuration for cw on is placed in this structure passed by reference. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N11Ex10RfPower5cw_onE">
+<span id="_CPPv3N11Ex10RfPower5cw_onE"></span><span id="_CPPv2N11Ex10RfPower5cw_onE"></span><span class="target" id="struct_ex10_rf_power_1adb8827837461320aec9090348342e818"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">cw_on</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../ex10_board_specific/ex10_gpio.html#_CPPv416GpioPinsSetClear" title="GpioPinsSetClear"><span class="n"><span class="pre">GpioPinsSetClear</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">gpio_pins_set_clear</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../yk_firmware_ex10_host_c_ops_layer.html#_CPPv412PowerConfigs" title="PowerConfigs"><span class="n"><span class="pre">PowerConfigs</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">power_config</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../yk_firmware_ex10_host_c_register_accessors.html#_CPPv426RfSynthesizerControlFields" title="RfSynthesizerControlFields"><span class="n"><span class="pre">RfSynthesizerControlFields</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">synth_control</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="regulatory_regions.html#_CPPv420Ex10RegulatoryTimers" title="Ex10RegulatoryTimers"><span class="n"><span class="pre">Ex10RegulatoryTimers</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">timer_config</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../yk_firmware_ex10_host_c_register_accessors.html#_CPPv428PowerDroopCompensationFields" title="PowerDroopCompensationFields"><span class="n"><span class="pre">PowerDroopCompensationFields</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">droop_comp</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N11Ex10RfPower5cw_onE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Ramp power while transmitting CW and prepare the receiver. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Param gpio_pins_set_clear</dt>
+<dd class="field-odd"><p>The gpio settings to use for the ramp up. </p>
+</dd>
+<dt class="field-even">Param power_config</dt>
+<dd class="field-even"><p>Parameters to use for the open loop and closed loop power control during the ramp process. </p>
+</dd>
+<dt class="field-odd">Param synth_control</dt>
+<dd class="field-odd"><p>Parameters used for the PLL lock op. </p>
+</dd>
+<dt class="field-even">Param timer_config</dt>
+<dd class="field-even"><p>Time configurations to use for automatic CW off. </p>
+</dd>
+<dt class="field-odd">Param droop_comp</dt>
+<dd class="field-odd"><p>Configuration for the droop compensation run during a ramp period. </p>
+</dd>
+<dt class="field-even">Return</dt>
+<dd class="field-even"><p>Info about any encountered errors. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N11Ex10RfPower19ramp_transmit_powerE">
+<span id="_CPPv3N11Ex10RfPower19ramp_transmit_powerE"></span><span id="_CPPv2N11Ex10RfPower19ramp_transmit_powerE"></span><span class="target" id="struct_ex10_rf_power_1aa299aeed71c085986004f8ec44f2fd8f"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">ramp_transmit_power</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../yk_firmware_ex10_host_c_ops_layer.html#_CPPv412PowerConfigs" title="PowerConfigs"><span class="n"><span class="pre">PowerConfigs</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">power_config</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="regulatory_regions.html#_CPPv420Ex10RegulatoryTimers" title="Ex10RegulatoryTimers"><span class="n"><span class="pre">Ex10RegulatoryTimers</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">timer_config</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N11Ex10RfPower19ramp_transmit_powerE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Ramps to the target transmit power. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Param power_config</dt>
+<dd class="field-odd"><p>Parameters to use for the open loop and closed loop power control during the ramp process. </p>
+</dd>
+<dt class="field-even">Param timer_config</dt>
+<dd class="field-even"><p>Time configurations to use for automatic CW off. </p>
+</dd>
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>Info about any encountered errors. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N11Ex10RfPower31get_droop_compensation_defaultsE">
+<span id="_CPPv3N11Ex10RfPower31get_droop_compensation_defaultsE"></span><span id="_CPPv2N11Ex10RfPower31get_droop_compensation_defaultsE"></span><span class="target" id="struct_ex10_rf_power_1a2a54410c4ad28b22359e54aaf4b66a21"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../yk_firmware_ex10_host_c_register_accessors.html#_CPPv428PowerDroopCompensationFields" title="PowerDroopCompensationFields"><span class="n"><span class="pre">PowerDroopCompensationFields</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_droop_compensation_defaults</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N11Ex10RfPower31get_droop_compensation_defaultsE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Grab the default values for power droop compensation. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>The power droop default structure. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N11Ex10RfPower21set_regulatory_timersE">
+<span id="_CPPv3N11Ex10RfPower21set_regulatory_timersE"></span><span id="_CPPv2N11Ex10RfPower21set_regulatory_timersE"></span><span class="target" id="struct_ex10_rf_power_1a3bf962658f7b5ebbf32a2075b80c2ad3"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">set_regulatory_timers</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="regulatory_regions.html#_CPPv420Ex10RegulatoryTimers" title="Ex10RegulatoryTimers"><span class="n"><span class="pre">Ex10RegulatoryTimers</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">timer_config</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N11Ex10RfPower21set_regulatory_timersE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Sets the regulatory timers into the device. </p>
+<p><ul class="simple">
+<li><p>nominal_stop_time: Ex10 will complete the ongoing Gen2 operation until it reaches a Query, QueryAdj or QueryRep and ramp down Tx.</p></li>
+<li><p>extended_stop_time: Ex10 will terminate any ongoing Gen2 operation and immediately ramp down Tx.</p></li>
+<li><p>regulatory_stop_time: Ex10 will terminate any ongoing Gen2 operation, immediately ramp down Tx and set the TX scalar to 0. </p></li>
+</ul>
+</p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N11Ex10RfPower20set_analog_rx_configE">
+<span id="_CPPv3N11Ex10RfPower20set_analog_rx_configE"></span><span id="_CPPv2N11Ex10RfPower20set_analog_rx_configE"></span><span class="target" id="struct_ex10_rf_power_1a819e8acb76a4af03e5e1f1b023ea9200"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">set_analog_rx_config</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../yk_firmware_ex10_host_c_register_accessors.html#_CPPv419RxGainControlFields" title="RxGainControlFields"><span class="n"><span class="pre">RxGainControlFields</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">analog_rx_fields</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N11Ex10RfPower20set_analog_rx_configE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Sets the analog rx configs and stores a local copy for faster retrieval instead of reading it off the device each time. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Param analog_rx_fields</dt>
+<dd class="field-odd"><p>The settings by which the SJC will be configured. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N11Ex10RfPower25enable_droop_compensationE">
+<span id="_CPPv3N11Ex10RfPower25enable_droop_compensationE"></span><span id="_CPPv2N11Ex10RfPower25enable_droop_compensationE"></span><span class="target" id="struct_ex10_rf_power_1a9cdea72a6ff1c00ddd8604ceb00f06ab"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">enable_droop_compensation</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../yk_firmware_ex10_host_c_register_accessors.html#_CPPv428PowerDroopCompensationFields" title="PowerDroopCompensationFields"><span class="n"><span class="pre">PowerDroopCompensationFields</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">compensation</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N11Ex10RfPower25enable_droop_compensationE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Writes the user passed compensation into the power droop compensation register on the device. </p>
+<p>This allows the user a simple way to enable the droop compensation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Param compensation</dt>
+<dd class="field-odd"><p>The compensation settings for the power droop compensation register. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N11Ex10RfPower26disable_droop_compensationE">
+<span id="_CPPv3N11Ex10RfPower26disable_droop_compensationE"></span><span id="_CPPv2N11Ex10RfPower26disable_droop_compensationE"></span><span class="target" id="struct_ex10_rf_power_1ab48b53430560848f0a05e4ec8b6f9d4c"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">disable_droop_compensation</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N11Ex10RfPower26disable_droop_compensationE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Creates a set of compensation settings with the enable set to false and writes it to the device power droop compensation register. </p>
+<p>This allowes the user a simple way to disable the droop compensation. </p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv48CwConfig">
+<span id="_CPPv38CwConfig"></span><span id="_CPPv28CwConfig"></span><span id="CwConfig"></span><span class="target" id="struct_cw_config"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">CwConfig</span></span></span><a class="headerlink" href="#_CPPv48CwConfig" title="Permalink to this definition">¶</a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8CwConfig4gpioE">
+<span id="_CPPv3N8CwConfig4gpioE"></span><span id="_CPPv2N8CwConfig4gpioE"></span><span id="CwConfig::gpio__GpioPinsSetClear"></span><span class="target" id="struct_cw_config_1a79accbbdd45f0b09347c595c97ad56af"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../ex10_board_specific/ex10_gpio.html#_CPPv416GpioPinsSetClear" title="GpioPinsSetClear"><span class="n"><span class="pre">GpioPinsSetClear</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">gpio</span></span></span><a class="headerlink" href="#_CPPv4N8CwConfig4gpioE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8CwConfig7rf_modeE">
+<span id="_CPPv3N8CwConfig7rf_modeE"></span><span id="_CPPv2N8CwConfig7rf_modeE"></span><span id="CwConfig::rf_mode__RfModes"></span><span class="target" id="struct_cw_config_1a171cdaa99877a863ecb1f8d1cb517bb1"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="n"><span class="pre">RfModes</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">rf_mode</span></span></span><a class="headerlink" href="#_CPPv4N8CwConfig7rf_modeE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8CwConfig5powerE">
+<span id="_CPPv3N8CwConfig5powerE"></span><span id="_CPPv2N8CwConfig5powerE"></span><span id="CwConfig::power__PowerConfigs"></span><span class="target" id="struct_cw_config_1af0747962e74e7574cdadbd28738228b8"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../yk_firmware_ex10_host_c_ops_layer.html#_CPPv412PowerConfigs" title="PowerConfigs"><span class="n"><span class="pre">PowerConfigs</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">power</span></span></span><a class="headerlink" href="#_CPPv4N8CwConfig5powerE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8CwConfig5synthE">
+<span id="_CPPv3N8CwConfig5synthE"></span><span id="_CPPv2N8CwConfig5synthE"></span><span id="CwConfig::synth__RfSynthesizerControlFields"></span><span class="target" id="struct_cw_config_1a33ba68e28323d29bdc328a3deec4e8f5"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../yk_firmware_ex10_host_c_register_accessors.html#_CPPv426RfSynthesizerControlFields" title="RfSynthesizerControlFields"><span class="n"><span class="pre">RfSynthesizerControlFields</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">synth</span></span></span><a class="headerlink" href="#_CPPv4N8CwConfig5synthE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8CwConfig5timerE">
+<span id="_CPPv3N8CwConfig5timerE"></span><span id="_CPPv2N8CwConfig5timerE"></span><span id="CwConfig::timer__Ex10RegulatoryTimers"></span><span class="target" id="struct_cw_config_1a2202f7d29b83dea73b2975a274e4aa9f"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="regulatory_regions.html#_CPPv420Ex10RegulatoryTimers" title="Ex10RegulatoryTimers"><span class="n"><span class="pre">Ex10RegulatoryTimers</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">timer</span></span></span><a class="headerlink" href="#_CPPv4N8CwConfig5timerE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv48RfFilter">
+<span id="_CPPv38RfFilter"></span><span id="_CPPv28RfFilter"></span><span id="RfFilter"></span><span class="target" id="struct_rf_filter"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">RfFilter</span></span></span><a class="headerlink" href="#_CPPv48RfFilter" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Defines the <a class="reference internal" href="#struct_rf_filter"><span class="std std-ref">RfFilter</span></a> selection for a region. </p>
+</dd></dl>
+
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>doxygenstruct: Cannot find class “RfModes” in doxygen xml output for project “ex10_c_dev_kit” from directory: _build/doxygen/xml</p>
+</div>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../../../_static/logo.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="core.html"
+                        title="previous chapter">The Ex10 Core</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="inventory.html"
+                        title="next chapter">Ex10Inventory</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="inventory.html" title="Ex10Inventory"
+             >next</a></li>
+        <li class="right" >
+          <a href="core.html" title="The Ex10 Core"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../yk_firmware_ex10_host_c_api.html" >Impinj Reader Chip C Host SDK</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../yk_firmware_ex10_host_c_api_layers.html" >API Layers</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="reader_primitives_layer.html" >Ex10 Reader Primitives</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Ex10RFPower</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Impinj, Inc..
+    </div>
+  </body>
+</html>

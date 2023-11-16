@@ -1,0 +1,327 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Ex10Calibration &#8212; Impinj Reader Chip SDK</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinxdoc.css" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Ex10Test" href="test.html" />
+    <link rel="prev" title="Regulatory Regions Structures and Interfaces" href="regulatory_regions.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="test.html" title="Ex10Test"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="regulatory_regions.html" title="Regulatory Regions Structures and Interfaces"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../yk_firmware_ex10_host_c_api.html" >Impinj Reader Chip C Host SDK</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../yk_firmware_ex10_host_c_api_layers.html" >API Layers</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="reader_primitives_layer.html" accesskey="U">Ex10 Reader Primitives</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Ex10Calibration</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="ex10calibration">
+<span id="ex10-api-host-c-api-reader-primitives-calibration"></span><h1>Ex10Calibration<a class="headerlink" href="#ex10calibration" title="Permalink to this headline">¶</a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">Ex10Calibration</span></code> reader primitive is used to convert the requested
+transmit power in cdBm to and from ADC counts that will be used with the Impinj
+reader chips internal power meters.  This calibration is implementation dependent
+so it relies on the calibration implementation in the boards directory.  This
+also provides conversion for the RSSI counts to and from cdMm for the tag read packets,
+and the LBT ops.</p>
+<p>The customers can customize the calibration system.  For an in depth look at refer to
+<a class="reference internal" href="../yk_firmware_ex10_calgen.html#ex10-calgen"><span class="std std-ref">Calibration Customization Using CalGen</span></a> in the advanced topics
+documentation</p>
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv415Ex10Calibration">
+<span id="_CPPv315Ex10Calibration"></span><span id="_CPPv215Ex10Calibration"></span><span id="Ex10Calibration"></span><span class="target" id="struct_ex10_calibration"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10Calibration</span></span></span><a class="headerlink" href="#_CPPv415Ex10Calibration" title="Permalink to this definition">¶</a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N15Ex10Calibration4initE">
+<span id="_CPPv3N15Ex10Calibration4initE"></span><span id="_CPPv2N15Ex10Calibration4initE"></span><span class="target" id="struct_ex10_calibration_1a3714c6f49d78d5e940948bb5dd1c0c2c"></span><span class="n"><span class="pre">int16_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">init</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../yk_firmware_ex10_host_c_protocol_layer.html#_CPPv412Ex10Protocol" title="Ex10Protocol"><span class="n"><span class="pre">Ex10Protocol</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">ex10_ops</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N15Ex10Calibration4initE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Initialize the Calibration object. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>int16_t If &gt; 0, the calibration version. If &lt; 0, uncalibrated or unknown calibration. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N15Ex10Calibration6deinitE">
+<span id="_CPPv3N15Ex10Calibration6deinitE"></span><span id="_CPPv2N15Ex10Calibration6deinitE"></span><span class="target" id="struct_ex10_calibration_1a19b69929d04d23223cdabe363fedbf02"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">deinit</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N15Ex10Calibration6deinitE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Release any resources used by the Calibration object. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N15Ex10Calibration12power_to_adcE">
+<span id="_CPPv3N15Ex10Calibration12power_to_adcE"></span><span id="_CPPv2N15Ex10Calibration12power_to_adcE"></span><span class="target" id="struct_ex10_calibration_1a1505a1f13c899f43b3d566663ca24dba"></span><span class="n"><span class="pre">uint16_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">power_to_adc</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">int16_t</span></span><span class="w"> </span><span class="n"><span class="pre">tx_power_cdbm</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n"><span class="pre">frequency_khz</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">uint16_t</span></span><span class="w"> </span><span class="n"><span class="pre">temperature_adc</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n"><span class="pre">temp_comp_enabled</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><a class="reference internal" href="rf_power.html#_CPPv48RfFilter" title="RfFilter"><span class="n"><span class="pre">RfFilter</span></span></a><span class="w"> </span><span class="n"><span class="pre">rf_band</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><a class="reference internal" href="../yk_firmware_ex10_host_c_register_accessors.html#_CPPv430AuxAdcControlChannelEnableBits" title="AuxAdcControlChannelEnableBits"><span class="n"><span class="pre">AuxAdcControlChannelEnableBits</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">power_detector_adc</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N15Ex10Calibration12power_to_adcE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Converts power to ADC code based on calibration, temp, frequency. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>: enum AuxAdcControlChannelEnableBits power_detector_adc updated with which adc channel should be used to ramp. </p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Param tx_power_cdbm</dt>
+<dd class="field-odd"><p>Target Tx power in cdBm. </p>
+</dd>
+<dt class="field-even">Param temperature_adc</dt>
+<dd class="field-even"><p>The measured temperature ADC count. </p>
+</dd>
+<dt class="field-odd">Param frequency_khz</dt>
+<dd class="field-odd"><p>The RF frequency in kHz. </p>
+</dd>
+<dt class="field-even">Param rf_band</dt>
+<dd class="field-even"><p>The regulatory band as contained in the calibration data. </p>
+</dd>
+<dt class="field-odd">Param power_detector_adc</dt>
+<dd class="field-odd"><p>A pointer to enum for which adc channel(s) to use for power ramp</p>
+</dd>
+<dt class="field-even">Return</dt>
+<dd class="field-even"><p>uint16_t ADC code corresponding to power. If the function is not supported with the current calibration version, it will return CAL_FUNC_NOT_SUPPORTED.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N15Ex10Calibration20reverse_power_to_adcE">
+<span id="_CPPv3N15Ex10Calibration20reverse_power_to_adcE"></span><span id="_CPPv2N15Ex10Calibration20reverse_power_to_adcE"></span><span class="target" id="struct_ex10_calibration_1a5b04697fad286fca07994cf90f52b466"></span><span class="n"><span class="pre">uint16_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">reverse_power_to_adc</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">int16_t</span></span><span class="w"> </span><span class="n"><span class="pre">reverse_power_cdBm</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n"><span class="pre">frequency_khz</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">uint16_t</span></span><span class="w"> </span><span class="n"><span class="pre">temperature_adc</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n"><span class="pre">temp_comp_enabled</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><a class="reference internal" href="rf_power.html#_CPPv48RfFilter" title="RfFilter"><span class="n"><span class="pre">RfFilter</span></span></a><span class="w"> </span><span class="n"><span class="pre">rf_band</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><a class="reference internal" href="../yk_firmware_ex10_host_c_register_accessors.html#_CPPv430AuxAdcControlChannelEnableBits" title="AuxAdcControlChannelEnableBits"><span class="n"><span class="pre">AuxAdcControlChannelEnableBits</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">reverse_power_detector_adc</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N15Ex10Calibration20reverse_power_to_adcE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Converts reverse power to ADC code based on calibration, temp, frequency. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>: enum AuxAdcControlChannelEnableBits power_detector_adc updated with which reverse power channel to use to measure reflection. </p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Param reverse_power_cdBm</dt>
+<dd class="field-odd"><p>The RF power amplitude in cdBm. mBm. </p>
+</dd>
+<dt class="field-even">Param temperature_adc</dt>
+<dd class="field-even"><p>The measured temperature ADC count. </p>
+</dd>
+<dt class="field-odd">Param frequency_khz</dt>
+<dd class="field-odd"><p>The RF frequency in kHz. </p>
+</dd>
+<dt class="field-even">Param rf_band</dt>
+<dd class="field-even"><p>The regulatory band as contained in the calibration data. </p>
+</dd>
+<dt class="field-odd">Param reverse_power_detector_adc</dt>
+<dd class="field-odd"><p>A pointer to enum for which adc channel(s) to use to measure reverse power.</p>
+</dd>
+<dt class="field-even">Return</dt>
+<dd class="field-even"><p>uint16_t ADC code corresponding to power. If the function is not supported with the current calibration version, it will return CAL_FUNC_NOT_SUPPORTED.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N15Ex10Calibration24get_power_control_paramsE">
+<span id="_CPPv3N15Ex10Calibration24get_power_control_paramsE"></span><span id="_CPPv2N15Ex10Calibration24get_power_control_paramsE"></span><span class="target" id="struct_ex10_calibration_1a07cea8f5170e6dec829ac57f070ee5aa"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../yk_firmware_ex10_host_c_ops_layer.html#_CPPv412PowerConfigs" title="PowerConfigs"><span class="n"><span class="pre">PowerConfigs</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_power_control_params</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">int16_t</span></span><span class="w"> </span><span class="n"><span class="pre">tx_power_cdbm</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n"><span class="pre">frequency_khz</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">uint16_t</span></span><span class="w"> </span><span class="n"><span class="pre">temperature_adc</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n"><span class="pre">temp_comp_enabled</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><a class="reference internal" href="rf_power.html#_CPPv48RfFilter" title="RfFilter"><span class="n"><span class="pre">RfFilter</span></span></a><span class="w"> </span><span class="n"><span class="pre">rf_band</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N15Ex10Calibration24get_power_control_paramsE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Create ADC params based on current Ex10 params. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Param tx_power_cdbm</dt>
+<dd class="field-odd"><p>Target Tx power in cdBm. </p>
+</dd>
+<dt class="field-even">Param frequency_khz</dt>
+<dd class="field-even"><p>Current Frequency in kHz </p>
+</dd>
+<dt class="field-odd">Param temperature_adc</dt>
+<dd class="field-odd"><p>The reading from the temp ADC </p>
+</dd>
+<dt class="field-even">Param rf_band</dt>
+<dd class="field-even"><p>Which RF band we are using </p>
+</dd>
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>The corrected ADC power based on all params </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N15Ex10Calibration20get_compensated_rssiE">
+<span id="_CPPv3N15Ex10Calibration20get_compensated_rssiE"></span><span id="_CPPv2N15Ex10Calibration20get_compensated_rssiE"></span><span class="target" id="struct_ex10_calibration_1a2cc220fb85d0602e0f08978c629aabed"></span><span class="n"><span class="pre">int16_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_compensated_rssi</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">uint16_t</span></span><span class="w"> </span><span class="n"><span class="pre">rssi_raw</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="n"><span class="pre">RfModes</span></span><span class="w"> </span><span class="n"><span class="pre">rf_mode</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../yk_firmware_ex10_host_c_register_accessors.html#_CPPv419RxGainControlFields" title="RxGainControlFields"><span class="n"><span class="pre">RxGainControlFields</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">rx_settings</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n"><span class="pre">antenna</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><a class="reference internal" href="rf_power.html#_CPPv48RfFilter" title="RfFilter"><span class="n"><span class="pre">RfFilter</span></span></a><span class="w"> </span><span class="n"><span class="pre">rf_band</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">uint16_t</span></span><span class="w"> </span><span class="n"><span class="pre">temp_adc</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N15Ex10Calibration20get_compensated_rssiE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Compensates RSSI value for temperature, analog settings, and RF mode based on calibration table. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Pass temperature_adc = 0 to use most recent stored temperature</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Param rssi_raw</dt>
+<dd class="field-odd"><p>Raw RSSI_LOG_2 value from firmware op </p>
+</dd>
+<dt class="field-even">Param temp_adc</dt>
+<dd class="field-even"><p>Temperature ADC code </p>
+</dd>
+<dt class="field-odd">Param rf_mode</dt>
+<dd class="field-odd"><p>RF mode </p>
+</dd>
+<dt class="field-even">Param rx_settings</dt>
+<dd class="field-even"><p>Settings corresponding to RxGainControl register </p>
+</dd>
+<dt class="field-odd">Param antenna</dt>
+<dd class="field-odd"><p>Antenna port used </p>
+</dd>
+<dt class="field-even">Param rf_band</dt>
+<dd class="field-even"><p>Which RF band we are using</p>
+</dd>
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>Compensated RSSI value in cdBm </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N15Ex10Calibration13get_rssi_log2E">
+<span id="_CPPv3N15Ex10Calibration13get_rssi_log2E"></span><span id="_CPPv2N15Ex10Calibration13get_rssi_log2E"></span><span class="target" id="struct_ex10_calibration_1a436235b54b8df374a0983b4b2fdcb75f"></span><span class="n"><span class="pre">uint16_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_rssi_log2</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">int16_t</span></span><span class="w"> </span><span class="n"><span class="pre">rssi_cdbm</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="n"><span class="pre">RfModes</span></span><span class="w"> </span><span class="n"><span class="pre">rf_mode</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../yk_firmware_ex10_host_c_register_accessors.html#_CPPv419RxGainControlFields" title="RxGainControlFields"><span class="n"><span class="pre">RxGainControlFields</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">rx_settings</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n"><span class="pre">antenna</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><a class="reference internal" href="rf_power.html#_CPPv48RfFilter" title="RfFilter"><span class="n"><span class="pre">RfFilter</span></span></a><span class="w"> </span><span class="n"><span class="pre">rf_band</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">uint16_t</span></span><span class="w"> </span><span class="n"><span class="pre">temp_adc</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N15Ex10Calibration13get_rssi_log2E" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Convert RSSI value in cdBm back to RSSI log2 counts using the temperature, analog settings, and RF mode. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Pass temperature_adc = 0 to use most recent stored temperature</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Param rssi_cdbm</dt>
+<dd class="field-odd"><p>Compensated RSSI value in cdBm </p>
+</dd>
+<dt class="field-even">Param temp_adc</dt>
+<dd class="field-even"><p>Temperature ADC code </p>
+</dd>
+<dt class="field-odd">Param rf_mode</dt>
+<dd class="field-odd"><p>RF mode </p>
+</dd>
+<dt class="field-even">Param rx_settings</dt>
+<dd class="field-even"><p>Settings corresponding to RxGainControl register </p>
+</dd>
+<dt class="field-odd">Param antenna</dt>
+<dd class="field-odd"><p>Antenna port used </p>
+</dd>
+<dt class="field-even">Param rf_band</dt>
+<dd class="field-even"><p>Which RF band we are using</p>
+</dd>
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>RSSI value in LOG2 counts derived from the RSSI value in cdBm </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N15Ex10Calibration24get_compensated_lbt_rssiE">
+<span id="_CPPv3N15Ex10Calibration24get_compensated_lbt_rssiE"></span><span id="_CPPv2N15Ex10Calibration24get_compensated_lbt_rssiE"></span><span class="target" id="struct_ex10_calibration_1ac997ad41b31f09dc04bba04ca0f9f2ae"></span><span class="n"><span class="pre">int16_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_compensated_lbt_rssi</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">uint16_t</span></span><span class="w"> </span><span class="n"><span class="pre">rssi_raw</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../yk_firmware_ex10_host_c_register_accessors.html#_CPPv419RxGainControlFields" title="RxGainControlFields"><span class="n"><span class="pre">RxGainControlFields</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">rx_settings</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n"><span class="pre">antenna</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><a class="reference internal" href="rf_power.html#_CPPv48RfFilter" title="RfFilter"><span class="n"><span class="pre">RfFilter</span></span></a><span class="w"> </span><span class="n"><span class="pre">rf_band</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">uint16_t</span></span><span class="w"> </span><span class="n"><span class="pre">temp_adc</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N15Ex10Calibration24get_compensated_lbt_rssiE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Compensates LBT RSSI value for temperature, analog settings, and RF mode based on calibration table. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Param rssi_raw</dt>
+<dd class="field-odd"><p>Raw RSSI_LOG_2 value from firmware op </p>
+</dd>
+<dt class="field-even">Param temp_adc</dt>
+<dd class="field-even"><p>Temperature ADC code </p>
+</dd>
+<dt class="field-odd">Param rx_settings</dt>
+<dd class="field-odd"><p>Settings corresponding to RxGainControl register </p>
+</dd>
+<dt class="field-even">Param antenna</dt>
+<dd class="field-even"><p>Antenna port used </p>
+</dd>
+<dt class="field-odd">Param rf_band</dt>
+<dd class="field-odd"><p>Which RF band we are using</p>
+</dd>
+<dt class="field-even">Return</dt>
+<dd class="field-even"><p>Compensated RSSI value in cdBm </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N15Ex10Calibration15get_cal_versionE">
+<span id="_CPPv3N15Ex10Calibration15get_cal_versionE"></span><span id="_CPPv2N15Ex10Calibration15get_cal_versionE"></span><span class="target" id="struct_ex10_calibration_1a09db65f28101530609f7a969bb7e142c"></span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_cal_version</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N15Ex10Calibration15get_cal_versionE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Returns the current board calibrations version. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>The current board calibration version </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N15Ex10Calibration24get_customer_cal_versionE">
+<span id="_CPPv3N15Ex10Calibration24get_customer_cal_versionE"></span><span id="_CPPv2N15Ex10Calibration24get_customer_cal_versionE"></span><span class="target" id="struct_ex10_calibration_1aa22e96908273a431f009e48653ed34ae"></span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_customer_cal_version</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N15Ex10Calibration24get_customer_cal_versionE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Returns the current board custmer calibrations version. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>The current board customer calibration version </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../../../_static/logo.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="regulatory_regions.html"
+                        title="previous chapter">Regulatory Regions Structures and Interfaces</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="test.html"
+                        title="next chapter">Ex10Test</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="test.html" title="Ex10Test"
+             >next</a></li>
+        <li class="right" >
+          <a href="regulatory_regions.html" title="Regulatory Regions Structures and Interfaces"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../yk_firmware_ex10_host_c_api.html" >Impinj Reader Chip C Host SDK</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../yk_firmware_ex10_host_c_api_layers.html" >API Layers</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="reader_primitives_layer.html" >Ex10 Reader Primitives</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Ex10Calibration</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Impinj, Inc..
+    </div>
+  </body>
+</html>

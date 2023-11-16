@@ -1,0 +1,173 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Application Stored Settings &#8212; Impinj Reader Chip SDK</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinxdoc.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="References" href="yk_firmware_ex10_references.html" />
+    <link rel="prev" title="LMAC Access Operations" href="yk_firmware_ex10_api_access.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="yk_firmware_ex10_references.html" title="References"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="yk_firmware_ex10_api_access.html" title="LMAC Access Operations"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="yk_firmware_ex10_api.html" accesskey="U">Impinj Reader Chip Wireline API</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Application Stored Settings</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="application-stored-settings">
+<span id="ex10-api-stored-settings"></span><h1>Application Stored Settings<a class="headerlink" href="#application-stored-settings" title="Permalink to this headline">¶</a></h1>
+<p>The stored settings feature enables the Impinj reader chip to execute <a class="reference internal" href="yk_firmware_ex10_api_messages.html#ex10-api-write"><span class="std std-ref">Write</span></a>
+operations prior to normal Impinj reader chip operation.
+This can be used to pre-configure Impinj reader chip registers without performing wireline communications;
+thereby speeding up the time to tag acquisition from a Power On Reset.</p>
+<p>The <a class="reference internal" href="yk_firmware_ex10_api_messages.html#ex10-api-write-info-page"><span class="std std-ref">WriteInfoPage</span></a> command is used to configure the StoredSettings
+flash page. The format of the StoredSettings page must conform to the following:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>A stored settings format byte (see <a class="reference internal" href="#stored-settings-format"><span class="std std-numref">Table 51</span></a> below).</p></li>
+<li><p>A properly formatted <a class="reference internal" href="yk_firmware_ex10_api_messages.html#ex10-api-write"><span class="std std-ref">Write</span></a> command.</p></li>
+</ul>
+</div></blockquote>
+<span id="stored-settings-format"></span><table class="colwidths-given docutils align-default" id="id3">
+<caption><span class="caption-number">Table 51 </span><span class="caption-text">Stored Settings Format</span><a class="headerlink" href="#id3" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 40%" />
+<col style="width: 40%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Format Byte</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>Result</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0x02</p></td>
+<td><p>Use the <a class="reference internal" href="yk_firmware_ex10_api_messages.html#ex10-api-write"><span class="std std-ref">Write</span></a> command to initialize the <a class="reference internal" href="yk_firmware_ex10_api_application_address_map.html#ex10-api-address-map"><span class="std std-ref">Application Address map</span></a>.</p></td>
+<td><p>The <a class="reference internal" href="yk_firmware_ex10_api_messages.html#ex10-api-write"><span class="std std-ref">Write</span></a> command operation result
+will be stored in the
+<a class="reference external" href="yk_firmware_ex10_api_common_address_map.html#address-entry-CommandResult">CommandResult</a>
+register.</p></td>
+</tr>
+<tr class="row-odd"><td><p>0xFF</p></td>
+<td><p>Erased.</p></td>
+<td><p>No write command is performed.</p></td>
+</tr>
+<tr class="row-even"><td><p>All other values.</p></td>
+<td><p>Invalid data.</p></td>
+<td><p>The StoredSettingsMalformed <a class="reference internal" href="yk_firmware_ex10_api_messages.html#ex10-api-response-codes"><span class="std std-ref">Response Code</span></a>
+will be stored in the
+<a class="reference external" href="yk_firmware_ex10_api_common_address_map.html#address-entry-CommandResult">CommandResult</a>
+register.</p></td>
+</tr>
+</tbody>
+</table>
+<p>The <em>Content</em> field within the <a class="reference internal" href="yk_firmware_ex10_api_messages.html#ex10-api-write-info-page"><span class="std std-ref">WriteInfoPage</span></a> command must
+conform to this sequence.</p>
+<p>Once the StoredSettings flash page has been written the Impinj reader chip will attempt to
+read and execute the <a class="reference internal" href="yk_firmware_ex10_api_messages.html#ex10-api-write"><span class="std std-ref">Write</span></a> command when it is reset. One of the
+<a class="reference internal" href="yk_firmware_ex10_api_messages.html#ex10-api-response-codes"><span class="std std-ref">ResponseCodes</span></a> will be stored in the
+<a class="reference external" href="yk_firmware_ex10_api_common_address_map.html#address-entry-CommandResult">CommandResult</a>
+register as a result of the <a class="reference internal" href="yk_firmware_ex10_api_messages.html#ex10-api-write"><span class="std std-ref">Write</span></a> operation if the
+<a class="reference internal" href="#stored-settings-format"><span class="std std-ref">Stored Settings Format</span></a> byte is not erased (0xFF).</p>
+<section id="error-handling">
+<h2>Error Handling<a class="headerlink" href="#error-handling" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><ul class="simple">
+<li><p>The <a class="reference internal" href="yk_firmware_ex10_api_messages.html#ex10-api-write-info-page"><span class="std std-ref">WriteInfoPage</span></a> command will execute without error
+even if the <em>Content</em> field is malformed;
+i.e. the <a class="reference internal" href="#stored-settings-format"><span class="std std-ref">Stored Settings Format</span></a> is invalid.</p></li>
+<li><p>The <a class="reference internal" href="yk_firmware_ex10_api_messages.html#ex10-api-write"><span class="std std-ref">Write</span></a> command is limited to
+<a class="reference internal" href="yk_firmware_ex10_api_wireline.html#ex10-api-wireline-spi"><span class="std std-ref">1023 bytes</span></a>
+The StoredSettings flash page may contain 2048 bytes of data.
+The <a class="reference internal" href="yk_firmware_ex10_api_messages.html#ex10-api-write-info-page"><span class="std std-ref">WriteInfoPage</span></a> command will execute without error if
+more than 1023 bytes are transmitted as <em>Content</em>.</p></li>
+<li><p>Neither of the above invocations of the <a class="reference internal" href="yk_firmware_ex10_api_messages.html#ex10-api-write-info-page"><span class="std std-ref">WriteInfoPage</span></a>
+command will result in an error condition. However, when the Impinj reader chip is reset,
+the attempt to execute the <a class="reference internal" href="yk_firmware_ex10_api_messages.html#ex10-api-write"><span class="std std-ref">Write</span></a> command within the stored
+settings will result in an error condition.</p></li>
+</ul>
+</div></blockquote>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="../../_static/logo.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Application Stored Settings</a><ul>
+<li><a class="reference internal" href="#error-handling">Error Handling</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="yk_firmware_ex10_api_access.html"
+                        title="previous chapter">LMAC Access Operations</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="yk_firmware_ex10_references.html"
+                        title="next chapter">References</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="yk_firmware_ex10_references.html" title="References"
+             >next</a></li>
+        <li class="right" >
+          <a href="yk_firmware_ex10_api_access.html" title="LMAC Access Operations"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="yk_firmware_ex10_api.html" >Impinj Reader Chip Wireline API</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Application Stored Settings</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Impinj, Inc..
+    </div>
+  </body>
+</html>

@@ -1,0 +1,179 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>The Ex10 Core &#8212; Impinj Reader Chip SDK</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinxdoc.css" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Ex10RFPower" href="rf_power.html" />
+    <link rel="prev" title="Ex10 Reader Primitives" href="reader_primitives_layer.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="rf_power.html" title="Ex10RFPower"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="reader_primitives_layer.html" title="Ex10 Reader Primitives"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../yk_firmware_ex10_host_c_api.html" >Impinj Reader Chip C Host SDK</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../yk_firmware_ex10_host_c_api_layers.html" >API Layers</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="reader_primitives_layer.html" accesskey="U">Ex10 Reader Primitives</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">The Ex10 Core</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="the-ex10-core">
+<span id="ex10-api-host-c-api-reader-primitives-core"></span><h1>The Ex10 Core<a class="headerlink" href="#the-ex10-core" title="Permalink to this headline">¶</a></h1>
+<p>The Ex10 core is the core group of modules that are needed for any communication
+with the Impinj reader chip for any purpose.  These include modules such as
+<a class="reference internal" href="../yk_firmware_ex10_host_c_ops_layer.html#ex10-api-host-c-api-ops"><span class="std std-ref">Ex10Ops</span></a> and <a class="reference internal" href="../yk_firmware_ex10_host_c_protocol_layer.html#ex10-api-host-c-api-protocol"><span class="std std-ref">Ex10Protocol</span></a>
+and the additional modules that they build on. The <cite>ex10_core_board_setup()</cite> function
+is a helper to assemble and initialize these core modules.  There is also
+a <cite>ex10_bootloader_core_board_setup()</cite> that is used to bring the
+Impinj reader chip up into the bootloader.</p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-functions">Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv421ex10_core_board_setup12Ex10RegionId8uint32_t">
+<span id="_CPPv321ex10_core_board_setup12Ex10RegionId8uint32_t"></span><span id="_CPPv221ex10_core_board_setup12Ex10RegionId8uint32_t"></span><span id="ex10_core_board_setup__Ex10RegionId.uint32_t"></span><span class="target" id="board__init__core_8h_1af063a5d05a97d9e4d51fd285ecc669ac"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ex10_core_board_setup</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><a class="reference internal" href="regulatory_regions.html#_CPPv412Ex10RegionId" title="Ex10RegionId"><span class="n"><span class="pre">Ex10RegionId</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">region_id</span></span>, <span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">spi_clock_hz</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv421ex10_core_board_setup12Ex10RegionId8uint32_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Initialize the Impinj Reader Chip core SDK. </p>
+<p>This includes the Ops and protocol layers, and any board bring up.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>region_id</strong> – The region to initialize the active region with </p></li>
+<li><p><strong>spi_clock_hz</strong> – The SPI inteface clock speed in Hz</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>struct <a class="reference internal" href="../ex10_host_c_support/ex10_result.html#struct_ex10_result"><span class="std std-ref">Ex10Result</span></a> Indicates whether the function call passed or failed. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv432ex10_bootloader_core_board_setup8uint32_t">
+<span id="_CPPv332ex10_bootloader_core_board_setup8uint32_t"></span><span id="_CPPv232ex10_bootloader_core_board_setup8uint32_t"></span><span id="ex10_bootloader_core_board_setup__uint32_t"></span><span class="target" id="board__init__core_8h_1a00003554497cb485b9103d63b45752fa"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ex10_bootloader_core_board_setup</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">spi_clock_hz</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv432ex10_bootloader_core_board_setup8uint32_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Initialize the Impinj Reader Chip and its associated Ex10 host interfaces in a minimal configuration for communication with the bootloader. </p>
+<p>This initialization profile is primarily used for uploading new firmware images into the Impinj Reader Chip.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>spi_clock_hz</strong> – The SPI interface clock speed in Hz. This value must be 1 MHz or less.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>struct <a class="reference internal" href="../ex10_host_c_support/ex10_result.html#struct_ex10_result"><span class="std std-ref">Ex10Result</span></a> Indicates whether the function call passed or failed. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv435ex10_bootloader_core_board_teardownv">
+<span id="_CPPv335ex10_bootloader_core_board_teardownv"></span><span id="_CPPv235ex10_bootloader_core_board_teardownv"></span><span id="ex10_bootloader_core_board_teardown__void"></span><span class="target" id="board__init__core_8h_1aeb230d95080037c4af17fec018b4ee70"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ex10_bootloader_core_board_teardown</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">void</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv435ex10_bootloader_core_board_teardownv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Deinitailize the <a class="reference internal" href="../yk_firmware_ex10_host_c_protocol_layer.html#struct_ex10_protocol"><span class="std std-ref">Ex10Protocol</span></a> object and power down the Impinj Reader Chip when the Impinj Reader Chip was configured in bootloader execution status. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv424ex10_core_board_teardownv">
+<span id="_CPPv324ex10_core_board_teardownv"></span><span id="_CPPv224ex10_core_board_teardownv"></span><span id="ex10_core_board_teardown__void"></span><span class="target" id="board__init__core_8h_1a6f604a58e15b31d34a04288d7373b93c"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ex10_core_board_teardown</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">void</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv424ex10_core_board_teardownv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Deinitialize the Ex10 Core interface groups of objects and power down the Impinj Reader Chip. </p>
+<p>This is strictly a software and driver layer release of host resources. No transactions are performed to the Impinj Reader Chip over the host interface within this function call. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv425ex10_core_board_gpio_initPK17Ex10GpioInterface">
+<span id="_CPPv325ex10_core_board_gpio_initPK17Ex10GpioInterface"></span><span id="_CPPv225ex10_core_board_gpio_initPK17Ex10GpioInterface"></span><span id="ex10_core_board_gpio_init__Ex10GpioInterfaceCP"></span><span class="target" id="board__init__core_8h_1a9848ee4fde7cf747fcb722c5d35ff1aa"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ex10_core_board_gpio_init</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../ex10_board_specific/ex10_gpio.html#_CPPv417Ex10GpioInterface" title="Ex10GpioInterface"><span class="n"><span class="pre">Ex10GpioInterface</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">gpio_if</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv425ex10_core_board_gpio_initPK17Ex10GpioInterface" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Initialize the gpio_driver pins required for Impinj Reader Chip operation. </p>
+<p>The following schematic pins are set as output direction, with the levels: PWR_EN deassert, active high, pin level = 0 ENABLE deassert, active high, pin level = 0 RESET_N assert, active low, pin level = 0</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>gpio_if</strong> – The instance of the GpioInterface. </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-variables">Variables</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv420DEFAULT_SPI_CLOCK_HZ">
+<span id="_CPPv320DEFAULT_SPI_CLOCK_HZ"></span><span id="_CPPv220DEFAULT_SPI_CLOCK_HZ"></span><span id="DEFAULT_SPI_CLOCK_HZ__uint32_tC"></span><span class="target" id="board__init__core_8h_1a2a81e947ce1596573c7ef39c20752f34"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">DEFAULT_SPI_CLOCK_HZ</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">4000000u</span></span><a class="headerlink" href="#_CPPv420DEFAULT_SPI_CLOCK_HZ" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Typical usage is 4MHz when running the Application. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv423BOOTLOADER_SPI_CLOCK_HZ">
+<span id="_CPPv323BOOTLOADER_SPI_CLOCK_HZ"></span><span id="_CPPv223BOOTLOADER_SPI_CLOCK_HZ"></span><span id="BOOTLOADER_SPI_CLOCK_HZ__uint32_tC"></span><span class="target" id="board__init__core_8h_1aaa152a52e8fa4fac3ef1b1159984b5eb"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">BOOTLOADER_SPI_CLOCK_HZ</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">1000000u</span></span><a class="headerlink" href="#_CPPv423BOOTLOADER_SPI_CLOCK_HZ" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>A reduced clock speed is required when running the Bootloader. </p>
+</dd></dl>
+
+</div>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../../../_static/logo.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="reader_primitives_layer.html"
+                        title="previous chapter">Ex10 Reader Primitives</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="rf_power.html"
+                        title="next chapter">Ex10RFPower</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="rf_power.html" title="Ex10RFPower"
+             >next</a></li>
+        <li class="right" >
+          <a href="reader_primitives_layer.html" title="Ex10 Reader Primitives"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../yk_firmware_ex10_host_c_api.html" >Impinj Reader Chip C Host SDK</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../yk_firmware_ex10_host_c_api_layers.html" >API Layers</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="reader_primitives_layer.html" >Ex10 Reader Primitives</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">The Ex10 Core</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Impinj, Inc..
+    </div>
+  </body>
+</html>

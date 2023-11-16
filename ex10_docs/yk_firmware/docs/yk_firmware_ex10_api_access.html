@@ -1,0 +1,450 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>LMAC Access Operations &#8212; Impinj Reader Chip SDK</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinxdoc.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Application Stored Settings" href="yk_firmware_ex10_api_stored_settings.html" />
+    <link rel="prev" title="EventFifo Packets" href="yk_firmware_ex10_api_event_packets.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="yk_firmware_ex10_api_stored_settings.html" title="Application Stored Settings"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="yk_firmware_ex10_api_event_packets.html" title="EventFifo Packets"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="yk_firmware_ex10_api.html" accesskey="U">Impinj Reader Chip Wireline API</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">LMAC Access Operations</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="lmac-access-operations">
+<span id="ex10-api-lmac-access-label"></span><h1>LMAC Access Operations<a class="headerlink" href="#lmac-access-operations" title="Permalink to this headline">¶</a></h1>
+<p>The LMAC supports gen2 access commands in two operating states.
+The first is the auto-access state where the access commands are
+preset and automatically sent on every singulated tag, and then the
+LMAC continues to the next inventory slot.  The second is the halted
+state where the LMAC stops on a singulated tag and waits for the
+host to send access commands and then tell the LMAC to resume the
+inventory round.  These two states are independent from each other
+but use a common buffer and access control fields.  These two
+states are described in detail below.</p>
+<section id="common-access-select-controls">
+<h2>Common Access/Select Controls<a class="headerlink" href="#common-access-select-controls" title="Permalink to this headline">¶</a></h2>
+<p>The select, auto-access, and halted operations share a common set of buffers
+and registers to setup their operations.  These buffers and other registers are used
+to describe the transactions are described in detail below.  These registers
+have 10 entries each so that up to 10 transactions can be described.  These 10
+transactions are shared between all 3 operations.  Some can be for select operations,
+and others can be for auto-access/halted operations.  Then each of the operations
+have their own enables register that indicates which transactions are to be used
+for this operation.  The enable registers are the
+<a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-Gen2SelectEnable">Gen2SelectEnable</a>,
+<a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-Gen2AutoAccessEnable">Gen2AutoAccessEnable</a>,
+and <a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-Gen2AccessEnable">Gen2AccessEnable</a>.
+When the operation runs, it will go though the sequence from bit 0 to bit 9 and if the bit is set to
+1 it will execute the operation described at that index in the operation description arrays.
+The transactions are always executed in order from 0 to 9.</p>
+<p>The shared buffer is the <a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-Gen2TxBuffer">Gen2TxBuffer</a>
+buffer that contains the bits to transmit for a given transaction.  The buffer for a transaction always starts
+at a <strong>byte</strong> boundary, but can be any <strong>bit</strong> length.  The bits are left justified in any byte that is not a full byte,
+so if the byte only contains 4 bits, they must be the upper 4 bits of that byte.</p>
+<p>The way that the operations map the enabled transaction to the bits in the buffer is by use of
+the <a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-Gen2Offsets">Gen2Offsets</a>
+and <a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-Gen2Lengths">Gen2Lengths</a>
+registers.  These two registers are arrays that have 10 entries each.  The offset
+register is the <strong>byte</strong> offset into the buffer, and the length register is the number of <strong>bits</strong> that
+are to be transmitted.</p>
+<p>The auto-access and halted operations use two additional register arrays that are the
+<a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-Gen2TxnControls">Gen2TxnControls</a>
+and <a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-Gen2TransactionIds">Gen2TransactionIds</a>.
+These register are arrays of 10 elements and map to the enable bits the same way.
+The details of these registers and how they are used for the auto-access and halted operations
+are described below.</p>
+</section>
+<section id="auto-access">
+<h2>Auto-Access<a class="headerlink" href="#auto-access" title="Permalink to this headline">¶</a></h2>
+<p>The auto-access feature is used to do a sequence of predefined access commands on every tag
+that is singulated, and then continue the inventory round.  The auto-access sequence is
+enabled by setting the AutoAccess bit in the
+<a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-InventoryRoundControl">InventoryRoundControl</a>
+register.  The auto-access enable
+<a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-Gen2AutoAccessEnable">Gen2AutoAccessEnable</a>,
+register determine which commands are sent.   The LMAC will go though
+bits 0 to 9 in order and if the bit is set, it will lookup the transaction
+described in the access control registers and do that transaction.
+The results of these transactions will be inserted into the event fifo as
+<a class="reference external" href="yk_firmware_ex10_api_event_packets.html#ex10_api_event_packet_gen2_transaction">gen2_transaction</a>
+events immediately after the <a class="reference external" href="yk_firmware_ex10_api_event_packets.html#ex10_api_event_packet_tag_read">tag_read</a> event.</p>
+<p>The auto-access sequence has 3 control flags that tell it how to handle a few situations.  They are also
+located in the <a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-InventoryRoundControl">InventoryRoundControl</a>
+register.  They are AbortOnFail, HaltOnFail and Always Ack.  In this context a “failure” of a transaction
+means that the bits received back from the tag did not pass CRC.  Also note that these flags are independent
+from each other and can be used in any combination.</p>
+<blockquote>
+<div><ul class="simple">
+<li><dl class="simple">
+<dt>AbortOnFail</dt><dd><p>If this flag is true then when the LMAC is processing an auto-access sequence and one
+of the transactions fails the CRC test, it will abort the sequence.  So for example if the
+sequence is setup as bits 1, 3, and 5.  Then if the 1 transaction passes CRC, and then
+the 3 transaction does not, the LMAC will stop, and not attempt transaction 5.  In this
+example the Gen2Transactions will only be reported for transactions 1 and 3 and
+the second transaction will report a bad crc.  What the LMAC does after the abort
+will depend on the other flags.  If this field is set to false it will process all
+the transactions no matter if they pass or fail the CRC test.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>HaltOnFail</dt><dd><p>If this flag is true the LMAC will automatically enter the halted state and notify the
+host that it has entered the halted state if any of the auto-access transactions fail
+the CRC test.  Then the LMAC will wait for normal halted instructions from the host.
+If this field is false the LMAC will continue to the next slot in the inventory
+round.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>AlwaysAck</dt><dd><p>If this flag is true it will always ack the tag (QueryRep or QueryAdj
+command as directed by the Q algorithm) even if any of the auto-access
+transactions have failed the CRC test.  If this field is false the LMAC
+will send a NAK command to a tag if any of the auto-access transactions fail.
+Then it will send a QueryRep or QueryAdj command and continue the inventory round
+as directed by the Q algorithm.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+</section>
+<section id="halted-state">
+<h2>Halted State<a class="headerlink" href="#halted-state" title="Permalink to this headline">¶</a></h2>
+<p>The halted state is a state where the LMAC has singulated a tag during an inventory round
+and the HaltOnAllTags field of the <a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-InventoryRoundControl">InventoryRoundControl</a>
+register is set to true.  The LMAC will then automatically issue a ReqRn command
+to the tag to get the handle and report it with the <a class="reference external" href="yk_firmware_ex10_api_event_packets.html#ex10_api_event_packet_tag_read">tag_read</a>
+event.  The LMAC will then insert an <a class="reference external" href="yk_firmware_ex10_api_event_packets.html#ex10_api_event_packet_halted">halted</a>
+Event into the event fifo.  The LMAC will then also set the Halted field in the
+<a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-HaltedStatus">HaltedStatus</a>
+register.  The LMAC then waits for the host to command it to send
+the desired access commands as described below.  Then when the host
+is ready to release this tag and move onto the next it sets
+the Resume field to true in the <a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-HaltedControl">HaltedControl</a>
+register.  This will cause the LMAC to ACK or NAK the tag (depending
+on if the NackTag field is set), and continue the inventory round
+halting again when it finds another tag.</p>
+<p>To send an access command(s) The host will setup the TX buffer as
+described above.  The it will set the enable bit(s) in the
+<a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-Gen2AccessEnable">Gen2AccessEnable</a>
+register and then set the Go bit to true in the
+<a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-HaltedControl">HaltedControl</a>
+register.  The LMAC will then transact all the gen2 access
+commands that are enabled.  And the host will receive
+<a class="reference external" href="yk_firmware_ex10_api_event_packets.html#ex10_api_event_packet_gen2_transaction">gen2_transaction</a>
+packets for each transaction in the event fifo.  Then it remains
+in the halted state and wait for additional commands from the host.</p>
+</section>
+<section id="auto-access-and-halted-state-interactions">
+<h2>Auto-Access and Halted State Interactions<a class="headerlink" href="#auto-access-and-halted-state-interactions" title="Permalink to this headline">¶</a></h2>
+<p>The auto-access and halted state features are two independent features that
+are normally used separately, however they can be used in combination with
+each other.  For example the auto-access feature could be enabled and the
+halt on all tags flag could also be set.  In this case the user might want to
+do some access commands on the tag immediately, and then decide what to do
+before continuing to the next tag.  As a possible example the user may
+read certain memory addresses of the tag, and then based on the data, write
+something back to the tags memory, and then continue to the next tag. This
+would make the initial reads faster but still give the host the ability to
+decide what to do with the tag.</p>
+<p>Another interaction might the case where the user wants to use the halt on fail
+feature of the auto-access command.  This will allow the host to interact
+with a tag that has failed the auto-access commands.  It may choose to inspect
+the tags details or take a specific action.  So the LMAC will do the auto-access
+commands and move through the tags that pass, but if the tags fail a CRC it will
+stop and wait for the host to continue from the halted state.</p>
+<p>The host can also set the GO bit in the <a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-HaltedControl">HaltedControl</a>
+while the LMAC is running an inventory and when it singulates a tag it will
+automatically run the access commands that were enabled.  This could be used to
+read a memory location on the tag immediately, and then let the host decide what to
+do.  Note that the GO bit is cleared when the access sequence is completed, so
+the host will need to set the GO bit again after the inventory round has been resumed.</p>
+<p>And further enhancement might be that the user can preset the <a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-HaltedControl">HaltedControl</a>
+GO bit before starting the inventory with the auto-access setup to halt on fail.
+This would cause the LMAC to immediately do the halted access commands when a tag
+fails the auto-access sequence.  Note that the host would need to set that GO bit
+after a halted state has been exited as it will be cleared as soon as the LMAC
+runs the halted commands.  This could be used when a tag fails the auto-access
+command, the host has setup a read command to read a certain address of the
+tag and report that back to the host.</p>
+</section>
+<section id="access-commands">
+<h2>Access Commands<a class="headerlink" href="#access-commands" title="Permalink to this headline">¶</a></h2>
+<p>Access commands are generally a transmit and receive pair.  There is
+the option for a command with no response, but the access command
+always replies to the host with a response to show that the command was
+sent.  To make the firmware as flexible as possible the access commands
+use a generic buffer that is shared with the select command that is
+described above.  The <a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-Gen2TxnControls">Gen2TxnControls</a>
+registers described below tells the LMAC what transaction to do.
+Then it will respond to the host with a
+<a class="reference external" href="yk_firmware_ex10_api_event_packets.html#ex10_api_event_packet_gen2_transaction">gen2_transaction</a>
+event in the event fifo.</p>
+</section>
+<section id="id12">
+<h2>Gen2TxnControls<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-Gen2TxnControls">Gen2TxnControls</a>
+array of registers describes the access transactions that go with
+the tx buffer offset and length pairs.  This register tells the LMAC
+the details of each of the transactions. The fields are listed below.</p>
+<blockquote>
+<div><ul>
+<li><dl>
+<dt>Response Type</dt><dd><p>This is  the response type the LMAC should expect from the tag.</p>
+<table class="colwidths-given docutils align-default" id="id16">
+<caption><span class="caption-number">Table 49 </span><span class="caption-text">Response Types</span><a class="headerlink" href="#id16" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 67%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Value</p></th>
+<th class="head"><p>Response Type</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="samp docutils literal notranslate"><span class="pre">0b000</span></code></p></td>
+<td><p>None (Tx Only transaction)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="samp docutils literal notranslate"><span class="pre">0b001</span></code></p></td>
+<td><p>Immediate Response</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="samp docutils literal notranslate"><span class="pre">0b010</span></code></p></td>
+<td><p>Delayed Reply (also handles In-Process Reply)</p></td>
+</tr>
+</tbody>
+</table>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>HasHeaderBit</dt><dd><p>This instructs the LMAC that the response has a header bit
+which tells the LMAC that there are two possible lengths
+to receive, a standard 41 bit error packet length if the
+first bit received is a 1 or the length described in the
+RxLength field below.  The LMAC pads the beginning of
+the received data with seven 0’s to align the data in the
+packet after the header bit.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>UseCoverCode</dt><dd><p>This instructs the LMAC to automatically send a ReqRn command
+to get a new RN16 value from the tag, and then covers the
+last 16 bits of the TX data with that cover code.  Note that
+this field is ignored in the IsKillCommand field is set below.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>AppendHandle</dt><dd><p>The LMAC retains the handle that was issued by the tag
+at when it entered the halted state.  If this bit is set
+the LMAC will automatically append the handle to the transaction.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>AppendCrc16</dt><dd><p>This causes the LMAC to append a Crc16 to the end of the
+transaction.  The CRC value is calculated automatically
+by the hardware and follows the CRC calculation as documented
+in the Gen2 standard.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>IsKillCommand</dt><dd><p>This tells the LMAC that this is a gen2 kill command and
+that it needs to use a cover code that is slightly different
+than the normal cover code above.  The LMAC will send a
+ReqRn to retrieve a new RN16 cover code.  But instead of
+covering the last 16-bits of the TX Data, it will apply
+the cover code as required by the kill command (last 3 bits
+are 0 and not covered, the preceding 16-bits are covered)</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>RxLength</dt><dd><p>This indicates the number of bits to receive back from the
+tag including the CRC.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+</section>
+<section id="gen2-transaction-event">
+<h2>gen2_transaction Event<a class="headerlink" href="#gen2-transaction-event" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference external" href="yk_firmware_ex10_api_event_packets.html#ex10_api_event_packet_gen2_transaction">gen2_transaction</a>
+event is placed in the event fifo when each of the access commands
+is completed, even if it is a no-reply type transaction.  The static
+fields in the packet are described below. The data received is in the dynamic section of the packet.</p>
+<blockquote>
+<div><ul>
+<li><dl class="simple">
+<dt>Transaction Id</dt><dd><p>The transaction ID is the ID that is set in the
+<a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-Gen2TransactionIds">Gen2TransactionIds</a>
+register array.  They can be set to anything so that the
+host can associate this event with a specific transaction.</p>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt>Status</dt><dd><p>This is the status of the transaction.</p>
+<table class="colwidths-given docutils align-default" id="id17">
+<caption><span class="caption-number">Table 50 </span><span class="caption-text">Gen2 Status</span><a class="headerlink" href="#id17" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Value</p></th>
+<th class="head"><p>Status</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="samp docutils literal notranslate"><span class="pre">0x01</span></code></p></td>
+<td><p>ok</p></td>
+<td><p>This was a good reception with valid data</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="samp docutils literal notranslate"><span class="pre">0x02</span></code></p></td>
+<td><p>bad_crc</p></td>
+<td><p>The data was checked against the standard Gen2 CRC calculation and it failed.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="samp docutils literal notranslate"><span class="pre">0x03</span></code></p></td>
+<td><p>no_reply</p></td>
+<td><p>This was a no-reply type transaction</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="samp docutils literal notranslate"><span class="pre">0x04</span></code></p></td>
+<td><p>invalid_reply_type</p></td>
+<td><p>The reply type field was invalid</p></td>
+</tr>
+</tbody>
+</table>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Valid Path Metrics</dt><dd><p>This is a bool field that indicates if the transaction passed the
+path metric threshold that the modem uses to determine if a packet is valid.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>RF Phase Begin</dt><dd><p>This is the phase measurement from the modem at the beginning
+of the packet.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>RF Phase End</dt><dd><p>This is the phase measurement from the modem at the end
+of the packet.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>RSSI</dt><dd><p>The RSSI measurement for the packet</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Num Bits</dt><dd><p>The number of bits that were received</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="../../_static/logo.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">LMAC Access Operations</a><ul>
+<li><a class="reference internal" href="#common-access-select-controls">Common Access/Select Controls</a></li>
+<li><a class="reference internal" href="#auto-access">Auto-Access</a></li>
+<li><a class="reference internal" href="#halted-state">Halted State</a></li>
+<li><a class="reference internal" href="#auto-access-and-halted-state-interactions">Auto-Access and Halted State Interactions</a></li>
+<li><a class="reference internal" href="#access-commands">Access Commands</a></li>
+<li><a class="reference internal" href="#id12">Gen2TxnControls</a></li>
+<li><a class="reference internal" href="#gen2-transaction-event">gen2_transaction Event</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="yk_firmware_ex10_api_event_packets.html"
+                        title="previous chapter">EventFifo Packets</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="yk_firmware_ex10_api_stored_settings.html"
+                        title="next chapter">Application Stored Settings</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="yk_firmware_ex10_api_stored_settings.html" title="Application Stored Settings"
+             >next</a></li>
+        <li class="right" >
+          <a href="yk_firmware_ex10_api_event_packets.html" title="EventFifo Packets"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="yk_firmware_ex10_api.html" >Impinj Reader Chip Wireline API</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">LMAC Access Operations</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Impinj, Inc..
+    </div>
+  </body>
+</html>

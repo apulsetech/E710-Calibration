@@ -1,0 +1,1403 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Ex10Gen2TxCommandManager &#8212; Impinj Reader Chip SDK</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinxdoc.css" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Ex10 SDK Error Reporting" href="ex10_result.html" />
+    <link rel="prev" title="Ex10EventParser" href="event_parser.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="ex10_result.html" title="Ex10 SDK Error Reporting"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="event_parser.html" title="Ex10EventParser"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../yk_firmware_ex10_host_c_api.html" >Impinj Reader Chip C Host SDK</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../yk_firmware_ex10_host_c_api_layers.html" >API Layers</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="support_modules.html" accesskey="U">Ex10 Support Modules</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Ex10Gen2TxCommandManager</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="ex10gen2txcommandmanager">
+<span id="ex10-api-host-c-api-gen2-tx-command-manager"></span><h1>Ex10Gen2TxCommandManager<a class="headerlink" href="#ex10gen2txcommandmanager" title="Permalink to this headline">¶</a></h1>
+<p>The Gen2 commands module revolves around a separate standalone buffer in the
+SDK with its own helpers. This means there is a local buffer in the SDK
+separate from the register in the Ex10 device. The Gen2 Tx Manager is
+responsible for modifying the local buffer and updating the device accordingly.
+For specifics on how to use this interface, see the usage guide
+<a class="reference internal" href="../yk_firmware_ex10_host_c_gen2_command_manager_usage.html#ex10-api-host-c-api-gen2-tx-command-manager-usage"><span class="std std-ref">Command Manager Usage</span></a></p>
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv424Ex10Gen2TxCommandManager">
+<span id="_CPPv324Ex10Gen2TxCommandManager"></span><span id="_CPPv224Ex10Gen2TxCommandManager"></span><span id="Ex10Gen2TxCommandManager"></span><span class="target" id="struct_ex10_gen2_tx_command_manager"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10Gen2TxCommandManager</span></span></span><a class="headerlink" href="#_CPPv424Ex10Gen2TxCommandManager" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The Ex10 Gen2TxCommandManager interface. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N24Ex10Gen2TxCommandManager20clear_local_sequenceE">
+<span id="_CPPv3N24Ex10Gen2TxCommandManager20clear_local_sequenceE"></span><span id="_CPPv2N24Ex10Gen2TxCommandManager20clear_local_sequenceE"></span><span class="target" id="struct_ex10_gen2_tx_command_manager_1a1bcecfd5557766fd3aef9eae301ee555"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">clear_local_sequence</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N24Ex10Gen2TxCommandManager20clear_local_sequenceE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Clears validity and enable markers for every command. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N24Ex10Gen2TxCommandManager31clear_command_in_local_sequenceE">
+<span id="_CPPv3N24Ex10Gen2TxCommandManager31clear_command_in_local_sequenceE"></span><span id="_CPPv2N24Ex10Gen2TxCommandManager31clear_command_in_local_sequenceE"></span><span class="target" id="struct_ex10_gen2_tx_command_manager_1a9a6e42df03c54e318d3ca8415ab3074b"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">clear_command_in_local_sequence</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n"><span class="pre">clear_idx</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">cmd_index</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N24Ex10Gen2TxCommandManager31clear_command_in_local_sequenceE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Clears the validity markers for the passed index. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Param clear_idx</dt>
+<dd class="field-odd"><p>The index to clear </p>
+</dd>
+<dt class="field-even">Param cmd_index</dt>
+<dd class="field-even"><p>The cleared index </p>
+</dd>
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>Returns an instance of <a class="reference internal" href="ex10_result.html#struct_ex10_result"><span class="std std-ref">Ex10Result</span></a> which informs the user if any errors occurred while clearing the index. If the user attempts to clear an index which is out of bounds, it will return an error immediately. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N24Ex10Gen2TxCommandManager14clear_sequenceE">
+<span id="_CPPv3N24Ex10Gen2TxCommandManager14clear_sequenceE"></span><span id="_CPPv2N24Ex10Gen2TxCommandManager14clear_sequenceE"></span><span class="target" id="struct_ex10_gen2_tx_command_manager_1ad0e9708bba51393c121aa7424ea079b1"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">clear_sequence</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N24Ex10Gen2TxCommandManager14clear_sequenceE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Clears the registers for command lengths and enables to ensure no commands are valid on the device. </p>
+<p>Does not touch the command info. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N24Ex10Gen2TxCommandManager4initE">
+<span id="_CPPv3N24Ex10Gen2TxCommandManager4initE"></span><span id="_CPPv2N24Ex10Gen2TxCommandManager4initE"></span><span class="target" id="struct_ex10_gen2_tx_command_manager_1a0eb910415900355c724a992bea2dec8e"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">init</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N24Ex10Gen2TxCommandManager4initE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Invalidate all commands and enables to start the buffer fresh. </p>
+<p>Also sets up the encode and decode data to utilize the backing buffers so local copies of commands can be used. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N24Ex10Gen2TxCommandManager14write_sequenceE">
+<span id="_CPPv3N24Ex10Gen2TxCommandManager14write_sequenceE"></span><span id="_CPPv2N24Ex10Gen2TxCommandManager14write_sequenceE"></span><span class="target" id="struct_ex10_gen2_tx_command_manager_1ae10f5983e291f4ebf1b797a945657ec1"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">write_sequence</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N24Ex10Gen2TxCommandManager14write_sequenceE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Writes all valid commands into the device Gen2TxBuffer register and sets up the required companion registers. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>Returns an instance of <a class="reference internal" href="ex10_result.html#struct_ex10_result"><span class="std std-ref">Ex10Result</span></a> which informs the user if any errors occurred while adding the command. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N24Ex10Gen2TxCommandManager20write_select_enablesE">
+<span id="_CPPv3N24Ex10Gen2TxCommandManager20write_select_enablesE"></span><span id="_CPPv2N24Ex10Gen2TxCommandManager20write_select_enablesE"></span><span class="target" id="struct_ex10_gen2_tx_command_manager_1ab126c9da752e731b81b27f5ec98ff5ad"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">write_select_enables</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">select_enables</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n"><span class="pre">size</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">cmd_index</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N24Ex10Gen2TxCommandManager20write_select_enablesE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Set the Gen2SelectEnable register to use within the select op based on the input boolean array. </p>
+<p>Any command enabled through this function will be sent during the send select op, regardless of if it is a proper select command. These enables are written directly to the device, regardless of if you have updated the Gen2Buffer register.</p>
+<p>
+If the sequence contains 10 <a class="reference internal" href="#struct_tx_command_info"><span class="std std-ref">TxCommandInfo</span></a> structures and the first three are valid, you could pass in a boolean array with indices 1 and 3 set to true to enable the selects at 1 and 3.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you attempt to enable a non-select command through this function, the index will be ignored. </p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Param select_enables</dt>
+<dd class="field-odd"><p>An array of booleans which signifies which indexes within the command buffer to enable. The sizing of this enables array is MaxTxCommandCount, signifying that each index in your enables array matches the corresponding sequence index.</p>
+</dd>
+<dt class="field-even">Param size</dt>
+<dd class="field-even"><p>The number of entries in the passed boolean array. This is the number of entries to utilize in setting the enable register. The size must be &lt;= to the max command sizing of 10. If the size is less, the latter enable indicies will be set to false.</p>
+</dd>
+<dt class="field-odd">Param cmd_index</dt>
+<dd class="field-odd"><p><strong>[out]</strong> The index in the command array for the last enabled bit.</p>
+</dd>
+<dt class="field-even">Return</dt>
+<dd class="field-even"><p>Returns any errors which may have occurred. If the user attempts to enable an index which does not have a valid command, the function will return immediately with an error. If the user enables an index containing an access command, the error will be set, but the function will finish normally.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N24Ex10Gen2TxCommandManager20write_halted_enablesE">
+<span id="_CPPv3N24Ex10Gen2TxCommandManager20write_halted_enablesE"></span><span id="_CPPv2N24Ex10Gen2TxCommandManager20write_halted_enablesE"></span><span class="target" id="struct_ex10_gen2_tx_command_manager_1ae3f19b2bf113f3b68fb012d0b2575138"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">write_halted_enables</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">access_enables</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n"><span class="pre">size</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">cmd_index</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N24Ex10Gen2TxCommandManager20write_halted_enablesE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Set the Gen2AccessEnable register to use within inventory based on the input boolean array. </p>
+<p>Any command enabled through this function can be sent to a tag during the inventory halted state. These enables are written directly to the device, regardless of if you have updated the Gen2Buffer register.</p>
+<p>
+If the command buffer contains 10 <a class="reference internal" href="#struct_tx_command_info"><span class="std std-ref">TxCommandInfo</span></a> structures, and the first three are valid, you could pass in a boolean array with indices 1 and 3 set to true to enable commands 1 and 3.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you attempt to enable a-select command through this function, the index will be ignored.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The enabled indices may or may not overlap with the other enables (the same command may be used for auto halt as well). </p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Param access_enables</dt>
+<dd class="field-odd"><p>An array of booleans which signifies which indices within the command buffer to enable. The sizing of this enables array is MaxTxCommandCount, signifying that each index in your enables array matches the corresponding sequence index.</p>
+</dd>
+<dt class="field-even">Param size</dt>
+<dd class="field-even"><p>The number of entries in the passed boolean array. This is the number of entries to utilize in setting the enable register. The size must be &lt;= to the max command sizing of 10. If the size is less, the latter enable indices will be set to false.</p>
+</dd>
+<dt class="field-odd">Param cmd_index</dt>
+<dd class="field-odd"><p>The index in the command array for the last enabled bit.</p>
+</dd>
+<dt class="field-even">Return</dt>
+<dd class="field-even"><p>Returns any errors which may have occurred. If the user attempts to enable an index which does not have a valid command, the function will return immediately with an error. If the user enables an index containing a select command, the error will be set, but the function will finish normally.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N24Ex10Gen2TxCommandManager25write_auto_access_enablesE">
+<span id="_CPPv3N24Ex10Gen2TxCommandManager25write_auto_access_enablesE"></span><span id="_CPPv2N24Ex10Gen2TxCommandManager25write_auto_access_enablesE"></span><span class="target" id="struct_ex10_gen2_tx_command_manager_1a048e93dc64323df26279d03aad5c3939"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">write_auto_access_enables</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">auto_access_enables</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n"><span class="pre">size</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">cmd_index</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N24Ex10Gen2TxCommandManager25write_auto_access_enablesE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Set the Gen2AutoAccessEnable register to use within inventory based on the input boolean array. </p>
+<p>Any command enabled through this function can be sent to a tag using the auto access functionality. These enables are written directly to the device, regardless of if you have updated the Gen2Buffer register.</p>
+<p>
+If the command buffer contains 10 <a class="reference internal" href="#struct_tx_command_info"><span class="std std-ref">TxCommandInfo</span></a> structures, and the first three are valid, you could pass in a boolean array with indices 1 and 3 set to true to enable commands 1 and 3.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you attempt to enable a-select command through this function, the index will be ignored.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The enabled indices may or may not overlap with the other enables (the same command may be used with halted). </p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Param auto_access_enables</dt>
+<dd class="field-odd"><p>An array of booleans which signifies which indices within the command buffer to enable. The sizing of this enables array is MaxTxCommandCount, signifying that each index in your enables array matches the corresponding sequence index.</p>
+</dd>
+<dt class="field-even">Param size</dt>
+<dd class="field-even"><p>The number of entries in the passed boolean array. This is the number of entries to utilize in setting the enable register. The size must be &lt;= to the max command sizing of 10. If the size is less, the latter enable indices will be set to false.</p>
+</dd>
+<dt class="field-odd">Param cmd_index</dt>
+<dd class="field-odd"><p>The index in the command array for the last enabled bit.</p>
+</dd>
+<dt class="field-even">Return</dt>
+<dd class="field-even"><p>Returns any errors which may have occurred. If the user attempts to enable an index which does not have a valid command, the function will return immediately with an error. If the user enables an index containing a select command, the error will be set, but the function will finish normally.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N24Ex10Gen2TxCommandManager22append_encoded_commandE">
+<span id="_CPPv3N24Ex10Gen2TxCommandManager22append_encoded_commandE"></span><span id="_CPPv2N24Ex10Gen2TxCommandManager22append_encoded_commandE"></span><span class="target" id="struct_ex10_gen2_tx_command_manager_1a2c0f1fbb4be70a0ee326fd9b5fc8bee6"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">append_encoded_command</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv47BitSpan" title="BitSpan"><span class="n"><span class="pre">BitSpan</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">tx_buffer</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n"><span class="pre">transaction_id</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">cmd_index</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N24Ex10Gen2TxCommandManager22append_encoded_commandE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Takes in an encoded command and appends it to the first free index in the local buffer. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>There are no issues in ordering of id nor with repeating the same transaction id. </p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The ID has no bearing on the order in which a command is sent. </p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Param tx_buffer</dt>
+<dd class="field-odd"><p>A byte span with data of the encoded command</p>
+</dd>
+<dt class="field-even">Param transaction_id</dt>
+<dd class="field-even"><p>An Id to associate with the command. This ID is sent back in the event fifo when the command is sent, but has no other effect on the command sending itself.</p>
+</dd>
+<dt class="field-odd">Param cmd_index</dt>
+<dd class="field-odd"><p>The index in the command array where the encoded command was added.</p>
+</dd>
+<dt class="field-even">Return</dt>
+<dd class="field-even"><p>Returns an instance of <a class="reference internal" href="ex10_result.html#struct_ex10_result"><span class="std std-ref">Ex10Result</span></a> which informs the user if any errors occurred while adding the command.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N24Ex10Gen2TxCommandManager25encode_and_append_commandE">
+<span id="_CPPv3N24Ex10Gen2TxCommandManager25encode_and_append_commandE"></span><span id="_CPPv2N24Ex10Gen2TxCommandManager25encode_and_append_commandE"></span><span class="target" id="struct_ex10_gen2_tx_command_manager_1ad0a3407ef6990f436e35b2182126d48a"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">encode_and_append_command</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv415Gen2CommandSpec" title="Gen2CommandSpec"><span class="n"><span class="pre">Gen2CommandSpec</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">cmd_spec</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n"><span class="pre">transaction_id</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">cmd_index</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N24Ex10Gen2TxCommandManager25encode_and_append_commandE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Takes in a <a class="reference internal" href="#struct_gen2_command_spec"><span class="std std-ref">Gen2CommandSpec</span></a>, encodes it, and appends it to the first free index in the local buffer. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>There are no issues in ordering of id nor with repeating the same transaction id. </p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The ID has no bearing on the order in which a command is sent. </p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Param cmd_spec</dt>
+<dd class="field-odd"><p>A specification for the gen2 command.</p>
+</dd>
+<dt class="field-even">Param transaction_id</dt>
+<dd class="field-even"><p>An Id to associate with the command. This ID is sent back in the event fifo when the command is sent, but has no other effect on the command sending itself.</p>
+</dd>
+<dt class="field-odd">Param cmd_index</dt>
+<dd class="field-odd"><p>The index in the command array where the encoded command was added.</p>
+</dd>
+<dt class="field-even">Return</dt>
+<dd class="field-even"><p>Returns an instance of <a class="reference internal" href="ex10_result.html#struct_ex10_result"><span class="std std-ref">Ex10Result</span></a> which informs the user if any errors occurred while adding the command.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N24Ex10Gen2TxCommandManager29read_device_to_local_sequenceE">
+<span id="_CPPv3N24Ex10Gen2TxCommandManager29read_device_to_local_sequenceE"></span><span id="_CPPv2N24Ex10Gen2TxCommandManager29read_device_to_local_sequenceE"></span><span class="target" id="struct_ex10_gen2_tx_command_manager_1adb240426943af30ac73899318dc3577a"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">read_device_to_local_sequence</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N24Ex10Gen2TxCommandManager29read_device_to_local_sequenceE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Reads out the gen2 buffer from the device into the local storage. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This overwrites any previous commands in the local command sequence. </p>
+</div>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N24Ex10Gen2TxCommandManager20print_local_sequenceE">
+<span id="_CPPv3N24Ex10Gen2TxCommandManager20print_local_sequenceE"></span><span id="_CPPv2N24Ex10Gen2TxCommandManager20print_local_sequenceE"></span><span class="target" id="struct_ex10_gen2_tx_command_manager_1a5e69469398d998ea98c75e54d581d067"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">print_local_sequence</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N24Ex10Gen2TxCommandManager20print_local_sequenceE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Prints out the basics of the local command sequence for use in debugging. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N24Ex10Gen2TxCommandManager22dump_control_registersE">
+<span id="_CPPv3N24Ex10Gen2TxCommandManager22dump_control_registersE"></span><span id="_CPPv2N24Ex10Gen2TxCommandManager22dump_control_registersE"></span><span class="target" id="struct_ex10_gen2_tx_command_manager_1ac71d6ac4bf55db02ff713d5902231743"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">dump_control_registers</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N24Ex10Gen2TxCommandManager22dump_control_registersE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Reads all the registers associated with Gen2 commands from the device and prints them out. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N24Ex10Gen2TxCommandManager18get_local_sequenceE">
+<span id="_CPPv3N24Ex10Gen2TxCommandManager18get_local_sequenceE"></span><span id="_CPPv2N24Ex10Gen2TxCommandManager18get_local_sequenceE"></span><span class="target" id="struct_ex10_gen2_tx_command_manager_1a43ae32a728356eafaf211c3da39730f4"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv413TxCommandInfo" title="TxCommandInfo"><span class="n"><span class="pre">TxCommandInfo</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_local_sequence</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N24Ex10Gen2TxCommandManager18get_local_sequenceE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Retrieves a pointer to the structure containing all commands. </p>
+<p>This allows for debug and modifications by an expert user. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This will print off all commands in the buffer, even if not enabled.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>Returns a pointer to the local command sequence. </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>doxygenenum: Cannot find enum “Gen2TxCommandManagerErrorType” in doxygen xml output for project “ex10_c_dev_kit” from directory: _build/doxygen/xml</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>doxygenstruct: Cannot find class “Gen2TxCommandManagerError” in doxygen xml output for project “ex10_c_dev_kit” from directory: _build/doxygen/xml</p>
+</div>
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv413TxCommandInfo">
+<span id="_CPPv313TxCommandInfo"></span><span id="_CPPv213TxCommandInfo"></span><span id="TxCommandInfo"></span><span class="target" id="struct_tx_command_info"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">TxCommandInfo</span></span></span><a class="headerlink" href="#_CPPv413TxCommandInfo" title="Permalink to this definition">¶</a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N13TxCommandInfo14decoded_bufferE">
+<span id="_CPPv3N13TxCommandInfo14decoded_bufferE"></span><span id="_CPPv2N13TxCommandInfo14decoded_bufferE"></span><span id="TxCommandInfo::decoded_buffer__uint8_tA"></span><span class="target" id="struct_tx_command_info_1a9b696493589b82bea2f4bae52626cc7c"></span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">decoded_buffer</span></span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">TxCommandDecodeBufferSize</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#_CPPv4N13TxCommandInfo14decoded_bufferE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N13TxCommandInfo14encoded_bufferE">
+<span id="_CPPv3N13TxCommandInfo14encoded_bufferE"></span><span id="_CPPv2N13TxCommandInfo14encoded_bufferE"></span><span id="TxCommandInfo::encoded_buffer__uint8_tA"></span><span class="target" id="struct_tx_command_info_1aa4bb66f6c4ebefb1c57015aba2d8afe8"></span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">encoded_buffer</span></span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">TxCommandEncodeBufferSize</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#_CPPv4N13TxCommandInfo14encoded_bufferE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N13TxCommandInfo15encoded_commandE">
+<span id="_CPPv3N13TxCommandInfo15encoded_commandE"></span><span id="_CPPv2N13TxCommandInfo15encoded_commandE"></span><span id="TxCommandInfo::encoded_command__BitSpan"></span><span class="target" id="struct_tx_command_info_1a5cfff950662d30f14a5173f409c5ef7b"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv47BitSpan" title="BitSpan"><span class="n"><span class="pre">BitSpan</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">encoded_command</span></span></span><a class="headerlink" href="#_CPPv4N13TxCommandInfo15encoded_commandE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N13TxCommandInfo15decoded_commandE">
+<span id="_CPPv3N13TxCommandInfo15decoded_commandE"></span><span id="_CPPv2N13TxCommandInfo15decoded_commandE"></span><span id="TxCommandInfo::decoded_command__Gen2CommandSpec"></span><span class="target" id="struct_tx_command_info_1a1b8b200cd26e16229a9577c32305fa06"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv415Gen2CommandSpec" title="Gen2CommandSpec"><span class="n"><span class="pre">Gen2CommandSpec</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">decoded_command</span></span></span><a class="headerlink" href="#_CPPv4N13TxCommandInfo15decoded_commandE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N13TxCommandInfo5validE">
+<span id="_CPPv3N13TxCommandInfo5validE"></span><span id="_CPPv2N13TxCommandInfo5validE"></span><span id="TxCommandInfo::valid__b"></span><span class="target" id="struct_tx_command_info_1a39159efb8538e9be08601b8e6085f34c"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">valid</span></span></span><a class="headerlink" href="#_CPPv4N13TxCommandInfo5validE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N13TxCommandInfo14transaction_idE">
+<span id="_CPPv3N13TxCommandInfo14transaction_idE"></span><span id="_CPPv2N13TxCommandInfo14transaction_idE"></span><span id="TxCommandInfo::transaction_id__uint8_t"></span><span class="target" id="struct_tx_command_info_1a37f82af3328f83b5d8aee5e440e671a4"></span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">transaction_id</span></span></span><a class="headerlink" href="#_CPPv4N13TxCommandInfo14transaction_idE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+<section id="gen2-access-commands">
+<h2>Gen2 Access Commands<a class="headerlink" href="#gen2-access-commands" title="Permalink to this headline">¶</a></h2>
+<p>This gen2 commands file allows for organization and interpreting of different
+gen2 commands. This file therefore has knowledge about all different gen2
+commands, what their individual fields consist of, etc. This file is then used
+to encode and decode gen2 commands and responses.</p>
+<dl class="cpp enum">
+<dt class="sig sig-object cpp" id="_CPPv411Gen2Command">
+<span id="_CPPv311Gen2Command"></span><span id="_CPPv211Gen2Command"></span><span class="target" id="gen2__commands_8h_1aade3df971d8747f9dab0512961ea95f3"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Gen2Command</span></span></span><a class="headerlink" href="#_CPPv411Gen2Command" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Gen2 standard commands. </p>
+<p><em>Values:</em></p>
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N11Gen2Command10Gen2SelectE">
+<span id="_CPPv3N11Gen2Command10Gen2SelectE"></span><span id="_CPPv2N11Gen2Command10Gen2SelectE"></span><span class="target" id="gen2__commands_8h_1aade3df971d8747f9dab0512961ea95f3af1945ff988b1955ccb9f47da470f586d"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Gen2Select</span></span></span><a class="headerlink" href="#_CPPv4N11Gen2Command10Gen2SelectE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N11Gen2Command8Gen2ReadE">
+<span id="_CPPv3N11Gen2Command8Gen2ReadE"></span><span id="_CPPv2N11Gen2Command8Gen2ReadE"></span><span class="target" id="gen2__commands_8h_1aade3df971d8747f9dab0512961ea95f3aa0b19d56a369a94840b7d6710039374a"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Gen2Read</span></span></span><a class="headerlink" href="#_CPPv4N11Gen2Command8Gen2ReadE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N11Gen2Command9Gen2WriteE">
+<span id="_CPPv3N11Gen2Command9Gen2WriteE"></span><span id="_CPPv2N11Gen2Command9Gen2WriteE"></span><span class="target" id="gen2__commands_8h_1aade3df971d8747f9dab0512961ea95f3ac204f70b40a58210dc2663acb9e619ae"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Gen2Write</span></span></span><a class="headerlink" href="#_CPPv4N11Gen2Command9Gen2WriteE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N11Gen2Command10Gen2Kill_1E">
+<span id="_CPPv3N11Gen2Command10Gen2Kill_1E"></span><span id="_CPPv2N11Gen2Command10Gen2Kill_1E"></span><span class="target" id="gen2__commands_8h_1aade3df971d8747f9dab0512961ea95f3ab3773ed3afd91f50ead251fefead495b"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Gen2Kill_1</span></span></span><a class="headerlink" href="#_CPPv4N11Gen2Command10Gen2Kill_1E" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>First step of the kill command, immediate reply. </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N11Gen2Command10Gen2Kill_2E">
+<span id="_CPPv3N11Gen2Command10Gen2Kill_2E"></span><span id="_CPPv2N11Gen2Command10Gen2Kill_2E"></span><span class="target" id="gen2__commands_8h_1aade3df971d8747f9dab0512961ea95f3a43af366d65fa5de29bddc28ae1a12c8a"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Gen2Kill_2</span></span></span><a class="headerlink" href="#_CPPv4N11Gen2Command10Gen2Kill_2E" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Second step of the kill command, delayed reply. </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N11Gen2Command8Gen2LockE">
+<span id="_CPPv3N11Gen2Command8Gen2LockE"></span><span id="_CPPv2N11Gen2Command8Gen2LockE"></span><span class="target" id="gen2__commands_8h_1aade3df971d8747f9dab0512961ea95f3a29b705e1f8612c3a418cff7aac01e7f3"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Gen2Lock</span></span></span><a class="headerlink" href="#_CPPv4N11Gen2Command8Gen2LockE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N11Gen2Command10Gen2AccessE">
+<span id="_CPPv3N11Gen2Command10Gen2AccessE"></span><span id="_CPPv2N11Gen2Command10Gen2AccessE"></span><span class="target" id="gen2__commands_8h_1aade3df971d8747f9dab0512961ea95f3a3d995de0318e453b3479f7c66c212f00"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Gen2Access</span></span></span><a class="headerlink" href="#_CPPv4N11Gen2Command10Gen2AccessE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N11Gen2Command14Gen2BlockWriteE">
+<span id="_CPPv3N11Gen2Command14Gen2BlockWriteE"></span><span id="_CPPv2N11Gen2Command14Gen2BlockWriteE"></span><span class="target" id="gen2__commands_8h_1aade3df971d8747f9dab0512961ea95f3aa814626734b4a953b9d282a662d0787e"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Gen2BlockWrite</span></span></span><a class="headerlink" href="#_CPPv4N11Gen2Command14Gen2BlockWriteE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N11Gen2Command18Gen2BlockPermalockE">
+<span id="_CPPv3N11Gen2Command18Gen2BlockPermalockE"></span><span id="_CPPv2N11Gen2Command18Gen2BlockPermalockE"></span><span class="target" id="gen2__commands_8h_1aade3df971d8747f9dab0512961ea95f3af42ce05fd7b3cd007688c61fcc24f3a9"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Gen2BlockPermalock</span></span></span><a class="headerlink" href="#_CPPv4N11Gen2Command18Gen2BlockPermalockE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N11Gen2Command16Gen2AuthenticateE">
+<span id="_CPPv3N11Gen2Command16Gen2AuthenticateE"></span><span id="_CPPv2N11Gen2Command16Gen2AuthenticateE"></span><span class="target" id="gen2__commands_8h_1aade3df971d8747f9dab0512961ea95f3a83b21650795ccc65bf5df85e75676441"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Gen2Authenticate</span></span></span><a class="headerlink" href="#_CPPv4N11Gen2Command16Gen2AuthenticateE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N11Gen2Command14Gen2MarginReadE">
+<span id="_CPPv3N11Gen2Command14Gen2MarginReadE"></span><span id="_CPPv2N11Gen2Command14Gen2MarginReadE"></span><span class="target" id="gen2__commands_8h_1aade3df971d8747f9dab0512961ea95f3a4ff1a3ec1bcb4a14e0fe4bb5f66c6875"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Gen2MarginRead</span></span></span><a class="headerlink" href="#_CPPv4N11Gen2Command14Gen2MarginReadE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N11Gen2Command17_GEN2_COMMAND_MAXE">
+<span id="_CPPv3N11Gen2Command17_GEN2_COMMAND_MAXE"></span><span id="_CPPv2N11Gen2Command17_GEN2_COMMAND_MAXE"></span><span class="target" id="gen2__commands_8h_1aade3df971d8747f9dab0512961ea95f3a536140af10473b2241fbf16620b7cdbf"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">_GEN2_COMMAND_MAX</span></span></span><a class="headerlink" href="#_CPPv4N11Gen2Command17_GEN2_COMMAND_MAXE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="cpp enum">
+<dt class="sig sig-object cpp" id="_CPPv422BlockPermalockReadLock">
+<span id="_CPPv322BlockPermalockReadLock"></span><span id="_CPPv222BlockPermalockReadLock"></span><span class="target" id="gen2__commands_8h_1aafa859fb7d00c4b8a9990b48472e3808"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">BlockPermalockReadLock</span></span></span><a class="headerlink" href="#_CPPv422BlockPermalockReadLock" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p><em>Values:</em></p>
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N22BlockPermalockReadLock4ReadE">
+<span id="_CPPv3N22BlockPermalockReadLock4ReadE"></span><span id="_CPPv2N22BlockPermalockReadLock4ReadE"></span><span class="target" id="gen2__commands_8h_1aafa859fb7d00c4b8a9990b48472e3808a809abe96853e69894bbf8e5730b31348"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Read</span></span></span><a class="headerlink" href="#_CPPv4N22BlockPermalockReadLock4ReadE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N22BlockPermalockReadLock9PermalockE">
+<span id="_CPPv3N22BlockPermalockReadLock9PermalockE"></span><span id="_CPPv2N22BlockPermalockReadLock9PermalockE"></span><span class="target" id="gen2__commands_8h_1aafa859fb7d00c4b8a9990b48472e3808ae1043db6d43d4bcf023bb6c2779b65de"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Permalock</span></span></span><a class="headerlink" href="#_CPPv4N22BlockPermalockReadLock9PermalockE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="cpp enum">
+<dt class="sig sig-object cpp" id="_CPPv412SelectTarget">
+<span id="_CPPv312SelectTarget"></span><span id="_CPPv212SelectTarget"></span><span class="target" id="gen2__commands_8h_1a8deefbe7d4099ef89059365480540554"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SelectTarget</span></span></span><a class="headerlink" href="#_CPPv412SelectTarget" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p><em>Values:</em></p>
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N12SelectTarget8Session0E">
+<span id="_CPPv3N12SelectTarget8Session0E"></span><span id="_CPPv2N12SelectTarget8Session0E"></span><span class="target" id="gen2__commands_8h_1a8deefbe7d4099ef89059365480540554a80954c75c68feed49b73809ad07708fe"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Session0</span></span></span><a class="headerlink" href="#_CPPv4N12SelectTarget8Session0E" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N12SelectTarget8Session1E">
+<span id="_CPPv3N12SelectTarget8Session1E"></span><span id="_CPPv2N12SelectTarget8Session1E"></span><span class="target" id="gen2__commands_8h_1a8deefbe7d4099ef89059365480540554af4a52847a3019a213e662ba108095cf2"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Session1</span></span></span><a class="headerlink" href="#_CPPv4N12SelectTarget8Session1E" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N12SelectTarget8Session2E">
+<span id="_CPPv3N12SelectTarget8Session2E"></span><span id="_CPPv2N12SelectTarget8Session2E"></span><span class="target" id="gen2__commands_8h_1a8deefbe7d4099ef89059365480540554a9e9f422745f3989c2b981204f314e9ff"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Session2</span></span></span><a class="headerlink" href="#_CPPv4N12SelectTarget8Session2E" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N12SelectTarget8Session3E">
+<span id="_CPPv3N12SelectTarget8Session3E"></span><span id="_CPPv2N12SelectTarget8Session3E"></span><span class="target" id="gen2__commands_8h_1a8deefbe7d4099ef89059365480540554aacc672fdcbc5e87a4011fce136d75f90"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Session3</span></span></span><a class="headerlink" href="#_CPPv4N12SelectTarget8Session3E" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N12SelectTarget12SelectedFlagE">
+<span id="_CPPv3N12SelectTarget12SelectedFlagE"></span><span id="_CPPv2N12SelectTarget12SelectedFlagE"></span><span class="target" id="gen2__commands_8h_1a8deefbe7d4099ef89059365480540554a3912352d6751a21bc35183ab716d0fcb"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SelectedFlag</span></span></span><a class="headerlink" href="#_CPPv4N12SelectTarget12SelectedFlagE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="cpp enum">
+<dt class="sig sig-object cpp" id="_CPPv412SelectAction">
+<span id="_CPPv312SelectAction"></span><span id="_CPPv212SelectAction"></span><span class="target" id="gen2__commands_8h_1a8ad0f848b9b0494b3d72af816e23b4fe"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SelectAction</span></span></span><a class="headerlink" href="#_CPPv412SelectAction" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p><em>Values:</em></p>
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N12SelectAction9Action000E">
+<span id="_CPPv3N12SelectAction9Action000E"></span><span id="_CPPv2N12SelectAction9Action000E"></span><span class="target" id="gen2__commands_8h_1a8ad0f848b9b0494b3d72af816e23b4fea31bda0b15ac9b066e7144d4759827178"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Action000</span></span></span><a class="headerlink" href="#_CPPv4N12SelectAction9Action000E" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>match:SL=1, inv-&gt;A non-match:SL=0, inv-&gt;B </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N12SelectAction9Action001E">
+<span id="_CPPv3N12SelectAction9Action001E"></span><span id="_CPPv2N12SelectAction9Action001E"></span><span class="target" id="gen2__commands_8h_1a8ad0f848b9b0494b3d72af816e23b4feaa08c7616eb7f7a1899215bfeef365f78"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Action001</span></span></span><a class="headerlink" href="#_CPPv4N12SelectAction9Action001E" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>match:SL=1, inv-&gt;A non-match:do nothing </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N12SelectAction9Action010E">
+<span id="_CPPv3N12SelectAction9Action010E"></span><span id="_CPPv2N12SelectAction9Action010E"></span><span class="target" id="gen2__commands_8h_1a8ad0f848b9b0494b3d72af816e23b4fea66c290ee7702ecb4d78b1567abe3471d"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Action010</span></span></span><a class="headerlink" href="#_CPPv4N12SelectAction9Action010E" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>match:do nothing non-match:SL=0, inv-&gt;B </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N12SelectAction9Action011E">
+<span id="_CPPv3N12SelectAction9Action011E"></span><span id="_CPPv2N12SelectAction9Action011E"></span><span class="target" id="gen2__commands_8h_1a8ad0f848b9b0494b3d72af816e23b4fea3add82b7381ddc5cc33b5f200455ea67"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Action011</span></span></span><a class="headerlink" href="#_CPPv4N12SelectAction9Action011E" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>match:SL=!, (A-&gt;B,B-&gt;A) non-match:do nothing </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N12SelectAction9Action100E">
+<span id="_CPPv3N12SelectAction9Action100E"></span><span id="_CPPv2N12SelectAction9Action100E"></span><span class="target" id="gen2__commands_8h_1a8ad0f848b9b0494b3d72af816e23b4feae8d55640fd567051d58bf69b24449703"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Action100</span></span></span><a class="headerlink" href="#_CPPv4N12SelectAction9Action100E" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>match:SL=0, inv-&gt;B non-match:SL=1, inv-&gt;A </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N12SelectAction9Action101E">
+<span id="_CPPv3N12SelectAction9Action101E"></span><span id="_CPPv2N12SelectAction9Action101E"></span><span class="target" id="gen2__commands_8h_1a8ad0f848b9b0494b3d72af816e23b4fea0a5409b23d11f67a4160a2f3b52f2ae0"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Action101</span></span></span><a class="headerlink" href="#_CPPv4N12SelectAction9Action101E" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>match:SL=0, inv-&gt;B non-match:do nothing </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N12SelectAction9Action110E">
+<span id="_CPPv3N12SelectAction9Action110E"></span><span id="_CPPv2N12SelectAction9Action110E"></span><span class="target" id="gen2__commands_8h_1a8ad0f848b9b0494b3d72af816e23b4feae5b35e40828d60944242d1798b72e71d"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Action110</span></span></span><a class="headerlink" href="#_CPPv4N12SelectAction9Action110E" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>match:do nothing non-match:SL=1, inv-&gt;A </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N12SelectAction9Action111E">
+<span id="_CPPv3N12SelectAction9Action111E"></span><span id="_CPPv2N12SelectAction9Action111E"></span><span class="target" id="gen2__commands_8h_1a8ad0f848b9b0494b3d72af816e23b4feab400665c6550997b445082c5e13acb10"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Action111</span></span></span><a class="headerlink" href="#_CPPv4N12SelectAction9Action111E" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>match:do nothing non-match:SL=!, (A-&gt;B, B-&gt;A) </p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="cpp enum">
+<dt class="sig sig-object cpp" id="_CPPv416SelectMemoryBank">
+<span id="_CPPv316SelectMemoryBank"></span><span id="_CPPv216SelectMemoryBank"></span><span class="target" id="gen2__commands_8h_1a789a372963f23cfd035f156e8c7263a5"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SelectMemoryBank</span></span></span><a class="headerlink" href="#_CPPv416SelectMemoryBank" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p><em>Values:</em></p>
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N16SelectMemoryBank14SelectFileTypeE">
+<span id="_CPPv3N16SelectMemoryBank14SelectFileTypeE"></span><span id="_CPPv2N16SelectMemoryBank14SelectFileTypeE"></span><span class="target" id="gen2__commands_8h_1a789a372963f23cfd035f156e8c7263a5a0eff871902e8084c51a72787d2311de2"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SelectFileType</span></span></span><a class="headerlink" href="#_CPPv4N16SelectMemoryBank14SelectFileTypeE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N16SelectMemoryBank9SelectEPCE">
+<span id="_CPPv3N16SelectMemoryBank9SelectEPCE"></span><span id="_CPPv2N16SelectMemoryBank9SelectEPCE"></span><span class="target" id="gen2__commands_8h_1a789a372963f23cfd035f156e8c7263a5acebed1ddd0028afba2194243d85f3c7e"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SelectEPC</span></span></span><a class="headerlink" href="#_CPPv4N16SelectMemoryBank9SelectEPCE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N16SelectMemoryBank9SelectTIDE">
+<span id="_CPPv3N16SelectMemoryBank9SelectTIDE"></span><span id="_CPPv2N16SelectMemoryBank9SelectTIDE"></span><span class="target" id="gen2__commands_8h_1a789a372963f23cfd035f156e8c7263a5a785fbfee40ee5a20194c7ad0eaedea03"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SelectTID</span></span></span><a class="headerlink" href="#_CPPv4N16SelectMemoryBank9SelectTIDE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N16SelectMemoryBank11SelectFile0E">
+<span id="_CPPv3N16SelectMemoryBank11SelectFile0E"></span><span id="_CPPv2N16SelectMemoryBank11SelectFile0E"></span><span class="target" id="gen2__commands_8h_1a789a372963f23cfd035f156e8c7263a5ad347aca4223fc37770b8ee9870d665eb"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SelectFile0</span></span></span><a class="headerlink" href="#_CPPv4N16SelectMemoryBank11SelectFile0E" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="cpp enum">
+<dt class="sig sig-object cpp" id="_CPPv410SelectType">
+<span id="_CPPv310SelectType"></span><span id="_CPPv210SelectType"></span><span class="target" id="gen2__commands_8h_1af14f87671f616c0717b8182e35f2bb58"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SelectType</span></span></span><a class="headerlink" href="#_CPPv410SelectType" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p><em>Values:</em></p>
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N10SelectType9SelectAllE">
+<span id="_CPPv3N10SelectType9SelectAllE"></span><span id="_CPPv2N10SelectType9SelectAllE"></span><span class="target" id="gen2__commands_8h_1af14f87671f616c0717b8182e35f2bb58af8cdb14f3d941cfd676aa528f1a2fd69"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SelectAll</span></span></span><a class="headerlink" href="#_CPPv4N10SelectType9SelectAllE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N10SelectType10SelectAll2E">
+<span id="_CPPv3N10SelectType10SelectAll2E"></span><span id="_CPPv2N10SelectType10SelectAll2E"></span><span class="target" id="gen2__commands_8h_1af14f87671f616c0717b8182e35f2bb58aa7f005ceb4ddf951d5a5d1bdcc156d79"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SelectAll2</span></span></span><a class="headerlink" href="#_CPPv4N10SelectType10SelectAll2E" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N10SelectType17SelectNotAssertedE">
+<span id="_CPPv3N10SelectType17SelectNotAssertedE"></span><span id="_CPPv2N10SelectType17SelectNotAssertedE"></span><span class="target" id="gen2__commands_8h_1af14f87671f616c0717b8182e35f2bb58a8154dcdc3d8dc583664ee328e19cccad"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SelectNotAsserted</span></span></span><a class="headerlink" href="#_CPPv4N10SelectType17SelectNotAssertedE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N10SelectType14SelectAssertedE">
+<span id="_CPPv3N10SelectType14SelectAssertedE"></span><span id="_CPPv2N10SelectType14SelectAssertedE"></span><span class="target" id="gen2__commands_8h_1af14f87671f616c0717b8182e35f2bb58a463dfbd59d5548bce3b01a3a634ca6c8"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SelectAsserted</span></span></span><a class="headerlink" href="#_CPPv4N10SelectType14SelectAssertedE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="cpp enum">
+<dt class="sig sig-object cpp" id="_CPPv410MemoryBank">
+<span id="_CPPv310MemoryBank"></span><span id="_CPPv210MemoryBank"></span><span class="target" id="gen2__commands_8h_1a88160075fa3c4ff9f8aed4d349e90136"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">MemoryBank</span></span></span><a class="headerlink" href="#_CPPv410MemoryBank" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p><em>Values:</em></p>
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N10MemoryBank8ReservedE">
+<span id="_CPPv3N10MemoryBank8ReservedE"></span><span id="_CPPv2N10MemoryBank8ReservedE"></span><span class="target" id="gen2__commands_8h_1a88160075fa3c4ff9f8aed4d349e90136a6136a0872216f91100b42ea04333af70"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Reserved</span></span></span><a class="headerlink" href="#_CPPv4N10MemoryBank8ReservedE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N10MemoryBank3EPCE">
+<span id="_CPPv3N10MemoryBank3EPCE"></span><span id="_CPPv2N10MemoryBank3EPCE"></span><span class="target" id="gen2__commands_8h_1a88160075fa3c4ff9f8aed4d349e90136affbec1401e348615b9a44e08e87f0d02"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">EPC</span></span></span><a class="headerlink" href="#_CPPv4N10MemoryBank3EPCE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N10MemoryBank3TIDE">
+<span id="_CPPv3N10MemoryBank3TIDE"></span><span id="_CPPv2N10MemoryBank3TIDE"></span><span class="target" id="gen2__commands_8h_1a88160075fa3c4ff9f8aed4d349e90136a20cafe5fce15aaad7528526d7fda7462"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">TID</span></span></span><a class="headerlink" href="#_CPPv4N10MemoryBank3TIDE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N10MemoryBank4UserE">
+<span id="_CPPv3N10MemoryBank4UserE"></span><span id="_CPPv2N10MemoryBank4UserE"></span><span class="target" id="gen2__commands_8h_1a88160075fa3c4ff9f8aed4d349e90136ae168fb880dc0042ac28438e1875e41d3"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">User</span></span></span><a class="headerlink" href="#_CPPv4N10MemoryBank4UserE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="cpp enum">
+<dt class="sig sig-object cpp" id="_CPPv412TagErrorCode">
+<span id="_CPPv312TagErrorCode"></span><span id="_CPPv212TagErrorCode"></span><span class="target" id="gen2__commands_8h_1a05d692ee4bb0cfaaaca38681e4e315d5"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">TagErrorCode</span></span></span><a class="headerlink" href="#_CPPv412TagErrorCode" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p><em>Values:</em></p>
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N12TagErrorCode5OtherE">
+<span id="_CPPv3N12TagErrorCode5OtherE"></span><span id="_CPPv2N12TagErrorCode5OtherE"></span><span class="target" id="gen2__commands_8h_1a05d692ee4bb0cfaaaca38681e4e315d5ab41fe07a134a62397420ef854d35c7b1"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Other</span></span></span><a class="headerlink" href="#_CPPv4N12TagErrorCode5OtherE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N12TagErrorCode12NotSupportedE">
+<span id="_CPPv3N12TagErrorCode12NotSupportedE"></span><span id="_CPPv2N12TagErrorCode12NotSupportedE"></span><span class="target" id="gen2__commands_8h_1a05d692ee4bb0cfaaaca38681e4e315d5ad0260f16c5c21dfb7c8300d1036e333f"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">NotSupported</span></span></span><a class="headerlink" href="#_CPPv4N12TagErrorCode12NotSupportedE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N12TagErrorCode22InsufficientPrivilegesE">
+<span id="_CPPv3N12TagErrorCode22InsufficientPrivilegesE"></span><span id="_CPPv2N12TagErrorCode22InsufficientPrivilegesE"></span><span class="target" id="gen2__commands_8h_1a05d692ee4bb0cfaaaca38681e4e315d5ae49f5b0367a9b07596ec54ac863f5554"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">InsufficientPrivileges</span></span></span><a class="headerlink" href="#_CPPv4N12TagErrorCode22InsufficientPrivilegesE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N12TagErrorCode13MemoryOverrunE">
+<span id="_CPPv3N12TagErrorCode13MemoryOverrunE"></span><span id="_CPPv2N12TagErrorCode13MemoryOverrunE"></span><span class="target" id="gen2__commands_8h_1a05d692ee4bb0cfaaaca38681e4e315d5a3ed273e15a08a41783382a402cc48974"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">MemoryOverrun</span></span></span><a class="headerlink" href="#_CPPv4N12TagErrorCode13MemoryOverrunE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N12TagErrorCode12MemoryLockedE">
+<span id="_CPPv3N12TagErrorCode12MemoryLockedE"></span><span id="_CPPv2N12TagErrorCode12MemoryLockedE"></span><span class="target" id="gen2__commands_8h_1a05d692ee4bb0cfaaaca38681e4e315d5a6c8430edb88c7967905e07e0dcf86279"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">MemoryLocked</span></span></span><a class="headerlink" href="#_CPPv4N12TagErrorCode12MemoryLockedE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N12TagErrorCode11CryptoSuiteE">
+<span id="_CPPv3N12TagErrorCode11CryptoSuiteE"></span><span id="_CPPv2N12TagErrorCode11CryptoSuiteE"></span><span class="target" id="gen2__commands_8h_1a05d692ee4bb0cfaaaca38681e4e315d5a41c5f2c72fe31551b2013acf2b295073"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">CryptoSuite</span></span></span><a class="headerlink" href="#_CPPv4N12TagErrorCode11CryptoSuiteE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N12TagErrorCode22CommandNotEncapsulatedE">
+<span id="_CPPv3N12TagErrorCode22CommandNotEncapsulatedE"></span><span id="_CPPv2N12TagErrorCode22CommandNotEncapsulatedE"></span><span class="target" id="gen2__commands_8h_1a05d692ee4bb0cfaaaca38681e4e315d5a29d0706598113f305c485ec5b0a7aaf7"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">CommandNotEncapsulated</span></span></span><a class="headerlink" href="#_CPPv4N12TagErrorCode22CommandNotEncapsulatedE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N12TagErrorCode22ResponseBufferOverflowE">
+<span id="_CPPv3N12TagErrorCode22ResponseBufferOverflowE"></span><span id="_CPPv2N12TagErrorCode22ResponseBufferOverflowE"></span><span class="target" id="gen2__commands_8h_1a05d692ee4bb0cfaaaca38681e4e315d5aa0ede86962235c1ad7cda3bb24654f6d"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ResponseBufferOverflow</span></span></span><a class="headerlink" href="#_CPPv4N12TagErrorCode22ResponseBufferOverflowE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N12TagErrorCode15SecurityTimeoutE">
+<span id="_CPPv3N12TagErrorCode15SecurityTimeoutE"></span><span id="_CPPv2N12TagErrorCode15SecurityTimeoutE"></span><span class="target" id="gen2__commands_8h_1a05d692ee4bb0cfaaaca38681e4e315d5a58677b135ac486aed97d8b90ca05f5fe"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SecurityTimeout</span></span></span><a class="headerlink" href="#_CPPv4N12TagErrorCode15SecurityTimeoutE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N12TagErrorCode17InsufficientPowerE">
+<span id="_CPPv3N12TagErrorCode17InsufficientPowerE"></span><span id="_CPPv2N12TagErrorCode17InsufficientPowerE"></span><span class="target" id="gen2__commands_8h_1a05d692ee4bb0cfaaaca38681e4e315d5af289bd26d6b7bc3998af91eb46d9bd81"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">InsufficientPower</span></span></span><a class="headerlink" href="#_CPPv4N12TagErrorCode17InsufficientPowerE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N12TagErrorCode11NonSpecificE">
+<span id="_CPPv3N12TagErrorCode11NonSpecificE"></span><span id="_CPPv2N12TagErrorCode11NonSpecificE"></span><span class="target" id="gen2__commands_8h_1a05d692ee4bb0cfaaaca38681e4e315d5a6a40e2a7fac8cedf7ddbd8d405b4ad1e"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">NonSpecific</span></span></span><a class="headerlink" href="#_CPPv4N12TagErrorCode11NonSpecificE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N12TagErrorCode7NoErrorE">
+<span id="_CPPv3N12TagErrorCode7NoErrorE"></span><span id="_CPPv2N12TagErrorCode7NoErrorE"></span><span class="target" id="gen2__commands_8h_1a05d692ee4bb0cfaaaca38681e4e315d5aef9104c292609ba6db320509be8fe27f"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">NoError</span></span></span><a class="headerlink" href="#_CPPv4N12TagErrorCode7NoErrorE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="cpp enum">
+<dt class="sig sig-object cpp" id="_CPPv412ResponseType">
+<span id="_CPPv312ResponseType"></span><span id="_CPPv212ResponseType"></span><span class="target" id="gen2__commands_8h_1af5055605e320b3f9ea9fa330b57604e7"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ResponseType</span></span></span><a class="headerlink" href="#_CPPv412ResponseType" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Gen2 response types as defined in the Gen2TxnControls register. </p>
+<p>To support in_process select “Delayed”. </p>
+<p><em>Values:</em></p>
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N12ResponseType5None_E">
+<span id="_CPPv3N12ResponseType5None_E"></span><span id="_CPPv2N12ResponseType5None_E"></span><span class="target" id="gen2__commands_8h_1af5055605e320b3f9ea9fa330b57604e7ae437871641ce968eff3f56e7aa7d5001"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">None_</span></span></span><a class="headerlink" href="#_CPPv4N12ResponseType5None_E" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N12ResponseType9ImmediateE">
+<span id="_CPPv3N12ResponseType9ImmediateE"></span><span id="_CPPv2N12ResponseType9ImmediateE"></span><span class="target" id="gen2__commands_8h_1af5055605e320b3f9ea9fa330b57604e7ae940424d9ddb2b0510a1c99d4755c2b9"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Immediate</span></span></span><a class="headerlink" href="#_CPPv4N12ResponseType9ImmediateE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N12ResponseType7DelayedE">
+<span id="_CPPv3N12ResponseType7DelayedE"></span><span id="_CPPv2N12ResponseType7DelayedE"></span><span class="target" id="gen2__commands_8h_1af5055605e320b3f9ea9fa330b57604e7a72bd26faec1ecc9a5e06209b443f137e"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Delayed</span></span></span><a class="headerlink" href="#_CPPv4N12ResponseType7DelayedE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N12ResponseType9InProcessE">
+<span id="_CPPv3N12ResponseType9InProcessE"></span><span id="_CPPv2N12ResponseType9InProcessE"></span><span class="target" id="gen2__commands_8h_1af5055605e320b3f9ea9fa330b57604e7a7c85305e96f20efbb4350f9878f18b4f"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">InProcess</span></span></span><a class="headerlink" href="#_CPPv4N12ResponseType9InProcessE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv47BitSpan">
+<span id="_CPPv37BitSpan"></span><span id="_CPPv27BitSpan"></span><span id="BitSpan"></span><span class="target" id="struct_bit_span"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">BitSpan</span></span></span><a class="headerlink" href="#_CPPv47BitSpan" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Defines a mutable location of contiguous memory, organized as bits. </p>
+<p>Each byte in data is utilized, therefore 8 bits from length exist in each byte. The bits and bytes are organized LSB first. This means that bit 0 of byte 0 is the first bit, bit 1 of byte 0 is next, etc. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N7BitSpan4dataE">
+<span id="_CPPv3N7BitSpan4dataE"></span><span id="_CPPv2N7BitSpan4dataE"></span><span id="BitSpan::data__uint8_tP"></span><span class="target" id="struct_bit_span_1a4068eca2888899ff9e24a9c799c1b9f0"></span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">data</span></span></span><a class="headerlink" href="#_CPPv4N7BitSpan4dataE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The pointer to beginning of the memory location. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N7BitSpan6lengthE">
+<span id="_CPPv3N7BitSpan6lengthE"></span><span id="_CPPv2N7BitSpan6lengthE"></span><span id="BitSpan::length__s"></span><span class="target" id="struct_bit_span_1abe6ff7b34912ca4efb3bbea729aa8d42"></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">length</span></span></span><a class="headerlink" href="#_CPPv4N7BitSpan6lengthE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The number of bits in the span. </p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv415Gen2CommandSpec">
+<span id="_CPPv315Gen2CommandSpec"></span><span id="_CPPv215Gen2CommandSpec"></span><span id="Gen2CommandSpec"></span><span class="target" id="struct_gen2_command_spec"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Gen2CommandSpec</span></span></span><a class="headerlink" href="#_CPPv415Gen2CommandSpec" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>A structure allowing the CSDK to parse Gen2 commands. </p>
+<p>
+EX: <a class="reference internal" href="#struct_select_command_args"><span class="std std-ref">SelectCommandArgs</span></a>. This is then accompanied by the command field which lets the code know how to interpret the void* casted data. <dl class="field-list simple">
+<dt class="field-odd">param command</dt>
+<dd class="field-odd"><p>The command type being used. </p>
+</dd>
+<dt class="field-even">param args</dt>
+<dd class="field-even"><p>Specifies the aruments of the given command type. These take the form of the CommandNameArgs.</p>
+</dd>
+</dl>
+</p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N15Gen2CommandSpec7commandE">
+<span id="_CPPv3N15Gen2CommandSpec7commandE"></span><span id="_CPPv2N15Gen2CommandSpec7commandE"></span><span id="Gen2CommandSpec::command__Gen2Command"></span><span class="target" id="struct_gen2_command_spec_1a2424fd21510463ed7c31f7e86d934de7"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv411Gen2Command" title="Gen2Command"><span class="n"><span class="pre">Gen2Command</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">command</span></span></span><a class="headerlink" href="#_CPPv4N15Gen2CommandSpec7commandE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N15Gen2CommandSpec4argsE">
+<span id="_CPPv3N15Gen2CommandSpec4argsE"></span><span id="_CPPv2N15Gen2CommandSpec4argsE"></span><span id="Gen2CommandSpec::args__voidP"></span><span class="target" id="struct_gen2_command_spec_1ae53afe006e585c6eb86f0d426d918d44"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">args</span></span></span><a class="headerlink" href="#_CPPv4N15Gen2CommandSpec4argsE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv49Gen2Reply">
+<span id="_CPPv39Gen2Reply"></span><span id="_CPPv29Gen2Reply"></span><span id="Gen2Reply"></span><span class="target" id="struct_gen2_reply"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Gen2Reply</span></span></span><a class="headerlink" href="#_CPPv49Gen2Reply" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>A decoded gen2 command from a raw reply. </p>
+<p>Used in decode_reply() in gen2_commands.c</p>
+<p><dl class="field-list simple">
+<dt class="field-odd">param reply</dt>
+<dd class="field-odd"><p>Populated with the command the tag is replying to. </p>
+</dd>
+<dt class="field-even">param error_code</dt>
+<dd class="field-even"><p>Shows if a generic gen2 error occurred. These are the generic gen2 errors specified in the gen2 spec under Annex I section I.1. </p>
+</dd>
+<dt class="field-odd">param data</dt>
+<dd class="field-odd"><p>The response data with the header bit stripped off. The header shows the error, so after being parsed, this is discarded. </p>
+</dd>
+<dt class="field-even">param transaction_status</dt>
+<dd class="field-even"><p>Gives some additional error information which can be garnered from the Ex10 device modem. </p>
+</dd>
+</dl>
+</p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N9Gen2Reply5replyE">
+<span id="_CPPv3N9Gen2Reply5replyE"></span><span id="_CPPv2N9Gen2Reply5replyE"></span><span id="Gen2Reply::reply__Gen2Command"></span><span class="target" id="struct_gen2_reply_1ae8627a4d2ee97728a85fabed10eb1c95"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv411Gen2Command" title="Gen2Command"><span class="n"><span class="pre">Gen2Command</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">reply</span></span></span><a class="headerlink" href="#_CPPv4N9Gen2Reply5replyE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N9Gen2Reply10error_codeE">
+<span id="_CPPv3N9Gen2Reply10error_codeE"></span><span id="_CPPv2N9Gen2Reply10error_codeE"></span><span id="Gen2Reply::error_code__TagErrorCode"></span><span class="target" id="struct_gen2_reply_1ad5a89317a36d824124b060445dc728be"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv412TagErrorCode" title="TagErrorCode"><span class="n"><span class="pre">TagErrorCode</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">error_code</span></span></span><a class="headerlink" href="#_CPPv4N9Gen2Reply10error_codeE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N9Gen2Reply4dataE">
+<span id="_CPPv3N9Gen2Reply4dataE"></span><span id="_CPPv2N9Gen2Reply4dataE"></span><span id="Gen2Reply::data__uint16_tP"></span><span class="target" id="struct_gen2_reply_1a92dc052719d3d5f3ac3a6a33544949d1"></span><span class="n"><span class="pre">uint16_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">data</span></span></span><a class="headerlink" href="#_CPPv4N9Gen2Reply4dataE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N9Gen2Reply18transaction_statusE">
+<span id="_CPPv3N9Gen2Reply18transaction_statusE"></span><span id="_CPPv2N9Gen2Reply18transaction_statusE"></span><span id="Gen2Reply::transaction_status__Gen2TransactionStatus"></span><span class="target" id="struct_gen2_reply_1abfce92581de856d417ca49ccff983791"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><a class="reference internal" href="event_parser.html#_CPPv421Gen2TransactionStatus" title="Gen2TransactionStatus"><span class="n"><span class="pre">Gen2TransactionStatus</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">transaction_status</span></span></span><a class="headerlink" href="#_CPPv4N9Gen2Reply18transaction_statusE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv417SelectCommandArgs">
+<span id="_CPPv317SelectCommandArgs"></span><span id="_CPPv217SelectCommandArgs"></span><span id="SelectCommandArgs"></span><span class="target" id="struct_select_command_args"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SelectCommandArgs</span></span></span><a class="headerlink" href="#_CPPv417SelectCommandArgs" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Gen2 commands which can be sent to tags. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N17SelectCommandArgs6targetE">
+<span id="_CPPv3N17SelectCommandArgs6targetE"></span><span id="_CPPv2N17SelectCommandArgs6targetE"></span><span id="SelectCommandArgs::target__SelectTarget"></span><span class="target" id="struct_select_command_args_1ac8dd0f56b1b57dbbd6e0509b21bbcd02"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv412SelectTarget" title="SelectTarget"><span class="n"><span class="pre">SelectTarget</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">target</span></span></span><a class="headerlink" href="#_CPPv4N17SelectCommandArgs6targetE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N17SelectCommandArgs6actionE">
+<span id="_CPPv3N17SelectCommandArgs6actionE"></span><span id="_CPPv2N17SelectCommandArgs6actionE"></span><span id="SelectCommandArgs::action__SelectAction"></span><span class="target" id="struct_select_command_args_1a0137086512932c306b53812e3598bb86"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv412SelectAction" title="SelectAction"><span class="n"><span class="pre">SelectAction</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">action</span></span></span><a class="headerlink" href="#_CPPv4N17SelectCommandArgs6actionE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N17SelectCommandArgs11memory_bankE">
+<span id="_CPPv3N17SelectCommandArgs11memory_bankE"></span><span id="_CPPv2N17SelectCommandArgs11memory_bankE"></span><span id="SelectCommandArgs::memory_bank__SelectMemoryBank"></span><span class="target" id="struct_select_command_args_1a49d3c45aa648678d7cc7114ccc8cfc26"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv416SelectMemoryBank" title="SelectMemoryBank"><span class="n"><span class="pre">SelectMemoryBank</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">memory_bank</span></span></span><a class="headerlink" href="#_CPPv4N17SelectCommandArgs11memory_bankE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N17SelectCommandArgs11bit_pointerE">
+<span id="_CPPv3N17SelectCommandArgs11bit_pointerE"></span><span id="_CPPv2N17SelectCommandArgs11bit_pointerE"></span><span id="SelectCommandArgs::bit_pointer__uint32_t"></span><span class="target" id="struct_select_command_args_1a38a209a51d990f5cd7b553b18099a854"></span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">bit_pointer</span></span></span><a class="headerlink" href="#_CPPv4N17SelectCommandArgs11bit_pointerE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N17SelectCommandArgs9bit_countE">
+<span id="_CPPv3N17SelectCommandArgs9bit_countE"></span><span id="_CPPv2N17SelectCommandArgs9bit_countE"></span><span id="SelectCommandArgs::bit_count__uint8_t"></span><span class="target" id="struct_select_command_args_1a1ae9e1b8ade877d3a270b25d6508ca22"></span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">bit_count</span></span></span><a class="headerlink" href="#_CPPv4N17SelectCommandArgs9bit_countE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N17SelectCommandArgs4maskE">
+<span id="_CPPv3N17SelectCommandArgs4maskE"></span><span id="_CPPv2N17SelectCommandArgs4maskE"></span><span id="SelectCommandArgs::mask__BitSpanP"></span><span class="target" id="struct_select_command_args_1a0c98fa5c6be628be19671985ddac66c2"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv47BitSpan" title="BitSpan"><span class="n"><span class="pre">BitSpan</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">mask</span></span></span><a class="headerlink" href="#_CPPv4N17SelectCommandArgs4maskE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N17SelectCommandArgs8truncateE">
+<span id="_CPPv3N17SelectCommandArgs8truncateE"></span><span id="_CPPv2N17SelectCommandArgs8truncateE"></span><span id="SelectCommandArgs::truncate__b"></span><span class="target" id="struct_select_command_args_1ac1ba362abb1c89e23024f67f91abed7d"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">truncate</span></span></span><a class="headerlink" href="#_CPPv4N17SelectCommandArgs8truncateE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv415ReadCommandArgs">
+<span id="_CPPv315ReadCommandArgs"></span><span id="_CPPv215ReadCommandArgs"></span><span id="ReadCommandArgs"></span><span class="target" id="struct_read_command_args"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ReadCommandArgs</span></span></span><a class="headerlink" href="#_CPPv415ReadCommandArgs" title="Permalink to this definition">¶</a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N15ReadCommandArgs11memory_bankE">
+<span id="_CPPv3N15ReadCommandArgs11memory_bankE"></span><span id="_CPPv2N15ReadCommandArgs11memory_bankE"></span><span id="ReadCommandArgs::memory_bank__MemoryBank"></span><span class="target" id="struct_read_command_args_1a119e572ed0ca0d46e424803b9f1a181f"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv410MemoryBank" title="MemoryBank"><span class="n"><span class="pre">MemoryBank</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">memory_bank</span></span></span><a class="headerlink" href="#_CPPv4N15ReadCommandArgs11memory_bankE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N15ReadCommandArgs12word_pointerE">
+<span id="_CPPv3N15ReadCommandArgs12word_pointerE"></span><span id="_CPPv2N15ReadCommandArgs12word_pointerE"></span><span id="ReadCommandArgs::word_pointer__uint32_t"></span><span class="target" id="struct_read_command_args_1a3d8f0407aa2740400399ecb8642d7414"></span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">word_pointer</span></span></span><a class="headerlink" href="#_CPPv4N15ReadCommandArgs12word_pointerE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N15ReadCommandArgs10word_countE">
+<span id="_CPPv3N15ReadCommandArgs10word_countE"></span><span id="_CPPv2N15ReadCommandArgs10word_countE"></span><span id="ReadCommandArgs::word_count__uint8_t"></span><span class="target" id="struct_read_command_args_1aca47e0e6dac67174fe31dc8c37368e05"></span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">word_count</span></span></span><a class="headerlink" href="#_CPPv4N15ReadCommandArgs10word_countE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv416WriteCommandArgs">
+<span id="_CPPv316WriteCommandArgs"></span><span id="_CPPv216WriteCommandArgs"></span><span id="WriteCommandArgs"></span><span class="target" id="struct_write_command_args"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">WriteCommandArgs</span></span></span><a class="headerlink" href="#_CPPv416WriteCommandArgs" title="Permalink to this definition">¶</a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N16WriteCommandArgs11memory_bankE">
+<span id="_CPPv3N16WriteCommandArgs11memory_bankE"></span><span id="_CPPv2N16WriteCommandArgs11memory_bankE"></span><span id="WriteCommandArgs::memory_bank__MemoryBank"></span><span class="target" id="struct_write_command_args_1a8fb334a914089af23c2b0a29c5f13265"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv410MemoryBank" title="MemoryBank"><span class="n"><span class="pre">MemoryBank</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">memory_bank</span></span></span><a class="headerlink" href="#_CPPv4N16WriteCommandArgs11memory_bankE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N16WriteCommandArgs12word_pointerE">
+<span id="_CPPv3N16WriteCommandArgs12word_pointerE"></span><span id="_CPPv2N16WriteCommandArgs12word_pointerE"></span><span id="WriteCommandArgs::word_pointer__uint32_t"></span><span class="target" id="struct_write_command_args_1a8a4f93fce8223dcd1d760855838a8ada"></span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">word_pointer</span></span></span><a class="headerlink" href="#_CPPv4N16WriteCommandArgs12word_pointerE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N16WriteCommandArgs4dataE">
+<span id="_CPPv3N16WriteCommandArgs4dataE"></span><span id="_CPPv2N16WriteCommandArgs4dataE"></span><span id="WriteCommandArgs::data__uint16_t"></span><span class="target" id="struct_write_command_args_1a13d3aafbbafbacccdedd6f41182e4555"></span><span class="n"><span class="pre">uint16_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">data</span></span></span><a class="headerlink" href="#_CPPv4N16WriteCommandArgs4dataE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv415KillCommandArgs">
+<span id="_CPPv315KillCommandArgs"></span><span id="_CPPv215KillCommandArgs"></span><span id="KillCommandArgs"></span><span class="target" id="struct_kill_command_args"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">KillCommandArgs</span></span></span><a class="headerlink" href="#_CPPv415KillCommandArgs" title="Permalink to this definition">¶</a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N15KillCommandArgs8passwordE">
+<span id="_CPPv3N15KillCommandArgs8passwordE"></span><span id="_CPPv2N15KillCommandArgs8passwordE"></span><span id="KillCommandArgs::password__uint16_t"></span><span class="target" id="struct_kill_command_args_1a8d4b0ff40aaf2365e2e8b46c1e6e845b"></span><span class="n"><span class="pre">uint16_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">password</span></span></span><a class="headerlink" href="#_CPPv4N15KillCommandArgs8passwordE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv415LockCommandArgs">
+<span id="_CPPv315LockCommandArgs"></span><span id="_CPPv215LockCommandArgs"></span><span id="LockCommandArgs"></span><span class="target" id="struct_lock_command_args"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">LockCommandArgs</span></span></span><a class="headerlink" href="#_CPPv415LockCommandArgs" title="Permalink to this definition">¶</a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N15LockCommandArgs29kill_password_read_write_maskE">
+<span id="_CPPv3N15LockCommandArgs29kill_password_read_write_maskE"></span><span id="_CPPv2N15LockCommandArgs29kill_password_read_write_maskE"></span><span id="LockCommandArgs::kill_password_read_write_mask__b"></span><span class="target" id="struct_lock_command_args_1a45a1b3de44f7393478fe2b0be0f2a4d3"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">kill_password_read_write_mask</span></span></span><a class="headerlink" href="#_CPPv4N15LockCommandArgs29kill_password_read_write_maskE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N15LockCommandArgs28kill_password_permalock_maskE">
+<span id="_CPPv3N15LockCommandArgs28kill_password_permalock_maskE"></span><span id="_CPPv2N15LockCommandArgs28kill_password_permalock_maskE"></span><span id="LockCommandArgs::kill_password_permalock_mask__b"></span><span class="target" id="struct_lock_command_args_1a03028bf418259c14ac3d944e6ce980d2"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">kill_password_permalock_mask</span></span></span><a class="headerlink" href="#_CPPv4N15LockCommandArgs28kill_password_permalock_maskE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N15LockCommandArgs31access_password_read_write_maskE">
+<span id="_CPPv3N15LockCommandArgs31access_password_read_write_maskE"></span><span id="_CPPv2N15LockCommandArgs31access_password_read_write_maskE"></span><span id="LockCommandArgs::access_password_read_write_mask__b"></span><span class="target" id="struct_lock_command_args_1a9d6a3c2a835cbe274395aaf819516434"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">access_password_read_write_mask</span></span></span><a class="headerlink" href="#_CPPv4N15LockCommandArgs31access_password_read_write_maskE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N15LockCommandArgs30access_password_permalock_maskE">
+<span id="_CPPv3N15LockCommandArgs30access_password_permalock_maskE"></span><span id="_CPPv2N15LockCommandArgs30access_password_permalock_maskE"></span><span id="LockCommandArgs::access_password_permalock_mask__b"></span><span class="target" id="struct_lock_command_args_1a432de268769432fbc5676aa199f05bca"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">access_password_permalock_mask</span></span></span><a class="headerlink" href="#_CPPv4N15LockCommandArgs30access_password_permalock_maskE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N15LockCommandArgs21epc_memory_write_maskE">
+<span id="_CPPv3N15LockCommandArgs21epc_memory_write_maskE"></span><span id="_CPPv2N15LockCommandArgs21epc_memory_write_maskE"></span><span id="LockCommandArgs::epc_memory_write_mask__b"></span><span class="target" id="struct_lock_command_args_1aa75f11f946c8f69455fd93b023285da0"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">epc_memory_write_mask</span></span></span><a class="headerlink" href="#_CPPv4N15LockCommandArgs21epc_memory_write_maskE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N15LockCommandArgs25epc_memory_permalock_maskE">
+<span id="_CPPv3N15LockCommandArgs25epc_memory_permalock_maskE"></span><span id="_CPPv2N15LockCommandArgs25epc_memory_permalock_maskE"></span><span id="LockCommandArgs::epc_memory_permalock_mask__b"></span><span class="target" id="struct_lock_command_args_1ae59f7d40989202c22e417df7bb6e5031"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">epc_memory_permalock_mask</span></span></span><a class="headerlink" href="#_CPPv4N15LockCommandArgs25epc_memory_permalock_maskE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N15LockCommandArgs21tid_memory_write_maskE">
+<span id="_CPPv3N15LockCommandArgs21tid_memory_write_maskE"></span><span id="_CPPv2N15LockCommandArgs21tid_memory_write_maskE"></span><span id="LockCommandArgs::tid_memory_write_mask__b"></span><span class="target" id="struct_lock_command_args_1a4a9a81b146ffd0ab19a90dd264288caa"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">tid_memory_write_mask</span></span></span><a class="headerlink" href="#_CPPv4N15LockCommandArgs21tid_memory_write_maskE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N15LockCommandArgs25tid_memory_permalock_maskE">
+<span id="_CPPv3N15LockCommandArgs25tid_memory_permalock_maskE"></span><span id="_CPPv2N15LockCommandArgs25tid_memory_permalock_maskE"></span><span id="LockCommandArgs::tid_memory_permalock_mask__b"></span><span class="target" id="struct_lock_command_args_1a56895d09054786be9f92162ef77104ff"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">tid_memory_permalock_mask</span></span></span><a class="headerlink" href="#_CPPv4N15LockCommandArgs25tid_memory_permalock_maskE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N15LockCommandArgs24file_0_memory_write_maskE">
+<span id="_CPPv3N15LockCommandArgs24file_0_memory_write_maskE"></span><span id="_CPPv2N15LockCommandArgs24file_0_memory_write_maskE"></span><span id="LockCommandArgs::file_0_memory_write_mask__b"></span><span class="target" id="struct_lock_command_args_1a57e2dc08de91f707fa9648a0a14d7fe0"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">file_0_memory_write_mask</span></span></span><a class="headerlink" href="#_CPPv4N15LockCommandArgs24file_0_memory_write_maskE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N15LockCommandArgs28file_0_memory_permalock_maskE">
+<span id="_CPPv3N15LockCommandArgs28file_0_memory_permalock_maskE"></span><span id="_CPPv2N15LockCommandArgs28file_0_memory_permalock_maskE"></span><span id="LockCommandArgs::file_0_memory_permalock_mask__b"></span><span class="target" id="struct_lock_command_args_1ab7497147632e0f8d40d0e010b80ad719"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">file_0_memory_permalock_mask</span></span></span><a class="headerlink" href="#_CPPv4N15LockCommandArgs28file_0_memory_permalock_maskE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N15LockCommandArgs29kill_password_read_write_lockE">
+<span id="_CPPv3N15LockCommandArgs29kill_password_read_write_lockE"></span><span id="_CPPv2N15LockCommandArgs29kill_password_read_write_lockE"></span><span id="LockCommandArgs::kill_password_read_write_lock__b"></span><span class="target" id="struct_lock_command_args_1ad59e9c0167c5008834e360e3f2f3ebcb"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">kill_password_read_write_lock</span></span></span><a class="headerlink" href="#_CPPv4N15LockCommandArgs29kill_password_read_write_lockE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N15LockCommandArgs23kill_password_permalockE">
+<span id="_CPPv3N15LockCommandArgs23kill_password_permalockE"></span><span id="_CPPv2N15LockCommandArgs23kill_password_permalockE"></span><span id="LockCommandArgs::kill_password_permalock__b"></span><span class="target" id="struct_lock_command_args_1a6e34f4560cba2c1b4aa7d1f719eb7f3d"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">kill_password_permalock</span></span></span><a class="headerlink" href="#_CPPv4N15LockCommandArgs23kill_password_permalockE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N15LockCommandArgs31access_password_read_write_lockE">
+<span id="_CPPv3N15LockCommandArgs31access_password_read_write_lockE"></span><span id="_CPPv2N15LockCommandArgs31access_password_read_write_lockE"></span><span id="LockCommandArgs::access_password_read_write_lock__b"></span><span class="target" id="struct_lock_command_args_1a994a2b5ad7ba1577e1bbd03d70f1122a"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">access_password_read_write_lock</span></span></span><a class="headerlink" href="#_CPPv4N15LockCommandArgs31access_password_read_write_lockE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N15LockCommandArgs25access_password_permalockE">
+<span id="_CPPv3N15LockCommandArgs25access_password_permalockE"></span><span id="_CPPv2N15LockCommandArgs25access_password_permalockE"></span><span id="LockCommandArgs::access_password_permalock__b"></span><span class="target" id="struct_lock_command_args_1a58979c18a945bdf0a046cc3707e711cb"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">access_password_permalock</span></span></span><a class="headerlink" href="#_CPPv4N15LockCommandArgs25access_password_permalockE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N15LockCommandArgs21epc_memory_write_lockE">
+<span id="_CPPv3N15LockCommandArgs21epc_memory_write_lockE"></span><span id="_CPPv2N15LockCommandArgs21epc_memory_write_lockE"></span><span id="LockCommandArgs::epc_memory_write_lock__b"></span><span class="target" id="struct_lock_command_args_1af3a2b5828be0f7d42d3d8e6c73b0f500"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">epc_memory_write_lock</span></span></span><a class="headerlink" href="#_CPPv4N15LockCommandArgs21epc_memory_write_lockE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N15LockCommandArgs20epc_memory_permalockE">
+<span id="_CPPv3N15LockCommandArgs20epc_memory_permalockE"></span><span id="_CPPv2N15LockCommandArgs20epc_memory_permalockE"></span><span id="LockCommandArgs::epc_memory_permalock__b"></span><span class="target" id="struct_lock_command_args_1a974ab0cde8aac35107261ea8fc0bff52"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">epc_memory_permalock</span></span></span><a class="headerlink" href="#_CPPv4N15LockCommandArgs20epc_memory_permalockE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N15LockCommandArgs21tid_memory_write_lockE">
+<span id="_CPPv3N15LockCommandArgs21tid_memory_write_lockE"></span><span id="_CPPv2N15LockCommandArgs21tid_memory_write_lockE"></span><span id="LockCommandArgs::tid_memory_write_lock__b"></span><span class="target" id="struct_lock_command_args_1aae5ba2b4ebdf1ea95990c60fac76608c"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">tid_memory_write_lock</span></span></span><a class="headerlink" href="#_CPPv4N15LockCommandArgs21tid_memory_write_lockE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N15LockCommandArgs20tid_memory_permalockE">
+<span id="_CPPv3N15LockCommandArgs20tid_memory_permalockE"></span><span id="_CPPv2N15LockCommandArgs20tid_memory_permalockE"></span><span id="LockCommandArgs::tid_memory_permalock__b"></span><span class="target" id="struct_lock_command_args_1a506e3fca79db5ded066ab9dd09409496"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">tid_memory_permalock</span></span></span><a class="headerlink" href="#_CPPv4N15LockCommandArgs20tid_memory_permalockE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N15LockCommandArgs24file_0_memory_write_lockE">
+<span id="_CPPv3N15LockCommandArgs24file_0_memory_write_lockE"></span><span id="_CPPv2N15LockCommandArgs24file_0_memory_write_lockE"></span><span id="LockCommandArgs::file_0_memory_write_lock__b"></span><span class="target" id="struct_lock_command_args_1a48aaec1e2715a2d92b83f2920f1cc455"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">file_0_memory_write_lock</span></span></span><a class="headerlink" href="#_CPPv4N15LockCommandArgs24file_0_memory_write_lockE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N15LockCommandArgs23file_0_memory_permalockE">
+<span id="_CPPv3N15LockCommandArgs23file_0_memory_permalockE"></span><span id="_CPPv2N15LockCommandArgs23file_0_memory_permalockE"></span><span id="LockCommandArgs::file_0_memory_permalock__b"></span><span class="target" id="struct_lock_command_args_1ab30d6e7e90441fb95ccc1b768f030250"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">file_0_memory_permalock</span></span></span><a class="headerlink" href="#_CPPv4N15LockCommandArgs23file_0_memory_permalockE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv417AccessCommandArgs">
+<span id="_CPPv317AccessCommandArgs"></span><span id="_CPPv217AccessCommandArgs"></span><span id="AccessCommandArgs"></span><span class="target" id="struct_access_command_args"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">AccessCommandArgs</span></span></span><a class="headerlink" href="#_CPPv417AccessCommandArgs" title="Permalink to this definition">¶</a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N17AccessCommandArgs8passwordE">
+<span id="_CPPv3N17AccessCommandArgs8passwordE"></span><span id="_CPPv2N17AccessCommandArgs8passwordE"></span><span id="AccessCommandArgs::password__uint16_t"></span><span class="target" id="struct_access_command_args_1afb3f9e7b1bb613c5dad3e52c0675178f"></span><span class="n"><span class="pre">uint16_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">password</span></span></span><a class="headerlink" href="#_CPPv4N17AccessCommandArgs8passwordE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv421BlockWriteCommandArgs">
+<span id="_CPPv321BlockWriteCommandArgs"></span><span id="_CPPv221BlockWriteCommandArgs"></span><span id="BlockWriteCommandArgs"></span><span class="target" id="struct_block_write_command_args"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">BlockWriteCommandArgs</span></span></span><a class="headerlink" href="#_CPPv421BlockWriteCommandArgs" title="Permalink to this definition">¶</a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N21BlockWriteCommandArgs11memory_bankE">
+<span id="_CPPv3N21BlockWriteCommandArgs11memory_bankE"></span><span id="_CPPv2N21BlockWriteCommandArgs11memory_bankE"></span><span id="BlockWriteCommandArgs::memory_bank__MemoryBank"></span><span class="target" id="struct_block_write_command_args_1ae35be995166ffbb49c11f9a056e33d25"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv410MemoryBank" title="MemoryBank"><span class="n"><span class="pre">MemoryBank</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">memory_bank</span></span></span><a class="headerlink" href="#_CPPv4N21BlockWriteCommandArgs11memory_bankE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N21BlockWriteCommandArgs12word_pointerE">
+<span id="_CPPv3N21BlockWriteCommandArgs12word_pointerE"></span><span id="_CPPv2N21BlockWriteCommandArgs12word_pointerE"></span><span id="BlockWriteCommandArgs::word_pointer__uint32_t"></span><span class="target" id="struct_block_write_command_args_1ad7f899d8737f5a205d207b7342bbf148"></span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">word_pointer</span></span></span><a class="headerlink" href="#_CPPv4N21BlockWriteCommandArgs12word_pointerE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N21BlockWriteCommandArgs10word_countE">
+<span id="_CPPv3N21BlockWriteCommandArgs10word_countE"></span><span id="_CPPv2N21BlockWriteCommandArgs10word_countE"></span><span id="BlockWriteCommandArgs::word_count__uint8_t"></span><span class="target" id="struct_block_write_command_args_1a2550858225493d81f6ba05741be267a2"></span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">word_count</span></span></span><a class="headerlink" href="#_CPPv4N21BlockWriteCommandArgs10word_countE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N21BlockWriteCommandArgs4dataE">
+<span id="_CPPv3N21BlockWriteCommandArgs4dataE"></span><span id="_CPPv2N21BlockWriteCommandArgs4dataE"></span><span id="BlockWriteCommandArgs::data__BitSpanP"></span><span class="target" id="struct_block_write_command_args_1ac7074ca15582f9bfda99bf635cca840a"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv47BitSpan" title="BitSpan"><span class="n"><span class="pre">BitSpan</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">data</span></span></span><a class="headerlink" href="#_CPPv4N21BlockWriteCommandArgs4dataE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv425BlockPermalockCommandArgs">
+<span id="_CPPv325BlockPermalockCommandArgs"></span><span id="_CPPv225BlockPermalockCommandArgs"></span><span id="BlockPermalockCommandArgs"></span><span class="target" id="struct_block_permalock_command_args"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">BlockPermalockCommandArgs</span></span></span><a class="headerlink" href="#_CPPv425BlockPermalockCommandArgs" title="Permalink to this definition">¶</a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N25BlockPermalockCommandArgs9read_lockE">
+<span id="_CPPv3N25BlockPermalockCommandArgs9read_lockE"></span><span id="_CPPv2N25BlockPermalockCommandArgs9read_lockE"></span><span id="BlockPermalockCommandArgs::read_lock__BlockPermalockReadLock"></span><span class="target" id="struct_block_permalock_command_args_1a109032c2e0225e8472cbfc0cbc4bf58f"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv422BlockPermalockReadLock" title="BlockPermalockReadLock"><span class="n"><span class="pre">BlockPermalockReadLock</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">read_lock</span></span></span><a class="headerlink" href="#_CPPv4N25BlockPermalockCommandArgs9read_lockE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N25BlockPermalockCommandArgs11memory_bankE">
+<span id="_CPPv3N25BlockPermalockCommandArgs11memory_bankE"></span><span id="_CPPv2N25BlockPermalockCommandArgs11memory_bankE"></span><span id="BlockPermalockCommandArgs::memory_bank__MemoryBank"></span><span class="target" id="struct_block_permalock_command_args_1a96b5d862327c12cf8f43ae5016bd6dfe"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv410MemoryBank" title="MemoryBank"><span class="n"><span class="pre">MemoryBank</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">memory_bank</span></span></span><a class="headerlink" href="#_CPPv4N25BlockPermalockCommandArgs11memory_bankE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N25BlockPermalockCommandArgs13block_pointerE">
+<span id="_CPPv3N25BlockPermalockCommandArgs13block_pointerE"></span><span id="_CPPv2N25BlockPermalockCommandArgs13block_pointerE"></span><span id="BlockPermalockCommandArgs::block_pointer__uint32_t"></span><span class="target" id="struct_block_permalock_command_args_1a90896fb2483d0d1d366607a7a8a20f3a"></span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">block_pointer</span></span></span><a class="headerlink" href="#_CPPv4N25BlockPermalockCommandArgs13block_pointerE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N25BlockPermalockCommandArgs11block_rangeE">
+<span id="_CPPv3N25BlockPermalockCommandArgs11block_rangeE"></span><span id="_CPPv2N25BlockPermalockCommandArgs11block_rangeE"></span><span id="BlockPermalockCommandArgs::block_range__uint8_t"></span><span class="target" id="struct_block_permalock_command_args_1a03423ca02645f59f7c77ba252929ac46"></span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">block_range</span></span></span><a class="headerlink" href="#_CPPv4N25BlockPermalockCommandArgs11block_rangeE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N25BlockPermalockCommandArgs4maskE">
+<span id="_CPPv3N25BlockPermalockCommandArgs4maskE"></span><span id="_CPPv2N25BlockPermalockCommandArgs4maskE"></span><span id="BlockPermalockCommandArgs::mask__BitSpanP"></span><span class="target" id="struct_block_permalock_command_args_1ada647382fdff1061eb953b5d4716c001"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv47BitSpan" title="BitSpan"><span class="n"><span class="pre">BitSpan</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">mask</span></span></span><a class="headerlink" href="#_CPPv4N25BlockPermalockCommandArgs4maskE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>For the Read case, pass pointer to a valid <a class="reference internal" href="#struct_bit_span"><span class="std std-ref">BitSpan</span></a> with length=0. </p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv423AuthenticateCommandArgs">
+<span id="_CPPv323AuthenticateCommandArgs"></span><span id="_CPPv223AuthenticateCommandArgs"></span><span id="AuthenticateCommandArgs"></span><span class="target" id="struct_authenticate_command_args"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">AuthenticateCommandArgs</span></span></span><a class="headerlink" href="#_CPPv423AuthenticateCommandArgs" title="Permalink to this definition">¶</a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N23AuthenticateCommandArgs8send_repE">
+<span id="_CPPv3N23AuthenticateCommandArgs8send_repE"></span><span id="_CPPv2N23AuthenticateCommandArgs8send_repE"></span><span id="AuthenticateCommandArgs::send_rep__b"></span><span class="target" id="struct_authenticate_command_args_1aa7295221b2660c9e951f9bf456309758"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">send_rep</span></span></span><a class="headerlink" href="#_CPPv4N23AuthenticateCommandArgs8send_repE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N23AuthenticateCommandArgs11inc_rep_lenE">
+<span id="_CPPv3N23AuthenticateCommandArgs11inc_rep_lenE"></span><span id="_CPPv2N23AuthenticateCommandArgs11inc_rep_lenE"></span><span id="AuthenticateCommandArgs::inc_rep_len__b"></span><span class="target" id="struct_authenticate_command_args_1aa2393476f605724366d2f59129ace445"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">inc_rep_len</span></span></span><a class="headerlink" href="#_CPPv4N23AuthenticateCommandArgs11inc_rep_lenE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N23AuthenticateCommandArgs3csiE">
+<span id="_CPPv3N23AuthenticateCommandArgs3csiE"></span><span id="_CPPv2N23AuthenticateCommandArgs3csiE"></span><span id="AuthenticateCommandArgs::csi__uint8_t"></span><span class="target" id="struct_authenticate_command_args_1a0db71c343c627306bbb482adaa5c04d2"></span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">csi</span></span></span><a class="headerlink" href="#_CPPv4N23AuthenticateCommandArgs3csiE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N23AuthenticateCommandArgs6lengthE">
+<span id="_CPPv3N23AuthenticateCommandArgs6lengthE"></span><span id="_CPPv2N23AuthenticateCommandArgs6lengthE"></span><span id="AuthenticateCommandArgs::length__uint16_t"></span><span class="target" id="struct_authenticate_command_args_1ac5eb2a8f70b54b3f7143eb51a9431ab2"></span><span class="n"><span class="pre">uint16_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">length</span></span></span><a class="headerlink" href="#_CPPv4N23AuthenticateCommandArgs6lengthE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N23AuthenticateCommandArgs7messageE">
+<span id="_CPPv3N23AuthenticateCommandArgs7messageE"></span><span id="_CPPv2N23AuthenticateCommandArgs7messageE"></span><span id="AuthenticateCommandArgs::message__BitSpanP"></span><span class="target" id="struct_authenticate_command_args_1a7d9353a0b11d5bfa4df61ecacad5eb76"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv47BitSpan" title="BitSpan"><span class="n"><span class="pre">BitSpan</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">message</span></span></span><a class="headerlink" href="#_CPPv4N23AuthenticateCommandArgs7messageE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N23AuthenticateCommandArgs12rep_len_bitsE">
+<span id="_CPPv3N23AuthenticateCommandArgs12rep_len_bitsE"></span><span id="_CPPv2N23AuthenticateCommandArgs12rep_len_bitsE"></span><span id="AuthenticateCommandArgs::rep_len_bits__uint16_t"></span><span class="target" id="struct_authenticate_command_args_1a8844115638d193f216b1d10dcef5fe5e"></span><span class="n"><span class="pre">uint16_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">rep_len_bits</span></span></span><a class="headerlink" href="#_CPPv4N23AuthenticateCommandArgs12rep_len_bitsE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>if send_rep is True, this is the expected number of bits in the tag’s response (length in bits of ‘Response’ field in the In-process reply packet). </p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv418AccessCommandReply">
+<span id="_CPPv318AccessCommandReply"></span><span id="_CPPv218AccessCommandReply"></span><span id="AccessCommandReply"></span><span class="target" id="struct_access_command_reply"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">AccessCommandReply</span></span></span><a class="headerlink" href="#_CPPv418AccessCommandReply" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Gen2 replies which are received by the device. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N18AccessCommandReply10tag_handleE">
+<span id="_CPPv3N18AccessCommandReply10tag_handleE"></span><span id="_CPPv2N18AccessCommandReply10tag_handleE"></span><span id="AccessCommandReply::tag_handle__uint16_t"></span><span class="target" id="struct_access_command_reply_1aedc20aff489e91a61a240cc75a7ad94c"></span><span class="n"><span class="pre">uint16_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">tag_handle</span></span></span><a class="headerlink" href="#_CPPv4N18AccessCommandReply10tag_handleE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N18AccessCommandReply12response_crcE">
+<span id="_CPPv3N18AccessCommandReply12response_crcE"></span><span id="_CPPv2N18AccessCommandReply12response_crcE"></span><span id="AccessCommandReply::response_crc__uint8_tA"></span><span class="target" id="struct_access_command_reply_1ab635938bca34726a2eab6400239f84b2"></span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">response_crc</span></span></span><span class="p"><span class="pre">[</span></span><span class="m"><span class="pre">2</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#_CPPv4N18AccessCommandReply12response_crcE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv416KillCommandReply">
+<span id="_CPPv316KillCommandReply"></span><span id="_CPPv216KillCommandReply"></span><span id="KillCommandReply"></span><span class="target" id="struct_kill_command_reply"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">KillCommandReply</span></span></span><a class="headerlink" href="#_CPPv416KillCommandReply" title="Permalink to this definition">¶</a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N16KillCommandReply10tag_handleE">
+<span id="_CPPv3N16KillCommandReply10tag_handleE"></span><span id="_CPPv2N16KillCommandReply10tag_handleE"></span><span id="KillCommandReply::tag_handle__uint16_t"></span><span class="target" id="struct_kill_command_reply_1a4d1f54a9066464af62ddf3ed7cbc4258"></span><span class="n"><span class="pre">uint16_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">tag_handle</span></span></span><a class="headerlink" href="#_CPPv4N16KillCommandReply10tag_handleE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N16KillCommandReply12response_crcE">
+<span id="_CPPv3N16KillCommandReply12response_crcE"></span><span id="_CPPv2N16KillCommandReply12response_crcE"></span><span id="KillCommandReply::response_crc__uint16_t"></span><span class="target" id="struct_kill_command_reply_1a1bc1c9e66d8adf39b9c3338d7c892b9e"></span><span class="n"><span class="pre">uint16_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">response_crc</span></span></span><a class="headerlink" href="#_CPPv4N16KillCommandReply12response_crcE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv412DelayedReply">
+<span id="_CPPv312DelayedReply"></span><span id="_CPPv212DelayedReply"></span><span id="DelayedReply"></span><span class="target" id="struct_delayed_reply"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">DelayedReply</span></span></span><a class="headerlink" href="#_CPPv412DelayedReply" title="Permalink to this definition">¶</a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N12DelayedReply10tag_handleE">
+<span id="_CPPv3N12DelayedReply10tag_handleE"></span><span id="_CPPv2N12DelayedReply10tag_handleE"></span><span id="DelayedReply::tag_handle__uint16_t"></span><span class="target" id="struct_delayed_reply_1a945877d4849e191bedc4d6c336b9e6e2"></span><span class="n"><span class="pre">uint16_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">tag_handle</span></span></span><a class="headerlink" href="#_CPPv4N12DelayedReply10tag_handleE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N12DelayedReply12response_crcE">
+<span id="_CPPv3N12DelayedReply12response_crcE"></span><span id="_CPPv2N12DelayedReply12response_crcE"></span><span id="DelayedReply::response_crc__uint16_t"></span><span class="target" id="struct_delayed_reply_1ae7f79340910110e2bd8916e21078aed0"></span><span class="n"><span class="pre">uint16_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">response_crc</span></span></span><a class="headerlink" href="#_CPPv4N12DelayedReply12response_crcE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv416Ex10Gen2Commands">
+<span id="_CPPv316Ex10Gen2Commands"></span><span id="_CPPv216Ex10Gen2Commands"></span><span id="Ex10Gen2Commands"></span><span class="target" id="struct_ex10_gen2_commands"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10Gen2Commands</span></span></span><a class="headerlink" href="#_CPPv416Ex10Gen2Commands" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Gen2 commands encoder/decoder interface. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N16Ex10Gen2Commands19encode_gen2_commandE">
+<span id="_CPPv3N16Ex10Gen2Commands19encode_gen2_commandE"></span><span id="_CPPv2N16Ex10Gen2Commands19encode_gen2_commandE"></span><span class="target" id="struct_ex10_gen2_commands_1af61e552edc541a1b83ab2eab4a35ecf1"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">encode_gen2_command</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv415Gen2CommandSpec" title="Gen2CommandSpec"><span class="n"><span class="pre">Gen2CommandSpec</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">cmd_spec</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv47BitSpan" title="BitSpan"><span class="n"><span class="pre">BitSpan</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">encoded_command</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N16Ex10Gen2Commands19encode_gen2_commandE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Encodes a Gen2 command for use in the Gen2TxBuffer. </p>
+<p>
+load_mask = 0x10 load_bits = 4 bits_loaded = 0b0001 </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For select mask only: Everything is loaded in left-justified. This means the bytes are loaded in via lsb, but the bits are loaded in left to right as well, making them bitwise msb. This was done for reader clarity to make it look like a bitstream EX: load_mask = 0xa2f5 load_bits = 12 bits_loaded = 0xa2f</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Param cmd_spec</dt>
+<dd class="field-odd"><p>A struct containing: 1) command - The command type as an enum Gen2Command 2) args - A pointer to an arg struct for the specified command, which contains values for the fields in the CommandEncoder table. </p>
+</dd>
+<dt class="field-even">Param encoded_command</dt>
+<dd class="field-even"><p><strong>[out]</strong> A bit span containing info about the encoded command. This contains the length of the command and data for the left-justified Gen2 command. </p>
+</dd>
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>struct <a class="reference internal" href="ex10_result.html#struct_ex10_result"><span class="std std-ref">Ex10Result</span></a> Indicates whether the function call passed or failed. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N16Ex10Gen2Commands19decode_gen2_commandE">
+<span id="_CPPv3N16Ex10Gen2Commands19decode_gen2_commandE"></span><span id="_CPPv2N16Ex10Gen2Commands19decode_gen2_commandE"></span><span class="target" id="struct_ex10_gen2_commands_1a8f649430edb05f95f330f9b3b2f75b76"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">decode_gen2_command</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv415Gen2CommandSpec" title="Gen2CommandSpec"><span class="n"><span class="pre">Gen2CommandSpec</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">cmd_spec</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv47BitSpan" title="BitSpan"><span class="n"><span class="pre">BitSpan</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">encoded_command</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N16Ex10Gen2Commands19decode_gen2_commandE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Decodes an encoded Gen2 command. </p>
+<p>Takes in an encoded command via a <a class="reference internal" href="#struct_bit_span"><span class="std std-ref">BitSpan</span></a> and create populates a <a class="reference internal" href="#struct_gen2_command_spec"><span class="std std-ref">Gen2CommandSpec</span></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Param cmd_spec</dt>
+<dd class="field-odd"><p><strong>[out]</strong> A struct containing: 1) command - The command type as an enum Gen2Command 2) args - A pointer to an arg struct for the specified command, which contains values for the fields in the CommandEncoder table. </p>
+</dd>
+<dt class="field-even">Param encoded_command</dt>
+<dd class="field-even"><p>A bit span containing info about the encoded command. This contains the length of the command and data for the left-justified Gen2 command. </p>
+</dd>
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>struct <a class="reference internal" href="ex10_result.html#struct_ex10_result"><span class="std std-ref">Ex10Result</span></a> Indicates whether the function call passed or failed. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N16Ex10Gen2Commands12decode_replyE">
+<span id="_CPPv3N16Ex10Gen2Commands12decode_replyE"></span><span id="_CPPv2N16Ex10Gen2Commands12decode_replyE"></span><span class="target" id="struct_ex10_gen2_commands_1a6e11e7d4eb50c7d6df780487bf24c176"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">decode_reply</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv411Gen2Command" title="Gen2Command"><span class="n"><span class="pre">Gen2Command</span></span></a><span class="w"> </span><span class="n"><span class="pre">command</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="event_parser.html#_CPPv415EventFifoPacket" title="EventFifoPacket"><span class="n"><span class="pre">EventFifoPacket</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">gen2_pkt</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv49Gen2Reply" title="Gen2Reply"><span class="n"><span class="pre">Gen2Reply</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">decoded_reply</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N16Ex10Gen2Commands12decode_replyE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Decodes a Gen2 command reply into a <a class="reference internal" href="#struct_gen2_reply"><span class="std std-ref">Gen2Reply</span></a> struct. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>: The data from the reply is placed into the ‘data’ field of the decoded_reply. This data is everything after the header bit. Normally, a reply contains 1 bit of header followed by data. The Ex10 device looks for an error in the header. If it sees the error bit, that bit is stored by itself in byte 0 of the raw data from the device. All data after this is stored starting at byte 1 of the reply array. If this tag’s reply does not contain a header bit, the data will start from byte 0. This function checks if a tag reply is expected to contain a header bit and based on this knows whether the rest of the reply data starts at byte 0 or 1 of the raw data from the device. The appropriate offset is chosen and placed into the decoded_reply.data field.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Param command</dt>
+<dd class="field-odd"><p>The Gen2 command that caused this reply. </p>
+</dd>
+<dt class="field-even">Param gen2_pkt</dt>
+<dd class="field-even"><p>A <a class="reference internal" href="../yk_firmware_ex10_host_c_other_types.html#struct_gen2_transaction"><span class="std std-ref">Gen2Transaction</span></a> packet parsed using the packet parser. </p>
+</dd>
+<dt class="field-odd">Param decoded_reply</dt>
+<dd class="field-odd"><p>A <a class="reference internal" href="#struct_gen2_reply"><span class="std std-ref">Gen2Reply</span></a> struct pointer to store decoded output. </p>
+</dd>
+<dt class="field-even">Return</dt>
+<dd class="field-even"><p>bool false if the command has no known reply or if an error is parsed in the return (showing the tag reported back and error). </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N16Ex10Gen2Commands11check_errorE">
+<span id="_CPPv3N16Ex10Gen2Commands11check_errorE"></span><span id="_CPPv2N16Ex10Gen2Commands11check_errorE"></span><span class="target" id="struct_ex10_gen2_commands_1a113de08292a9fe81f353a230908a645b"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">check_error</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv49Gen2Reply" title="Gen2Reply"><span class="n"><span class="pre">Gen2Reply</span></span></a><span class="w"> </span><span class="n"><span class="pre">reply</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N16Ex10Gen2Commands11check_errorE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Checks the <a class="reference internal" href="#struct_gen2_reply"><span class="std std-ref">Gen2Reply</span></a> for error and prints the error message. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Param reply</dt>
+<dd class="field-odd"><p>A <a class="reference internal" href="#struct_gen2_reply"><span class="std std-ref">Gen2Reply</span></a>. </p>
+</dd>
+<dt class="field-even">Return</dt>
+<dd class="field-even"><p>bool true if the reply has an error. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N16Ex10Gen2Commands11print_replyE">
+<span id="_CPPv3N16Ex10Gen2Commands11print_replyE"></span><span id="_CPPv2N16Ex10Gen2Commands11print_replyE"></span><span class="target" id="struct_ex10_gen2_commands_1a86e99213e070759bc5e35a1430df70ce"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">print_reply</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv49Gen2Reply" title="Gen2Reply"><span class="n"><span class="pre">Gen2Reply</span></span></a><span class="w"> </span><span class="n"><span class="pre">reply</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N16Ex10Gen2Commands11print_replyE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>ex10_print the given <a class="reference internal" href="#struct_gen2_reply"><span class="std std-ref">Gen2Reply</span></a>. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Param reply</dt>
+<dd class="field-odd"><p>A <a class="reference internal" href="#struct_gen2_reply"><span class="std std-ref">Gen2Reply</span></a>. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N16Ex10Gen2Commands26get_gen2_tx_control_configE">
+<span id="_CPPv3N16Ex10Gen2Commands26get_gen2_tx_control_configE"></span><span id="_CPPv2N16Ex10Gen2Commands26get_gen2_tx_control_configE"></span><span class="target" id="struct_ex10_gen2_commands_1a699d073d79fff02a74dae85f71b73c16"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_gen2_tx_control_config</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv415Gen2CommandSpec" title="Gen2CommandSpec"><span class="n"><span class="pre">Gen2CommandSpec</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">cmd_spec</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../yk_firmware_ex10_host_c_register_accessors.html#_CPPv421Gen2TxnControlsFields" title="Gen2TxnControlsFields"><span class="n"><span class="pre">Gen2TxnControlsFields</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">txn_control</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N16Ex10Gen2Commands26get_gen2_tx_control_configE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Determine the Gen2TxnControls register settings needed for this command. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Param cmd_spec</dt>
+<dd class="field-odd"><p><strong>[in]</strong> A command spec used with ‘encode_command’. </p>
+</dd>
+<dt class="field-even">Param txn_control</dt>
+<dd class="field-even"><p><strong>[out]</strong> A <a class="reference internal" href="../yk_firmware_ex10_host_c_register_accessors.html#struct_gen2_txn_controls_fields"><span class="std std-ref">Gen2TxnControlsFields</span></a> struct which maps directly to the Gen2TxnControls register. </p>
+</dd>
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>struct <a class="reference internal" href="ex10_result.html#struct_ex10_result"><span class="std std-ref">Ex10Result</span></a> Indicates whether the function call passed or failed. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N16Ex10Gen2Commands15get_ebv_bit_lenE">
+<span id="_CPPv3N16Ex10Gen2Commands15get_ebv_bit_lenE"></span><span id="_CPPv2N16Ex10Gen2Commands15get_ebv_bit_lenE"></span><span class="target" id="struct_ex10_gen2_commands_1a0ceb1702c66d5ed3ead96fc17775c13e"></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_ebv_bit_len</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N16Ex10Gen2Commands15get_ebv_bit_lenE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>EBV bit encoding/decoding is detailed in the gen2 spec under Annex A. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Param value</dt>
+<dd class="field-odd"><p>The value to get the ebv bit count for </p>
+</dd>
+<dt class="field-even">Return</dt>
+<dd class="field-even"><p>The bit count if the value were to be encoded. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N16Ex10Gen2Commands8bit_packE">
+<span id="_CPPv3N16Ex10Gen2Commands8bit_packE"></span><span id="_CPPv2N16Ex10Gen2Commands8bit_packE"></span><span class="target" id="struct_ex10_gen2_commands_1a80831d2e5325814b0f2aeb5395c2791b"></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">bit_pack</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">encoded</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n"><span class="pre">bit_offset</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n"><span class="pre">bit_count</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N16Ex10Gen2Commands8bit_packE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Packs in bits using least significant byte and least significant bit Most fields of a gen2 command utilize least significant bit. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N16Ex10Gen2Commands12bit_pack_ebvE">
+<span id="_CPPv3N16Ex10Gen2Commands12bit_pack_ebvE"></span><span id="_CPPv2N16Ex10Gen2Commands12bit_pack_ebvE"></span><span class="target" id="struct_ex10_gen2_commands_1aa16f3ef9b23ed90b2d5893834fc5ded1"></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">bit_pack_ebv</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">encoded_command</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n"><span class="pre">start_length</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N16Ex10Gen2Commands12bit_pack_ebvE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>EBV bit encoding/decoding is detailed in the gen2 spec under Annex A. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Param encoded_command</dt>
+<dd class="field-odd"><p>The encoded command thus far. </p>
+</dd>
+<dt class="field-even">Param start_length</dt>
+<dd class="field-even"><p>The starting bit length to pack more onto. </p>
+</dd>
+<dt class="field-odd">Param value</dt>
+<dd class="field-odd"><p>The value to encode and pack. </p>
+</dd>
+<dt class="field-even">Return</dt>
+<dd class="field-even"><p>Returns the new starting bit length post encoding. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N16Ex10Gen2Commands10bit_unpackE">
+<span id="_CPPv3N16Ex10Gen2Commands10bit_unpackE"></span><span id="_CPPv2N16Ex10Gen2Commands10bit_unpackE"></span><span class="target" id="struct_ex10_gen2_commands_1ac6f66fd6aa869a833071163a5cb6772e"></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">bit_unpack</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">cmd</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n"><span class="pre">start_length</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n"><span class="pre">bit_len</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N16Ex10Gen2Commands10bit_unpackE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N16Ex10Gen2Commands14bit_unpack_ebvE">
+<span id="_CPPv3N16Ex10Gen2Commands14bit_unpack_ebvE"></span><span id="_CPPv2N16Ex10Gen2Commands14bit_unpack_ebvE"></span><span class="target" id="struct_ex10_gen2_commands_1a871d735d94a7366a5b97849938ca3317"></span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">bit_unpack_ebv</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">cmd</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n"><span class="pre">byte_len</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N16Ex10Gen2Commands14bit_unpack_ebvE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N16Ex10Gen2Commands14bit_unpack_msbE">
+<span id="_CPPv3N16Ex10Gen2Commands14bit_unpack_msbE"></span><span id="_CPPv2N16Ex10Gen2Commands14bit_unpack_msbE"></span><span class="target" id="struct_ex10_gen2_commands_1a5b4cf3713864234d67b3bf2aaad03186"></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">bit_unpack_msb</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">cmd</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n"><span class="pre">start_length</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n"><span class="pre">bit_len</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N16Ex10Gen2Commands14bit_unpack_msbE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N16Ex10Gen2Commands17ebv_length_decodeE">
+<span id="_CPPv3N16Ex10Gen2Commands17ebv_length_decodeE"></span><span id="_CPPv2N16Ex10Gen2Commands17ebv_length_decodeE"></span><span class="target" id="struct_ex10_gen2_commands_1ac8214bd9c1355dbb9a4571efe69dfd29"></span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">ebv_length_decode</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">cmd</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n"><span class="pre">curr_bit_len</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N16Ex10Gen2Commands17ebv_length_decodeE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N16Ex10Gen2Commands18le_bytes_to_uint16E">
+<span id="_CPPv3N16Ex10Gen2Commands18le_bytes_to_uint16E"></span><span id="_CPPv2N16Ex10Gen2Commands18le_bytes_to_uint16E"></span><span class="target" id="struct_ex10_gen2_commands_1afcafa86c494f123153bd5cd822ed0858"></span><span class="n"><span class="pre">uint16_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">le_bytes_to_uint16</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">void_ptr</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N16Ex10Gen2Commands18le_bytes_to_uint16E" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Convert a pair of little endian bytes to uint16. </p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../../../_static/logo.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Ex10Gen2TxCommandManager</a><ul>
+<li><a class="reference internal" href="#gen2-access-commands">Gen2 Access Commands</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="event_parser.html"
+                        title="previous chapter">Ex10EventParser</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="ex10_result.html"
+                        title="next chapter">Ex10 SDK Error Reporting</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="ex10_result.html" title="Ex10 SDK Error Reporting"
+             >next</a></li>
+        <li class="right" >
+          <a href="event_parser.html" title="Ex10EventParser"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../yk_firmware_ex10_host_c_api.html" >Impinj Reader Chip C Host SDK</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../yk_firmware_ex10_host_c_api_layers.html" >API Layers</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="support_modules.html" >Ex10 Support Modules</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Ex10Gen2TxCommandManager</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Impinj, Inc..
+    </div>
+  </body>
+</html>

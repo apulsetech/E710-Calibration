@@ -1,0 +1,264 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Wireline &#8212; Impinj Reader Chip SDK</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinxdoc.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Messages" href="yk_firmware_ex10_api_messages.html" />
+    <link rel="prev" title="Impinj Reader Chip Wireline API" href="yk_firmware_ex10_api.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="yk_firmware_ex10_api_messages.html" title="Messages"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="yk_firmware_ex10_api.html" title="Impinj Reader Chip Wireline API"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="yk_firmware_ex10_api.html" accesskey="U">Impinj Reader Chip Wireline API</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Wireline</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="wireline">
+<span id="ex10-api-wireline"></span><h1>Wireline<a class="headerlink" href="#wireline" title="Permalink to this headline">¶</a></h1>
+<section id="bootloader-and-application-contexts">
+<h2>Bootloader and Application Contexts<a class="headerlink" href="#bootloader-and-application-contexts" title="Permalink to this headline">¶</a></h2>
+<p>The Impinj reader chips have two distinct firmware components:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>A bootloader that is stored in embedded ROM.
+The bootloader is capable of:</p>
+<ul class="simple">
+<li><p>Uploading and authenticating the application image.</p></li>
+<li><p>Writing the calibration data.</p></li>
+<li><p>Writing the stored settings.</p></li>
+</ul>
+</li>
+<li><p>An upgradable application that is stored in embedded flash.
+The application firmware orchestrates the chip’s RFID functionality.</p></li>
+</ol>
+</div></blockquote>
+<p>The host must be aware of which firmware component with which it is conversing.
+When interoperating with the Impinj reader chip these modes of operation are referred to as
+the bootloader context and the application context.</p>
+</section>
+<section id="power-up-sequencing">
+<h2>Power-Up Sequencing<a class="headerlink" href="#power-up-sequencing" title="Permalink to this headline">¶</a></h2>
+<p>For information on the startup and shutdown sequences, please see the
+Impinj E910, E710, E510, and E310 Device Datasheet:
+<a class="reference external" href="https://support.impinj.com/hc/en-us/articles/360010952420">https://support.impinj.com/hc/en-us/articles/360010952420</a></p>
+</section>
+<section id="power-down-sequencing">
+<h2>Power-Down Sequencing<a class="headerlink" href="#power-down-sequencing" title="Permalink to this headline">¶</a></h2>
+<p>For information on the startup and shutdown sequences, please see the
+Impinj E910, E710, E510, and E310 Device Datasheet:
+<a class="reference external" href="https://support.impinj.com/hc/en-us/articles/360010952420">https://support.impinj.com/hc/en-us/articles/360010952420</a></p>
+</section>
+<section id="resetting-into-the-bootloader">
+<h2>Resetting into the Bootloader<a class="headerlink" href="#resetting-into-the-bootloader" title="Permalink to this headline">¶</a></h2>
+<p>In order to enter the bootloader context of the Impinj reader chip the host must
+reset the reader chip while asserting the signal READY_N low.</p>
+<p>Immediately after reset, the Impinj reader chip samples the READY_N line to determine if
+it should remain in the bootloader context instead of vectoring into the
+application context. In the case where the host desires that the reader chip remain in the
+bootloader, it should hold the READY_N line low for at least 8706 cycles of the
+FREF clock (T<sub>h</sub>).</p>
+<p>The bootloader will wait for READY_N to go high before it completes its
+initialization.  Once READY_N goes high, the host should not drive READY_N again
+unless the host resets the Impinj reader chip.</p>
+<figure class="align-default" id="id1">
+<img alt="../../_images/remain_in_bootloader.svg" src="../../_images/remain_in_bootloader.svg" /><figcaption>
+<p><span class="caption-number">Fig. 8 </span><span class="caption-text">Request from host to remain in bootloader</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+</section>
+<section id="resetting-into-the-application">
+<h2>Resetting into the Application<a class="headerlink" href="#resetting-into-the-application" title="Permalink to this headline">¶</a></h2>
+<p>During normal operations, the host should not drive the READY_N line. When
+operating within the application context, a low asserted READY_N line
+indicates to the host that it may continue with SPI traffic over the wireline.
+READY_N provides command and control flow control to the Impinj reader chip.</p>
+<p>The “READY_N Host” signal in <a class="reference internal" href="#wireline-jump-to-app"><span class="std std-numref">Fig. 9</span></a> below is the READY_N
+line as driven by the host, and “READY_N Ex10” is READY_N as driven by the Impinj reader
+chip.</p>
+<figure class="align-default" id="id2">
+<span id="wireline-jump-to-app"></span><img alt="../../_images/jump_to_app.svg" src="../../_images/jump_to_app.svg" /><figcaption>
+<p><span class="caption-number">Fig. 9 </span><span class="caption-text">Normal startup</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+</section>
+<section id="spi">
+<span id="ex10-api-wireline-spi"></span><h2>SPI<a class="headerlink" href="#spi" title="Permalink to this headline">¶</a></h2>
+<p>SPI should be configured for 8-bit words, most significant bit first.  When
+there are multi-word (greater than 8-bit) fields in a payload, they are
+transmitted least significant byte first.</p>
+<p>The polarity and phase are:</p>
+<ul class="simple">
+<li><p>CPOL=0 (clock idles low)</p></li>
+<li><p>CPHA=1 (data launches on rising edge and is captured on falling edge)</p></li>
+</ul>
+<p>Framing of messages comes from the (active low) SS signal.  The maximum frame
+size when in the bootloader context is 2064 bytes, allowing for payloads of up
+to 2048 bytes with some metadata around those payloads. The maximum frame size
+when in the application context is 1023 bytes.</p>
+<p><strong>Note</strong>: For the host to properly perform the <a class="reference internal" href="yk_firmware_ex10_api_messages.html#ex10-api-write-info-page"><span class="std std-ref">WriteInfoPage</span></a>
+command the host SPI interface must be capable of performing 2052 (2048 + 4) byte
+transfers per transaction. The <a class="reference internal" href="yk_firmware_ex10_api_messages.html#ex10-api-write-info-page"><span class="std std-ref">WriteInfoPage</span></a>
+is accessible from the bootloader.</p>
+<p>The signals are:</p>
+<table class="colwidths-given docutils align-default" id="id3">
+<caption><span class="caption-number">Table 9 </span><span class="caption-text">SPI Signals</span><a class="headerlink" href="#id3" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 67%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Signal</p></th>
+<th class="head"><p>Direction at Host</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>SS</p></td>
+<td><p>Output</p></td>
+<td><p>Slave select. In addition to selecting the slave (Impinj reader chip), this is used
+for framing. This signal must remain active for the duration of the
+message and deactivate at the end of the message</p></td>
+</tr>
+<tr class="row-odd"><td><p>CLK</p></td>
+<td><p>Output</p></td>
+<td><p>SPI data clock</p></td>
+</tr>
+<tr class="row-even"><td><p>MOSI</p></td>
+<td><p>Output</p></td>
+<td><p>Master out, slave in data</p></td>
+</tr>
+<tr class="row-odd"><td><p>MISO</p></td>
+<td><p>Input</p></td>
+<td><p>Master in, slave out data</p></td>
+</tr>
+<tr class="row-even"><td><p>READY_N</p></td>
+<td><p>Open Drain</p></td>
+<td><p>Active low ready line/stay in bootloader. The host must not initiate a
+data transfer while this is not active. Note that this will go inactive
+immediately after the host initiates a data transfer. The primary
+purpose of this signal after booting is to provide flow control.
+Immediately out of reset, the Impinj reader chip will sample this and if it is
+active (low), remain in the bootloader rather than vectoring to the main
+image.</p></td>
+</tr>
+</tbody>
+</table>
+<p>When a transaction has no response, it consists of sending the command message.
+The transaction can be considered complete when READY_N signal is asserted:</p>
+<figure class="align-default" id="id4">
+<img alt="../../_images/spi_no_response.svg" src="../../_images/spi_no_response.svg" /><figcaption>
+<p><span class="caption-number">Fig. 10 </span><span class="caption-text">SPI transaction with no response</span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+<p>In the case of a transaction that does have a response, the master sends the
+command, de-asserts the SS signal, and once READY_N asserts, reasserts the SS
+signal and clocks out the response message:</p>
+<figure class="align-default" id="id5">
+<img alt="../../_images/spi_with_response.svg" src="../../_images/spi_with_response.svg" /><figcaption>
+<p><span class="caption-number">Fig. 11 </span><span class="caption-text">SPI transaction that contains a response</span><a class="headerlink" href="#id5" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+<ul class="simple">
+<li><p>When executing from the application context the Impinj reader chip will output 0x00 value
+octets across the MISO line when a command is being sent to the reader chip.</p></li>
+<li><p>When executing from the bootloader context the Impinj reader chip will output 0xFF value
+octets across the MISO line when a command is being sent to the reader chip.</p></li>
+</ul>
+<p>When debugging the SPI transactions this is one means by which the observer
+can determine which context the Impinj reader chip is operating.</p>
+<p>It is recommended that when clocking out response bits over the SPI interface,
+the host should either hold MOSI low (send all 0x00 value octets) or hold MOSI
+high (send all 0xFF value octets) during the transaction. If the Impinj reader chip
+misinterprets the command, it is guaranteed to not see a valid command during
+the response portion of the transaction since none of the valid commands start
+with either 0x00 or 0xFF.</p>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="../../_static/logo.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Wireline</a><ul>
+<li><a class="reference internal" href="#bootloader-and-application-contexts">Bootloader and Application Contexts</a></li>
+<li><a class="reference internal" href="#power-up-sequencing">Power-Up Sequencing</a></li>
+<li><a class="reference internal" href="#power-down-sequencing">Power-Down Sequencing</a></li>
+<li><a class="reference internal" href="#resetting-into-the-bootloader">Resetting into the Bootloader</a></li>
+<li><a class="reference internal" href="#resetting-into-the-application">Resetting into the Application</a></li>
+<li><a class="reference internal" href="#spi">SPI</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="yk_firmware_ex10_api.html"
+                        title="previous chapter">Impinj Reader Chip Wireline API</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="yk_firmware_ex10_api_messages.html"
+                        title="next chapter">Messages</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="yk_firmware_ex10_api_messages.html" title="Messages"
+             >next</a></li>
+        <li class="right" >
+          <a href="yk_firmware_ex10_api.html" title="Impinj Reader Chip Wireline API"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="yk_firmware_ex10_api.html" >Impinj Reader Chip Wireline API</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Wireline</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Impinj, Inc..
+    </div>
+  </body>
+</html>

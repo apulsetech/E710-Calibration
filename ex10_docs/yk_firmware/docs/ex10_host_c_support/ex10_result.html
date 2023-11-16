@@ -1,0 +1,1030 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Ex10 SDK Error Reporting &#8212; Impinj Reader Chip SDK</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinxdoc.css" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Ex10CommandLine" href="ex10_command_line.html" />
+    <link rel="prev" title="Ex10Gen2TxCommandManager" href="gen2_commands.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="ex10_command_line.html" title="Ex10CommandLine"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="gen2_commands.html" title="Ex10Gen2TxCommandManager"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../yk_firmware_ex10_host_c_api.html" >Impinj Reader Chip C Host SDK</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../yk_firmware_ex10_host_c_api_layers.html" >API Layers</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="support_modules.html" accesskey="U">Ex10 Support Modules</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Ex10 SDK Error Reporting</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="ex10-sdk-error-reporting">
+<span id="ex10-api-host-c-api-ex10-result"></span><h1>Ex10 SDK Error Reporting<a class="headerlink" href="#ex10-sdk-error-reporting" title="Permalink to this headline">¶</a></h1>
+<p>The Ex10 SDK integrates a single path for error reporting. This enables a
+streamlined path to handle and troubleshoot errors that occur at any point in
+an Ex10 based reader, including errors that occur in the firmware and in the C SDK.
+At the core of error reporting scheme is the Ex10Result structure, as described below.</p>
+<p>As soon as a failure happens, a <a class="reference external" href="../ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result">struct Ex10Result</a>
+is created to capture the error specifics at the earliest point.
+It is to be passed to a higher level for analysis and handling.
+Once a caller identifies that <a class="reference external" href="../ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result">struct Ex10Result</a>
+contains an error condition, it will be passed upwards without modification.</p>
+<p>On success, <code class="docutils literal notranslate"><span class="pre">error</span></code> field will be set to <code class="docutils literal notranslate"><span class="pre">0</span></code> and other fields should be
+ignored.</p>
+<p>On error, <code class="docutils literal notranslate"><span class="pre">error</span></code> field will be set to <code class="docutils literal notranslate"><span class="pre">1</span></code> and other fields will be set
+with relevant information:</p>
+<ul class="simple">
+<li><p>the  <a class="reference external" href="../ex10_host_c_support/ex10_result.html#_CPPv410Ex10Module">Ex10Module</a> where the error originated</p></li>
+<li><p>result code identifying the error type (<a class="reference external" href="../ex10_host_c_support/ex10_result.html#_CPPv417Ex10SdkResultCode">Ex10SdkResultCode</a> or <a class="reference external" href="../ex10_host_c_support/ex10_result.html#_CPPv420Ex10DeviceResultCode">Ex10DeviceResultCode</a>)</p></li>
+<li><p>Additional error-specific information will be provided in <code class="docutils literal notranslate"><span class="pre">device_status</span></code> field</p></li>
+</ul>
+<p>The <a class="reference external" href="../ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result">struct Ex10Result</a>
+can be extended to report customer-specific error conditions.
+When <code class="docutils literal notranslate"><span class="pre">customer</span></code> bit is set to <code class="docutils literal notranslate"><span class="pre">0</span></code>, the <code class="docutils literal notranslate"><span class="pre">Ex10Result</span></code> struct format is as
+shown in the following table.
+When <code class="docutils literal notranslate"><span class="pre">customer</span></code> bit is set to <code class="docutils literal notranslate"><span class="pre">1</span></code>, a different internal
+structure can be defined, with the following 2 limitations:</p>
+<ul class="simple">
+<li><p>Overall <code class="docutils literal notranslate"><span class="pre">Ex10Result</span></code> size cannot exceed 64 bits</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">error</span></code> bit logic remains consistent, meaning <code class="docutils literal notranslate"><span class="pre">0</span></code> denote success and <code class="docutils literal notranslate"><span class="pre">1</span></code> denote that an error occurred</p></li>
+</ul>
+<table class="colwidths-given docutils align-default" id="id18">
+<caption><span class="caption-number">Table 6 </span><span class="caption-text">Ex10Result structure</span><a class="headerlink" href="#id18" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 60%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Bit</p></th>
+<th class="head"><p>Name</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">63</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">error</span></code></p></td>
+<td><ul class="simple">
+<li><p>0: Success</p></li>
+<li><p>1: Error</p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">62</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">customer</span></code></p></td>
+<td><ul class="simple">
+<li><p>0: Impinj defined</p></li>
+<li><p>1: Customer defined</p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">61:48</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">rfu</span></code></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">47:40</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">module</span></code></p></td>
+<td><p>The module from which the status originated: <a class="reference external" href="../ex10_host_c_support/ex10_result.html#_CPPv410Ex10Module">Ex10Module</a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">39:32</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">result_code</span></code></p></td>
+<td><p>Result code specific to the module. The following table shows what result code enums can be
+used for each module type.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Module</p></th>
+<th class="head"><p>Result Code Enum</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Ex10ModuleDevice</p></td>
+<td><p><a class="reference external" href="../ex10_host_c_support/ex10_result.html#_CPPv420Ex10DeviceResultCode">Ex10DeviceResultCode</a></p></td>
+</tr>
+<tr class="row-odd"><td><p>Other module types</p></td>
+<td><p><a class="reference external" href="../ex10_host_c_support/ex10_result.html#_CPPv417Ex10SdkResultCode">Ex10SdkResultCode</a></p></td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">31:0</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">device_status</span></code></p></td>
+<td><p>For some modules and result codes, additional status information will be available in this field.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Module</p></th>
+<th class="head"><p>Result Code</p></th>
+<th class="head"><p>Device Status</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference external" href="../ex10_host_c_support/ex10_result.html#_CPPv4N10Ex10Module16Ex10ModuleDeviceE">Ex10ModuleDevice</a></p></td>
+<td><p><a class="reference external" href="../ex10_host_c_support/ex10_result.html#_CPPv4N20Ex10DeviceResultCode17Ex10DeviceSuccessE">Ex10DeviceSuccess</a></p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="../ex10_host_c_support/ex10_result.html#_CPPv4N10Ex10Module16Ex10ModuleDeviceE">Ex10ModuleDevice</a></p></td>
+<td><p><a class="reference external" href="../ex10_host_c_support/ex10_result.html#_CPPv4N20Ex10DeviceResultCode33Ex10DeviceErrorCommandsNoResponseE">Ex10DeviceErrorCommandsNoResponse</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Device</span> <span class="pre">Status</span></code> field will hold the contents of
+<a class="reference external" href="../yk_firmware_ex10_api_common_address_map.html#address-entry-CommandResult">Command Result</a>
+register containing details of the command to create this error</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="../ex10_host_c_support/ex10_result.html#_CPPv4N10Ex10Module16Ex10ModuleDeviceE">Ex10ModuleDevice</a></p></td>
+<td><p><a class="reference external" href="../ex10_host_c_support/ex10_result.html#_CPPv4N20Ex10DeviceResultCode35Ex10DeviceErrorCommandsWithResponseE">Ex10DeviceErrorCommandsWithResponse</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Device</span> <span class="pre">Status</span></code> field will hold the contents of
+<a class="reference external" href="../ex10_host_c_support/ex10_result.html?highlight=ex10commandshostresult#_CPPv422Ex10CommandsHostResult">struct Ex10CommandsHostResult</a>
+containing details of the command to create this error</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="../ex10_host_c_support/ex10_result.html#_CPPv4N10Ex10Module16Ex10ModuleDeviceE">Ex10ModuleDevice</a></p></td>
+<td><p><a class="reference external" href="../ex10_host_c_support/ex10_result.html#_CPPv4N20Ex10DeviceResultCode18Ex10DeviceErrorOpsE">Ex10DeviceErrorOps</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Device</span> <span class="pre">Status</span></code> field will hold the contents of
+<a class="reference external" href="../yk_firmware_ex10_api_application_address_map.html#address-entry-OpsStatus">OpsStatus register</a> containing details of the op to create this error</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="../ex10_host_c_support/ex10_result.html#_CPPv4N10Ex10Module16Ex10ModuleDeviceE">Ex10ModuleDevice</a></p></td>
+<td><p><a class="reference external" href="../ex10_host_c_support/ex10_result.html#_CPPv4N20Ex10DeviceResultCode25Ex10DeviceErrorOpsTimeoutE">Ex10DeviceErrorOpsTimeout</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Device</span> <span class="pre">Status</span></code> field will hold the contents of
+<a class="reference external" href="../yk_firmware_ex10_api_application_address_map.html#address-entry-OpsStatus">OpsStatus register</a> containing details of the op to timeout</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="../ex10_host_c_support/ex10_result.html#_CPPv4N10Ex10Module18Ex10ModuleProtocolE">Ex10ModuleProtocol</a></p></td>
+<td><p><a class="reference external" href="../ex10_host_c_support/ex10_result.html#_CPPv4N17Ex10SdkResultCode25Ex10SdkErrorGpioInterfaceE">Ex10SdkErrorGpioInterface</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Device</span> <span class="pre">Status</span></code> field will hold the error code received from the GPIO interface, for example a POSIX error code</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="../ex10_host_c_support/ex10_result.html#_CPPv4N10Ex10Module18Ex10ModuleProtocolE">Ex10ModuleProtocol</a>,
+<a class="reference external" href="../ex10_host_c_support/ex10_result.html#_CPPv4N10Ex10Module27Ex10ModuleCommandTransactorE">Ex10ModuleCommandTransactor</a>,
+<a class="reference external" href="../ex10_host_c_support/ex10_result.html#_CPPv4N10Ex10Module19Ex10ModuleBoardInitE">Ex10ModuleBoardInit</a></p></td>
+<td><p><a class="reference external" href="../ex10_host_c_support/ex10_result.html#_CPPv4N17Ex10SdkResultCode25Ex10SdkErrorHostInterfaceE">Ex10SdkErrorHostInterface</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Device</span> <span class="pre">Status</span></code> field will hold the error code received from the host interface, for example POSIX error code</p></td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+<section id="main-context-errors">
+<h2>Main Context Errors<a class="headerlink" href="#main-context-errors" title="Permalink to this headline">¶</a></h2>
+<p>When one of the following happens:</p>
+<ol class="arabic simple">
+<li><p>An error occurred in the main context operation of the Ex10 SDK</p></li>
+<li><p>The Ex10 SDK main context receives an error status from the Impinj Reader Chip</p></li>
+</ol>
+<p>then a <a class="reference external" href="../ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result">struct Ex10Result</a>
+capturing the occurred error will be created and it will be bubbled up to the
+application for handling.</p>
+<p>Here are a few examples of various error conditions and the
+<a class="reference external" href="../ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result">struct Ex10Result</a>
+that will be created as a result:</p>
+<section id="example-1-success">
+<h3>Example 1: Success<a class="headerlink" href="#example-1-success" title="Permalink to this headline">¶</a></h3>
+<p>The following <a class="reference external" href="../ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result">struct Ex10Result</a>
+signifies success:</p>
+<table class="colwidths-auto docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Error</p></th>
+<th class="head"><p>Customer</p></th>
+<th class="head"><p>RFU</p></th>
+<th class="head"><p>Module</p></th>
+<th class="head"><p>Result Code</p></th>
+<th class="head"><p>Device Status</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>N/A</p></td>
+<td><p>N/A</p></td>
+<td><p>N/A</p></td>
+<td><p>N/A</p></td>
+<td><p>N/A</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="example-2-ex10-sdk-error">
+<h3>Example 2: Ex10 SDK Error<a class="headerlink" href="#example-2-ex10-sdk-error" title="Permalink to this headline">¶</a></h3>
+<p>The example below shows an attempted upload from the Application, without
+resetting to the bootloader. This demonstrates an error that was created at
+the Ex10Protocol layer of the Ex10 SDK:</p>
+<figure class="align-default">
+<img alt="../../../_images/ex10_result_error_flow_sdk.png" src="../../../_images/ex10_result_error_flow_sdk.png" />
+</figure>
+<p>The following <a class="reference external" href="../ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result">struct Ex10Result</a>
+will be created:</p>
+<table class="colwidths-auto docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Error</p></th>
+<th class="head"><p>Customer</p></th>
+<th class="head"><p>RFU</p></th>
+<th class="head"><p>Module</p></th>
+<th class="head"><p>Result Code</p></th>
+<th class="head"><p>Device Status</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>Ex10ModuleProtocol</p></td>
+<td><p>Ex10SdkErrorRunLocation</p></td>
+<td><p>0</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="example-3-ex10-device-error">
+<h3>Example 3: Ex10 Device Error<a class="headerlink" href="#example-3-ex10-device-error" title="Permalink to this headline">¶</a></h3>
+<p>The example below shows an upload that failed due to an invalid firmware
+image. This demonstrates an error that originated in the Impinj Reader Chip and
+received by the Ex10 SDK (main context):</p>
+<figure class="align-default">
+<img alt="../../../_images/ex10_result_error_flow_device.png" src="../../../_images/ex10_result_error_flow_device.png" />
+</figure>
+<p>The following <a class="reference external" href="../ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result">struct Ex10Result</a>
+will be created:</p>
+<table class="colwidths-auto docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Error</p></th>
+<th class="head"><p>Customer</p></th>
+<th class="head"><p>RFU</p></th>
+<th class="head"><p>Module</p></th>
+<th class="head"><p>Result Code</p></th>
+<th class="head"><p>Device Status</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>Ex10ModuleDevice</p></td>
+<td><p>Ex10DeviceErrorCommandsNoResponse</p></td>
+<td><p><a class="reference external" href="../yk_firmware_ex10_api_common_address_map.html#address-entry-CommandResult">struct CommandResultFields</a>:</p>
+<table class="colwidths-auto docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Failed Result Code</p></th>
+<th class="head"><p>Failed Command Code</p></th>
+<th class="head"><p>Commands Since First Error</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>ImageInvalid</p></td>
+<td><p>CommandCompleteUpload</p></td>
+<td><p>0</p></td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="interrupt-context-errors">
+<span id="ex10-api-host-c-api-ex10-result-interrupt-context"></span><h2>Interrupt Context Errors<a class="headerlink" href="#interrupt-context-errors" title="Permalink to this headline">¶</a></h2>
+<p>Errors may occur during interrupt processing and these require special
+handling. In this case the Ex10 SDK interrupt context cannot “return an error
+to caller” because it was triggered by an interrupt from Impinj Reader Chip
+and not called by the application.</p>
+<p>Currently the interrupt context uses the Event FIFO queue to communicate with
+the main context, so same approach will be used to report to the main context
+on errors occurred in interrupt context.</p>
+<p>When an error occurs in interrupt context, a
+<a class="reference external" href="../yk_firmware_ex10_api_event_packets.html#ex10_api_event_packet_ex10_result_packet">Ex10Result Event FIFO packet</a>
+will be created and enqueued into Ex10 Event FIFO queue to be processed by
+the application. This new packet will contain a <a class="reference external" href="../ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result">struct Ex10Result</a>
+with specific details on the encountered error, as done in main context error
+reporting.</p>
+<p>Interrupt context has a buffer pool dedicated for error reporting. If the
+interrupt context encountered an error, but the error pool is empty, that error
+will be silently discarded.</p>
+<p>The example below shows an interrupt_handler in Ex10Protocol failing to
+retrieve a buffer from the SDK Event FIFO buffer pool. This demonstrates
+an error occurred in the interrupt context and how it gets reported to the
+application.</p>
+<figure class="align-default">
+<img alt="../../../_images/ex10_result_error_flow_interrupt.png" src="../../../_images/ex10_result_error_flow_interrupt.png" />
+</figure>
+</section>
+<section id="api">
+<h2>API<a class="headerlink" href="#api" title="Permalink to this headline">¶</a></h2>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-enums">Enums</p>
+<dl class="cpp enum">
+<dt class="sig sig-object cpp" id="_CPPv417Ex10SdkResultCode">
+<span id="_CPPv317Ex10SdkResultCode"></span><span id="_CPPv217Ex10SdkResultCode"></span><span class="target" id="ex10__result_8h_1a6341a03703fdaa14d50bb37636a6e828"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10SdkResultCode</span></span></span><a class="headerlink" href="#_CPPv417Ex10SdkResultCode" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Generic SDK result codes. </p>
+<p>These values will be placed into the ‘result_code’ field of the struct <a class="reference internal" href="#struct_ex10_result"><span class="std std-ref">Ex10Result</span></a> value. </p>
+<p><em>Values:</em></p>
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N17Ex10SdkResultCode14Ex10SdkSuccessE">
+<span id="_CPPv3N17Ex10SdkResultCode14Ex10SdkSuccessE"></span><span id="_CPPv2N17Ex10SdkResultCode14Ex10SdkSuccessE"></span><span class="target" id="ex10__result_8h_1a6341a03703fdaa14d50bb37636a6e828a7b08a0abb13af54b51309c575aeeb4a3"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10SdkSuccess</span></span></span><a class="headerlink" href="#_CPPv4N17Ex10SdkResultCode14Ex10SdkSuccessE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N17Ex10SdkResultCode25Ex10SdkErrorBadParamValueE">
+<span id="_CPPv3N17Ex10SdkResultCode25Ex10SdkErrorBadParamValueE"></span><span id="_CPPv2N17Ex10SdkResultCode25Ex10SdkErrorBadParamValueE"></span><span class="target" id="ex10__result_8h_1a6341a03703fdaa14d50bb37636a6e828abb0519811cf3735eed9df17bf3741930"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10SdkErrorBadParamValue</span></span></span><a class="headerlink" href="#_CPPv4N17Ex10SdkResultCode25Ex10SdkErrorBadParamValueE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Invalid parameter value. </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N17Ex10SdkResultCode26Ex10SdkErrorBadParamLengthE">
+<span id="_CPPv3N17Ex10SdkResultCode26Ex10SdkErrorBadParamLengthE"></span><span id="_CPPv2N17Ex10SdkResultCode26Ex10SdkErrorBadParamLengthE"></span><span class="target" id="ex10__result_8h_1a6341a03703fdaa14d50bb37636a6e828a52f1192396494fdd175b8baf57d9a839"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10SdkErrorBadParamLength</span></span></span><a class="headerlink" href="#_CPPv4N17Ex10SdkResultCode26Ex10SdkErrorBadParamLengthE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Invalid parameter length. </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N17Ex10SdkResultCode29Ex10SdkErrorBadParamAlignmentE">
+<span id="_CPPv3N17Ex10SdkResultCode29Ex10SdkErrorBadParamAlignmentE"></span><span id="_CPPv2N17Ex10SdkResultCode29Ex10SdkErrorBadParamAlignmentE"></span><span class="target" id="ex10__result_8h_1a6341a03703fdaa14d50bb37636a6e828ae7242ae36f03a3cb74f1fe588b972df6"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10SdkErrorBadParamAlignment</span></span></span><a class="headerlink" href="#_CPPv4N17Ex10SdkResultCode29Ex10SdkErrorBadParamAlignmentE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Parameter address or length misalignment. </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N17Ex10SdkResultCode23Ex10SdkErrorNullPointerE">
+<span id="_CPPv3N17Ex10SdkResultCode23Ex10SdkErrorNullPointerE"></span><span id="_CPPv2N17Ex10SdkResultCode23Ex10SdkErrorNullPointerE"></span><span class="target" id="ex10__result_8h_1a6341a03703fdaa14d50bb37636a6e828a9913d76935d64aa1dcb5d2cf0a4c4d24"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10SdkErrorNullPointer</span></span></span><a class="headerlink" href="#_CPPv4N17Ex10SdkResultCode23Ex10SdkErrorNullPointerE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Pointer parameter is null. </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N17Ex10SdkResultCode19Ex10SdkErrorTimeoutE">
+<span id="_CPPv3N17Ex10SdkResultCode19Ex10SdkErrorTimeoutE"></span><span id="_CPPv2N17Ex10SdkResultCode19Ex10SdkErrorTimeoutE"></span><span class="target" id="ex10__result_8h_1a6341a03703fdaa14d50bb37636a6e828ad4cc7b0ab5ccac76d67acbac4c96a3ad"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10SdkErrorTimeout</span></span></span><a class="headerlink" href="#_CPPv4N17Ex10SdkResultCode19Ex10SdkErrorTimeoutE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Timeout occurred while waiting for an event to occur or action to complete, for example waiting for READY_N to deassert. </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N17Ex10SdkResultCode23Ex10SdkErrorRunLocationE">
+<span id="_CPPv3N17Ex10SdkResultCode23Ex10SdkErrorRunLocationE"></span><span id="_CPPv2N17Ex10SdkResultCode23Ex10SdkErrorRunLocationE"></span><span class="target" id="ex10__result_8h_1a6341a03703fdaa14d50bb37636a6e828a5f0641242d69a2a294fda6131aa71b7e"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10SdkErrorRunLocation</span></span></span><a class="headerlink" href="#_CPPv4N17Ex10SdkResultCode23Ex10SdkErrorRunLocationE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The running location, application or bootloader, did not match the requested operation. </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N17Ex10SdkResultCode29Ex10SdkErrorAggBufferOverflowE">
+<span id="_CPPv3N17Ex10SdkResultCode29Ex10SdkErrorAggBufferOverflowE"></span><span id="_CPPv2N17Ex10SdkResultCode29Ex10SdkErrorAggBufferOverflowE"></span><span class="target" id="ex10__result_8h_1a6341a03703fdaa14d50bb37636a6e828aa68e8fb9578de36c4f47c08f6353e5b5"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10SdkErrorAggBufferOverflow</span></span></span><a class="headerlink" href="#_CPPv4N17Ex10SdkResultCode29Ex10SdkErrorAggBufferOverflowE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Aggregate buffer overflow. </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N17Ex10SdkResultCode21Ex10SdkErrorOpRunningE">
+<span id="_CPPv3N17Ex10SdkResultCode21Ex10SdkErrorOpRunningE"></span><span id="_CPPv2N17Ex10SdkResultCode21Ex10SdkErrorOpRunningE"></span><span class="target" id="ex10__result_8h_1a6341a03703fdaa14d50bb37636a6e828ab3aa25a9a77780e2a7317d030400172c"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10SdkErrorOpRunning</span></span></span><a class="headerlink" href="#_CPPv4N17Ex10SdkResultCode21Ex10SdkErrorOpRunningE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Attempting to start an Op when another Op is running. </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N17Ex10SdkResultCode24Ex10SdkErrorInvalidStateE">
+<span id="_CPPv3N17Ex10SdkResultCode24Ex10SdkErrorInvalidStateE"></span><span id="_CPPv2N17Ex10SdkResultCode24Ex10SdkErrorInvalidStateE"></span><span class="target" id="ex10__result_8h_1a6341a03703fdaa14d50bb37636a6e828a73ea554aff7875635cf4fd7b82d8abc0"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10SdkErrorInvalidState</span></span></span><a class="headerlink" href="#_CPPv4N17Ex10SdkResultCode24Ex10SdkErrorInvalidStateE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Invalid or unexpected state encountered. </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N17Ex10SdkResultCode20Ex10SdkEventFifoFullE">
+<span id="_CPPv3N17Ex10SdkResultCode20Ex10SdkEventFifoFullE"></span><span id="_CPPv2N17Ex10SdkResultCode20Ex10SdkEventFifoFullE"></span><span class="target" id="ex10__result_8h_1a6341a03703fdaa14d50bb37636a6e828a4ae183049598b3c0b6492cb98655fc2e"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10SdkEventFifoFull</span></span></span><a class="headerlink" href="#_CPPv4N17Ex10SdkResultCode20Ex10SdkEventFifoFullE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The Ex10 EventFifo overflowed; Packet processing halted. </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N17Ex10SdkResultCode29Ex10SdkNoFreeEventFifoBuffersE">
+<span id="_CPPv3N17Ex10SdkResultCode29Ex10SdkNoFreeEventFifoBuffersE"></span><span id="_CPPv2N17Ex10SdkResultCode29Ex10SdkNoFreeEventFifoBuffersE"></span><span class="target" id="ex10__result_8h_1a6341a03703fdaa14d50bb37636a6e828accfab3e89df39361e67aa53d2b4767fb"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10SdkNoFreeEventFifoBuffers</span></span></span><a class="headerlink" href="#_CPPv4N17Ex10SdkResultCode29Ex10SdkNoFreeEventFifoBuffersE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The Ex10 Free event FIFO buffer list is empty. </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N17Ex10SdkResultCode41Ex10SdkFreeEventFifoBuffersLengthMismatchE">
+<span id="_CPPv3N17Ex10SdkResultCode41Ex10SdkFreeEventFifoBuffersLengthMismatchE"></span><span id="_CPPv2N17Ex10SdkResultCode41Ex10SdkFreeEventFifoBuffersLengthMismatchE"></span><span class="target" id="ex10__result_8h_1a6341a03703fdaa14d50bb37636a6e828a18f74dffff540411561b7abaabfbb386"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10SdkFreeEventFifoBuffersLengthMismatch</span></span></span><a class="headerlink" href="#_CPPv4N17Ex10SdkResultCode41Ex10SdkFreeEventFifoBuffersLengthMismatchE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Ex10 Free event FIFO buffers length is incompatible for required operation. </p>
+<p>Example: the free event FIFO buffers may be defined too short to accommodate the expected response from the ReadFifo command. </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N17Ex10SdkResultCode19Ex10SdkLmacOverloadE">
+<span id="_CPPv3N17Ex10SdkResultCode19Ex10SdkLmacOverloadE"></span><span id="_CPPv2N17Ex10SdkResultCode19Ex10SdkLmacOverloadE"></span><span class="target" id="ex10__result_8h_1a6341a03703fdaa14d50bb37636a6e828abc6699d31ae9e7fea603810d62431579"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10SdkLmacOverload</span></span></span><a class="headerlink" href="#_CPPv4N17Ex10SdkResultCode19Ex10SdkLmacOverloadE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The Ex10 LMAC processor was over-loaded; packet processing halted. </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N17Ex10SdkResultCode25Ex10InventoryInvalidParamE">
+<span id="_CPPv3N17Ex10SdkResultCode25Ex10InventoryInvalidParamE"></span><span id="_CPPv2N17Ex10SdkResultCode25Ex10InventoryInvalidParamE"></span><span class="target" id="ex10__result_8h_1a6341a03703fdaa14d50bb37636a6e828ac5ec07154c99bbbb48e2d8ab7d6d5f9f"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10InventoryInvalidParam</span></span></span><a class="headerlink" href="#_CPPv4N17Ex10SdkResultCode25Ex10InventoryInvalidParamE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>A register setting in the Ex10 contained an invalid value when starting the StartInventoryRoundOp. </p>
+<p>When this happens the Ex10 will respond with an EventFifo <a class="reference internal" href="../yk_firmware_ex10_host_c_other_types.html#struct_inventory_round_summary"><span class="std std-ref">InventoryRoundSummary</span></a> packet whose summary_reason is equal to InventorySummaryInvalidParam. </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N17Ex10SdkResultCode33Ex10InventorySummaryReasonInvalidE">
+<span id="_CPPv3N17Ex10SdkResultCode33Ex10InventorySummaryReasonInvalidE"></span><span id="_CPPv2N17Ex10SdkResultCode33Ex10InventorySummaryReasonInvalidE"></span><span class="target" id="ex10__result_8h_1a6341a03703fdaa14d50bb37636a6e828a501af641688d0a44a98c1096ce04fb33"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10InventorySummaryReasonInvalid</span></span></span><a class="headerlink" href="#_CPPv4N17Ex10SdkResultCode33Ex10InventorySummaryReasonInvalidE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The InventoryRoundSummary.reason value is not known to the SDK. </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N17Ex10SdkResultCode26Ex10InvalidEventFifoPacketE">
+<span id="_CPPv3N17Ex10SdkResultCode26Ex10InvalidEventFifoPacketE"></span><span id="_CPPv2N17Ex10SdkResultCode26Ex10InvalidEventFifoPacketE"></span><span class="target" id="ex10__result_8h_1a6341a03703fdaa14d50bb37636a6e828a2a3c00d11edbc8c0c7d677f6544f6e36"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10InvalidEventFifoPacket</span></span></span><a class="headerlink" href="#_CPPv4N17Ex10SdkResultCode26Ex10InvalidEventFifoPacketE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Invalid Event FIFO packet detected. </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N17Ex10SdkResultCode25Ex10SdkErrorGpioInterfaceE">
+<span id="_CPPv3N17Ex10SdkResultCode25Ex10SdkErrorGpioInterfaceE"></span><span id="_CPPv2N17Ex10SdkResultCode25Ex10SdkErrorGpioInterfaceE"></span><span class="target" id="ex10__result_8h_1a6341a03703fdaa14d50bb37636a6e828a5c9ea656783b33582b8bf4c25797960a"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10SdkErrorGpioInterface</span></span></span><a class="headerlink" href="#_CPPv4N17Ex10SdkResultCode25Ex10SdkErrorGpioInterfaceE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>An error occurred on the GPIO interface when communicating with the Ex10 device. </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N17Ex10SdkResultCode25Ex10SdkErrorHostInterfaceE">
+<span id="_CPPv3N17Ex10SdkResultCode25Ex10SdkErrorHostInterfaceE"></span><span id="_CPPv2N17Ex10SdkResultCode25Ex10SdkErrorHostInterfaceE"></span><span class="target" id="ex10__result_8h_1a6341a03703fdaa14d50bb37636a6e828aca558b641f7753584146300e3ae49679"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10SdkErrorHostInterface</span></span></span><a class="headerlink" href="#_CPPv4N17Ex10SdkResultCode25Ex10SdkErrorHostInterfaceE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>An error occurred on the host (i.e. </p>
+<p>SPI) interface when communicating with the Ex10 device. </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N17Ex10SdkResultCode25Ex10ErrorGen2BufferLengthE">
+<span id="_CPPv3N17Ex10SdkResultCode25Ex10ErrorGen2BufferLengthE"></span><span id="_CPPv2N17Ex10SdkResultCode25Ex10ErrorGen2BufferLengthE"></span><span class="target" id="ex10__result_8h_1a6341a03703fdaa14d50bb37636a6e828a759bee60d41b484b1fddc3705483f9c4"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10ErrorGen2BufferLength</span></span></span><a class="headerlink" href="#_CPPv4N17Ex10SdkResultCode25Ex10ErrorGen2BufferLengthE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The encoded Gen commands will not fit in the buffer. </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N17Ex10SdkResultCode24Ex10ErrorGen2NumCommandsE">
+<span id="_CPPv3N17Ex10SdkResultCode24Ex10ErrorGen2NumCommandsE"></span><span id="_CPPv2N17Ex10SdkResultCode24Ex10ErrorGen2NumCommandsE"></span><span class="target" id="ex10__result_8h_1a6341a03703fdaa14d50bb37636a6e828a984ffeadd143e030eb90ab10dc9d105e"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10ErrorGen2NumCommands</span></span></span><a class="headerlink" href="#_CPPv4N17Ex10SdkResultCode24Ex10ErrorGen2NumCommandsE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Too many Gen2 Tx Commands. </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N17Ex10SdkResultCode26Ex10ErrorGen2CommandEncodeE">
+<span id="_CPPv3N17Ex10SdkResultCode26Ex10ErrorGen2CommandEncodeE"></span><span id="_CPPv2N17Ex10SdkResultCode26Ex10ErrorGen2CommandEncodeE"></span><span class="target" id="ex10__result_8h_1a6341a03703fdaa14d50bb37636a6e828a5eb49480032ee4c823d5e7f0052b574f"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10ErrorGen2CommandEncode</span></span></span><a class="headerlink" href="#_CPPv4N17Ex10SdkResultCode26Ex10ErrorGen2CommandEncodeE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Could not encode the Gen2 command. </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N17Ex10SdkResultCode26Ex10ErrorGen2CommandDecodeE">
+<span id="_CPPv3N17Ex10SdkResultCode26Ex10ErrorGen2CommandDecodeE"></span><span id="_CPPv2N17Ex10SdkResultCode26Ex10ErrorGen2CommandDecodeE"></span><span class="target" id="ex10__result_8h_1a6341a03703fdaa14d50bb37636a6e828a992ca96b99f8494b34b46ade88294708"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10ErrorGen2CommandDecode</span></span></span><a class="headerlink" href="#_CPPv4N17Ex10SdkResultCode26Ex10ErrorGen2CommandDecodeE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Could not decode the Gen2 command. </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N17Ex10SdkResultCode34Ex10ErrorGen2CommandEnableMismatchE">
+<span id="_CPPv3N17Ex10SdkResultCode34Ex10ErrorGen2CommandEnableMismatchE"></span><span id="_CPPv2N17Ex10SdkResultCode34Ex10ErrorGen2CommandEnableMismatchE"></span><span class="target" id="ex10__result_8h_1a6341a03703fdaa14d50bb37636a6e828a5aed8c55097afbbe16ef7f94df5f4b3f"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10ErrorGen2CommandEnableMismatch</span></span></span><a class="headerlink" href="#_CPPv4N17Ex10SdkResultCode34Ex10ErrorGen2CommandEnableMismatchE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Unexpected select, halted, or access enable command. </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N17Ex10SdkResultCode25Ex10ErrorGen2EmptyCommandE">
+<span id="_CPPv3N17Ex10SdkResultCode25Ex10ErrorGen2EmptyCommandE"></span><span id="_CPPv2N17Ex10SdkResultCode25Ex10ErrorGen2EmptyCommandE"></span><span class="target" id="ex10__result_8h_1a6341a03703fdaa14d50bb37636a6e828a23cef089f3556d7df5afd24c419566c1"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10ErrorGen2EmptyCommand</span></span></span><a class="headerlink" href="#_CPPv4N17Ex10SdkResultCode25Ex10ErrorGen2EmptyCommandE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The Gen command at the returned index is not valid. </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N17Ex10SdkResultCode30Ex10SdkErrorUnexpectedTxLengthE">
+<span id="_CPPv3N17Ex10SdkResultCode30Ex10SdkErrorUnexpectedTxLengthE"></span><span id="_CPPv2N17Ex10SdkResultCode30Ex10SdkErrorUnexpectedTxLengthE"></span><span class="target" id="ex10__result_8h_1a6341a03703fdaa14d50bb37636a6e828ad39e8290aee8b6c476863be4a62f8860"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10SdkErrorUnexpectedTxLength</span></span></span><a class="headerlink" href="#_CPPv4N17Ex10SdkResultCode30Ex10SdkErrorUnexpectedTxLengthE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Unexpected transmission length occurred on the host (i.e. </p>
+<p>SPI) interface when communicating with the Ex10 device. </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N17Ex10SdkResultCode18Ex10AboveThresholdE">
+<span id="_CPPv3N17Ex10SdkResultCode18Ex10AboveThresholdE"></span><span id="_CPPv2N17Ex10SdkResultCode18Ex10AboveThresholdE"></span><span class="target" id="ex10__result_8h_1a6341a03703fdaa14d50bb37636a6e828a6fbdb6aaa25a328c9a9927a6315bb349"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10AboveThreshold</span></span></span><a class="headerlink" href="#_CPPv4N17Ex10SdkResultCode18Ex10AboveThresholdE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The result was above the measurement threshold. </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N17Ex10SdkResultCode18Ex10BelowThresholdE">
+<span id="_CPPv3N17Ex10SdkResultCode18Ex10BelowThresholdE"></span><span id="_CPPv2N17Ex10SdkResultCode18Ex10BelowThresholdE"></span><span class="target" id="ex10__result_8h_1a6341a03703fdaa14d50bb37636a6e828a128e1be5ae765e90320ec97813ddb0da"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10BelowThreshold</span></span></span><a class="headerlink" href="#_CPPv4N17Ex10SdkResultCode18Ex10BelowThresholdE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The result was below the measurement threshold. </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N17Ex10SdkResultCode16Ex10MemcpyFailedE">
+<span id="_CPPv3N17Ex10SdkResultCode16Ex10MemcpyFailedE"></span><span id="_CPPv2N17Ex10SdkResultCode16Ex10MemcpyFailedE"></span><span class="target" id="ex10__result_8h_1a6341a03703fdaa14d50bb37636a6e828a4c37df9e9b973e1489695046fd4964c2"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10MemcpyFailed</span></span></span><a class="headerlink" href="#_CPPv4N17Ex10SdkResultCode16Ex10MemcpyFailedE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The call to ex10_memcpy() failed. </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N17Ex10SdkResultCode16Ex10MemsetFailedE">
+<span id="_CPPv3N17Ex10SdkResultCode16Ex10MemsetFailedE"></span><span id="_CPPv2N17Ex10SdkResultCode16Ex10MemsetFailedE"></span><span class="target" id="ex10__result_8h_1a6341a03703fdaa14d50bb37636a6e828a169e035dd9dba446d7cccf3e4ef360bd"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10MemsetFailed</span></span></span><a class="headerlink" href="#_CPPv4N17Ex10SdkResultCode16Ex10MemsetFailedE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The call to ex10_memzero() failed. </p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="cpp enum">
+<dt class="sig sig-object cpp" id="_CPPv420Ex10DeviceResultCode">
+<span id="_CPPv320Ex10DeviceResultCode"></span><span id="_CPPv220Ex10DeviceResultCode"></span><span class="target" id="ex10__result_8h_1a5cc65f4177882c0a54b5adbb76375b1f"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10DeviceResultCode</span></span></span><a class="headerlink" href="#_CPPv420Ex10DeviceResultCode" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>When an error occurs in the Ex10 interface, the result code will be one of these values. </p>
+<p><em>Values:</em></p>
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N20Ex10DeviceResultCode17Ex10DeviceSuccessE">
+<span id="_CPPv3N20Ex10DeviceResultCode17Ex10DeviceSuccessE"></span><span id="_CPPv2N20Ex10DeviceResultCode17Ex10DeviceSuccessE"></span><span class="target" id="ex10__result_8h_1a5cc65f4177882c0a54b5adbb76375b1fab9d01e04a777d0350f52a3b533d881b2"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10DeviceSuccess</span></span></span><a class="headerlink" href="#_CPPv4N20Ex10DeviceResultCode17Ex10DeviceSuccessE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>No errors have occurred; the transaction was successful. </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N20Ex10DeviceResultCode33Ex10DeviceErrorCommandsNoResponseE">
+<span id="_CPPv3N20Ex10DeviceResultCode33Ex10DeviceErrorCommandsNoResponseE"></span><span id="_CPPv2N20Ex10DeviceResultCode33Ex10DeviceErrorCommandsNoResponseE"></span><span class="target" id="ex10__result_8h_1a5cc65f4177882c0a54b5adbb76375b1faf774d6c186279bad5decf82d3c2193a6"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10DeviceErrorCommandsNoResponse</span></span></span><a class="headerlink" href="#_CPPv4N20Ex10DeviceResultCode33Ex10DeviceErrorCommandsNoResponseE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>An error occurred when a command was sent which does not have a response. </p>
+<p>Example: The Ex10 Write Command has no response in the transaction. </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N20Ex10DeviceResultCode35Ex10DeviceErrorCommandsWithResponseE">
+<span id="_CPPv3N20Ex10DeviceResultCode35Ex10DeviceErrorCommandsWithResponseE"></span><span id="_CPPv2N20Ex10DeviceResultCode35Ex10DeviceErrorCommandsWithResponseE"></span><span class="target" id="ex10__result_8h_1a5cc65f4177882c0a54b5adbb76375b1fac74016f0dcfc496adb7017962b461ed4"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10DeviceErrorCommandsWithResponse</span></span></span><a class="headerlink" href="#_CPPv4N20Ex10DeviceResultCode35Ex10DeviceErrorCommandsWithResponseE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>An error occurred when a command was sent which has a response. </p>
+<p>Example: The Ex10 Read Command has a response in the transaction. </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N20Ex10DeviceResultCode18Ex10DeviceErrorOpsE">
+<span id="_CPPv3N20Ex10DeviceResultCode18Ex10DeviceErrorOpsE"></span><span id="_CPPv2N20Ex10DeviceResultCode18Ex10DeviceErrorOpsE"></span><span class="target" id="ex10__result_8h_1a5cc65f4177882c0a54b5adbb76375b1fa9ef3df89324c3b3b5a39ba8cf7fb02ec"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10DeviceErrorOps</span></span></span><a class="headerlink" href="#_CPPv4N20Ex10DeviceResultCode18Ex10DeviceErrorOpsE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>An error occurred when starting an Op. </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N20Ex10DeviceResultCode25Ex10DeviceErrorOpsTimeoutE">
+<span id="_CPPv3N20Ex10DeviceResultCode25Ex10DeviceErrorOpsTimeoutE"></span><span id="_CPPv2N20Ex10DeviceResultCode25Ex10DeviceErrorOpsTimeoutE"></span><span class="target" id="ex10__result_8h_1a5cc65f4177882c0a54b5adbb76375b1fab44200d234179af5adb2822f055cbbf9"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10DeviceErrorOpsTimeout</span></span></span><a class="headerlink" href="#_CPPv4N20Ex10DeviceResultCode25Ex10DeviceErrorOpsTimeoutE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>An error occurred when starting an Op and waiting for the Op to complete. </p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="cpp enum">
+<dt class="sig sig-object cpp" id="_CPPv410Ex10Module">
+<span id="_CPPv310Ex10Module"></span><span id="_CPPv210Ex10Module"></span><span class="target" id="ex10__result_8h_1aaf450f8002d9b1e38fecdd44081c9e8b"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10Module</span></span></span><a class="headerlink" href="#_CPPv410Ex10Module" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p><em>Values:</em></p>
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N10Ex10Module19Ex10ModuleUndefinedE">
+<span id="_CPPv3N10Ex10Module19Ex10ModuleUndefinedE"></span><span id="_CPPv2N10Ex10Module19Ex10ModuleUndefinedE"></span><span class="target" id="ex10__result_8h_1aaf450f8002d9b1e38fecdd44081c9e8ba04c8de3a22f721403681d7b786ad8e29"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10ModuleUndefined</span></span></span><a class="headerlink" href="#_CPPv4N10Ex10Module19Ex10ModuleUndefinedE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N10Ex10Module16Ex10ModuleDeviceE">
+<span id="_CPPv3N10Ex10Module16Ex10ModuleDeviceE"></span><span id="_CPPv2N10Ex10Module16Ex10ModuleDeviceE"></span><span class="target" id="ex10__result_8h_1aaf450f8002d9b1e38fecdd44081c9e8bae89aa5f8966fa2fdd7a46decd7856fa5"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10ModuleDevice</span></span></span><a class="headerlink" href="#_CPPv4N10Ex10Module16Ex10ModuleDeviceE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N10Ex10Module27Ex10ModuleCommandTransactorE">
+<span id="_CPPv3N10Ex10Module27Ex10ModuleCommandTransactorE"></span><span id="_CPPv2N10Ex10Module27Ex10ModuleCommandTransactorE"></span><span class="target" id="ex10__result_8h_1aaf450f8002d9b1e38fecdd44081c9e8baec02c9e9a3abbcbb887401498321d548"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10ModuleCommandTransactor</span></span></span><a class="headerlink" href="#_CPPv4N10Ex10Module27Ex10ModuleCommandTransactorE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N10Ex10Module18Ex10ModuleCommandsE">
+<span id="_CPPv3N10Ex10Module18Ex10ModuleCommandsE"></span><span id="_CPPv2N10Ex10Module18Ex10ModuleCommandsE"></span><span class="target" id="ex10__result_8h_1aaf450f8002d9b1e38fecdd44081c9e8bab795d44e4070537bcdf4583194794b47"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10ModuleCommands</span></span></span><a class="headerlink" href="#_CPPv4N10Ex10Module18Ex10ModuleCommandsE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N10Ex10Module18Ex10ModuleProtocolE">
+<span id="_CPPv3N10Ex10Module18Ex10ModuleProtocolE"></span><span id="_CPPv2N10Ex10Module18Ex10ModuleProtocolE"></span><span class="target" id="ex10__result_8h_1aaf450f8002d9b1e38fecdd44081c9e8bafaf2447e5b2540dbf98f5914a8413806"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10ModuleProtocol</span></span></span><a class="headerlink" href="#_CPPv4N10Ex10Module18Ex10ModuleProtocolE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N10Ex10Module13Ex10ModuleOpsE">
+<span id="_CPPv3N10Ex10Module13Ex10ModuleOpsE"></span><span id="_CPPv2N10Ex10Module13Ex10ModuleOpsE"></span><span class="target" id="ex10__result_8h_1aaf450f8002d9b1e38fecdd44081c9e8babce45cc9bfb310f0f740fcb4bc2c412a"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10ModuleOps</span></span></span><a class="headerlink" href="#_CPPv4N10Ex10Module13Ex10ModuleOpsE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N10Ex10Module15Ex10ModuleUtilsE">
+<span id="_CPPv3N10Ex10Module15Ex10ModuleUtilsE"></span><span id="_CPPv2N10Ex10Module15Ex10ModuleUtilsE"></span><span class="target" id="ex10__result_8h_1aaf450f8002d9b1e38fecdd44081c9e8bad14cff47b5eb56f6ffd61cccb474f5f7"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10ModuleUtils</span></span></span><a class="headerlink" href="#_CPPv4N10Ex10Module15Ex10ModuleUtilsE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N10Ex10Module17Ex10ModuleRfPowerE">
+<span id="_CPPv3N10Ex10Module17Ex10ModuleRfPowerE"></span><span id="_CPPv2N10Ex10Module17Ex10ModuleRfPowerE"></span><span class="target" id="ex10__result_8h_1aaf450f8002d9b1e38fecdd44081c9e8bae69d52eaa73ffe59c8c1305e47aa2023"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10ModuleRfPower</span></span></span><a class="headerlink" href="#_CPPv4N10Ex10Module17Ex10ModuleRfPowerE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N10Ex10Module19Ex10ModuleInventoryE">
+<span id="_CPPv3N10Ex10Module19Ex10ModuleInventoryE"></span><span id="_CPPv2N10Ex10Module19Ex10ModuleInventoryE"></span><span class="target" id="ex10__result_8h_1aaf450f8002d9b1e38fecdd44081c9e8baca043e925c293af40d26b704b2b1d2ba"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10ModuleInventory</span></span></span><a class="headerlink" href="#_CPPv4N10Ex10Module19Ex10ModuleInventoryE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N10Ex10Module16Ex10ModuleReaderE">
+<span id="_CPPv3N10Ex10Module16Ex10ModuleReaderE"></span><span id="_CPPv2N10Ex10Module16Ex10ModuleReaderE"></span><span class="target" id="ex10__result_8h_1aaf450f8002d9b1e38fecdd44081c9e8ba1cc4686ef6738fe162e5872a98c36b70"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10ModuleReader</span></span></span><a class="headerlink" href="#_CPPv4N10Ex10Module16Ex10ModuleReaderE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N10Ex10Module14Ex10ModuleTestE">
+<span id="_CPPv3N10Ex10Module14Ex10ModuleTestE"></span><span id="_CPPv2N10Ex10Module14Ex10ModuleTestE"></span><span class="target" id="ex10__result_8h_1aaf450f8002d9b1e38fecdd44081c9e8ba8218141a615dfe856f7d365082c2b677"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10ModuleTest</span></span></span><a class="headerlink" href="#_CPPv4N10Ex10Module14Ex10ModuleTestE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N10Ex10Module20Ex10ModulePowerModesE">
+<span id="_CPPv3N10Ex10Module20Ex10ModulePowerModesE"></span><span id="_CPPv2N10Ex10Module20Ex10ModulePowerModesE"></span><span class="target" id="ex10__result_8h_1aaf450f8002d9b1e38fecdd44081c9e8ba2d6aff5a08d83b471e528392eff12a6b"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10ModulePowerModes</span></span></span><a class="headerlink" href="#_CPPv4N10Ex10Module20Ex10ModulePowerModesE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N10Ex10Module22Ex10ModuleGen2CommandsE">
+<span id="_CPPv3N10Ex10Module22Ex10ModuleGen2CommandsE"></span><span id="_CPPv2N10Ex10Module22Ex10ModuleGen2CommandsE"></span><span class="target" id="ex10__result_8h_1aaf450f8002d9b1e38fecdd44081c9e8bad76a5717fbe9600ff45659cc747fc504"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10ModuleGen2Commands</span></span></span><a class="headerlink" href="#_CPPv4N10Ex10Module22Ex10ModuleGen2CommandsE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N10Ex10Module22Ex10ModuleGen2ResponseE">
+<span id="_CPPv3N10Ex10Module22Ex10ModuleGen2ResponseE"></span><span id="_CPPv2N10Ex10Module22Ex10ModuleGen2ResponseE"></span><span class="target" id="ex10__result_8h_1aaf450f8002d9b1e38fecdd44081c9e8bae6d1e10e13975117564aea4048ea6814"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10ModuleGen2Response</span></span></span><a class="headerlink" href="#_CPPv4N10Ex10Module22Ex10ModuleGen2ResponseE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N10Ex10Module23Ex10ModuleModuleManagerE">
+<span id="_CPPv3N10Ex10Module23Ex10ModuleModuleManagerE"></span><span id="_CPPv2N10Ex10Module23Ex10ModuleModuleManagerE"></span><span class="target" id="ex10__result_8h_1aaf450f8002d9b1e38fecdd44081c9e8ba3030322d562ab66beab8862cb7333252"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10ModuleModuleManager</span></span></span><a class="headerlink" href="#_CPPv4N10Ex10Module23Ex10ModuleModuleManagerE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N10Ex10Module24Ex10ModuleFifoBufferListE">
+<span id="_CPPv3N10Ex10Module24Ex10ModuleFifoBufferListE"></span><span id="_CPPv2N10Ex10Module24Ex10ModuleFifoBufferListE"></span><span class="target" id="ex10__result_8h_1aaf450f8002d9b1e38fecdd44081c9e8baa104966a75d0cdef2df52b1d76dcfbba"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10ModuleFifoBufferList</span></span></span><a class="headerlink" href="#_CPPv4N10Ex10Module24Ex10ModuleFifoBufferListE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N10Ex10Module19Ex10ModuleBoardInitE">
+<span id="_CPPv3N10Ex10Module19Ex10ModuleBoardInitE"></span><span id="_CPPv2N10Ex10Module19Ex10ModuleBoardInitE"></span><span class="target" id="ex10__result_8h_1aaf450f8002d9b1e38fecdd44081c9e8ba05861194f5fa679a211a8f66ec1ac9a9"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10ModuleBoardInit</span></span></span><a class="headerlink" href="#_CPPv4N10Ex10Module19Ex10ModuleBoardInitE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N10Ex10Module21Ex10AntennaDisconnectE">
+<span id="_CPPv3N10Ex10Module21Ex10AntennaDisconnectE"></span><span id="_CPPv2N10Ex10Module21Ex10AntennaDisconnectE"></span><span class="target" id="ex10__result_8h_1aaf450f8002d9b1e38fecdd44081c9e8baa916deb49c09633303f90a5e02be7fe5"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10AntennaDisconnect</span></span></span><a class="headerlink" href="#_CPPv4N10Ex10Module21Ex10AntennaDisconnectE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N10Ex10Module20Ex10ListenBeforeTalkE">
+<span id="_CPPv3N10Ex10Module20Ex10ListenBeforeTalkE"></span><span id="_CPPv2N10Ex10Module20Ex10ListenBeforeTalkE"></span><span class="target" id="ex10__result_8h_1aaf450f8002d9b1e38fecdd44081c9e8bad522315619e11ab217b2123e32ae1106"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10ListenBeforeTalk</span></span></span><a class="headerlink" href="#_CPPv4N10Ex10Module20Ex10ListenBeforeTalkE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N10Ex10Module17Ex10ModuleUseCaseE">
+<span id="_CPPv3N10Ex10Module17Ex10ModuleUseCaseE"></span><span id="_CPPv2N10Ex10Module17Ex10ModuleUseCaseE"></span><span class="target" id="ex10__result_8h_1aaf450f8002d9b1e38fecdd44081c9e8bad541c481eefb5863b225444ef3b20cc7"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10ModuleUseCase</span></span></span><a class="headerlink" href="#_CPPv4N10Ex10Module17Ex10ModuleUseCaseE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N10Ex10Module22Ex10ModuleAutosetModesE">
+<span id="_CPPv3N10Ex10Module22Ex10ModuleAutosetModesE"></span><span id="_CPPv2N10Ex10Module22Ex10ModuleAutosetModesE"></span><span class="target" id="ex10__result_8h_1aaf450f8002d9b1e38fecdd44081c9e8ba5bc12b097c4b555f58c42b04b236f3af"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10ModuleAutosetModes</span></span></span><a class="headerlink" href="#_CPPv4N10Ex10Module22Ex10ModuleAutosetModesE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N10Ex10Module21Ex10ModuleApplicationE">
+<span id="_CPPv3N10Ex10Module21Ex10ModuleApplicationE"></span><span id="_CPPv2N10Ex10Module21Ex10ModuleApplicationE"></span><span class="target" id="ex10__result_8h_1aaf450f8002d9b1e38fecdd44081c9e8baa1a3f6157ab3ff85020baf7883cf5d60"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10ModuleApplication</span></span></span><a class="headerlink" href="#_CPPv4N10Ex10Module21Ex10ModuleApplicationE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N10Ex10Module16Ex10ModuleRegionE">
+<span id="_CPPv3N10Ex10Module16Ex10ModuleRegionE"></span><span id="_CPPv2N10Ex10Module16Ex10ModuleRegionE"></span><span class="target" id="ex10__result_8h_1aaf450f8002d9b1e38fecdd44081c9e8bab5cee39ed56c767fc4871ddb3f927ae5"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10ModuleRegion</span></span></span><a class="headerlink" href="#_CPPv4N10Ex10Module16Ex10ModuleRegionE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N10Ex10Module18Ex10ModuleEx10GpioE">
+<span id="_CPPv3N10Ex10Module18Ex10ModuleEx10GpioE"></span><span id="_CPPv2N10Ex10Module18Ex10ModuleEx10GpioE"></span><span class="target" id="ex10__result_8h_1aaf450f8002d9b1e38fecdd44081c9e8ba7d0590514257e1badcce13b106fbb549"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10ModuleEx10Gpio</span></span></span><a class="headerlink" href="#_CPPv4N10Ex10Module18Ex10ModuleEx10GpioE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="cpp enum">
+<dt class="sig sig-object cpp" id="_CPPv426Ex10CommandsHostResultCode">
+<span id="_CPPv326Ex10CommandsHostResultCode"></span><span id="_CPPv226Ex10CommandsHostResultCode"></span><span class="target" id="ex10__result_8h_1a6762dd439c07e5a533dc30452010b9f5"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10CommandsHostResultCode</span></span></span><a class="headerlink" href="#_CPPv426Ex10CommandsHostResultCode" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>When the host interface encounters and error, it will be one of these types. </p>
+<p><em>Values:</em></p>
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N26Ex10CommandsHostResultCode17HostResultSuccessE">
+<span id="_CPPv3N26Ex10CommandsHostResultCode17HostResultSuccessE"></span><span id="_CPPv2N26Ex10CommandsHostResultCode17HostResultSuccessE"></span><span class="target" id="ex10__result_8h_1a6762dd439c07e5a533dc30452010b9f5adf5a3ee2211a5860962cfc0cce663c95"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">HostResultSuccess</span></span></span><a class="headerlink" href="#_CPPv4N26Ex10CommandsHostResultCode17HostResultSuccessE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N26Ex10CommandsHostResultCode33HostResultReceivedLengthIncorrectE">
+<span id="_CPPv3N26Ex10CommandsHostResultCode33HostResultReceivedLengthIncorrectE"></span><span id="_CPPv2N26Ex10CommandsHostResultCode33HostResultReceivedLengthIncorrectE"></span><span class="target" id="ex10__result_8h_1a6762dd439c07e5a533dc30452010b9f5a24eedb2e1988dc32a485ac92074307ed"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">HostResultReceivedLengthIncorrect</span></span></span><a class="headerlink" href="#_CPPv4N26Ex10CommandsHostResultCode33HostResultReceivedLengthIncorrectE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N26Ex10CommandsHostResultCode33HostResultTestTransferVerifyErrorE">
+<span id="_CPPv3N26Ex10CommandsHostResultCode33HostResultTestTransferVerifyErrorE"></span><span id="_CPPv2N26Ex10CommandsHostResultCode33HostResultTestTransferVerifyErrorE"></span><span class="target" id="ex10__result_8h_1a6762dd439c07e5a533dc30452010b9f5a92456f6547ab5eea0e1af48b3ecc5e10"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">HostResultTestTransferVerifyError</span></span></span><a class="headerlink" href="#_CPPv4N26Ex10CommandsHostResultCode33HostResultTestTransferVerifyErrorE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-functions">Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv417make_ex10_successv">
+<span id="_CPPv317make_ex10_successv"></span><span id="_CPPv217make_ex10_successv"></span><span id="make_ex10_success__void"></span><span class="target" id="ex10__result_8h_1a66659f80149a227396d13b96fb345851"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">make_ex10_success</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">void</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417make_ex10_successv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv419make_ex10_sdk_error10Ex10Module17Ex10SdkResultCode">
+<span id="_CPPv319make_ex10_sdk_error10Ex10Module17Ex10SdkResultCode"></span><span id="_CPPv219make_ex10_sdk_error10Ex10Module17Ex10SdkResultCode"></span><span id="make_ex10_sdk_error__Ex10Module.Ex10SdkResultCode"></span><span class="target" id="ex10__result_8h_1ac2baa086459c75fd55eab183b89475b7"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">make_ex10_sdk_error</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv410Ex10Module" title="Ex10Module"><span class="n"><span class="pre">Ex10Module</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">module</span></span>, <span class="k"><span class="pre">enum</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv417Ex10SdkResultCode" title="Ex10SdkResultCode"><span class="n"><span class="pre">Ex10SdkResultCode</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">result_code</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv419make_ex10_sdk_error10Ex10Module17Ex10SdkResultCode" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv431make_ex10_sdk_error_with_status10Ex10Module17Ex10SdkResultCode8uint32_t">
+<span id="_CPPv331make_ex10_sdk_error_with_status10Ex10Module17Ex10SdkResultCode8uint32_t"></span><span id="_CPPv231make_ex10_sdk_error_with_status10Ex10Module17Ex10SdkResultCode8uint32_t"></span><span id="make_ex10_sdk_error_with_status__Ex10Module.Ex10SdkResultCode.uint32_t"></span><span class="target" id="ex10__result_8h_1a3db624b19c0349919f9acc2e1e0bd46d"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">make_ex10_sdk_error_with_status</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv410Ex10Module" title="Ex10Module"><span class="n"><span class="pre">Ex10Module</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">module</span></span>, <span class="k"><span class="pre">enum</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv417Ex10SdkResultCode" title="Ex10SdkResultCode"><span class="n"><span class="pre">Ex10SdkResultCode</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">sdk_result_code</span></span>, <span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">status</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv431make_ex10_sdk_error_with_status10Ex10Module17Ex10SdkResultCode8uint32_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv432make_ex10_commands_no_resp_error19CommandResultFields">
+<span id="_CPPv332make_ex10_commands_no_resp_error19CommandResultFields"></span><span id="_CPPv232make_ex10_commands_no_resp_error19CommandResultFields"></span><span id="make_ex10_commands_no_resp_error__CommandResultFields"></span><span class="target" id="ex10__result_8h_1ae4af95a6fa8dd3e43b05612f2021c979"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">make_ex10_commands_no_resp_error</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../yk_firmware_ex10_host_c_register_accessors.html#_CPPv419CommandResultFields" title="CommandResultFields"><span class="n"><span class="pre">CommandResultFields</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">cmd_result</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv432make_ex10_commands_no_resp_error19CommandResultFields" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv431make_ex10_commands_w_resp_error12ResponseCode11CommandCode26Ex10CommandsHostResultCode">
+<span id="_CPPv331make_ex10_commands_w_resp_error12ResponseCode11CommandCode26Ex10CommandsHostResultCode"></span><span id="_CPPv231make_ex10_commands_w_resp_error12ResponseCode11CommandCode26Ex10CommandsHostResultCode"></span><span id="make_ex10_commands_w_resp_error__ResponseCode.CommandCode.Ex10CommandsHostResultCode"></span><span class="target" id="ex10__result_8h_1ac20918e7ada61b8e110192a59e611063"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">make_ex10_commands_w_resp_error</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><a class="reference internal" href="../yk_firmware_ex10_host_c_register_accessors.html#_CPPv412ResponseCode" title="ResponseCode"><span class="n"><span class="pre">ResponseCode</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">failed_result_code</span></span>, <span class="k"><span class="pre">enum</span></span><span class="w"> </span><a class="reference internal" href="../yk_firmware_ex10_host_c_register_accessors.html#_CPPv411CommandCode" title="CommandCode"><span class="n"><span class="pre">CommandCode</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">failed_command_code</span></span>, <span class="k"><span class="pre">enum</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv426Ex10CommandsHostResultCode" title="Ex10CommandsHostResultCode"><span class="n"><span class="pre">Ex10CommandsHostResultCode</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">failed_host_result_code</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv431make_ex10_commands_w_resp_error12ResponseCode11CommandCode26Ex10CommandsHostResultCode" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv419make_ex10_ops_error15OpsStatusFields">
+<span id="_CPPv319make_ex10_ops_error15OpsStatusFields"></span><span id="_CPPv219make_ex10_ops_error15OpsStatusFields"></span><span id="make_ex10_ops_error__OpsStatusFields"></span><span class="target" id="ex10__result_8h_1a6b59dc6e203a577eb2512cf3be757b13"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">make_ex10_ops_error</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../yk_firmware_ex10_host_c_register_accessors.html#_CPPv415OpsStatusFields" title="OpsStatusFields"><span class="n"><span class="pre">OpsStatusFields</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">ops_status</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv419make_ex10_ops_error15OpsStatusFields" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv427make_ex10_ops_timeout_error15OpsStatusFields">
+<span id="_CPPv327make_ex10_ops_timeout_error15OpsStatusFields"></span><span id="_CPPv227make_ex10_ops_timeout_error15OpsStatusFields"></span><span id="make_ex10_ops_timeout_error__OpsStatusFields"></span><span class="target" id="ex10__result_8h_1af37267fe9b617f473d202b176b883da8"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">make_ex10_ops_timeout_error</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../yk_firmware_ex10_host_c_register_accessors.html#_CPPv415OpsStatusFields" title="OpsStatusFields"><span class="n"><span class="pre">OpsStatusFields</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">ops_status</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv427make_ex10_ops_timeout_error15OpsStatusFields" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv426make_ex10_ops_module_error15OpsStatusFields10Ex10Module">
+<span id="_CPPv326make_ex10_ops_module_error15OpsStatusFields10Ex10Module"></span><span id="_CPPv226make_ex10_ops_module_error15OpsStatusFields10Ex10Module"></span><span id="make_ex10_ops_module_error__OpsStatusFields.Ex10Module"></span><span class="target" id="ex10__result_8h_1a16f209f06439959ed149f8f533fc9586"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">make_ex10_ops_module_error</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../yk_firmware_ex10_host_c_register_accessors.html#_CPPv415OpsStatusFields" title="OpsStatusFields"><span class="n"><span class="pre">OpsStatusFields</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">ops_status</span></span>, <span class="k"><span class="pre">enum</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv410Ex10Module" title="Ex10Module"><span class="n"><span class="pre">Ex10Module</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">module</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv426make_ex10_ops_module_error15OpsStatusFields10Ex10Module" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv428make_ex10_result_fifo_packet10Ex10Result8uint32_t">
+<span id="_CPPv328make_ex10_result_fifo_packet10Ex10Result8uint32_t"></span><span id="_CPPv228make_ex10_result_fifo_packet10Ex10Result8uint32_t"></span><span id="make_ex10_result_fifo_packet__Ex10Result.uint32_t"></span><span class="target" id="ex10__result_8h_1aaa6e586fbf80f6167dc2dfea83cdc37c"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../yk_firmware_ex10_host_c_other_types.html#_CPPv414FifoBufferNode" title="FifoBufferNode"><span class="n"><span class="pre">FifoBufferNode</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">make_ex10_result_fifo_packet</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">ex10_result</span></span>, <span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">us_counter</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv428make_ex10_result_fifo_packet10Ex10Result8uint32_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv431get_ex10_sdk_result_code_string17Ex10SdkResultCode">
+<span id="_CPPv331get_ex10_sdk_result_code_string17Ex10SdkResultCode"></span><span id="_CPPv231get_ex10_sdk_result_code_string17Ex10SdkResultCode"></span><span id="get_ex10_sdk_result_code_string__Ex10SdkResultCode"></span><span class="target" id="ex10__result_8h_1a41a4fb12896a9a3bf01c8c80264074ff"></span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_ex10_sdk_result_code_string</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv417Ex10SdkResultCode" title="Ex10SdkResultCode"><span class="n"><span class="pre">Ex10SdkResultCode</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">value</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv431get_ex10_sdk_result_code_string17Ex10SdkResultCode" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv434get_ex10_device_result_code_string20Ex10DeviceResultCode">
+<span id="_CPPv334get_ex10_device_result_code_string20Ex10DeviceResultCode"></span><span id="_CPPv234get_ex10_device_result_code_string20Ex10DeviceResultCode"></span><span id="get_ex10_device_result_code_string__Ex10DeviceResultCode"></span><span class="target" id="ex10__result_8h_1af404266162da13d839ac28299e3f7c18"></span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_ex10_device_result_code_string</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv420Ex10DeviceResultCode" title="Ex10DeviceResultCode"><span class="n"><span class="pre">Ex10DeviceResultCode</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">value</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv434get_ex10_device_result_code_string20Ex10DeviceResultCode" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv422get_ex10_module_string10Ex10Module">
+<span id="_CPPv322get_ex10_module_string10Ex10Module"></span><span id="_CPPv222get_ex10_module_string10Ex10Module"></span><span id="get_ex10_module_string__Ex10Module"></span><span class="target" id="ex10__result_8h_1acee93e8e7b8e30031c693133fabea8a4"></span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_ex10_module_string</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv410Ex10Module" title="Ex10Module"><span class="n"><span class="pre">Ex10Module</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">value</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv422get_ex10_module_string10Ex10Module" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv441get_ex10_commands_host_result_code_string26Ex10CommandsHostResultCode">
+<span id="_CPPv341get_ex10_commands_host_result_code_string26Ex10CommandsHostResultCode"></span><span id="_CPPv241get_ex10_commands_host_result_code_string26Ex10CommandsHostResultCode"></span><span id="get_ex10_commands_host_result_code_string__Ex10CommandsHostResultCode"></span><span class="target" id="ex10__result_8h_1a61c32e1269ad6d9d7cd7db2d7a8530c9"></span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_ex10_commands_host_result_code_string</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv426Ex10CommandsHostResultCode" title="Ex10CommandsHostResultCode"><span class="n"><span class="pre">Ex10CommandsHostResultCode</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">value</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv441get_ex10_commands_host_result_code_string26Ex10CommandsHostResultCode" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv417print_ex10_resultK10Ex10Result">
+<span id="_CPPv317print_ex10_resultK10Ex10Result"></span><span id="_CPPv217print_ex10_resultK10Ex10Result"></span><span id="print_ex10_result__Ex10ResultC"></span><span class="target" id="ex10__result_8h_1a91f8dcda7ebdfba7f6dbecbc218a3a45"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">print_ex10_result</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">result</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417print_ex10_resultK10Ex10Result" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv420ex10_error_list_pullv">
+<span id="_CPPv320ex10_error_list_pullv"></span><span id="_CPPv220ex10_error_list_pullv"></span><span id="ex10_error_list_pull__void"></span><span class="target" id="ex10__result_8h_1a190f71c0eca78454b640ac56e5ba653f"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ex10_error_list_pull</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">void</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv420ex10_error_list_pullv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv422Ex10CommandsHostResult">
+<span id="_CPPv322Ex10CommandsHostResult"></span><span id="_CPPv222Ex10CommandsHostResult"></span><span id="Ex10CommandsHostResult"></span><span class="target" id="struct_ex10_commands_host_result"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10CommandsHostResult</span></span></span><a class="headerlink" href="#_CPPv422Ex10CommandsHostResult" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">device_status</span></code> field when reporting on status of an Ex10 command “with response” that resulted in an error. </p>
+<p>For a “command with response”, error status can be originated in 2 places:</p>
+<p><ul class="simple">
+<li><p>After sending the command, an error response may be received by the Ex10 SDK.</p></li>
+<li><p>After sending the command, the Ex10 SDK may encounter errors when decoding the received response. </p></li>
+</ul>
+</p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N22Ex10CommandsHostResult18failed_result_codeE">
+<span id="_CPPv3N22Ex10CommandsHostResult18failed_result_codeE"></span><span id="_CPPv2N22Ex10CommandsHostResult18failed_result_codeE"></span><span id="Ex10CommandsHostResult::failed_result_code__ResponseCode"></span><span class="target" id="struct_ex10_commands_host_result_1a523ecdf52682ce297bc8a095ebfcf99a"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><a class="reference internal" href="../yk_firmware_ex10_host_c_register_accessors.html#_CPPv412ResponseCode" title="ResponseCode"><span class="n"><span class="pre">ResponseCode</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">failed_result_code</span></span></span><a class="headerlink" href="#_CPPv4N22Ex10CommandsHostResult18failed_result_codeE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N22Ex10CommandsHostResult19failed_command_codeE">
+<span id="_CPPv3N22Ex10CommandsHostResult19failed_command_codeE"></span><span id="_CPPv2N22Ex10CommandsHostResult19failed_command_codeE"></span><span id="Ex10CommandsHostResult::failed_command_code__CommandCode"></span><span class="target" id="struct_ex10_commands_host_result_1a3496792f14b6f8b154a891b63a684657"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><a class="reference internal" href="../yk_firmware_ex10_host_c_register_accessors.html#_CPPv411CommandCode" title="CommandCode"><span class="n"><span class="pre">CommandCode</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">failed_command_code</span></span></span><a class="headerlink" href="#_CPPv4N22Ex10CommandsHostResult19failed_command_codeE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N22Ex10CommandsHostResult23failed_host_result_codeE">
+<span id="_CPPv3N22Ex10CommandsHostResult23failed_host_result_codeE"></span><span id="_CPPv2N22Ex10CommandsHostResult23failed_host_result_codeE"></span><span id="Ex10CommandsHostResult::failed_host_result_code__Ex10CommandsHostResultCode"></span><span class="target" id="struct_ex10_commands_host_result_1aa996cce9f9952839e12de83ae65e0922"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv426Ex10CommandsHostResultCode" title="Ex10CommandsHostResultCode"><span class="n"><span class="pre">Ex10CommandsHostResultCode</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">failed_host_result_code</span></span></span><a class="headerlink" href="#_CPPv4N22Ex10CommandsHostResult23failed_host_result_codeE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N22Ex10CommandsHostResult3rfuE">
+<span id="_CPPv3N22Ex10CommandsHostResult3rfuE"></span><span id="_CPPv2N22Ex10CommandsHostResult3rfuE"></span><span id="Ex10CommandsHostResult::rfu__uint8_t"></span><span class="target" id="struct_ex10_commands_host_result_1a77dbcc0b32bffe16f5360ebacd3b5b0c"></span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">rfu</span></span></span><a class="headerlink" href="#_CPPv4N22Ex10CommandsHostResult3rfuE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv414Ex10ResultCode">
+<span id="_CPPv314Ex10ResultCode"></span><span id="_CPPv214Ex10ResultCode"></span><span id="Ex10ResultCode"></span><span class="target" id="union_ex10_result_code"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10ResultCode</span></span></span><a class="headerlink" href="#_CPPv414Ex10ResultCode" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>code specific to the component where this status originated </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N14Ex10ResultCode3sdkE">
+<span id="_CPPv3N14Ex10ResultCode3sdkE"></span><span id="_CPPv2N14Ex10ResultCode3sdkE"></span><span id="Ex10ResultCode::sdk__Ex10SdkResultCode"></span><span class="target" id="union_ex10_result_code_1a7afb7a872e6530523315b7c7d744ddef"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv417Ex10SdkResultCode" title="Ex10SdkResultCode"><span class="n"><span class="pre">Ex10SdkResultCode</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">sdk</span></span></span><a class="headerlink" href="#_CPPv4N14Ex10ResultCode3sdkE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N14Ex10ResultCode6deviceE">
+<span id="_CPPv3N14Ex10ResultCode6deviceE"></span><span id="_CPPv2N14Ex10ResultCode6deviceE"></span><span id="Ex10ResultCode::device__Ex10DeviceResultCode"></span><span class="target" id="union_ex10_result_code_1afb9abd296f694e78326681bf9fdb541e"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv420Ex10DeviceResultCode" title="Ex10DeviceResultCode"><span class="n"><span class="pre">Ex10DeviceResultCode</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">device</span></span></span><a class="headerlink" href="#_CPPv4N14Ex10ResultCode6deviceE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N14Ex10ResultCode3rawE">
+<span id="_CPPv3N14Ex10ResultCode3rawE"></span><span id="_CPPv2N14Ex10ResultCode3rawE"></span><span id="Ex10ResultCode::raw__uint8_t"></span><span class="target" id="union_ex10_result_code_1abad03f621c2df82f412afefe12fe808e"></span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">raw</span></span></span><a class="headerlink" href="#_CPPv4N14Ex10ResultCode3rawE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv416Ex10DeviceStatus">
+<span id="_CPPv316Ex10DeviceStatus"></span><span id="_CPPv216Ex10DeviceStatus"></span><span id="Ex10DeviceStatus"></span><span class="target" id="union_ex10_device_status"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10DeviceStatus</span></span></span><a class="headerlink" href="#_CPPv416Ex10DeviceStatus" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>retrieved from Ex10 Reader Chip on failed command or operation </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N16Ex10DeviceStatus10cmd_resultE">
+<span id="_CPPv3N16Ex10DeviceStatus10cmd_resultE"></span><span id="_CPPv2N16Ex10DeviceStatus10cmd_resultE"></span><span id="Ex10DeviceStatus::cmd_result__CommandResultFields"></span><span class="target" id="union_ex10_device_status_1a66997a7793516f1d69397f56866f3f32"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../yk_firmware_ex10_host_c_register_accessors.html#_CPPv419CommandResultFields" title="CommandResultFields"><span class="n"><span class="pre">CommandResultFields</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cmd_result</span></span></span><a class="headerlink" href="#_CPPv4N16Ex10DeviceStatus10cmd_resultE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N16Ex10DeviceStatus15cmd_host_resultE">
+<span id="_CPPv3N16Ex10DeviceStatus15cmd_host_resultE"></span><span id="_CPPv2N16Ex10DeviceStatus15cmd_host_resultE"></span><span id="Ex10DeviceStatus::cmd_host_result__Ex10CommandsHostResult"></span><span class="target" id="union_ex10_device_status_1aeb704ff6293193fd316496488694470d"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv422Ex10CommandsHostResult" title="Ex10CommandsHostResult"><span class="n"><span class="pre">Ex10CommandsHostResult</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cmd_host_result</span></span></span><a class="headerlink" href="#_CPPv4N16Ex10DeviceStatus15cmd_host_resultE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N16Ex10DeviceStatus10ops_statusE">
+<span id="_CPPv3N16Ex10DeviceStatus10ops_statusE"></span><span id="_CPPv2N16Ex10DeviceStatus10ops_statusE"></span><span id="Ex10DeviceStatus::ops_status__OpsStatusFields"></span><span class="target" id="union_ex10_device_status_1ab98151b19f0b0a7e6fa865e39dc21278"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../yk_firmware_ex10_host_c_register_accessors.html#_CPPv415OpsStatusFields" title="OpsStatusFields"><span class="n"><span class="pre">OpsStatusFields</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ops_status</span></span></span><a class="headerlink" href="#_CPPv4N16Ex10DeviceStatus10ops_statusE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N16Ex10DeviceStatus3rawE">
+<span id="_CPPv3N16Ex10DeviceStatus3rawE"></span><span id="_CPPv2N16Ex10DeviceStatus3rawE"></span><span id="Ex10DeviceStatus::raw__uint32_t"></span><span class="target" id="union_ex10_device_status_1ad8230daf4f85be2c94e72469e339de82"></span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">raw</span></span></span><a class="headerlink" href="#_CPPv4N16Ex10DeviceStatus3rawE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv410Ex10Result">
+<span id="_CPPv310Ex10Result"></span><span id="_CPPv210Ex10Result"></span><span id="Ex10Result"></span><span class="target" id="struct_ex10_result"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10Result</span></span></span><a class="headerlink" href="#_CPPv410Ex10Result" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>by Ex10 SDK for error reporting </p>
+<p>Bit allocation: <table class="colwidths-auto docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Bits </p></th>
+<th class="head"><p>Name </p></th>
+<th class="head"><p>Description  </p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>[63] </p></td>
+<td><p>error </p></td>
+<td><p>1: Indicates Error, 0: Non-error </p></td>
+</tr>
+<tr class="row-odd"><td><p>[62] </p></td>
+<td><p>customer </p></td>
+<td><p>1: Customer defined error, 0: Impinj defined </p></td>
+</tr>
+<tr class="row-even"><td><p>[61:48] </p></td>
+<td><p>rfu </p></td>
+<td><p>Reserved for future use </p></td>
+</tr>
+<tr class="row-odd"><td><p>[47:40] </p></td>
+<td><p>module </p></td>
+<td><p>The module from which the status originated </p></td>
+</tr>
+<tr class="row-even"><td><p>[39:32] </p></td>
+<td><p>result_code </p></td>
+<td><p>A result code specific to the origination, </p></td>
+</tr>
+<tr class="row-odd"><td><p></p></td>
+<td><p></p></td>
+<td><p>and module </p></td>
+</tr>
+<tr class="row-even"><td><p>[31:0] </p></td>
+<td><p>device_status </p></td>
+<td><p>Additional error-specific information </p></td>
+</tr>
+</tbody>
+</table>
+</p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N10Ex10Result5errorE">
+<span id="_CPPv3N10Ex10Result5errorE"></span><span id="_CPPv2N10Ex10Result5errorE"></span><span id="Ex10Result::error__b"></span><span class="target" id="struct_ex10_result_1a80f5ce28601883aa65f7d737016b57de"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">error</span></span></span><a class="headerlink" href="#_CPPv4N10Ex10Result5errorE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N10Ex10Result8customerE">
+<span id="_CPPv3N10Ex10Result8customerE"></span><span id="_CPPv2N10Ex10Result8customerE"></span><span id="Ex10Result::customer__b"></span><span class="target" id="struct_ex10_result_1a640cdd5541f9381790c7bfcb7facf7ea"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">customer</span></span></span><a class="headerlink" href="#_CPPv4N10Ex10Result8customerE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N10Ex10Result3rfuE">
+<span id="_CPPv3N10Ex10Result3rfuE"></span><span id="_CPPv2N10Ex10Result3rfuE"></span><span id="Ex10Result::rfu__uint16_t"></span><span class="target" id="struct_ex10_result_1ae5833efce4d42adae79fe280694f04e5"></span><span class="n"><span class="pre">uint16_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">rfu</span></span></span><a class="headerlink" href="#_CPPv4N10Ex10Result3rfuE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N10Ex10Result6moduleE">
+<span id="_CPPv3N10Ex10Result6moduleE"></span><span id="_CPPv2N10Ex10Result6moduleE"></span><span id="Ex10Result::module__Ex10Module"></span><span class="target" id="struct_ex10_result_1a3d6a7ca2c69c163884a155e8902d6d4e"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv410Ex10Module" title="Ex10Module"><span class="n"><span class="pre">Ex10Module</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">module</span></span></span><a class="headerlink" href="#_CPPv4N10Ex10Result6moduleE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N10Ex10Result11result_codeE">
+<span id="_CPPv3N10Ex10Result11result_codeE"></span><span id="_CPPv2N10Ex10Result11result_codeE"></span><span id="Ex10Result::result_code__Ex10ResultCode"></span><span class="target" id="struct_ex10_result_1a4a71b20816cef274554cc58f56cb882b"></span><span class="k"><span class="pre">union</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv414Ex10ResultCode" title="Ex10ResultCode"><span class="n"><span class="pre">Ex10ResultCode</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">result_code</span></span></span><a class="headerlink" href="#_CPPv4N10Ex10Result11result_codeE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N10Ex10Result13device_statusE">
+<span id="_CPPv3N10Ex10Result13device_statusE"></span><span id="_CPPv2N10Ex10Result13device_statusE"></span><span id="Ex10Result::device_status__Ex10DeviceStatus"></span><span class="target" id="struct_ex10_result_1a992c3fbbf98045d358ffc98df882b612"></span><span class="k"><span class="pre">union</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv416Ex10DeviceStatus" title="Ex10DeviceStatus"><span class="n"><span class="pre">Ex10DeviceStatus</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">device_status</span></span></span><a class="headerlink" href="#_CPPv4N10Ex10Result13device_statusE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../../../_static/logo.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Ex10 SDK Error Reporting</a><ul>
+<li><a class="reference internal" href="#main-context-errors">Main Context Errors</a><ul>
+<li><a class="reference internal" href="#example-1-success">Example 1: Success</a></li>
+<li><a class="reference internal" href="#example-2-ex10-sdk-error">Example 2: Ex10 SDK Error</a></li>
+<li><a class="reference internal" href="#example-3-ex10-device-error">Example 3: Ex10 Device Error</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#interrupt-context-errors">Interrupt Context Errors</a></li>
+<li><a class="reference internal" href="#api">API</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="gen2_commands.html"
+                        title="previous chapter">Ex10Gen2TxCommandManager</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="ex10_command_line.html"
+                        title="next chapter">Ex10CommandLine</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="ex10_command_line.html" title="Ex10CommandLine"
+             >next</a></li>
+        <li class="right" >
+          <a href="gen2_commands.html" title="Ex10Gen2TxCommandManager"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../yk_firmware_ex10_host_c_api.html" >Impinj Reader Chip C Host SDK</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../yk_firmware_ex10_host_c_api_layers.html" >API Layers</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="support_modules.html" >Ex10 Support Modules</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Ex10 SDK Error Reporting</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Impinj, Inc..
+    </div>
+  </body>
+</html>

@@ -1,0 +1,247 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Use Case Examples &#8212; Impinj Reader Chip SDK</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinxdoc.css" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Legacy Ex10Reader Examples" href="ex10_reader_examples.html" />
+    <link rel="prev" title="Impinj Reader Chip SDK Examples" href="examples.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="ex10_reader_examples.html" title="Legacy Ex10Reader Examples"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="examples.html" title="Impinj Reader Chip SDK Examples"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../yk_firmware_ex10_host_c_api.html" >Impinj Reader Chip C Host SDK</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="examples.html" accesskey="U">Impinj Reader Chip SDK Examples</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Use Case Examples</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="use-case-examples">
+<span id="ex10-api-host-use-case-examples"></span><h1>Use Case Examples<a class="headerlink" href="#use-case-examples" title="Permalink to this headline">¶</a></h1>
+<p>The use case examples are located in the <code class="docutils literal notranslate"><span class="pre">ex10_c_dev_kit/use_case_examples</span></code> directory
+in the SDK bundle. They show how the use case layers are used to create examples
+for different use cases, or show how the different modules can interact with
+each other.</p>
+<section id="command-line-arguments">
+<h2>Command Line Arguments<a class="headerlink" href="#command-line-arguments" title="Permalink to this headline">¶</a></h2>
+<p>The SDK contains the <a class="reference internal" href="../ex10_host_c_support/ex10_command_line.html#ex10-api-host-c-api-command-line"><span class="std std-ref">Ex10CommandLine</span></a>
+module that is used to parse the command line of many of the use case examples
+and can be used to modify the behavior of the example without needing to
+recompile.  To see what arguments can be parsed the user can use the <code class="docutils literal notranslate"><span class="pre">--help</span></code>
+argument and it will print out the supported arguments.  Note that some
+examples might include arguments that are ignored.</p>
+</section>
+<section id="access-read-write">
+<h2>Access Read/Write<a class="headerlink" href="#access-read-write" title="Permalink to this headline">¶</a></h2>
+<p>The access read/write example is build with no ramping modules, and with the
+antenna disconnect ramping module to show how the ramping modules can be used
+with the use cases.</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">access_read_write_use_case_example.c</span></code></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">access_read_write_use_case_antenna_disconnect_example.c</span></code></div>
+</div>
+</div></blockquote>
+<p>This example uses the <a class="reference internal" href="../ex10_host_c_use_cases/tag_access.html#struct_ex10_tag_access_use_case"><span class="std std-ref">Ex10TagAccessUseCase</span></a> to halt on all the tags in the field of view, and then does a write of random data to user memory, then reads back that random data. This sequence is setup during the halted callback while the LMAC is halted on the tag.</p>
+<p>The example runs this sequence 5 times just to show that the inventory round stops after the LMAC decides it is out of tags. </p>
+</section>
+<section id="authenticate-m775">
+<h2>Authenticate M775<a class="headerlink" href="#authenticate-m775" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">authenticate_m775_use_case_example.c</span></code></p>
+</div></blockquote>
+<p>This example uses the ex10 tag access use case to halt on all the m775 tags in the field of view and execute the authenticate command. On each halt, the reader sends a unique challenge, then, the tag responds to the reader with encrypted tag data. The authenticate command tag respond includes the ‘challenge’, ‘tag shortened TID’, and ‘Tag Response’. </p>
+</section>
+<section id="auto-access">
+<h2>Auto Access<a class="headerlink" href="#auto-access" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">auto_access_read_write_use_case_example.c</span></code></p>
+</div></blockquote>
+<p>This example shows how to use the continuous inventory use case to do auto access sequences on tags while doing inventory. It does this by setting up a gen2 write and then a gen2 read command. These are set into the device and enabled as autoaccess commands before running continuous inventory. The use case then inventories tags and calls the applications callback when it receives a <a class="reference internal" href="../yk_firmware_ex10_host_c_other_types.html#struct_tag_read"><span class="std std-ref">TagRead</span></a> or <a class="reference internal" href="../yk_firmware_ex10_host_c_other_types.html#struct_gen2_transaction"><span class="std std-ref">Gen2Transaction</span></a> event fifo packet (and the <a class="reference internal" href="../yk_firmware_ex10_host_c_other_types.html#struct_continuous_inventory_summary"><span class="std std-ref">ContinuousInventorySummary</span></a> when it has finished.) The callback collects the <a class="reference internal" href="../yk_firmware_ex10_host_c_other_types.html#struct_tag_read"><span class="std std-ref">TagRead</span></a>, Gen2 Access Write packets and stores them. When it receives the Gen2 Access Read packet, it verifies that the previous two packets were received and then prints them out as a group. This is intended to show how an application might group things together to make sure that the transactions were successful. </p>
+</section>
+<section id="auto-set">
+<h2>Auto Set<a class="headerlink" href="#auto-set" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">autoset_use_case_example.c</span></code></p>
+</div></blockquote>
+<p>The autoset use case example illustrates how to</p>
+<p><ul class="simple">
+<li><p>Initialize an array of inventory sequence structures to iterate through the Autoset RF modes.</p></li>
+<li><p>Begin and end the inventory iteration through the Autoset RF modes.</p></li>
+</ul>
+</p>
+<p>The Autoset RF mode inventory sequence progresses from the fastest, least sensitive RF mode to the slowest most sensitive RF mode. This sequence is optimized to find the most number of tags in the field of view in the least amount of time. </p>
+</section>
+<section id="continuous-inventory">
+<h2>Continuous Inventory<a class="headerlink" href="#continuous-inventory" title="Permalink to this headline">¶</a></h2>
+<p>The continuous inventory use case example is built with no ramping modules
+or build with the different combination of ramping modules as an example of
+how those modules interact with the use case.  All of these files do the
+same inventory behavior, they just differ in the ramping module options
+chosen</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">continuous_inventory_use_case_example.c</span></code></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">continuous_inventory_use_case_antenna_disconnect_example.c</span></code></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">continuous_inventory_use_case_lbt_example</span></code></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">continuous_inventory_use_case_lbt_antenna_disconnect_example.c</span></code></div>
+</div>
+</div></blockquote>
+<p>The continuous inventory example below is optimized for read rates. This example sets up the continuous inventory use case and calls the continuous_inventory() function from the Ex1ContinuousInventoryUseCase. This means the SDK is responsible for starting each inventory round, allowing faster read rates. For better performance, this example is currently not configured to print each inventoried EPC. This can be changed by using the ‘verbose’ inventory configuration parameter. The inventory example below is optimized for approximately 256 tags in FOV. To adjust dynamic Q algorithm for other tag populations, the following parameters should be updated:</p>
+<p><ul class="simple">
+<li><p>initial_q </p></li>
+</ul>
+</p>
+</section>
+<section id="lock-kill">
+<h2>Lock Kill<a class="headerlink" href="#lock-kill" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p><a href="#id1"><span class="problematic" id="id2">|</span></a><code class="docutils literal notranslate"><span class="pre">lock_kill_use_case_example.c</span></code></p>
+</div></blockquote>
+<p>The command sequence for the Lock-Kill is setup during the halted callback while the LMAC is halted on the tag. The command sequence to kill a tag should look something like:</p>
+<p><ol class="arabic simple">
+<li><p>Unlock the kill password memory by sending a Gen2Lock command</p></li>
+<li><p>Read and parse the kill password by sending a Gen2Read command</p></li>
+<li><p>To kill a tag, the kill password must be non-zero. So, if the password is set to zero, change it to a non-zero value by sending a Gen2Write command</p></li>
+<li><p>Kill the tag by sending a Gen2Kill command</p></li>
+</ol>
+</p>
+<p>WARNING: This example will permanently disable tag(s). </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This example will kill any tags in the field of view</p>
+</div>
+</section>
+<section id="margin-read">
+<h2>Margin Read<a class="headerlink" href="#margin-read" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">margin_read_use_case_example.c</span></code></p>
+</div></blockquote>
+<p>This use case example shows how to set and execute Margin Read commands using <a class="reference internal" href="../ex10_host_c_use_cases/tag_access.html#struct_ex10_tag_access_use_case"><span class="std std-ref">Ex10TagAccessUseCase</span></a>. Margin Read is an Impinj proprietary command that allows the users to check the strength of the bits stored in NVM. When the targeted bit does not match the given mask, or if any of the targeted bit is between the high and low threshold voltages, it will report a Margin Read command error. Possible error types for Margin Read are <code class="docutils literal notranslate"><span class="pre">MemoryOverrun</span></code>, <code class="docutils literal notranslate"><span class="pre">MemoryLocked</span></code>, <code class="docutils literal notranslate"><span class="pre">InsufficientPower</span></code>, and <code class="docutils literal notranslate"><span class="pre">Other</span></code>. Note that Margin Read will not check for ROM and DFF bits.</p>
+<p>This is what the example does:<ol class="arabic simple">
+<li><p>Halt on a tag using the Tag Access Use Case</p></li>
+<li><p>Obtain a word in Tag EPC memory bank</p></li>
+<li><p>Execute Margin Read command targeting the EPC bank with a matching mask</p></li>
+<li><p>Report success</p></li>
+<li><p>Execute Margin Read command targeting the EPC bank with a mismatching mask</p></li>
+<li><p>Report failure with an error type of <code class="docutils literal notranslate"><span class="pre">Other</span></code> </p></li>
+</ol>
+</p>
+</section>
+<section id="select-command">
+<h2>Select Command<a class="headerlink" href="#select-command" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">select_command_use_case_example.c</span></code></p>
+</div></blockquote>
+<p>This example shows how to set a select command on the continuous inventory use case. After setting a desired select command, the command will be sent at the beginning of every inventory round during continuous inventory. In this example, the tag CRC is used as the select mask, but any bit in the memory bank can be used. Here is a brief description of what each task does:<ul class="simple">
+<li><p>Task 1. Obtain a valid tag CRC by running a dual target continuous inventory without a select command. This CRC value will be used as the select mask for Task 2.</p></li>
+<li><p>Task 2. Run a series of dual target continuous inventory using different select command arguments.<ul>
+<li><p>Run 1 - Action000 with a select type of SelectedAsserted</p></li>
+<li><p>Run 2 - Action000 with a select type of SelectNotAsserted</p></li>
+<li><p>Run 3 - Action100 with a select type of SelectedAsserted</p></li>
+<li><p>Run 4 - Action100 with a select type of SelectNotAsserted</p></li>
+</ul>
+</p></li>
+</ul>
+</p>
+<p>All continuous inventory rounds in this example are setup to run in a dual target with a <code class="docutils literal notranslate"><span class="pre">max_number_of_rounds</span> <span class="pre">=</span> <span class="pre">2</span></code> so that the tag’s inventory flag can return to A state after every run.</p>
+<p>For better performance, this example is currently not configured to print all tag information. This can be changed by using the ‘verbose’ inventory configuration parameter. </p>
+</section>
+<section id="select-inventory-session-flag">
+<h2>Select Inventory Session Flag<a class="headerlink" href="#select-inventory-session-flag" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">select_inventory_session_flag.c</span></code></p>
+</div></blockquote>
+<p>Illustrates how to send all tags in a session from inventory flag state A to state B, or A to B, for a specific session. </p>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../../../_static/logo.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Use Case Examples</a><ul>
+<li><a class="reference internal" href="#command-line-arguments">Command Line Arguments</a></li>
+<li><a class="reference internal" href="#access-read-write">Access Read/Write</a></li>
+<li><a class="reference internal" href="#authenticate-m775">Authenticate M775</a></li>
+<li><a class="reference internal" href="#auto-access">Auto Access</a></li>
+<li><a class="reference internal" href="#auto-set">Auto Set</a></li>
+<li><a class="reference internal" href="#continuous-inventory">Continuous Inventory</a></li>
+<li><a class="reference internal" href="#lock-kill">Lock Kill</a></li>
+<li><a class="reference internal" href="#margin-read">Margin Read</a></li>
+<li><a class="reference internal" href="#select-command">Select Command</a></li>
+<li><a class="reference internal" href="#select-inventory-session-flag">Select Inventory Session Flag</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="examples.html"
+                        title="previous chapter">Impinj Reader Chip SDK Examples</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="ex10_reader_examples.html"
+                        title="next chapter">Legacy Ex10Reader Examples</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="ex10_reader_examples.html" title="Legacy Ex10Reader Examples"
+             >next</a></li>
+        <li class="right" >
+          <a href="examples.html" title="Impinj Reader Chip SDK Examples"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../yk_firmware_ex10_host_c_api.html" >Impinj Reader Chip C Host SDK</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="examples.html" >Impinj Reader Chip SDK Examples</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Use Case Examples</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Impinj, Inc..
+    </div>
+  </body>
+</html>

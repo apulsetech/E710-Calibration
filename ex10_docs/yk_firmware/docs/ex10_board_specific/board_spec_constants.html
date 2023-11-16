@@ -1,0 +1,159 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Board Spec Constants &#8212; Impinj Reader Chip SDK</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinxdoc.css" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Ex10BoardSpec" href="ex10_board_spec.html" />
+    <link rel="prev" title="Board Specific Implementation" href="ex10_board_specific.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="ex10_board_spec.html" title="Ex10BoardSpec"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="ex10_board_specific.html" title="Board Specific Implementation"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../yk_firmware_ex10_host_c_api.html" >Impinj Reader Chip C Host SDK</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="ex10_board_specific.html" accesskey="U">Board Specific Implementation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Board Spec Constants</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="board-spec-constants">
+<span id="ex10-api-host-c-api-board-board-spec"></span><h1>Board Spec Constants<a class="headerlink" href="#board-spec-constants" title="Permalink to this headline">¶</a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">board_spec_constants.h</span></code> file is a central place where the constants
+that are associated with the actual implementation of the reader are captured
+and then referenced by the different parts of the SDK as needed.  The partners
+are expected to update these constants to reflect the details of the
+actual reader implementation.  For example the antenna count, the
+LO insertion loss, etc.</p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-defines">Defines</p>
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.TCXO_FREQ_KHZ">
+<span class="target" id="board__spec__constants_8h_1a9d36c0b8721567e0704d4b0e0ef4f0e4"></span><span class="sig-name descname"><span class="n"><span class="pre">TCXO_FREQ_KHZ</span></span></span><a class="headerlink" href="#c.TCXO_FREQ_KHZ" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The E710 evaluation board crystal oscillator frequency. </p>
+</dd></dl>
+
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.EX10_SPI_BURST_SIZE">
+<span class="target" id="board__spec__constants_8h_1a8405a631f69b558de0f8f21fc0c52164"></span><span class="sig-name descname"><span class="n"><span class="pre">EX10_SPI_BURST_SIZE</span></span></span><a class="headerlink" href="#c.EX10_SPI_BURST_SIZE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The maximum SPI transaction size supported by the host processor, in bytes. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The maximum Ex10 application command size is 1023 bytes. The EX10_SPI_BURST_SIZE must not be larger than the command size. </p>
+</div>
+</dd></dl>
+
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.ANTENNA_PORT_COUNT">
+<span class="target" id="board__spec__constants_8h_1adba9b200258147d87466fb2bcc6f7216"></span><span class="sig-name descname"><span class="n"><span class="pre">ANTENNA_PORT_COUNT</span></span></span><a class="headerlink" href="#c.ANTENNA_PORT_COUNT" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Define the number of antenna ports supported by the board. </p>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-variables">Variables</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv428DEFAULT_EVENT_FIFO_THRESHOLD">
+<span id="_CPPv328DEFAULT_EVENT_FIFO_THRESHOLD"></span><span id="_CPPv228DEFAULT_EVENT_FIFO_THRESHOLD"></span><span id="DEFAULT_EVENT_FIFO_THRESHOLD__uint16_tC"></span><span class="target" id="board__spec__constants_8h_1aeb3b0cd9f4c944d8bbd46273d1a9fc0c"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="n"><span class="pre">uint16_t</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">DEFAULT_EVENT_FIFO_THRESHOLD</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">EX10_EVENT_FIFO_SIZE</span></span><span class="w"> </span><span class="o"><span class="pre">/</span></span><span class="w"> </span><span class="m"><span class="pre">2</span></span><a class="headerlink" href="#_CPPv428DEFAULT_EVENT_FIFO_THRESHOLD" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The value used for the fifo threshold will dictate how often the SDK reads from the device. </p>
+<p>This, in accordance with number of tags being read, dictates how many SDK event FIFO buffers are being used at a given time. A smaller value will use more buffers, but the amount in that buffer will be smaller and therefore faster to process. There is a tradeoff based on memory available, traffic to the device, and tags being read. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv426LOW_BIAS_TX_POWER_MAX_CDBM">
+<span id="_CPPv326LOW_BIAS_TX_POWER_MAX_CDBM"></span><span id="_CPPv226LOW_BIAS_TX_POWER_MAX_CDBM"></span><span id="LOW_BIAS_TX_POWER_MAX_CDBM__int16_tC"></span><span class="target" id="board__spec__constants_8h_1a16d3ec6aa03aca4d2d4a4e7f7e4ddb90"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="n"><span class="pre">int16_t</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">LOW_BIAS_TX_POWER_MAX_CDBM</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">2700u</span></span><a class="headerlink" href="#_CPPv426LOW_BIAS_TX_POWER_MAX_CDBM" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Define the PA power range transmit power threshold. </p>
+<p>This value will determine which PA power range is used when ramping up CW to its target power value.</p>
+<p>When the Tx power, in units of cdBm, is greater than or equal to this value, then the high power PA setting is used.</p>
+<p>When the Tx power, in units of cdBm, is less than this value, then the low power PA setting is used.</p>
+<p>On the Impinj Reader Chip development board schematic the signal DIGITAL_IO[15] PWR_RANGE controls the PA power range setting. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv423BOARD_INSERTION_LOSS_RX">
+<span id="_CPPv323BOARD_INSERTION_LOSS_RX"></span><span id="_CPPv223BOARD_INSERTION_LOSS_RX"></span><span id="BOARD_INSERTION_LOSS_RX__uint16_tC"></span><span class="target" id="board__spec__constants_8h_1a8604047d7c5288916a7d92f312aa39e2"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="n"><span class="pre">uint16_t</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">BOARD_INSERTION_LOSS_RX</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">1100u</span></span><a class="headerlink" href="#_CPPv423BOARD_INSERTION_LOSS_RX" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Returns the RX insertion loss based on the board. </p>
+<p>This insertion loss should be modified to match the used board. This insertion loss is the loss in cdB of the output power as seen at the reverse power detectors. This includes the 10dB loss from directional coupler between TX and RX. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv423BOARD_INSERTION_LOSS_LO">
+<span id="_CPPv323BOARD_INSERTION_LOSS_LO"></span><span id="_CPPv223BOARD_INSERTION_LOSS_LO"></span><span id="BOARD_INSERTION_LOSS_LO__uint16_tC"></span><span class="target" id="board__spec__constants_8h_1a3b1802b297cecbca1a46588e99974fb7"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="n"><span class="pre">uint16_t</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">BOARD_INSERTION_LOSS_LO</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">1440u</span></span><a class="headerlink" href="#_CPPv423BOARD_INSERTION_LOSS_LO" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Returns the LO insertion loss based on the board. </p>
+<p>This insertion loss should be modified to match the used board. This insertion loss is the loss in cdB of the output power as seen at the reverse power detectors. </p>
+</dd></dl>
+
+</div>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../../../_static/logo.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="ex10_board_specific.html"
+                        title="previous chapter">Board Specific Implementation</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="ex10_board_spec.html"
+                        title="next chapter">Ex10BoardSpec</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="ex10_board_spec.html" title="Ex10BoardSpec"
+             >next</a></li>
+        <li class="right" >
+          <a href="ex10_board_specific.html" title="Board Specific Implementation"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../yk_firmware_ex10_host_c_api.html" >Impinj Reader Chip C Host SDK</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="ex10_board_specific.html" >Board Specific Implementation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Board Spec Constants</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Impinj, Inc..
+    </div>
+  </body>
+</html>

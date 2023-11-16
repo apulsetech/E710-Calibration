@@ -1,0 +1,209 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Ex10Transactor &#8212; Impinj Reader Chip SDK</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinxdoc.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <link rel="search" title="Search" href="../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="nav-item nav-item-0"><a href="index.html">Impinj Reader Chip SDK</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Ex10Transactor</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="ex10transactor">
+<span id="ex10-api-host-c-api-transactor"></span><h1>Ex10Transactor<a class="headerlink" href="#ex10transactor" title="Permalink to this headline">¶</a></h1>
+<p>There are two interface modules which reside within the Ex10Transactor layer:
+<code class="docutils literal notranslate"><span class="pre">Ex10CommandTransactor</span></code> and <code class="docutils literal notranslate"><span class="pre">Ex10PowerTransactor</span></code>.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">Ex10CommandTransactor</span></code> uses the HostInterface to send and receive data
+across the wireline to and from the Impinj Reader Chip.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">Ex10PowerTransactor</span></code> manipulates the host GPIO lines to power up/down the
+Impinj Reader Chip into the Bootloader and/or Application.</p>
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv421Ex10CommandTransactor">
+<span id="_CPPv321Ex10CommandTransactor"></span><span id="_CPPv221Ex10CommandTransactor"></span><span id="Ex10CommandTransactor"></span><span class="target" id="struct_ex10_command_transactor"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10CommandTransactor</span></span></span><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N21Ex10CommandTransactor4initE">
+<span id="_CPPv3N21Ex10CommandTransactor4initE"></span><span id="_CPPv2N21Ex10CommandTransactor4initE"></span><span class="target" id="struct_ex10_command_transactor_1a65c9c37593acb53349c95ed452d95552"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">init</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="ex10_board_specific/ex10_gpio.html#_CPPv417Ex10GpioInterface" title="Ex10GpioInterface"><span class="n"><span class="pre">Ex10GpioInterface</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">gpio_interface</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="ex10_board_specific/ex10_host_interface.html#_CPPv413HostInterface" title="HostInterface"><span class="n"><span class="pre">HostInterface</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">host_interface</span></span><span class="p"><span class="pre">)</span></span><br /></dt>
+<dd><p>Initialize the command transactor object. </p>
+<p>This resets the command transactor to the command state. The host interface and gpio modules are opened and owned by the command transactor. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N21Ex10CommandTransactor6deinitE">
+<span id="_CPPv3N21Ex10CommandTransactor6deinitE"></span><span id="_CPPv2N21Ex10CommandTransactor6deinitE"></span><span class="target" id="struct_ex10_command_transactor_1a67e4a0b21af9be6024a908c0bdc59043"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">deinit</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><br /></dt>
+<dd><p>Release any resources in use by the command transactor module. </p>
+<p>This includes the host interface. The host interface and gpio modules are closed and released from ownership by the command transactor. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N21Ex10CommandTransactor12send_commandE">
+<span id="_CPPv3N21Ex10CommandTransactor12send_commandE"></span><span id="_CPPv2N21Ex10CommandTransactor12send_commandE"></span><span class="target" id="struct_ex10_command_transactor_1a3c62d10af4b6cb236c1eb5bc5a2782b6"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">send_command</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">command_buffer</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n"><span class="pre">command_length</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n"><span class="pre">ready_n_timeout_ms</span></span><span class="p"><span class="pre">)</span></span><br /></dt>
+<dd><p>Sends a command from the host to the Ex10. </p>
+<p>Blocks until READY_N is asserted by Ex10.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Param command_buffer</dt>
+<dd class="field-odd"><p>Contains the Ex10 command. </p>
+</dd>
+<dt class="field-even">Param command_length</dt>
+<dd class="field-even"><p>The length of the command in bytes. </p>
+</dd>
+<dt class="field-odd">Param ready_n_timeout_ms</dt>
+<dd class="field-odd"><p>The number of milliseconds to wait for the Ex10 READY_N line to assert low.</p>
+</dd>
+<dt class="field-even">Return</dt>
+<dd class="field-even"><p>struct <a class="reference internal" href="ex10_host_c_support/ex10_result.html#struct_ex10_result"><span class="std std-ref">Ex10Result</span></a> Indicates whether the function call passed or failed. Errors reported when:<ul class="simple">
+<li><p>The gpio and wireline interfaces are not initialized.</p></li>
+<li><p>The Ex10 READY_N line does not assert low before the timeout expires.</p></li>
+<li><p>The number of bytes sent does not equal the number of bytes requested over the wireline interface. </p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N21Ex10CommandTransactor16receive_responseE">
+<span id="_CPPv3N21Ex10CommandTransactor16receive_responseE"></span><span id="_CPPv2N21Ex10CommandTransactor16receive_responseE"></span><span class="target" id="struct_ex10_command_transactor_1ad9fb55be118b5b8cea87824cc530a5e5"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">receive_response</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">response_buffer</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n"><span class="pre">response_buffer_length</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n"><span class="pre">ready_n_timeout_ms</span></span><span class="p"><span class="pre">)</span></span><br /></dt>
+<dd><p>Receives a response from the host. </p>
+<p>Blocks waiting for READY_N to be asserted by the Ex10.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Param response_buffer</dt>
+<dd class="field-odd"><p>The buffer which will be filled in with the Ex10 response. </p>
+</dd>
+<dt class="field-even">Param response_buffer_length</dt>
+<dd class="field-even"><p>The size of the response buffer in bytes. This is also the expected Rx length in bytes. </p>
+</dd>
+<dt class="field-odd">Param ready_n_timeout_ms</dt>
+<dd class="field-odd"><p>The number of milliseconds to wait for the Ex10 READY_N line to assert low.</p>
+</dd>
+<dt class="field-even">Return</dt>
+<dd class="field-even"><p>struct <a class="reference internal" href="ex10_host_c_support/ex10_result.html#struct_ex10_result"><span class="std std-ref">Ex10Result</span></a> Indicates whether the function call passed or failed. Errors reported when:<ul class="simple">
+<li><p>The gpio and wireline interfaces are not initialized.</p></li>
+<li><p>Expected Rx length exceeds (EX10_SPI_BURST_SIZE + 1u).</p></li>
+<li><p>The Ex10 READY_N line does not assert low before the timeout expires.</p></li>
+<li><p>Errors reported from host interface read() command</p></li>
+<li><p>Number of bytes received does not match the expected RX size. </p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N21Ex10CommandTransactor19send_and_recv_bytesE">
+<span id="_CPPv3N21Ex10CommandTransactor19send_and_recv_bytesE"></span><span id="_CPPv2N21Ex10CommandTransactor19send_and_recv_bytesE"></span><span class="target" id="struct_ex10_command_transactor_1af115fc044e80b9d476da9496e500c6bf"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">send_and_recv_bytes</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">command_buffer</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n"><span class="pre">command_length</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">response_buffer</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n"><span class="pre">response_buffer_length</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n"><span class="pre">ready_n_timeout_ms</span></span><span class="p"><span class="pre">)</span></span><br /></dt>
+<dd><p>Calls <a class="reference internal" href="#struct_ex10_command_transactor_1a3c62d10af4b6cb236c1eb5bc5a2782b6"><span class="std std-ref">send_command()</span></a> and <a class="reference internal" href="#struct_ex10_command_transactor_1ad9fb55be118b5b8cea87824cc530a5e5"><span class="std std-ref">receive_response()</span></a> with one function. </p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv419Ex10PowerTransactor">
+<span id="_CPPv319Ex10PowerTransactor"></span><span id="_CPPv219Ex10PowerTransactor"></span><span id="Ex10PowerTransactor"></span><span class="target" id="struct_ex10_power_transactor"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10PowerTransactor</span></span></span><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N19Ex10PowerTransactor4initE">
+<span id="_CPPv3N19Ex10PowerTransactor4initE"></span><span id="_CPPv2N19Ex10PowerTransactor4initE"></span><span class="target" id="struct_ex10_power_transactor_1ad11189e715b651f9d9dbef86a8c2b91b"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">init</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N19Ex10PowerTransactor6deinitE">
+<span id="_CPPv3N19Ex10PowerTransactor6deinitE"></span><span id="_CPPv2N19Ex10PowerTransactor6deinitE"></span><span class="target" id="struct_ex10_power_transactor_1a5ba8b5dfe7928be438dd2a628288a35e"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">deinit</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N19Ex10PowerTransactor23power_up_to_applicationE">
+<span id="_CPPv3N19Ex10PowerTransactor23power_up_to_applicationE"></span><span id="_CPPv2N19Ex10PowerTransactor23power_up_to_applicationE"></span><span class="target" id="struct_ex10_power_transactor_1a4e8160abf6c7dc84b945744c865670b0"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">power_up_to_application</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><br /></dt>
+<dd><p>Power on the Impinj Reader Chip into the Application. </p>
+<p>If the application programmed into the Impinj Reader Chip is not valid then the reader will be executing the within the bootloader.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns &lt;</dt>
+<dd class="field-odd"><p>0 Indicates a device IO or operation system error. </p>
+</dd>
+<dt class="field-even">Returns 1</dt>
+<dd class="field-even"><p>Indicates that the Impinj Reader Chip is executing in the bootloader context. </p>
+</dd>
+<dt class="field-odd">Returns 2</dt>
+<dd class="field-odd"><p>Indicates that the Impinj Reader Chip is executing in the application context (success). </p>
+</dd>
+<dt class="field-even">Return</dt>
+<dd class="field-even"><p>int Indicates whether the call was successful. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N19Ex10PowerTransactor22power_up_to_bootloaderE">
+<span id="_CPPv3N19Ex10PowerTransactor22power_up_to_bootloaderE"></span><span id="_CPPv2N19Ex10PowerTransactor22power_up_to_bootloaderE"></span><span class="target" id="struct_ex10_power_transactor_1a10e8e0a31cb577b5e8b0d1d855768de6"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">power_up_to_bootloader</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><br /></dt>
+<dd><p>Power on the Impinj Reader Chip into the Bootloader. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N19Ex10PowerTransactor10power_downE">
+<span id="_CPPv3N19Ex10PowerTransactor10power_downE"></span><span id="_CPPv2N19Ex10PowerTransactor10power_downE"></span><span class="target" id="struct_ex10_power_transactor_1aca6ec28264eed99415f49cdee0ee5cc3"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">power_down</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><br /></dt>
+<dd><p>Remove power from the Impinj Reader Chip, keeping software interfaces intact and ready for use. </p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="../../_static/logo.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="nav-item nav-item-0"><a href="index.html">Impinj Reader Chip SDK</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Ex10Transactor</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Impinj, Inc..
+    </div>
+  </body>
+</html>

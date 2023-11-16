@@ -1,0 +1,237 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Ex10 Continuous Inventory Use Case &#8212; Impinj Reader Chip SDK</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinxdoc.css" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Ex10 Inventory Sequence Use Case" href="inventory_sequence.html" />
+    <link rel="prev" title="Ex10 Use Case Layers" href="use_case_layer.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="inventory_sequence.html" title="Ex10 Inventory Sequence Use Case"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="use_case_layer.html" title="Ex10 Use Case Layers"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../yk_firmware_ex10_host_c_api.html" >Impinj Reader Chip C Host SDK</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../yk_firmware_ex10_host_c_api_layers.html" >API Layers</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="use_case_layer.html" accesskey="U">Ex10 Use Case Layers</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Ex10 Continuous Inventory Use Case</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="ex10-continuous-inventory-use-case">
+<span id="ex10-api-host-c-api-use-case-continuous-inventory"></span><h1>Ex10 Continuous Inventory Use Case<a class="headerlink" href="#ex10-continuous-inventory-use-case" title="Permalink to this headline">¶</a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">Ex10ContinuousInventoryUseCase</span></code> simply performs inventory
+until its stop condition is achieved.  This use case will hop between frequencies
+and start new inventory rounds automatically in the interrupt handlers to achieve optimal
+performance.  If the application registers its tag report callback, and then
+calls the use case <code class="docutils literal notranslate"><span class="pre">continuous_inventory()</span></code> API.  This will start an inventory round,
+and then wait for packets to come back from the Impinj Reader Chip via the event FIFO.
+The use case interrupt handler will monitor the event FIFO stream for inventory complete
+packets from the Impinj Reader Chip firmware, and take the appropriate action to continue inventory
+until the stop conditions are achieved.  The interrupt context will internally
+send the packets to the main use case context that the application called.  The main
+context will then filter the packets and call the registered callback function with the <code class="docutils literal notranslate"><span class="pre">TagRead</span></code>
+or <code class="docutils literal notranslate"><span class="pre">ContinuousInventorySummary</span></code> packet as the argument.</p>
+<p>The application can register a callback to receive the <code class="docutils literal notranslate"><span class="pre">TagRead</span></code> and <code class="docutils literal notranslate"><span class="pre">ContinuousInventorySummary</span></code>
+packets and do what is needed by the application with those packets.  If the application
+needs the <code class="docutils literal notranslate"><span class="pre">TagRead</span></code> packet to persist after the callback returns it will need to copy the data
+out of the packet as it will be discarded when the callback returns.  The callback should
+also be a non-blocking type function meaning that the callback should process the packet
+and promptly return to the use case.  The SDK dev kit examples print these packets
+to stdout.  User applications may publish the packets to another process,
+such as a MQTT broker(pub-sub).  For debugging purposes, there is a feature on the use case
+to disable the packet filter which will pass all packets in the event FIFO to the handler.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">Ex10ContinuousInventoryUseCase</span></code> does not support halted access (that is supported by
+the <a class="reference internal" href="tag_access.html#ex10-api-host-c-api-use-case-tag-access"><span class="std std-ref">Ex10TagAccessUseCase</span></a>), but it does support the auto-access
+feature where the Impinj reader chip will automatically run a pre-configured access commands
+when it singulates a tag, and then continue with the inventory round automatically.  The
+additional access commands will generate additional Event FIFO Gen2Transaction packets.
+These packets will be passed to the callback registered by the application.  Note that
+the TagRead and Gen2Transaction packets will be passed to the callback in with one packet
+call to the callback.  If the application needs to process these packets as a group, it is
+up to the application to collect them and process them as such.  The TagRead packet will
+always be first, and then the Gen2Transaction will be sent in order as they were configured.
+If the application has enabled the abort on fail feature of auto-access, then it must be
+able to handle those packets not showing up if a previous packet failed.</p>
+<blockquote>
+<div><figure class="align-default">
+<img alt="../../../_images/continuous_inventory_use_case_example.png" src="../../../_images/continuous_inventory_use_case_example.png" />
+</figure>
+</div></blockquote>
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv430Ex10ContinuousInventoryUseCase">
+<span id="_CPPv330Ex10ContinuousInventoryUseCase"></span><span id="_CPPv230Ex10ContinuousInventoryUseCase"></span><span id="Ex10ContinuousInventoryUseCase"></span><span class="target" id="struct_ex10_continuous_inventory_use_case"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10ContinuousInventoryUseCase</span></span></span><a class="headerlink" href="#_CPPv430Ex10ContinuousInventoryUseCase" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The continuous inventory use case interface. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N30Ex10ContinuousInventoryUseCase4initE">
+<span id="_CPPv3N30Ex10ContinuousInventoryUseCase4initE"></span><span id="_CPPv2N30Ex10ContinuousInventoryUseCase4initE"></span><span class="target" id="struct_ex10_continuous_inventory_use_case_1aadab7ca6672c4cd33bf0d6287d3f9a33"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">init</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N30Ex10ContinuousInventoryUseCase4initE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Initialize the <a class="reference internal" href="#struct_ex10_continuous_inventory_use_case"><span class="std std-ref">Ex10ContinuousInventoryUseCase</span></a> object. </p>
+<p>This must be called after the Ex10 core has been initialized </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N30Ex10ContinuousInventoryUseCase6deinitE">
+<span id="_CPPv3N30Ex10ContinuousInventoryUseCase6deinitE"></span><span id="_CPPv2N30Ex10ContinuousInventoryUseCase6deinitE"></span><span class="target" id="struct_ex10_continuous_inventory_use_case_1a2915a5ddf2272d04c9000c1c6fcce149"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">deinit</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N30Ex10ContinuousInventoryUseCase6deinitE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Release any resources used by the <a class="reference internal" href="#struct_ex10_continuous_inventory_use_case"><span class="std std-ref">Ex10ContinuousInventoryUseCase</span></a> object. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>struct <a class="reference internal" href="../ex10_host_c_support/ex10_result.html#struct_ex10_result"><span class="std std-ref">Ex10Result</span></a> Indicates whether the function call passed or failed. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N30Ex10ContinuousInventoryUseCase35register_packet_subscriber_callbackE">
+<span id="_CPPv3N30Ex10ContinuousInventoryUseCase35register_packet_subscriber_callbackE"></span><span id="_CPPv2N30Ex10ContinuousInventoryUseCase35register_packet_subscriber_callbackE"></span><span class="target" id="struct_ex10_continuous_inventory_use_case_1aebc0295f58953d6b06e531048556d052"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">register_packet_subscriber_callback</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">packet_subscriber_callback</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../ex10_host_c_support/event_parser.html#_CPPv415EventFifoPacket" title="EventFifoPacket"><span class="n"><span class="pre">EventFifoPacket</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N30Ex10ContinuousInventoryUseCase35register_packet_subscriber_callbackE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Register a Callback to subscribe to <a class="reference internal" href="../yk_firmware_ex10_host_c_other_types.html#struct_tag_read"><span class="std std-ref">TagRead</span></a> and <a class="reference internal" href="../yk_firmware_ex10_host_c_other_types.html#struct_inventory_round_summary"><span class="std std-ref">InventoryRoundSummary</span></a> packets during the set of inventory sequences. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This function must be called before calling <a class="reference internal" href="#struct_ex10_continuous_inventory_use_case_1a2500097fca6a839d21a75cd25393e718"><span class="std std-ref">continuous_inventory()</span></a>.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Param packet_subscriber_callback</dt>
+<dd class="field-odd"><p>A pointer to a function that will be called back during the inventory sequence with pointers to packet data. If the callback <a class="reference internal" href="../ex10_host_c_support/ex10_result.html#struct_ex10_result"><span class="std std-ref">Ex10Result</span></a> indicates an error, then the inventory sequence will terminate. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N30Ex10ContinuousInventoryUseCase20enable_packet_filterE">
+<span id="_CPPv3N30Ex10ContinuousInventoryUseCase20enable_packet_filterE"></span><span id="_CPPv2N30Ex10ContinuousInventoryUseCase20enable_packet_filterE"></span><span class="target" id="struct_ex10_continuous_inventory_use_case_1a2366315931d268e489ec3f12b58c7a13"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">enable_packet_filter</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n"><span class="pre">enable_filter</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N30Ex10ContinuousInventoryUseCase20enable_packet_filterE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>By default only the <a class="reference internal" href="../yk_firmware_ex10_host_c_other_types.html#struct_tag_read"><span class="std std-ref">TagRead</span></a> and <a class="reference internal" href="../yk_firmware_ex10_host_c_other_types.html#struct_inventory_round_summary"><span class="std std-ref">InventoryRoundSummary</span></a> packet types are sent to the packet subscriber. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Param enable_filter</dt>
+<dd class="field-odd"><p>If set to false, all packets will be sent to the packet subscriber. If true, the normal behavior of only sending the <a class="reference internal" href="../yk_firmware_ex10_host_c_other_types.html#struct_tag_read"><span class="std std-ref">TagRead</span></a> and <a class="reference internal" href="../yk_firmware_ex10_host_c_other_types.html#struct_inventory_round_summary"><span class="std std-ref">InventoryRoundSummary</span></a> packets to the subscriber is enforced. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N30Ex10ContinuousInventoryUseCase18enable_auto_accessE">
+<span id="_CPPv3N30Ex10ContinuousInventoryUseCase18enable_auto_accessE"></span><span id="_CPPv2N30Ex10ContinuousInventoryUseCase18enable_auto_accessE"></span><span class="target" id="struct_ex10_continuous_inventory_use_case_1a2eacb15d0b1ecf03497e974b597b9728"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">enable_auto_access</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n"><span class="pre">enable</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N30Ex10ContinuousInventoryUseCase18enable_auto_accessE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>By default the continuous inventory use case does not do auto access actions when it singulates a tag. </p>
+<p>If true the the preconfigured auto access commands will be executed on each tag that is sinulated, if false they will not. The application must setup the auto access commands before starting the continuous inventory round.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Param enable</dt>
+<dd class="field-odd"><p>If set to true, auto access is enabled If set to false, auto access is disabled </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N30Ex10ContinuousInventoryUseCase20enable_abort_on_failE">
+<span id="_CPPv3N30Ex10ContinuousInventoryUseCase20enable_abort_on_failE"></span><span id="_CPPv2N30Ex10ContinuousInventoryUseCase20enable_abort_on_failE"></span><span class="target" id="struct_ex10_continuous_inventory_use_case_1a4cfc45132abfaddff555618c88ecb04b"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">enable_abort_on_fail</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n"><span class="pre">enable</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N30Ex10ContinuousInventoryUseCase20enable_abort_on_failE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>This enables the abort_on_fail flag for the auto access sequence that can be enabled above. </p>
+<p>This will cause the autoaccess sequence to abort an auto access sequence on a sigulated tag if one of the access transactions fails. In the event of a failure, the inventory round will continue to the next tag. If this is false, all configured auto access commands will be performed.</p>
+<p>The applicaiton callback is responsible for detecting the failure and to adjust its expectations about what <a class="reference internal" href="../yk_firmware_ex10_host_c_other_types.html#struct_gen2_transaction"><span class="std std-ref">Gen2Transaction</span></a> packets will be put into the event fifo. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N30Ex10ContinuousInventoryUseCase36get_continuous_inventory_stop_reasonE">
+<span id="_CPPv3N30Ex10ContinuousInventoryUseCase36get_continuous_inventory_stop_reasonE"></span><span id="_CPPv2N30Ex10ContinuousInventoryUseCase36get_continuous_inventory_stop_reasonE"></span><span class="target" id="struct_ex10_continuous_inventory_use_case_1a952d73e4449cd8681f0205f36a5a31e0"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><a class="reference internal" href="../yk_firmware_ex10_host_c_reader_layer.html#_CPPv410StopReason" title="StopReason"><span class="n"><span class="pre">StopReason</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_continuous_inventory_stop_reason</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N30Ex10ContinuousInventoryUseCase36get_continuous_inventory_stop_reasonE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Used to return the reason that continuous inventory stopped. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>The StopReason. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N30Ex10ContinuousInventoryUseCase20continuous_inventoryE">
+<span id="_CPPv3N30Ex10ContinuousInventoryUseCase20continuous_inventoryE"></span><span id="_CPPv2N30Ex10ContinuousInventoryUseCase20continuous_inventoryE"></span><span class="target" id="struct_ex10_continuous_inventory_use_case_1a2500097fca6a839d21a75cd25393e718"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">continuous_inventory</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="n"><span class="pre">Ex10ContinuousInventoryUseCaseParameters</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N30Ex10ContinuousInventoryUseCase20continuous_inventoryE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Run inventory rounds continuously until the specified stop conditions are met. </p>
+<p><dl class="simple">
+<dt><strong>See</strong></dt><dd><p>struct Ex10ContinuousInventoryUseCaseParameters </p>
+</dd>
+</dl>
+</p>
+<dl class="field-list simple">
+<dt class="field-odd">Param params</dt>
+<dd class="field-odd"><p></p>
+</dd>
+<dt class="field-even">Return</dt>
+<dd class="field-even"><p>Info about any encountered errors. </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../../../_static/logo.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="use_case_layer.html"
+                        title="previous chapter">Ex10 Use Case Layers</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="inventory_sequence.html"
+                        title="next chapter">Ex10 Inventory Sequence Use Case</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="inventory_sequence.html" title="Ex10 Inventory Sequence Use Case"
+             >next</a></li>
+        <li class="right" >
+          <a href="use_case_layer.html" title="Ex10 Use Case Layers"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../yk_firmware_ex10_host_c_api.html" >Impinj Reader Chip C Host SDK</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../yk_firmware_ex10_host_c_api_layers.html" >API Layers</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="use_case_layer.html" >Ex10 Use Case Layers</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Ex10 Continuous Inventory Use Case</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Impinj, Inc..
+    </div>
+  </body>
+</html>

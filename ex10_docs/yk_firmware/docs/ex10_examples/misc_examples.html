@@ -1,0 +1,199 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Misc Examples &#8212; Impinj Reader Chip SDK</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinxdoc.css" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Advanced Topics" href="../yk_firmware_ex10_host_c_advanced_topics.html" />
+    <link rel="prev" title="Legacy Ex10Reader Examples" href="ex10_reader_examples.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../yk_firmware_ex10_host_c_advanced_topics.html" title="Advanced Topics"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="ex10_reader_examples.html" title="Legacy Ex10Reader Examples"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../yk_firmware_ex10_host_c_api.html" >Impinj Reader Chip C Host SDK</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="examples.html" accesskey="U">Impinj Reader Chip SDK Examples</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Misc Examples</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="misc-examples">
+<span id="ex10-api-host-misc-examples"></span><h1>Misc Examples<a class="headerlink" href="#misc-examples" title="Permalink to this headline">¶</a></h1>
+<p>These are a group of examples that show how to do miscellaneous things such
+uploading a new firmware image.  These normally use the <code class="docutils literal notranslate"><span class="pre">ex10_typical_board_setup()</span></code>
+to bring up the SDK, but they may be able to be changed to use the
+<code class="docutils literal notranslate"><span class="pre">ex10_core_board_setup()</span></code> to get the same functionality without bringing
+up the full stack.</p>
+<section id="app-upload-example">
+<h2>App Upload Example<a class="headerlink" href="#app-upload-example" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">app_upload_example.c</span></code></p>
+</div></blockquote>
+<p>The application upload example is used to upload the Impinj reader chip firmware. It expects the first command line argument to be the yk_image file to be uploaded. </p>
+</section>
+<section id="etsi-burst">
+<h2>ETSI Burst<a class="headerlink" href="#etsi-burst" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">etsi_burst_example.c</span></code></p>
+</div></blockquote>
+<p>The ETSI burst example shows how to use the ETSI burst test feature with the <a class="reference internal" href="../yk_firmware_ex10_host_c_reader_layer.html#struct_ex10_reader"><span class="std std-ref">Ex10Reader</span></a>. </p>
+</section>
+<section id="fct-wrapper">
+<h2>FCT Wrapper<a class="headerlink" href="#fct-wrapper" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">ex10_fct_wrapper.c</span></code></p>
+</div></blockquote>
+<p>The Ex10 FCT wrapper is a program that is used in the FCT process and brings up the SDK to communicate with the Impinj reader chip, then opens up a UART on the Raspberry Pi to communicate with a PC that is running the main FCT scripts. </p>
+</section>
+<section id="get-version-info">
+<h2>Get Version Info<a class="headerlink" href="#get-version-info" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">get_version_info.c</span></code></p>
+</div></blockquote>
+<p>get version info example will read the parameters specified from the Impinj reader chip and print them out to standard out. The avaliable command line arguments are:</p>
+<p><ul class="simple">
+<li><p>a: returns application info</p></li>
+<li><p>b: returns bootloader info</p></li>
+<li><p>c: returns calibration info</p></li>
+<li><p>d: returns device info</p></li>
+<li><p>s: returns sku</p></li>
+<li><p>R: revalidate application image </p></li>
+</ul>
+</p>
+</section>
+<section id="measure-chip-sensors">
+<h2>Measure Chip Sensors<a class="headerlink" href="#measure-chip-sensors" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">measure_chip_sensors.c</span></code></p>
+</div></blockquote>
+<p>Ex10 chip sensor measurement example</p>
+<p>This example measures all of the Aux ADC inputs and the SJC solution determined by the SJC Op inside the reader chip firmware, sweeping TX power and frequency to characterize the behavior of a hardware with an attached antenna or load.</p>
+<p>This allows characterization of LO and RX power measurements to determine intrinsic self-jammer performance (using a 50 Ohm termination at the antenna port) and performance with a specific antenna.</p>
+<p>If SJC errors occur, modifications may be made to the cw_on op to ignore those errors, allowing the example to gather data in the invalid configurations.</p>
+<p>The results are printed in a CSV format so they can be easily analyzed in software like Excel.</p>
+<p>Console printing can be piped to a file in Linux using the pipe or tee:</p>
+<p><code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">./build/e710_ref_design/examples/measure_chip_sensors.bin</span> <span class="pre">|</span> <span class="pre">tee</span> <span class="pre">./measure_chip_sensors_log_1.csv</span></code> </p>
+</section>
+<section id="transmit-prbs-pattern">
+<h2>Transmit PRBS pattern<a class="headerlink" href="#transmit-prbs-pattern" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">prbs_example.c</span></code></p>
+</div></blockquote>
+<p>This example shows how to setup the Impinj reader chip to ramp up and transmit a PRBS pattern for testing purposes. </p>
+</section>
+<section id="print-calibration">
+<h2>Print Calibration<a class="headerlink" href="#print-calibration" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">print_calibration_v5</span></code></p>
+</div></blockquote>
+<p>This utility can read in the calibration data stored in the Impinj reader chip and print out the details to stdout </p>
+</section>
+<section id="simple-ramping">
+<h2>Simple Ramping<a class="headerlink" href="#simple-ramping" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">simple_ramping_example.c</span></code></p>
+</div></blockquote>
+<p>This example shows how to use the <a class="reference internal" href="../yk_firmware_ex10_host_c_reader_layer.html#struct_ex10_reader"><span class="std std-ref">Ex10Reader</span></a> to ramp the Impinj reader chip up to power. </p>
+</section>
+<section id="test-spi-transfer">
+<h2>Test SPI Transfer<a class="headerlink" href="#test-spi-transfer" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">test_spi_transfer.c</span></code></p>
+</div></blockquote>
+<p>Execute repeated varied length data transfers via the ex10 host interface using the TransferTest command.</p>
+<p>The number of iterations is a single argument on the command line. Use zero to run forever.</p>
+<p><div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>One limitation is that the ‘time_helper’ routines assert when the call to clock() rolls over. When this occurs, you’ll see: … Test transfer 17064366 Test transfer 17064367 exercise_transfers.bin: time_helpers.c:20: time_start: Assertion `time &lt;= * 0xFFFFFFFF’ failed. Aborted (core dumped) </p>
+</div>
+</p>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../../../_static/logo.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Misc Examples</a><ul>
+<li><a class="reference internal" href="#app-upload-example">App Upload Example</a></li>
+<li><a class="reference internal" href="#etsi-burst">ETSI Burst</a></li>
+<li><a class="reference internal" href="#fct-wrapper">FCT Wrapper</a></li>
+<li><a class="reference internal" href="#get-version-info">Get Version Info</a></li>
+<li><a class="reference internal" href="#measure-chip-sensors">Measure Chip Sensors</a></li>
+<li><a class="reference internal" href="#transmit-prbs-pattern">Transmit PRBS pattern</a></li>
+<li><a class="reference internal" href="#print-calibration">Print Calibration</a></li>
+<li><a class="reference internal" href="#simple-ramping">Simple Ramping</a></li>
+<li><a class="reference internal" href="#test-spi-transfer">Test SPI Transfer</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="ex10_reader_examples.html"
+                        title="previous chapter">Legacy Ex10Reader Examples</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../yk_firmware_ex10_host_c_advanced_topics.html"
+                        title="next chapter">Advanced Topics</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../yk_firmware_ex10_host_c_advanced_topics.html" title="Advanced Topics"
+             >next</a></li>
+        <li class="right" >
+          <a href="ex10_reader_examples.html" title="Legacy Ex10Reader Examples"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../yk_firmware_ex10_host_c_api.html" >Impinj Reader Chip C Host SDK</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="examples.html" >Impinj Reader Chip SDK Examples</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Misc Examples</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Impinj, Inc..
+    </div>
+  </body>
+</html>

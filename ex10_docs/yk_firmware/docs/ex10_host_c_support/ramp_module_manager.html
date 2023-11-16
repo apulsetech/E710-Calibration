@@ -1,0 +1,592 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Ex10 Ramp Module Manager &#8212; Impinj Reader Chip SDK</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinxdoc.css" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Ex10 Utils" href="utils.html" />
+    <link rel="prev" title="Aggregate Operations" href="aggregate_operations.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="utils.html" title="Ex10 Utils"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="aggregate_operations.html" title="Aggregate Operations"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../yk_firmware_ex10_host_c_api.html" >Impinj Reader Chip C Host SDK</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../yk_firmware_ex10_host_c_api_layers.html" >API Layers</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="support_modules.html" accesskey="U">Ex10 Support Modules</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Ex10 Ramp Module Manager</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="ex10-ramp-module-manager">
+<span id="ex10-api-host-c-api-ramp-module-manager"></span><h1>Ex10 Ramp Module Manager<a class="headerlink" href="#ex10-ramp-module-manager" title="Permalink to this headline">¶</a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">Ex10RfPower</span></code> module supports pre- and post-rampup callbacks.  The Ex10 Ramp Module Manager is
+a block that is used to manage those rampup callbacks for the user.  The purpose of this manager is
+to provide a mechanism to disconnect the pre- and post-rampup callback features from the other parts
+of the SDK, this way they can be used with other components of the SDK independently without
+modification.  This allows these features to be added to any of the use cases for any given
+example.  The module manager constrains that the pre and post callbacks are defined as a set
+to ensure that the compatibility and performance of the callbacks have been verified.</p>
+<p>Some of the rampup callback modules require information about how the Impinj Reader Chip is configured.
+The way that this module manager decouples the rest of the SDK from these needs is that
+any module that calls <code class="docutils literal notranslate"><span class="pre">cw_on()</span></code> in the <code class="docutils literal notranslate"><span class="pre">Ex10RfPower</span></code> module must always set the pre- and post-rampup
+variables by calling the <code class="docutils literal notranslate"><span class="pre">store_pre_ramp_variables()</span></code> and <code class="docutils literal notranslate"><span class="pre">store_post_ramp_variables()</span></code> with
+the appropriate values.  This way the use case just provides the information that
+the modules will need regardless. These <code class="docutils literal notranslate"><span class="pre">store_...</span></code> functions take a list of all of the
+parameters that might be needed by any of the modules.  These functions
+were purposefully written to collect all of the variables possibly needed by a module in a single call.
+If this list changes in the future because a new module has been added and needs a new parameter, this
+will cause the SDK/applications to fail to compile and can be addressed when the change is
+made.  These parameters are stored in the ex10 ramp module manager, so that they can be
+retrieved by the modules if needed.  Any block can use the ex10 ramp module manager as
+a storage mechanism (it is not restricted to the ramp modules).</p>
+<p>The module manager also stores the function pointers that will be called before and after
+the <code class="docutils literal notranslate"><span class="pre">Ex10RfPower</span></code> module ramps up.  This way the <code class="docutils literal notranslate"><span class="pre">Ex10RfPower</span></code> module is decoupled from managing
+the function pointers and can just call the <code class="docutils literal notranslate"><span class="pre">call_pre_ramp_callback()</span></code> and <code class="docutils literal notranslate"><span class="pre">call_post_ramp_callback()</span></code>
+functions at the appropriate times.  If the rampup callback functions return an error, then the
+rampup will be aborted.  The <code class="docutils literal notranslate"><span class="pre">register_ramp_callbacks()</span></code> function registers both
+the pre- and post-rampup callbacks at the same time and will return an error if there are any
+callbacks already registered.  It does this to couple the pre- and post- behavior
+together so that if a module needs to have both a pre and post callback, another module does not
+break that module by re-registering just one of the rampup callbacks on its own.</p>
+<p>The ex10 ramp module manager only allows one module to be installed at a time.  This is so that
+Impinj can verify that the modules operate as expected.  If there are situations where multiple
+modules are useful together, then a super module will be created and Impinj will verify
+that the operation of the combined modules is optimized and handle any possible conflicts.
+Of course the user can create their own modules, but they are then responsible for verifying the modules’ proper operation.</p>
+<p>The Ex10 ramp modules must implement a basic API that is an <code class="docutils literal notranslate"><span class="pre">init()</span></code> that
+will register their pre and post callbacks with the Ex10 ramp module manager, and a
+<code class="docutils literal notranslate"><span class="pre">deinit()</span></code> that will remove the callbacks.  The modules can also have other API
+calls that can be specific to that module.  This <code class="docutils literal notranslate"><span class="pre">init()</span></code> API should be called from the
+application layer which knows that the modules features are desired.  This way the pre- and post-ramp
+modules can be mixed and matched with the use cases at the application level.</p>
+<figure class="align-default">
+<img alt="../../../_images/ramp_module_manager_ramp_sequence.png" src="../../../_images/ramp_module_manager_ramp_sequence.png" />
+</figure>
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv421Ex10RampModuleManager">
+<span id="_CPPv321Ex10RampModuleManager"></span><span id="_CPPv221Ex10RampModuleManager"></span><span id="Ex10RampModuleManager"></span><span class="target" id="struct_ex10_ramp_module_manager"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10RampModuleManager</span></span></span><a class="headerlink" href="#_CPPv421Ex10RampModuleManager" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>This is the pre and post ramp callback module manager. </p>
+<p>It provides an interface where the modules can register themselves for callback, and the use cases can call a standard function that will then determine if any callback is registered.</p>
+<p>This module also is a place where state variables can be stored for the callbacks to use. The use cases are responsible for maintaining these variables to be accurate when the callbacks are called. This allows the callback modules and the use cases to be decoupled from each other. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N21Ex10RampModuleManager24store_pre_ramp_variablesE">
+<span id="_CPPv3N21Ex10RampModuleManager24store_pre_ramp_variablesE"></span><span id="_CPPv2N21Ex10RampModuleManager24store_pre_ramp_variablesE"></span><span class="target" id="struct_ex10_ramp_module_manager_1a2ea2a703b80e7da972c7f2898b9610fe"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">store_pre_ramp_variables</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n"><span class="pre">antenna</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N21Ex10RampModuleManager24store_pre_ramp_variablesE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>These functions are used to capture the values needed for the pre and post ramp callbacks. </p>
+<p>It is the responsibility of the use case/reader layers to set these before the callbacks are called.</p>
+<p>These are the current settings needed by the supported modules and the list of parameters may grow in the future. If so, these functions should grow to add those new parameters. This is because the use cases that are setting these variables don’t know what modules are enabled, so they should store all of the parameter. And if a new parameter is added for a new module, it will change the function signature and cause the use cases to fail to compile until they add the new parameter. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N21Ex10RampModuleManager25store_post_ramp_variablesE">
+<span id="_CPPv3N21Ex10RampModuleManager25store_post_ramp_variablesE"></span><span id="_CPPv2N21Ex10RampModuleManager25store_post_ramp_variablesE"></span><span class="target" id="struct_ex10_ramp_module_manager_1a70357b1b1d86e2df066914d10eab0dd3"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">store_post_ramp_variables</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">int16_t</span></span><span class="w"> </span><span class="n"><span class="pre">tx_power_cdbm</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n"><span class="pre">frequency_khz</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N21Ex10RampModuleManager25store_post_ramp_variablesE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N21Ex10RampModuleManager21store_adc_temperatureE">
+<span id="_CPPv3N21Ex10RampModuleManager21store_adc_temperatureE"></span><span id="_CPPv2N21Ex10RampModuleManager21store_adc_temperatureE"></span><span class="target" id="struct_ex10_ramp_module_manager_1a69f09c5b3cff13583d97653ae57a663b"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">store_adc_temperature</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">uint16_t</span></span><span class="w"> </span><span class="n"><span class="pre">adc_temperature</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N21Ex10RampModuleManager21store_adc_temperatureE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N21Ex10RampModuleManager24retrieve_adc_temperatureE">
+<span id="_CPPv3N21Ex10RampModuleManager24retrieve_adc_temperatureE"></span><span id="_CPPv2N21Ex10RampModuleManager24retrieve_adc_temperatureE"></span><span class="target" id="struct_ex10_ramp_module_manager_1ad43192f2c075edc094f61827c54719cf"></span><span class="n"><span class="pre">uint16_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">retrieve_adc_temperature</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N21Ex10RampModuleManager24retrieve_adc_temperatureE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>These retrieve functions are here so that the callbacks can grab the parameters that they need to do their functions all of these values are set by calling the store functions above and the use cases are responsible for making sure that the correct values are stored. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N21Ex10RampModuleManager25retrieve_pre_ramp_antennaE">
+<span id="_CPPv3N21Ex10RampModuleManager25retrieve_pre_ramp_antennaE"></span><span id="_CPPv2N21Ex10RampModuleManager25retrieve_pre_ramp_antennaE"></span><span class="target" id="struct_ex10_ramp_module_manager_1af48dcd8e63a0eb50ad0380dabb5a4bc3"></span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">retrieve_pre_ramp_antenna</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N21Ex10RampModuleManager25retrieve_pre_ramp_antennaE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N21Ex10RampModuleManager32retrieve_post_ramp_frequency_khzE">
+<span id="_CPPv3N21Ex10RampModuleManager32retrieve_post_ramp_frequency_khzE"></span><span id="_CPPv2N21Ex10RampModuleManager32retrieve_post_ramp_frequency_khzE"></span><span class="target" id="struct_ex10_ramp_module_manager_1adf6fcf82a9c1d6df76049be837684256"></span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">retrieve_post_ramp_frequency_khz</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N21Ex10RampModuleManager32retrieve_post_ramp_frequency_khzE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N21Ex10RampModuleManager32retrieve_post_ramp_tx_power_cdbmE">
+<span id="_CPPv3N21Ex10RampModuleManager32retrieve_post_ramp_tx_power_cdbmE"></span><span id="_CPPv2N21Ex10RampModuleManager32retrieve_post_ramp_tx_power_cdbmE"></span><span class="target" id="struct_ex10_ramp_module_manager_1a3f8f967ae654c45cd2b0635f8e2cfffc"></span><span class="n"><span class="pre">int16_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">retrieve_post_ramp_tx_power_cdbm</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N21Ex10RampModuleManager32retrieve_post_ramp_tx_power_cdbmE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N21Ex10RampModuleManager22call_pre_ramp_callbackE">
+<span id="_CPPv3N21Ex10RampModuleManager22call_pre_ramp_callbackE"></span><span id="_CPPv2N21Ex10RampModuleManager22call_pre_ramp_callbackE"></span><span class="target" id="struct_ex10_ramp_module_manager_1a069d79296568f6d38c6e0fd89a097220"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">call_pre_ramp_callback</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N21Ex10RampModuleManager22call_pre_ramp_callbackE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Use cases are to call this function immediately before calling cw_on. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N21Ex10RampModuleManager23call_post_ramp_callbackE">
+<span id="_CPPv3N21Ex10RampModuleManager23call_post_ramp_callbackE"></span><span id="_CPPv2N21Ex10RampModuleManager23call_post_ramp_callbackE"></span><span class="target" id="struct_ex10_ramp_module_manager_1a35e2f186b85d268a9ec6652901fb318a"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">call_post_ramp_callback</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N21Ex10RampModuleManager23call_post_ramp_callbackE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Use cases are to call this function immediately after calling cw_on. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N21Ex10RampModuleManager23register_ramp_callbacksE">
+<span id="_CPPv3N21Ex10RampModuleManager23register_ramp_callbacksE"></span><span id="_CPPv2N21Ex10RampModuleManager23register_ramp_callbacksE"></span><span class="target" id="struct_ex10_ramp_module_manager_1a51a96650d684cc782b930b4b60b7c202"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">register_ramp_callbacks</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">pre_cb</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">post_cb</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N21Ex10RampModuleManager23register_ramp_callbacksE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Registers the function pointer the rf power module to call before and after ramping. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Param pre_cb</dt>
+<dd class="field-odd"><p>The function pointer to register. The function takes a pointer to <a class="reference internal" href="ex10_result.html#struct_ex10_result"><span class="std std-ref">Ex10Result</span></a> as a parameter. In the case of an error, any error handling should be done by the callback context since it knows what is appropriate to do for the error. If the Ex10Result.error is set to true, it will cause the cw_on to abort the rampup and return <a class="reference internal" href="ex10_result.html#struct_ex10_result"><span class="std std-ref">Ex10Result</span></a>. </p>
+</dd>
+<dt class="field-even">Param post_cb</dt>
+<dd class="field-even"><p>The function pointer to register. The function takes a pointer to <a class="reference internal" href="ex10_result.html#struct_ex10_result"><span class="std std-ref">Ex10Result</span></a> as a parameter. In the case of an error, any error handling should be done by the callback context since it knows what is appropriate to do for the error. If the Ex10Result.error is set to true, it will cause the cw_on to abort the rampup and return <a class="reference internal" href="ex10_result.html#struct_ex10_result"><span class="std std-ref">Ex10Result</span></a>.</p>
+</dd>
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>Returns <a class="reference internal" href="ex10_result.html#struct_ex10_result"><span class="std std-ref">Ex10Result</span></a> with success if successful or an SDK error if there are already a callbacks installed. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N21Ex10RampModuleManager25unregister_ramp_callbacksE">
+<span id="_CPPv3N21Ex10RampModuleManager25unregister_ramp_callbacksE"></span><span id="_CPPv2N21Ex10RampModuleManager25unregister_ramp_callbacksE"></span><span class="target" id="struct_ex10_ramp_module_manager_1aa511f87a44570986de3b4878face42d8"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">unregister_ramp_callbacks</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N21Ex10RampModuleManager25unregister_ramp_callbacksE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Removes the callback and sets it back to NULL. </p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+<section id="antenna-disconnect">
+<h2>Antenna Disconnect<a class="headerlink" href="#antenna-disconnect" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference internal" href="../yk_firmware_ex10_host_c_reverse_power_detect.html#ex10-api-host-c-api-reverse-power-label"><span class="std std-ref">Antenna Disconnect</span></a> module has only
+post-rampup functionality. The module has default values that are setup for the
+E710 Development Board.  Some of these parameters are defined in the <code class="docutils literal notranslate"><span class="pre">board_spec.h</span></code> file and
+some of them have default values. The API allows these default values to be modified
+if desired.</p>
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv421Ex10AntennaDisconnect">
+<span id="_CPPv321Ex10AntennaDisconnect"></span><span id="_CPPv221Ex10AntennaDisconnect"></span><span id="Ex10AntennaDisconnect"></span><span class="target" id="struct_ex10_antenna_disconnect"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10AntennaDisconnect</span></span></span><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N21Ex10AntennaDisconnect4initE">
+<span id="_CPPv3N21Ex10AntennaDisconnect4initE"></span><span id="_CPPv2N21Ex10AntennaDisconnect4initE"></span><span class="target" id="struct_ex10_antenna_disconnect_1a6b7722c1ff7be65fc9837a4548b9cb2a"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">init</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N21Ex10AntennaDisconnect4initE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Initialize the Antenna Disconnect Module and register the ramp callbacks. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N21Ex10AntennaDisconnect6deinitE">
+<span id="_CPPv3N21Ex10AntennaDisconnect6deinitE"></span><span id="_CPPv2N21Ex10AntennaDisconnect6deinitE"></span><span class="target" id="struct_ex10_antenna_disconnect_1aed021a264fc3cec645fa00f325d9cecb"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">deinit</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N21Ex10AntennaDisconnect6deinitE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>De-initialize the Antenna Disconnect Module and unregister the ramp callbacks. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N21Ex10AntennaDisconnect19set_return_loss_cdbE">
+<span id="_CPPv3N21Ex10AntennaDisconnect19set_return_loss_cdbE"></span><span id="_CPPv2N21Ex10AntennaDisconnect19set_return_loss_cdbE"></span><span class="target" id="struct_ex10_antenna_disconnect_1abd84bc5b153bf298cd8ba843014ccde4"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">set_return_loss_cdb</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">uint16_t</span></span><span class="w"> </span><span class="n"><span class="pre">return_loss_cdb</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N21Ex10AntennaDisconnect19set_return_loss_cdbE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Param return_loss_cdb</dt>
+<dd class="field-odd"><p>The return loss at the board output in cdB. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N21Ex10AntennaDisconnect18set_max_margin_cdbE">
+<span id="_CPPv3N21Ex10AntennaDisconnect18set_max_margin_cdbE"></span><span id="_CPPv2N21Ex10AntennaDisconnect18set_max_margin_cdbE"></span><span class="target" id="struct_ex10_antenna_disconnect_1a148a48dfe9e3da9870393b242ee4798a"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">set_max_margin_cdb</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">int16_t</span></span><span class="w"> </span><span class="n"><span class="pre">max_margin_cdb</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N21Ex10AntennaDisconnect18set_max_margin_cdbE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Param max_margin_cdb</dt>
+<dd class="field-odd"><p>The maximum margin to use in the calculation </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N21Ex10AntennaDisconnect36get_last_reverse_power_adc_thresholdE">
+<span id="_CPPv3N21Ex10AntennaDisconnect36get_last_reverse_power_adc_thresholdE"></span><span id="_CPPv2N21Ex10AntennaDisconnect36get_last_reverse_power_adc_thresholdE"></span><span class="target" id="struct_ex10_antenna_disconnect_1a2ca9c8064185ee709205656c1f9bb1d9"></span><span class="n"><span class="pre">uint16_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_last_reverse_power_adc_threshold</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N21Ex10AntennaDisconnect36get_last_reverse_power_adc_thresholdE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Retrieves the last reverse power threshold used in the antenna disconnect callback. </p>
+<p>This represents only the threshold that was calculated during the callback.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>uint16_t The reverse power threshold in ADC counts </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N21Ex10AntennaDisconnect26get_last_reverse_power_adcE">
+<span id="_CPPv3N21Ex10AntennaDisconnect26get_last_reverse_power_adcE"></span><span id="_CPPv2N21Ex10AntennaDisconnect26get_last_reverse_power_adcE"></span><span class="target" id="struct_ex10_antenna_disconnect_1a75e24c0384582d6a92f29f56b5c212da"></span><span class="n"><span class="pre">uint16_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_last_reverse_power_adc</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N21Ex10AntennaDisconnect26get_last_reverse_power_adcE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Retrieves the most recent reverse power measurement made duing the post ramp up callback. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>uint16_t The reverse power measured in ADC counts </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N21Ex10AntennaDisconnect34get_return_loss_threshold_exceededE">
+<span id="_CPPv3N21Ex10AntennaDisconnect34get_return_loss_threshold_exceededE"></span><span id="_CPPv2N21Ex10AntennaDisconnect34get_return_loss_threshold_exceededE"></span><span class="target" id="struct_ex10_antenna_disconnect_1a590403db78f285c7a533bfd03486875e"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_return_loss_threshold_exceeded</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N21Ex10AntennaDisconnect34get_return_loss_threshold_exceededE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Determines if the return loss threshold was exceeded. </p>
+<p>Using user passed parameters and board specific losses, this function checks if the current measurement on the reverse power detectors is above the allowed value.</p>
+<p>Note that the parameters are passed into the module</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>Whether the threshold was exceeded. A true means that the reverse power detector measured higher than expected, and a false means we are within expectations. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N21Ex10AntennaDisconnect37antenna_disconnect_post_ramp_callbackE">
+<span id="_CPPv3N21Ex10AntennaDisconnect37antenna_disconnect_post_ramp_callbackE"></span><span id="_CPPv2N21Ex10AntennaDisconnect37antenna_disconnect_post_ramp_callbackE"></span><span class="target" id="struct_ex10_antenna_disconnect_1aa374fe80b23b55d2616279ada7b3c82c"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">antenna_disconnect_post_ramp_callback</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">ex10_result</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N21Ex10AntennaDisconnect37antenna_disconnect_post_ramp_callbackE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>This function pointer is the post ramp callback use by the Antenna Disconnect ramping module. </p>
+<p>It is intended to be used with a super ramping module that includes the Antenna Disconnect behavior with another module (the <a class="reference internal" href="#struct_ex10_antenna_disconnect_1a6b7722c1ff7be65fc9837a4548b9cb2a"><span class="std std-ref">init()</span></a> functionality should be used if using only this module) </p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</section>
+<section id="listen-before-talk">
+<h2>Listen Before Talk<a class="headerlink" href="#listen-before-talk" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference internal" href="../yk_firmware_ex10_host_c_lbt_usage.html#ex10-api-host-c-lbt-usage-label"><span class="std std-ref">Listen Before Talk</span></a> module is used to
+verify that there is no other reader already occupying the channel that the Impinj Reader Chip is planning to ramp up
+on.  It does this by measuring the RSSI at the RX pin and will not return
+until it detects that the channel is unoccupied.  It also has a timeout feature that
+will return a fail code if the channel was never clear.</p>
+<p>The parameters for the LBT operation have been pre-configured for the Japan 2 region
+and can be modified by using the setters in the API.</p>
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv420Ex10ListenBeforeTalk">
+<span id="_CPPv320Ex10ListenBeforeTalk"></span><span id="_CPPv220Ex10ListenBeforeTalk"></span><span id="Ex10ListenBeforeTalk"></span><span class="target" id="struct_ex10_listen_before_talk"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10ListenBeforeTalk</span></span></span><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N20Ex10ListenBeforeTalk4initE">
+<span id="_CPPv3N20Ex10ListenBeforeTalk4initE"></span><span id="_CPPv2N20Ex10ListenBeforeTalk4initE"></span><span class="target" id="struct_ex10_listen_before_talk_1a85e22e843b3fb6672b0b827aeabfc3e3"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">init</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N20Ex10ListenBeforeTalk4initE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Initialize the LBT Module and register the ramp callbacks. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N20Ex10ListenBeforeTalk6deinitE">
+<span id="_CPPv3N20Ex10ListenBeforeTalk6deinitE"></span><span id="_CPPv2N20Ex10ListenBeforeTalk6deinitE"></span><span class="target" id="struct_ex10_listen_before_talk_1a1dad0eadaff8a4d177cd517fd3c52da1"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">deinit</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N20Ex10ListenBeforeTalk6deinitE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>De-initialize the LBT Module and unregister the ramp callbacks. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N20Ex10ListenBeforeTalk14set_rssi_countE">
+<span id="_CPPv3N20Ex10ListenBeforeTalk14set_rssi_countE"></span><span id="_CPPv2N20Ex10ListenBeforeTalk14set_rssi_countE"></span><span class="target" id="struct_ex10_listen_before_talk_1ae49f60f4c5166159cdfb4a54dcc645b6"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">set_rssi_count</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n"><span class="pre">rssi_count_exp</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N20Ex10ListenBeforeTalk14set_rssi_countE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N20Ex10ListenBeforeTalk19set_passes_requiredE">
+<span id="_CPPv3N20Ex10ListenBeforeTalk19set_passes_requiredE"></span><span id="_CPPv2N20Ex10ListenBeforeTalk19set_passes_requiredE"></span><span class="target" id="struct_ex10_listen_before_talk_1a4ac111c76a055b706de9c9e8e08b45cd"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">set_passes_required</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n"><span class="pre">passes_required</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N20Ex10ListenBeforeTalk19set_passes_requiredE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N20Ex10ListenBeforeTalk27set_lbt_pass_threshold_cdbmE">
+<span id="_CPPv3N20Ex10ListenBeforeTalk27set_lbt_pass_threshold_cdbmE"></span><span id="_CPPv2N20Ex10ListenBeforeTalk27set_lbt_pass_threshold_cdbmE"></span><span class="target" id="struct_ex10_listen_before_talk_1a61a7240ba6b5cd9a063d90a220376e91"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">set_lbt_pass_threshold_cdbm</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">int32_t</span></span><span class="w"> </span><span class="n"><span class="pre">lbt_pass_threshold_cdbm</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N20Ex10ListenBeforeTalk27set_lbt_pass_threshold_cdbmE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N20Ex10ListenBeforeTalk25set_max_rssi_measurementsE">
+<span id="_CPPv3N20Ex10ListenBeforeTalk25set_max_rssi_measurementsE"></span><span id="_CPPv2N20Ex10ListenBeforeTalk25set_max_rssi_measurementsE"></span><span class="target" id="struct_ex10_listen_before_talk_1a33251557f7029f4e84de7a3c21b49ec2"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">set_max_rssi_measurements</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n"><span class="pre">set_max_rssi_measurements</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N20Ex10ListenBeforeTalk25set_max_rssi_measurementsE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N20Ex10ListenBeforeTalk24set_measurement_delay_usE">
+<span id="_CPPv3N20Ex10ListenBeforeTalk24set_measurement_delay_usE"></span><span id="_CPPv2N20Ex10ListenBeforeTalk24set_measurement_delay_usE"></span><span class="target" id="struct_ex10_listen_before_talk_1aab620b90dcc412e6478bdfea2d4c96d5"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">set_measurement_delay_us</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">uint16_t</span></span><span class="w"> </span><span class="n"><span class="pre">measurement_delay_us</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N20Ex10ListenBeforeTalk24set_measurement_delay_usE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N20Ex10ListenBeforeTalk25get_last_rssi_measurementE">
+<span id="_CPPv3N20Ex10ListenBeforeTalk25get_last_rssi_measurementE"></span><span id="_CPPv2N20Ex10ListenBeforeTalk25get_last_rssi_measurementE"></span><span class="target" id="struct_ex10_listen_before_talk_1a915c6a609dfe46ba6b667ef6b21bf94c"></span><span class="n"><span class="pre">int16_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_last_rssi_measurement</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N20Ex10ListenBeforeTalk25get_last_rssi_measurementE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N20Ex10ListenBeforeTalk22get_last_frequency_khzE">
+<span id="_CPPv3N20Ex10ListenBeforeTalk22get_last_frequency_khzE"></span><span id="_CPPv2N20Ex10ListenBeforeTalk22get_last_frequency_khzE"></span><span class="target" id="struct_ex10_listen_before_talk_1a4bb38f0119574430b59cb82a5e4555b6"></span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_last_frequency_khz</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N20Ex10ListenBeforeTalk22get_last_frequency_khzE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N20Ex10ListenBeforeTalk31get_total_num_rssi_measurementsE">
+<span id="_CPPv3N20Ex10ListenBeforeTalk31get_total_num_rssi_measurementsE"></span><span id="_CPPv2N20Ex10ListenBeforeTalk31get_total_num_rssi_measurementsE"></span><span class="target" id="struct_ex10_listen_before_talk_1ad05538809578c182846f0c0a23f6dc92"></span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_total_num_rssi_measurements</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N20Ex10ListenBeforeTalk31get_total_num_rssi_measurementsE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N20Ex10ListenBeforeTalk27get_listen_before_talk_rssiE">
+<span id="_CPPv3N20Ex10ListenBeforeTalk27get_listen_before_talk_rssiE"></span><span id="_CPPv2N20Ex10ListenBeforeTalk27get_listen_before_talk_rssiE"></span><span class="target" id="struct_ex10_listen_before_talk_1a52439f30d1703c100f01c101ac24da1d"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_listen_before_talk_rssi</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n"><span class="pre">antenna</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n"><span class="pre">frequency_khz</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">int32_t</span></span><span class="w"> </span><span class="n"><span class="pre">lbt_offset</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n"><span class="pre">rssi_count</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n"><span class="pre">override_used</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../yk_firmware_ex10_host_c_register_accessors.html#_CPPv419RxGainControlFields" title="RxGainControlFields"><span class="n"><span class="pre">RxGainControlFields</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">lbt_rx_gains</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">int16_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">lbt_rssi_out</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N20Ex10ListenBeforeTalk27get_listen_before_talk_rssiE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Runs the LBT op and retrieves a single RSSI measurement through the measured_rssi_log2_reg register. </p>
+<p>This value is then thrown through the calibration layer compensation before being returned to the user. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Param antenna</dt>
+<dd class="field-odd"><p>The antenna to listen on. </p>
+</dd>
+<dt class="field-even">Param frequency_khz</dt>
+<dd class="field-even"><p>If a frequency is specified here, this forces the stack to always ramp up to the same frequency. If 0, the region specific jump table will be used. </p>
+</dd>
+<dt class="field-odd">Param lbt_offset</dt>
+<dd class="field-odd"><p>The offset frequency for measuring the RSSI. </p>
+</dd>
+<dt class="field-even">Param rssi_count</dt>
+<dd class="field-even"><p>The integration count for measuring RSSI.</p>
+</dd>
+<dt class="field-odd">Param override_used</dt>
+<dd class="field-odd"><p>Determines whether or not to use the Rx gain override setting in the LBT control register. This is normally false, which means the default LBT-specific settings are used in RSSI measurement and compensation. These default settings override the <a class="reference internal" href="../yk_firmware_ex10_host_c_register_accessors.html#struct_rx_gain_control_fields"><span class="std std-ref">RxGainControlFields</span></a> in the RxGainControl register. If the override is set, the user-specified settings in the RxGainControl register will be used during measurement and compensation. Note that these user settings must be set before this function call.</p>
+</dd>
+<dt class="field-even">Param lbt_rx_gains</dt>
+<dd class="field-even"><p>The rx gains to use during the lbt measurements. </p>
+</dd>
+<dt class="field-odd">Param lbt_rssi_out</dt>
+<dd class="field-odd"><p>The compensated RSSI value in cdBm. </p>
+</dd>
+<dt class="field-even">Return</dt>
+<dd class="field-even"><p>The status showing any errors which occurred. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N20Ex10ListenBeforeTalk24listen_before_talk_multiE">
+<span id="_CPPv3N20Ex10ListenBeforeTalk24listen_before_talk_multiE"></span><span id="_CPPv2N20Ex10ListenBeforeTalk24listen_before_talk_multiE"></span><span class="target" id="struct_ex10_listen_before_talk_1a21132523eb454735e893651a0cc28ed3"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">listen_before_talk_multi</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n"><span class="pre">antenna</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n"><span class="pre">rssi_count</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../yk_firmware_ex10_host_c_register_accessors.html#_CPPv416LbtControlFields" title="LbtControlFields"><span class="n"><span class="pre">LbtControlFields</span></span></a><span class="w"> </span><span class="n"><span class="pre">lbt_settings</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">frequencies_khz</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">int32_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">lbt_offsets</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">int16_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">rssi_measurements</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../yk_firmware_ex10_host_c_register_accessors.html#_CPPv419RxGainControlFields" title="RxGainControlFields"><span class="n"><span class="pre">RxGainControlFields</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">lbt_rx_gains</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N20Ex10ListenBeforeTalk24listen_before_talk_multiE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Runs the LBT op with a variable number of measurements. </p>
+<p>The user configures the number of measurements up to 5 along with the delay between each measurement. This delay will be the same between all measurements. The user may also set the LBT offset and base frequency to a different value for each measurement. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>: The override field determines whether or not to use the Rx gain override setting in the LBT control register. This is normally false, which means the default LBT-specific settings are used in RSSI measurement and compensation. These default settings override the <a class="reference internal" href="../yk_firmware_ex10_host_c_register_accessors.html#struct_rx_gain_control_fields"><span class="std std-ref">RxGainControlFields</span></a> in the RxGainControl register. If the override is set, the user-specified settings in the RxGainControl register will be used during measurement and compensation. Note that these user settings must be set before this function call.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Param antenna</dt>
+<dd class="field-odd"><p>The antenna to listen on. </p>
+</dd>
+<dt class="field-even">Param frequency_khz</dt>
+<dd class="field-even"><p>If a frequency is specified here, this forces the stack to always ramp up to the same frequency. If 0, the frequency used will iterate through the region specific jump table. </p>
+</dd>
+<dt class="field-odd">Param rssi_count</dt>
+<dd class="field-odd"><p>The integration count for measuring RSSI. </p>
+</dd>
+<dt class="field-even">Param lbt_settings</dt>
+<dd class="field-even"><p>The lbt controls for the entire op. This tells the op whether to use a delay between measurements, how many measurements to make, whether or not to override the RX gain settings, and if a narrower bandwidth should be used. </p>
+</dd>
+<dt class="field-odd">Param frequencies_khz</dt>
+<dd class="field-odd"><p>The frequencies array for all LBT measurements. Note that these can all differ. </p>
+</dd>
+<dt class="field-even">Param lbt_offset</dt>
+<dd class="field-even"><p>The offset frequency for measuring the RSSI in each measurement. Note that these can all differ. </p>
+</dd>
+<dt class="field-odd">Param rssi_measurements</dt>
+<dd class="field-odd"><p>The rssi results are placed in this array. Ensure that the array contains enough space for the number of measurements that were specified in lbt_settings. </p>
+</dd>
+<dt class="field-even">Param lbt_rx_gains</dt>
+<dd class="field-even"><p>The rx gains to use during the lbt measurements. </p>
+</dd>
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>The status showing any errors which occurred. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N20Ex10ListenBeforeTalk29multi_listen_before_talk_rssiE">
+<span id="_CPPv3N20Ex10ListenBeforeTalk29multi_listen_before_talk_rssiE"></span><span id="_CPPv2N20Ex10ListenBeforeTalk29multi_listen_before_talk_rssiE"></span><span class="target" id="struct_ex10_listen_before_talk_1a9c09eae75d59034026b285ab793d0c62"></span><span class="n"><span class="pre">int16_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">multi_listen_before_talk_rssi</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n"><span class="pre">antenna</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N20Ex10ListenBeforeTalk29multi_listen_before_talk_rssiE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Runs the LBT op and analyzes the RSSI results with default lbt settings. </p>
+<p>If the user wishes to alter the lbt_offset, rssi_count, passes_required, lbt_pass_threshold_cdbm, or max_rssi_measurements, they must use the corresponding setter functions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Param antenna</dt>
+<dd class="field-odd"><p>The antenna on which to make the measurements</p>
+</dd>
+<dt class="field-even">Return</dt>
+<dd class="field-even"><p>int16_t The max RSSI measured from the LBT op. If the value returned is over the threshold specified by ‘lbt_pass_threshold_cdbm’, then the op failed to return a passing RSSI ‘rssi_count’ number of times in a row before ‘max_rssi_measurements’. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N20Ex10ListenBeforeTalk33get_default_lbt_rx_analog_configsE">
+<span id="_CPPv3N20Ex10ListenBeforeTalk33get_default_lbt_rx_analog_configsE"></span><span id="_CPPv2N20Ex10ListenBeforeTalk33get_default_lbt_rx_analog_configsE"></span><span class="target" id="struct_ex10_listen_before_talk_1a2342574051cde542b860482cd47a958e"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../yk_firmware_ex10_host_c_register_accessors.html#_CPPv419RxGainControlFields" title="RxGainControlFields"><span class="n"><span class="pre">RxGainControlFields</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_default_lbt_rx_analog_configs</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N20Ex10ListenBeforeTalk33get_default_lbt_rx_analog_configsE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N20Ex10ListenBeforeTalk21lbt_pre_ramp_callbackE">
+<span id="_CPPv3N20Ex10ListenBeforeTalk21lbt_pre_ramp_callbackE"></span><span id="_CPPv2N20Ex10ListenBeforeTalk21lbt_pre_ramp_callbackE"></span><span class="target" id="struct_ex10_listen_before_talk_1a15308d6366602ed6935a64d2bcd6969a"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">lbt_pre_ramp_callback</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">ex10_result</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N20Ex10ListenBeforeTalk21lbt_pre_ramp_callbackE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>This function pointer is the pre ramp callback use by the LBT ramping module. </p>
+<p>It is intended to be used with a super ramping module that includes the LBT behavior with another module (the <a class="reference internal" href="#struct_ex10_listen_before_talk_1a85e22e843b3fb6672b0b827aeabfc3e3"><span class="std std-ref">init()</span></a> functionality should be used if using only this module) </p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</section>
+<section id="antenna-disconnect-and-listen-before-talk">
+<h2>Antenna Disconnect and Listen Before Talk<a class="headerlink" href="#antenna-disconnect-and-listen-before-talk" title="Permalink to this headline">¶</a></h2>
+<p>The antenna disconnect and listen before talk is a super module that combines the
+functionality of the <a class="reference internal" href="../yk_firmware_ex10_host_c_reverse_power_detect.html#ex10-api-host-c-api-reverse-power-label"><span class="std std-ref">Antenna Disconnect</span></a>
+module and the <a class="reference internal" href="../yk_firmware_ex10_host_c_lbt_usage.html#ex10-api-host-c-lbt-usage-label"><span class="std std-ref">Listen Before Talk</span></a> module
+together so that they can be used at the same time.  This module has taken into
+account interactions between the modules.  Note that this function actually uses
+the ramping callbacks from the two modules directly as they do not interact with
+each other.</p>
+<p>The parameters for the antenna disconnect and the listen before talk module
+should be set using the setters on this API so that it can take into account
+any interactions that the modules might have.</p>
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv437Ex10AntennaDisconnectListenBeforeTalk">
+<span id="_CPPv337Ex10AntennaDisconnectListenBeforeTalk"></span><span id="_CPPv237Ex10AntennaDisconnectListenBeforeTalk"></span><span id="Ex10AntennaDisconnectListenBeforeTalk"></span><span class="target" id="struct_ex10_antenna_disconnect_listen_before_talk"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10AntennaDisconnectListenBeforeTalk</span></span></span><a class="headerlink" href="#_CPPv437Ex10AntennaDisconnectListenBeforeTalk" title="Permalink to this definition">¶</a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N37Ex10AntennaDisconnectListenBeforeTalk4initE">
+<span id="_CPPv3N37Ex10AntennaDisconnectListenBeforeTalk4initE"></span><span id="_CPPv2N37Ex10AntennaDisconnectListenBeforeTalk4initE"></span><span class="target" id="struct_ex10_antenna_disconnect_listen_before_talk_1a1deb38fbdc5d9b58c67d9c4432ae1017"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">init</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N37Ex10AntennaDisconnectListenBeforeTalk4initE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Initialize the Antenna Disconnect and Listen Before Talk Module and register the ramp callbacks. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N37Ex10AntennaDisconnectListenBeforeTalk6deinitE">
+<span id="_CPPv3N37Ex10AntennaDisconnectListenBeforeTalk6deinitE"></span><span id="_CPPv2N37Ex10AntennaDisconnectListenBeforeTalk6deinitE"></span><span class="target" id="struct_ex10_antenna_disconnect_listen_before_talk_1af5c29cd5264dc652088d0d17780db13f"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">deinit</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N37Ex10AntennaDisconnectListenBeforeTalk6deinitE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>De-initialize the Antenna Disconnect and Listen Before Talk Module and unregister the ramp callbacks. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N37Ex10AntennaDisconnectListenBeforeTalk19set_return_loss_cdbE">
+<span id="_CPPv3N37Ex10AntennaDisconnectListenBeforeTalk19set_return_loss_cdbE"></span><span id="_CPPv2N37Ex10AntennaDisconnectListenBeforeTalk19set_return_loss_cdbE"></span><span class="target" id="struct_ex10_antenna_disconnect_listen_before_talk_1aede3c5de2b26593cc7bbc95061312e70"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">set_return_loss_cdb</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">uint16_t</span></span><span class="w"> </span><span class="n"><span class="pre">return_loss_cdb</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N37Ex10AntennaDisconnectListenBeforeTalk19set_return_loss_cdbE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>These functions set the parameters for the antenna disconnect module. </p>
+<p>For the descriptions of these functions see the stand alone antenna disconnect module. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N37Ex10AntennaDisconnectListenBeforeTalk18set_max_margin_cdbE">
+<span id="_CPPv3N37Ex10AntennaDisconnectListenBeforeTalk18set_max_margin_cdbE"></span><span id="_CPPv2N37Ex10AntennaDisconnectListenBeforeTalk18set_max_margin_cdbE"></span><span class="target" id="struct_ex10_antenna_disconnect_listen_before_talk_1a8823610390a70200b5b16ed55e4abf0f"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">set_max_margin_cdb</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">int16_t</span></span><span class="w"> </span><span class="n"><span class="pre">max_margin_cdb</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N37Ex10AntennaDisconnectListenBeforeTalk18set_max_margin_cdbE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N37Ex10AntennaDisconnectListenBeforeTalk36get_last_reverse_power_adc_thresholdE">
+<span id="_CPPv3N37Ex10AntennaDisconnectListenBeforeTalk36get_last_reverse_power_adc_thresholdE"></span><span id="_CPPv2N37Ex10AntennaDisconnectListenBeforeTalk36get_last_reverse_power_adc_thresholdE"></span><span class="target" id="struct_ex10_antenna_disconnect_listen_before_talk_1a270064f88296e2368be5c954d8c88e0c"></span><span class="n"><span class="pre">uint16_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_last_reverse_power_adc_threshold</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N37Ex10AntennaDisconnectListenBeforeTalk36get_last_reverse_power_adc_thresholdE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N37Ex10AntennaDisconnectListenBeforeTalk26get_last_reverse_power_adcE">
+<span id="_CPPv3N37Ex10AntennaDisconnectListenBeforeTalk26get_last_reverse_power_adcE"></span><span id="_CPPv2N37Ex10AntennaDisconnectListenBeforeTalk26get_last_reverse_power_adcE"></span><span class="target" id="struct_ex10_antenna_disconnect_listen_before_talk_1a7863b2157c7bb4b4312a6c6a22b4c443"></span><span class="n"><span class="pre">uint16_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_last_reverse_power_adc</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N37Ex10AntennaDisconnectListenBeforeTalk26get_last_reverse_power_adcE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N37Ex10AntennaDisconnectListenBeforeTalk14set_rssi_countE">
+<span id="_CPPv3N37Ex10AntennaDisconnectListenBeforeTalk14set_rssi_countE"></span><span id="_CPPv2N37Ex10AntennaDisconnectListenBeforeTalk14set_rssi_countE"></span><span class="target" id="struct_ex10_antenna_disconnect_listen_before_talk_1a83712ab995a6391921dfdcfad46c2a0a"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">set_rssi_count</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n"><span class="pre">rssi_count_exp</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N37Ex10AntennaDisconnectListenBeforeTalk14set_rssi_countE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>These function set the parameters for the listen before talk module. </p>
+<p>For the descriptions of these functions see the stand alone listen before talk module. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N37Ex10AntennaDisconnectListenBeforeTalk19set_passes_requiredE">
+<span id="_CPPv3N37Ex10AntennaDisconnectListenBeforeTalk19set_passes_requiredE"></span><span id="_CPPv2N37Ex10AntennaDisconnectListenBeforeTalk19set_passes_requiredE"></span><span class="target" id="struct_ex10_antenna_disconnect_listen_before_talk_1a02c6cac42c9865848b584fc67f230f64"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">set_passes_required</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n"><span class="pre">passes_required</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N37Ex10AntennaDisconnectListenBeforeTalk19set_passes_requiredE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N37Ex10AntennaDisconnectListenBeforeTalk27set_lbt_pass_threshold_cdbmE">
+<span id="_CPPv3N37Ex10AntennaDisconnectListenBeforeTalk27set_lbt_pass_threshold_cdbmE"></span><span id="_CPPv2N37Ex10AntennaDisconnectListenBeforeTalk27set_lbt_pass_threshold_cdbmE"></span><span class="target" id="struct_ex10_antenna_disconnect_listen_before_talk_1a7677019c99872032dfd2c65fcb05e534"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">set_lbt_pass_threshold_cdbm</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">int32_t</span></span><span class="w"> </span><span class="n"><span class="pre">lbt_pass_threshold_cdbm</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N37Ex10AntennaDisconnectListenBeforeTalk27set_lbt_pass_threshold_cdbmE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N37Ex10AntennaDisconnectListenBeforeTalk25set_max_rssi_measurementsE">
+<span id="_CPPv3N37Ex10AntennaDisconnectListenBeforeTalk25set_max_rssi_measurementsE"></span><span id="_CPPv2N37Ex10AntennaDisconnectListenBeforeTalk25set_max_rssi_measurementsE"></span><span class="target" id="struct_ex10_antenna_disconnect_listen_before_talk_1a0cc1502c35f0849acfdee2c77fdd3228"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">set_max_rssi_measurements</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n"><span class="pre">set_max_rssi_measurements</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N37Ex10AntennaDisconnectListenBeforeTalk25set_max_rssi_measurementsE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N37Ex10AntennaDisconnectListenBeforeTalk24set_measurement_delay_usE">
+<span id="_CPPv3N37Ex10AntennaDisconnectListenBeforeTalk24set_measurement_delay_usE"></span><span id="_CPPv2N37Ex10AntennaDisconnectListenBeforeTalk24set_measurement_delay_usE"></span><span class="target" id="struct_ex10_antenna_disconnect_listen_before_talk_1a7df864fc3a576f910bf5b56d1487f001"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">set_measurement_delay_us</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">uint16_t</span></span><span class="w"> </span><span class="n"><span class="pre">measurement_delay_us</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N37Ex10AntennaDisconnectListenBeforeTalk24set_measurement_delay_usE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N37Ex10AntennaDisconnectListenBeforeTalk25get_last_rssi_measurementE">
+<span id="_CPPv3N37Ex10AntennaDisconnectListenBeforeTalk25get_last_rssi_measurementE"></span><span id="_CPPv2N37Ex10AntennaDisconnectListenBeforeTalk25get_last_rssi_measurementE"></span><span class="target" id="struct_ex10_antenna_disconnect_listen_before_talk_1a1adb34f306f0ab8b52a1cae2091540b1"></span><span class="n"><span class="pre">int16_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_last_rssi_measurement</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N37Ex10AntennaDisconnectListenBeforeTalk25get_last_rssi_measurementE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N37Ex10AntennaDisconnectListenBeforeTalk22get_last_frequency_khzE">
+<span id="_CPPv3N37Ex10AntennaDisconnectListenBeforeTalk22get_last_frequency_khzE"></span><span id="_CPPv2N37Ex10AntennaDisconnectListenBeforeTalk22get_last_frequency_khzE"></span><span class="target" id="struct_ex10_antenna_disconnect_listen_before_talk_1ae60138e2800397900aff7b5e32d211b2"></span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_last_frequency_khz</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N37Ex10AntennaDisconnectListenBeforeTalk22get_last_frequency_khzE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N37Ex10AntennaDisconnectListenBeforeTalk31get_total_num_rssi_measurementsE">
+<span id="_CPPv3N37Ex10AntennaDisconnectListenBeforeTalk31get_total_num_rssi_measurementsE"></span><span id="_CPPv2N37Ex10AntennaDisconnectListenBeforeTalk31get_total_num_rssi_measurementsE"></span><span class="target" id="struct_ex10_antenna_disconnect_listen_before_talk_1ad416e2ffb63e688ea01ef8f73c8263c2"></span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_total_num_rssi_measurements</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N37Ex10AntennaDisconnectListenBeforeTalk31get_total_num_rssi_measurementsE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../../../_static/logo.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Ex10 Ramp Module Manager</a><ul>
+<li><a class="reference internal" href="#antenna-disconnect">Antenna Disconnect</a></li>
+<li><a class="reference internal" href="#listen-before-talk">Listen Before Talk</a></li>
+<li><a class="reference internal" href="#antenna-disconnect-and-listen-before-talk">Antenna Disconnect and Listen Before Talk</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="aggregate_operations.html"
+                        title="previous chapter">Aggregate Operations</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="utils.html"
+                        title="next chapter">Ex10 Utils</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="utils.html" title="Ex10 Utils"
+             >next</a></li>
+        <li class="right" >
+          <a href="aggregate_operations.html" title="Aggregate Operations"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../yk_firmware_ex10_host_c_api.html" >Impinj Reader Chip C Host SDK</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../yk_firmware_ex10_host_c_api_layers.html" >API Layers</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="support_modules.html" >Ex10 Support Modules</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Ex10 Ramp Module Manager</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Impinj, Inc..
+    </div>
+  </body>
+</html>

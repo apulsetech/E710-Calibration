@@ -1,0 +1,228 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Ex10HostInterface &#8212; Impinj Reader Chip SDK</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinxdoc.css" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Ex10Random" href="ex10_random.html" />
+    <link rel="prev" title="GPIO Abstractions" href="ex10_gpio.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="ex10_random.html" title="Ex10Random"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="ex10_gpio.html" title="GPIO Abstractions"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../yk_firmware_ex10_host_c_api.html" >Impinj Reader Chip C Host SDK</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="ex10_board_specific.html" accesskey="U">Board Specific Implementation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Ex10HostInterface</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="ex10hostinterface">
+<span id="ex10-api-host-c-api-board-host-interface"></span><h1>Ex10HostInterface<a class="headerlink" href="#ex10hostinterface" title="Permalink to this headline">¶</a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">Ex10HostInterface</span></code> is an abstraction for the communication interface between
+the SDK and the Impinj reader chip.  This allows the reader to abstract away the
+bus interface.  At this time only the SPI interface is supported.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">Ex10SpiDriver</span></code> is used to implement a SPI driver that can do
+<a class="reference internal" href="../yk_firmware_ex10_api_wireline.html#ex10-api-wireline-spi"><span class="std std-ref">Ex10Wireline</span></a> transactions with the Impinj reader chip.</p>
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv413HostInterface">
+<span id="_CPPv313HostInterface"></span><span id="_CPPv213HostInterface"></span><span id="HostInterface"></span><span class="target" id="struct_host_interface"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">HostInterface</span></span></span><a class="headerlink" href="#_CPPv413HostInterface" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The Ex10 host interface is a serial device master which controls the Ex10. </p>
+<p>Ex10 supports the following protocol: SPI CPOL = 0 (clock idles low) CPHA = 1 (data launches on rising edge and is captured on falling edge) Clock Rates: 4 MHz maximum clock rate when controlling the Application. 1 MHz maximum clock rate when controlling the Bootloader. Notes:<ul class="simple">
+<li><p>When sending data to the Ex10, using the <a class="reference internal" href="#struct_host_interface_1ad282a499ff291147d530f0d1bef39a19"><span class="std std-ref">write()</span></a> method, the received data on the MISO line contains no valid information.</p></li>
+<li><p>When receiving data from the Ex10, using the <a class="reference internal" href="#struct_host_interface_1a30c49524783b90f2706a63aa0e81ac7e"><span class="std std-ref">read()</span></a> method, the data sent on the MOSI line is ignored by the Ex10. </p></li>
+</ul>
+</p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N13HostInterface4openE">
+<span id="_CPPv3N13HostInterface4openE"></span><span id="_CPPv2N13HostInterface4openE"></span><span class="target" id="struct_host_interface_1ac3e2c0ee435e6edba9cdbc09fee19c09"></span><span class="n"><span class="pre">int32_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">open</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n"><span class="pre">interface_speed</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N13HostInterface4openE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Initialize the host interface. </p>
+<p>This includes setting the clock speed, polarity, bit width, etc.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns 0</dt>
+<dd class="field-odd"><p>The call was successful. </p>
+</dd>
+<dt class="field-even">Returns &lt;0</dt>
+<dd class="field-even"><p>The call was unsuccessful. Check errno for the failure reason. </p>
+</dd>
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>int A indicator of success or failure. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N13HostInterface5closeE">
+<span id="_CPPv3N13HostInterface5closeE"></span><span id="_CPPv2N13HostInterface5closeE"></span><span class="target" id="struct_host_interface_1a05b33166373ef3d0cbcb0250a2f90b4a"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">close</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N13HostInterface5closeE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Deinitialize the host interface. </p>
+<p>Frees all resources associated with the hardware device. This allows the device to be acquired for use by other applications. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N13HostInterface4readE">
+<span id="_CPPv3N13HostInterface4readE"></span><span id="_CPPv2N13HostInterface4readE"></span><span class="target" id="struct_host_interface_1a30c49524783b90f2706a63aa0e81ac7e"></span><span class="n"><span class="pre">int32_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">read</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n"><span class="pre">length</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N13HostInterface4readE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Receive a byte stream of data from the Ex10 device. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Param data</dt>
+<dd class="field-odd"><p>A pointer to the buffer which will be filled in by the byte stream received from the Ex10. </p>
+</dd>
+<dt class="field-even">Param length</dt>
+<dd class="field-even"><p>The length of the data buffer in bytes.</p>
+</dd>
+<dt class="field-odd">Returns -1</dt>
+<dd class="field-odd"><p>The host serial interface hardware faulted. </p>
+</dd>
+<dt class="field-even">Return</dt>
+<dd class="field-even"><p>The number of bytes received from the Ex10 device. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N13HostInterface5writeE">
+<span id="_CPPv3N13HostInterface5writeE"></span><span id="_CPPv2N13HostInterface5writeE"></span><span class="target" id="struct_host_interface_1ad282a499ff291147d530f0d1bef39a19"></span><span class="n"><span class="pre">int32_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">write</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n"><span class="pre">length</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N13HostInterface5writeE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Send a byte stream of data to the Ex10 device. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Param data</dt>
+<dd class="field-odd"><p>A pointer to the byte stream to send to the Ex10. </p>
+</dd>
+<dt class="field-even">Param length</dt>
+<dd class="field-even"><p>The number of bytes in the stream to send.</p>
+</dd>
+<dt class="field-odd">Returns -1</dt>
+<dd class="field-odd"><p>The host serial interface hardware faulted. </p>
+</dd>
+<dt class="field-even">Return</dt>
+<dd class="field-even"><p>The number of bytes sent to the Ex10 device. </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv413Ex10SpiDriver">
+<span id="_CPPv313Ex10SpiDriver"></span><span id="_CPPv213Ex10SpiDriver"></span><span id="Ex10SpiDriver"></span><span class="target" id="struct_ex10_spi_driver"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10SpiDriver</span></span></span><a class="headerlink" href="#_CPPv413Ex10SpiDriver" title="Permalink to this definition">¶</a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N13Ex10SpiDriver8spi_openE">
+<span id="_CPPv3N13Ex10SpiDriver8spi_openE"></span><span id="_CPPv2N13Ex10SpiDriver8spi_openE"></span><span class="target" id="struct_ex10_spi_driver_1ac67d646852f965de808b96e20e599499"></span><span class="n"><span class="pre">int32_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">spi_open</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n"><span class="pre">spi_speed_hz</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N13Ex10SpiDriver8spi_openE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N13Ex10SpiDriver9spi_closeE">
+<span id="_CPPv3N13Ex10SpiDriver9spi_closeE"></span><span id="_CPPv2N13Ex10SpiDriver9spi_closeE"></span><span class="target" id="struct_ex10_spi_driver_1a21ef9c4198b977dffdd7f355d1d616fe"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">spi_close</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N13Ex10SpiDriver9spi_closeE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N13Ex10SpiDriver9spi_writeE">
+<span id="_CPPv3N13Ex10SpiDriver9spi_writeE"></span><span id="_CPPv2N13Ex10SpiDriver9spi_writeE"></span><span class="target" id="struct_ex10_spi_driver_1a63c1f1b28599e0cdd978009eff893549"></span><span class="n"><span class="pre">int32_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">spi_write</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">tx_buff</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n"><span class="pre">length</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N13Ex10SpiDriver9spi_writeE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Used for any transaction requiring only a write with no expectation of data coming back after the write. </p>
+<p>
+If not all bytes are written properly, a -1 is returned. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Param tx_buff</dt>
+<dd class="field-odd"><p>Buffer containing the data to be written data after the write. </p>
+</dd>
+<dt class="field-even">Param length</dt>
+<dd class="field-even"><p>The number of bytes to write from tx_buff</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N13Ex10SpiDriver8spi_readE">
+<span id="_CPPv3N13Ex10SpiDriver8spi_readE"></span><span id="_CPPv2N13Ex10SpiDriver8spi_readE"></span><span class="target" id="struct_ex10_spi_driver_1a87fbb66651cbea167b3f7358ae136cef"></span><span class="n"><span class="pre">int32_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">spi_read</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">rx_buff</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n"><span class="pre">length</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N13Ex10SpiDriver8spi_readE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Used for any transaction requiring only a read using dummy bytes out MOSI. </p>
+<p>
+If not all bytes are received properly, a -1 is returned. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Param rx_buff</dt>
+<dd class="field-odd"><p>Buffer in which to place incoming data after the write. </p>
+</dd>
+<dt class="field-even">Param length</dt>
+<dd class="field-even"><p>The number of bytes to read into rx_buff</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../../../_static/logo.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="ex10_gpio.html"
+                        title="previous chapter">GPIO Abstractions</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="ex10_random.html"
+                        title="next chapter">Ex10Random</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="ex10_random.html" title="Ex10Random"
+             >next</a></li>
+        <li class="right" >
+          <a href="ex10_gpio.html" title="GPIO Abstractions"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../yk_firmware_ex10_host_c_api.html" >Impinj Reader Chip C Host SDK</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="ex10_board_specific.html" >Board Specific Implementation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Ex10HostInterface</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Impinj, Inc..
+    </div>
+  </body>
+</html>

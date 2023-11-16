@@ -1,0 +1,112 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Byte Span Type &#8212; Impinj Reader Chip SDK</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinxdoc.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <link rel="search" title="Search" href="../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="nav-item nav-item-0"><a href="index.html">Impinj Reader Chip SDK</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Byte Span Type</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="byte-span-type">
+<span id="ex10-api-host-c-api-byte-span-types"></span><h1>Byte Span Type<a class="headerlink" href="#byte-span-type" title="Permalink to this headline">¶</a></h1>
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv48ByteSpan">
+<span id="_CPPv38ByteSpan"></span><span id="_CPPv28ByteSpan"></span><span id="ByteSpan"></span><span class="target" id="struct_byte_span"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ByteSpan</span></span></span><a class="headerlink" href="#_CPPv48ByteSpan" title="Permalink to this definition">¶</a><br /></dt>
+<dd><em>#include &lt;byte_span.h&gt;</em><p>Defines a mutable location of contiguous memory, organized as bytes. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8ByteSpan4dataE">
+<span id="_CPPv3N8ByteSpan4dataE"></span><span id="_CPPv2N8ByteSpan4dataE"></span><span id="ByteSpan::data__uint8_tP"></span><span class="target" id="struct_byte_span_1a4d7bc84cf724c76d95bdae0d68dca18c"></span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">data</span></span></span><a class="headerlink" href="#_CPPv4N8ByteSpan4dataE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The pointer to beginning of the memory location. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8ByteSpan6lengthE">
+<span id="_CPPv3N8ByteSpan6lengthE"></span><span id="_CPPv2N8ByteSpan6lengthE"></span><span id="ByteSpan::length__s"></span><span class="target" id="struct_byte_span_1adf90d97bc92af8d4e0c703b0105feaca"></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">length</span></span></span><a class="headerlink" href="#_CPPv4N8ByteSpan6lengthE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The number of bytes in the contiguous memory. </p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv413ConstByteSpan">
+<span id="_CPPv313ConstByteSpan"></span><span id="_CPPv213ConstByteSpan"></span><span id="ConstByteSpan"></span><span class="target" id="struct_const_byte_span"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ConstByteSpan</span></span></span><a class="headerlink" href="#_CPPv413ConstByteSpan" title="Permalink to this definition">¶</a><br /></dt>
+<dd><em>#include &lt;byte_span.h&gt;</em><p>Defines a immutable location of contiguous memory, organized as bytes. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N13ConstByteSpan4dataE">
+<span id="_CPPv3N13ConstByteSpan4dataE"></span><span id="_CPPv2N13ConstByteSpan4dataE"></span><span id="ConstByteSpan::data__uint8_tCP"></span><span class="target" id="struct_const_byte_span_1a9d30c2c01b4893ce5b123bdc75f436f0"></span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">data</span></span></span><a class="headerlink" href="#_CPPv4N13ConstByteSpan4dataE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The pointer to beginning of the memory location. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N13ConstByteSpan6lengthE">
+<span id="_CPPv3N13ConstByteSpan6lengthE"></span><span id="_CPPv2N13ConstByteSpan6lengthE"></span><span id="ConstByteSpan::length__s"></span><span class="target" id="struct_const_byte_span_1a5e7e37444eb5fc3850cd7e418ad29835"></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">length</span></span></span><a class="headerlink" href="#_CPPv4N13ConstByteSpan6lengthE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The number of bytes in the contiguous memory. </p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="../../_static/logo.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="nav-item nav-item-0"><a href="index.html">Impinj Reader Chip SDK</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Byte Span Type</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Impinj, Inc..
+    </div>
+  </body>
+</html>

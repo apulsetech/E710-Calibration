@@ -1,0 +1,254 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Ex10BoardSpec &#8212; Impinj Reader Chip SDK</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinxdoc.css" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Ex10DriverList" href="ex10_driver_list.html" />
+    <link rel="prev" title="Board Spec Constants" href="board_spec_constants.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="ex10_driver_list.html" title="Ex10DriverList"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="board_spec_constants.html" title="Board Spec Constants"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../yk_firmware_ex10_host_c_api.html" >Impinj Reader Chip C Host SDK</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="ex10_board_specific.html" accesskey="U">Board Specific Implementation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Ex10BoardSpec</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="ex10boardspec">
+<span id="ex10-api-host-c-api-board-spec"></span><h1>Ex10BoardSpec<a class="headerlink" href="#ex10boardspec" title="Permalink to this headline">¶</a></h1>
+<p>The Ex10BoardSpec is used as an abstraction layer where the implementation specific
+details can be abstracted away for the SDK.  The use of the GPIO pins on the Impinj
+reader chip are dependent on the implementation of the reader.  This layer provides
+a method to describe what to do with the GPIO pins, for their default settings, and
+what pins should be setup as outputs.  These settings are returned as two <code class="docutils literal notranslate"><span class="pre">uint32_t</span></code>
+values, one for the output enables which is written to the
+<a class="reference external" href="../yk_firmware_ex10_api_application_address_map.html#address-entry-GpioOutputEnable">GpioOutputEnable</a>
+register and one that is for the levels that is written to the
+<a class="reference external" href="../yk_firmware_ex10_api_application_address_map.html#address-entry-GpioOutputLevel">GpioOutputLevel</a>
+register at startup.  This way the SDK does not need to know what each GPIO pin does,
+it just asks the board layer to correctly set the levels <code class="docutils literal notranslate"><span class="pre">uint32_t</span></code> word for a given
+condition such as setting up for a specific antenna (which in some cases may be not to
+set any GPIOs, if for example the antennas are set by a separate one wire interface).</p>
+<p>The board spec layer has the concept of <code class="docutils literal notranslate"><span class="pre">antenna</span></code>, <code class="docutils literal notranslate"><span class="pre">rx_baseband_filter</span></code>,and
+<code class="docutils literal notranslate"><span class="pre">tx_rf_filter</span></code> which are common elements in readers and commonly use the Impinj
+reader chip GPIO pins to control.  This <code class="docutils literal notranslate"><span class="pre">get_gpio_output_levels</span></code> provides the
+correct GPIO settings for those three parameters.  On the E710 Development Board,
+the antenna selection is controlled by one GPIO, but in a different design there
+could be two GPIO pins that need to be set.  This layer is board specific so it has
+that knowledge and can set the GPIO pins appropriately.</p>
+<p>Other than the GPIO example provided above, the board spec layer has additional
+features that are heavily influenced by the design and provide a method to
+implement board specific features here.  They are documented in the structures
+below.</p>
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv413Ex10BoardSpec">
+<span id="_CPPv313Ex10BoardSpec"></span><span id="_CPPv213Ex10BoardSpec"></span><span id="Ex10BoardSpec"></span><span class="target" id="struct_ex10_board_spec"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10BoardSpec</span></span></span><a class="headerlink" href="#_CPPv413Ex10BoardSpec" title="Permalink to this definition">¶</a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N13Ex10BoardSpec30get_default_gpio_output_levelsE">
+<span id="_CPPv3N13Ex10BoardSpec30get_default_gpio_output_levelsE"></span><span id="_CPPv2N13Ex10BoardSpec30get_default_gpio_output_levelsE"></span><span class="target" id="struct_ex10_board_spec_1a7913e7d77858dc7ebe6dffac556a2a9a"></span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_default_gpio_output_levels</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N13Ex10BoardSpec30get_default_gpio_output_levelsE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Generate the default GPIO output level configuration desired. </p>
+<p>This can be used at boot or when not running inventory; i.e. when CW is not ramped up to operational power.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>uint32_t A bit field of GPIO levels which, when set to ‘1’, indicates that the GPIO output level is high. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N13Ex10BoardSpec22get_gpio_output_levelsE">
+<span id="_CPPv3N13Ex10BoardSpec22get_gpio_output_levelsE"></span><span id="_CPPv2N13Ex10BoardSpec22get_gpio_output_levelsE"></span><span class="target" id="struct_ex10_board_spec_1a26c7a1d024020d2595b086b02279ec5a"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_gpio_output_levels</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n"><span class="pre">antenna</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="n"><span class="pre">BasebandFilterType</span></span><span class="w"> </span><span class="n"><span class="pre">rx_baseband_filter</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><a class="reference internal" href="../ex10_host_c_reader_primitives/rf_power.html#_CPPv48RfFilter" title="RfFilter"><span class="n"><span class="pre">RfFilter</span></span></a><span class="w"> </span><span class="n"><span class="pre">tx_rf_filter</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">gpio_levels</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N13Ex10BoardSpec22get_gpio_output_levelsE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Generate the GPIO output level configuration required to ramp to power using the provided parameters. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Param antenna</dt>
+<dd class="field-odd"><p><strong>[in]</strong> The antenna port to select. </p>
+</dd>
+<dt class="field-even">Param rx_baseband_filter</dt>
+<dd class="field-even"><p><strong>[in]</strong> The Rx baseband filter selection. </p>
+</dd>
+<dt class="field-odd">Param tx_rf_filter</dt>
+<dd class="field-odd"><p><strong>[in]</strong> An enum <a class="reference internal" href="../ex10_host_c_reader_primitives/rf_power.html#struct_rf_filter"><span class="std std-ref">RfFilter</span></a> value used to select the Tx SAW. </p>
+</dd>
+<dt class="field-even">Param A</dt>
+<dd class="field-even"><p><strong>[out]</strong> bit field of GPIO levels which can be written to the GpioOutputLevel register.</p>
+</dd>
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>struct <a class="reference internal" href="../ex10_host_c_support/ex10_result.html#struct_ex10_result"><span class="std std-ref">Ex10Result</span></a> Indicates whether the function call passed or failed. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N13Ex10BoardSpec23get_gpio_output_enablesE">
+<span id="_CPPv3N13Ex10BoardSpec23get_gpio_output_enablesE"></span><span id="_CPPv2N13Ex10BoardSpec23get_gpio_output_enablesE"></span><span class="target" id="struct_ex10_board_spec_1a62c4c92a403e40dde844faed3bc56a53"></span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_gpio_output_enables</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N13Ex10BoardSpec23get_gpio_output_enablesE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Get the GPIO output enable bit-field that will enable the appropriate GPIO pins required for proper board operation. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>uint32_t A bit field of GPIO pins which must be enabled as outputs for proper board operation. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N13Ex10BoardSpec30get_gpio_output_pins_set_clearE">
+<span id="_CPPv3N13Ex10BoardSpec30get_gpio_output_pins_set_clearE"></span><span id="_CPPv2N13Ex10BoardSpec30get_gpio_output_pins_set_clearE"></span><span class="target" id="struct_ex10_board_spec_1a4d57f68c9a28190e4dd807a5aaa67def"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../ex10_host_c_support/ex10_result.html#_CPPv410Ex10Result" title="Ex10Result"><span class="n"><span class="pre">Ex10Result</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_gpio_output_pins_set_clear</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="ex10_gpio.html#_CPPv416GpioPinsSetClear" title="GpioPinsSetClear"><span class="n"><span class="pre">GpioPinsSetClear</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">gpio_pins_set_clear</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n"><span class="pre">antenna</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">int16_t</span></span><span class="w"> </span><span class="n"><span class="pre">tx_power_cdbm</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="n"><span class="pre">BasebandFilterType</span></span><span class="w"> </span><span class="n"><span class="pre">rx_baseband_filter</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><a class="reference internal" href="../ex10_host_c_reader_primitives/rf_power.html#_CPPv48RfFilter" title="RfFilter"><span class="n"><span class="pre">RfFilter</span></span></a><span class="w"> </span><span class="n"><span class="pre">tx_rf_filter</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N13Ex10BoardSpec30get_gpio_output_pins_set_clearE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Based on the parameters antenna, tx_power_cdbm, rx_baseband_filter, and tx_rf_filter, modify the parameter ‘gpio’ to set the GPIO output levels and enables. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Only pins associated with the parameters antenna, rx_baseband_filter, tx_power_cdbm and tx_rf_filter are modified. The other pins represented by the member bit-fields within the struct <a class="reference internal" href="ex10_gpio.html#struct_gpio_pins_set_clear"><span class="std std-ref">GpioPinsSetClear</span></a> are unchanged.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Param [in/out]</dt>
+<dd class="field-odd"><p>gpio A pointer to struct <a class="reference internal" href="ex10_gpio.html#struct_gpio_pins_set_clear"><span class="std std-ref">GpioPinsSetClear</span></a> whose fields will be bit-wise OR’d with the specific bits associated with the passed in parameter values. This combines the parameter based GPIO pin settings with the pin settings passed in. </p>
+</dd>
+<dt class="field-even">Param antenna</dt>
+<dd class="field-even"><p>The antenna port to select. </p>
+</dd>
+<dt class="field-odd">Param tx_power_cdbm</dt>
+<dd class="field-odd"><p>The transmit power in cdBm units. </p>
+</dd>
+<dt class="field-even">Param rx_baseband_filter</dt>
+<dd class="field-even"><p>The Rx baseband filter selection. </p>
+</dd>
+<dt class="field-odd">Param tx_rf_filter</dt>
+<dd class="field-odd"><p>An enum <a class="reference internal" href="../ex10_host_c_reader_primitives/rf_power.html#struct_rf_filter"><span class="std std-ref">RfFilter</span></a> value used to select the Tx SAW.</p>
+</dd>
+<dt class="field-even">Return</dt>
+<dd class="field-even"><p>struct <a class="reference internal" href="../ex10_host_c_support/ex10_result.html#struct_ex10_result"><span class="std std-ref">Ex10Result</span></a> Indicates whether the function call passed or failed. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N13Ex10BoardSpec28get_default_rx_analog_configE">
+<span id="_CPPv3N13Ex10BoardSpec28get_default_rx_analog_configE"></span><span id="_CPPv2N13Ex10BoardSpec28get_default_rx_analog_configE"></span><span class="target" id="struct_ex10_board_spec_1a1667fa49327ae0c1fa7f2b605a45c3eb"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../yk_firmware_ex10_host_c_register_accessors.html#_CPPv419RxGainControlFields" title="RxGainControlFields"><span class="n"><span class="pre">RxGainControlFields</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_default_rx_analog_config</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N13Ex10BoardSpec28get_default_rx_analog_configE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Returns the default receiver gains to use with the device. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>struct <a class="reference internal" href="../yk_firmware_ex10_host_c_register_accessors.html#struct_rx_gain_control_fields"><span class="std std-ref">RxGainControlFields</span></a> The default receiver gain settings. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N13Ex10BoardSpec25get_sjc_residue_thresholdE">
+<span id="_CPPv3N13Ex10BoardSpec25get_sjc_residue_thresholdE"></span><span id="_CPPv2N13Ex10BoardSpec25get_sjc_residue_thresholdE"></span><span class="target" id="struct_ex10_board_spec_1a42c293f3aff0e1b9248ecb731c6dde2f"></span><span class="n"><span class="pre">uint16_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_sjc_residue_threshold</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N13Ex10BoardSpec25get_sjc_residue_thresholdE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Returns the SJC residue voltage magnitude threshold used to determine SJC pass/fail criterion. </p>
+<p><dl class="simple">
+<dt><strong>See</strong></dt><dd><p><a class="reference internal" href="../yk_firmware_ex10_host_c_sjc_accessor.html#struct_ex10_sjc_accessor_1afda1c4639268ef545457a3e72e1fb523"><span class="std std-ref">Ex10SjcAccessor::set_residue_threshold()</span></a>. </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N13Ex10BoardSpec29get_pa_bias_power_on_delay_msE">
+<span id="_CPPv3N13Ex10BoardSpec29get_pa_bias_power_on_delay_msE"></span><span id="_CPPv2N13Ex10BoardSpec29get_pa_bias_power_on_delay_msE"></span><span class="target" id="struct_ex10_board_spec_1a8ab003c520b1cd4bc01ae01ea525ca94"></span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_pa_bias_power_on_delay_ms</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N13Ex10BoardSpec29get_pa_bias_power_on_delay_msE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return</dt>
+<dd class="field-odd"><p>uint32_t The time, in milliseconds, required after power and bias is applied to the power amplifier, until the system is ready to inventory tags. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N13Ex10BoardSpec22get_default_gpio_setupE">
+<span id="_CPPv3N13Ex10BoardSpec22get_default_gpio_setupE"></span><span id="_CPPv2N13Ex10BoardSpec22get_default_gpio_setupE"></span><span class="target" id="struct_ex10_board_spec_1a41f0e90554baae363a92948d04cad341"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="ex10_gpio.html#_CPPv416GpioPinsSetClear" title="GpioPinsSetClear"><span class="n"><span class="pre">GpioPinsSetClear</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_default_gpio_setup</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N13Ex10BoardSpec22get_default_gpio_setupE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Setup the GPIO in the default configuration for this board configuration. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N13Ex10BoardSpec32temperature_compensation_enabledE">
+<span id="_CPPv3N13Ex10BoardSpec32temperature_compensation_enabledE"></span><span id="_CPPv2N13Ex10BoardSpec32temperature_compensation_enabledE"></span><span class="target" id="struct_ex10_board_spec_1aff1e39f95c96fc17c502ded9f67c0ea2"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">temperature_compensation_enabled</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">uint16_t</span></span><span class="w"> </span><span class="n"><span class="pre">temperature_adc</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N13Ex10BoardSpec32temperature_compensation_enabledE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Based on the value of the temperature ADC value read, determine if the <a class="reference internal" href="../yk_firmware_ex10_host_c_other_types.html#struct_tx_ramp_up"><span class="std std-ref">TxRampUp</span></a> power detector should use the ADC value to correct for temperature variance. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Param temperature_adc</dt>
+<dd class="field-odd"><p>The ADC temperature value in ADC ticks.</p>
+</dd>
+<dt class="field-even">Return</dt>
+<dd class="field-even"><p>true if the ADC value can be used for Tx power compensation. false if it should not be used. </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../../../_static/logo.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="board_spec_constants.html"
+                        title="previous chapter">Board Spec Constants</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="ex10_driver_list.html"
+                        title="next chapter">Ex10DriverList</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="ex10_driver_list.html" title="Ex10DriverList"
+             >next</a></li>
+        <li class="right" >
+          <a href="board_spec_constants.html" title="Board Spec Constants"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../yk_firmware_ex10_host_c_api.html" >Impinj Reader Chip C Host SDK</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="ex10_board_specific.html" >Board Specific Implementation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Ex10BoardSpec</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Impinj, Inc..
+    </div>
+  </body>
+</html>

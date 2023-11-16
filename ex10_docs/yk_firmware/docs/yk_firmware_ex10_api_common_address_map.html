@@ -1,0 +1,519 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Common Address Map &#8212; Impinj Reader Chip SDK</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinxdoc.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Bootloader Address Map" href="yk_firmware_ex10_api_bootloader_address_map.html" />
+    <link rel="prev" title="Messages" href="yk_firmware_ex10_api_messages.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="yk_firmware_ex10_api_bootloader_address_map.html" title="Bootloader Address Map"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="yk_firmware_ex10_api_messages.html" title="Messages"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="yk_firmware_ex10_api.html" accesskey="U">Impinj Reader Chip Wireline API</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Common Address Map</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="common-address-map">
+<h1>Common Address Map<a class="headerlink" href="#common-address-map" title="Permalink to this headline">¶</a></h1>
+<p>These are the registers that can be accessed with the <a class="reference internal" href="yk_firmware_ex10_api_messages.html#ex10-api-read"><span class="std std-ref">Read</span></a> and
+<a class="reference internal" href="yk_firmware_ex10_api_messages.html#ex10-api-write"><span class="std std-ref">Write</span></a> commands from the both the bootloader and application
+contexts. When fields are multi-byte, they are little-endian.</p>
+<section id="common_address_map_summary">
+<h2>Address Map Summary<a class="headerlink" href="#common_address_map_summary" title="Permalink to this headline">¶</a></h2>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 21%" />
+<col style="width: 7%" />
+<col style="width: 7%" />
+<col style="width: 7%" />
+<col style="width: 57%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Name</p></th>
+<th class="head"><p>Offset</p></th>
+<th class="head"><p>Length</p></th>
+<th class="head"><p>Access</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><code class="docutils literal notranslate"><a class="reference internal" href="#address-entry-CommandResult"><span class="pre">CommandResult</span></a></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">0x0000</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">4</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">read-only</span></code></td>
+<td><p><p>Command message result for responseless commands</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><a class="reference internal" href="#address-entry-ResetCause"><span class="pre">ResetCause</span></a></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">0x0004</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">2</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">read-only</span></code></td>
+<td><p><p>The cause of the reader chip reset.</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><a class="reference internal" href="#address-entry-Status"><span class="pre">Status</span></a></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">0x0006</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">2</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">read-only</span></code></td>
+<td><p><p>The active firmware context</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><a class="reference internal" href="#address-entry-VersionString"><span class="pre">VersionString</span></a></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">0x0008</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">32</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">read-only</span></code></td>
+<td><p><p>The application firmware version string</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><a class="reference internal" href="#address-entry-BuildNumber"><span class="pre">BuildNumber</span></a></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">0x0028</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">4</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">read-only</span></code></td>
+<td><p><p>The application firmware build number</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><a class="reference internal" href="#address-entry-GitHash"><span class="pre">GitHash</span></a></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">0x002C</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">4</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">read-only</span></code></td>
+<td><p><p>The application firmware git hash</p>
+</p></td>
+</tr>
+<tr class="row-even"><td colspan="5"></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><a class="reference internal" href="#address-entry-SerialNumber"><span class="pre">SerialNumber</span></a></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">0x0070</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">32</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">read-only</span></code></td>
+<td><p><p>The device serial number</p>
+</p></td>
+</tr>
+</tbody>
+</table>
+<h2 id="address-entry-CommandResult">CommandResult: Command message result for responseless commands<a class="headerlink" href="#common_address_map_summary" title="Permalink to this headline">¶</a></h2>
+<p><p>Commands which provide a response contain the command result code within
+the response. Commands which do not have a response and fail to
+perform the requested command store the failed command and response
+codes in these registers.</p>
+<p>These values are cleared to indicate ‘no error’ once any portion of the
+command result register set is read.
+The FailedResultCode field is set to its ‘success’ value 0xA5.
+The FailedCommandCode and CommandsSinceFirstError fields are reset to
+the value of 0x00.</p>
+</p>
+<p>Field Address: 0x0000</p>
+<p>Field Details:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 8%" />
+<col style="width: 25%" />
+<col style="width: 67%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Bit</p></th>
+<th class="head"><p>Name</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">7:0</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">FailedResultCode</span></code></td>
+<td><p><p>The failed result code of the first command which
+failed to perform its intended function and contains no response.
+Subsequent commands which have no response and fail do not
+overwrite this value until this register is read.
+When this register is read all fields within the register are reset
+to their default values.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 9%" />
+<col style="width: 45%" />
+<col style="width: 45%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Value</p></th>
+<th class="head"><p>Name</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">0xa5</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">Success</span></code></td>
+<td><p><p>The command executed successfully.</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">0x1</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">CommandInvalid</span></code></td>
+<td><p><p>The command issued is invalid; i.e. has no implementation.</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">0x2</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">ArgumentInvalid</span></code></td>
+<td><p><p>An argument, passed within the command buffer, was out of range.</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">0x6</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">ResponseOverflow</span></code></td>
+<td><p><p>The number of response bytes requested exceeds the
+capacity of the response buffer.</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">0x7</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">CommandMalformed</span></code></td>
+<td><p><p>The number of command bytes is insufficient to complete
+the specified command.</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">0x8</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">AddressWriteFailure</span></code></td>
+<td><p><p>Write command execution failure.
+The write delegate associated with a given address failed.</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">0x9</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">ImageInvalid</span></code></td>
+<td><p><p>This return code occurs when the attempt to validate the image fails.</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">0xa</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">LengthInvalid</span></code></td>
+<td><p><p>The payload length exceeds the limit of the destination memory.</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">0xb</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">UploadStateInvalid</span></code></td>
+<td><p><p>The image upload state is invalid for the command received.
+The likely case is that the destination has not been set prior to
+an image upload continue request.</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">0xe</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">BadCrc</span></code></td>
+<td><p><p>The CRC provided does not match the given payload.</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">0xf</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">FlashInvalidPage</span></code></td>
+<td><p><p>Requested flash page is an invalid target.</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">0x10</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">FlashPageLocked</span></code></td>
+<td><p><p>Operation failed due to flash page being locked.</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">0x11</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">FlashEraseFailure</span></code></td>
+<td><p><p>A flash erase operation failed.</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">0x12</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">FlashProgramFailure</span></code></td>
+<td><p><p>A flash program operation failed.</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">0x13</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">StoredSettingsMalformed</span></code></td>
+<td><p><p>The stored settings were malformed and therefore were not executed.</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">0x14</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">NotEnoughSpace</span></code></td>
+<td><p><p>There was insufficient space to complete the command.</p>
+</p></td>
+</tr>
+</tbody>
+</table>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">15:8</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">FailedCommandCode</span></code></td>
+<td><p><p>The failed command identifier of the first command which
+failed to perform its intended function and contains no response.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 9%" />
+<col style="width: 45%" />
+<col style="width: 45%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Value</p></th>
+<th class="head"><p>Name</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">0x1</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">Read</span></code></td>
+<td><p><p>Read data from the address map.</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">0x2</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">Write</span></code></td>
+<td><p><p>Write data into the address map.</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">0x3</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">ReadFifo</span></code></td>
+<td><p><p>Read data from one of the FIFO streams.</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">0x4</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">StartUpload</span></code></td>
+<td><p><p>Start the process to update the main image with the first piece of the
+main image content.</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">0x5</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">ContinueUpload</span></code></td>
+<td><p><p>Continue the update process with more image content.</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">0x6</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">CompleteUpload</span></code></td>
+<td><p><p>Complete the upload process with the last piece of the image.
+This will perform any necessary validation before completing.</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">0x7</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">ReValidateMainImage</span></code></td>
+<td><p><p>Perform a signature check on the currently loaded image and
+mark as valid or invalid if the check fails.</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">0x8</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">Reset</span></code></td>
+<td><p><p>Perform a soft reset of the reader chip. The reset will complete
+when READY_N is asserted low.</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">0xa</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">TestTransfer</span></code></td>
+<td><p><p>Transfer a series of bytes to and from the reader chip for debugging
+connectivity issues.</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">0xb</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">WriteInfoPage</span></code></td>
+<td><p><p>Write data to the information flash page.</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">0xc</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">TestRead</span></code></td>
+<td><p><p>Read from the reader chip memory bus.</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">0xe</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">InsertFifoEvent</span></code></td>
+<td><p><p>Inject a custom EventFifo packet into the EventFifo stream.</p>
+</p></td>
+</tr>
+</tbody>
+</table>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">31:16</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">CommandsSinceFirstError</span></code></td>
+<td><p><p>The number of commands that were received over the host interface that
+did not provide a response since the first command failure occurred.
+This value indicates the staleness of the FailedResultCode and
+FailedCommandCode values.</p>
+</p></td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<h2 id="address-entry-ResetCause">ResetCause: The cause of the reader chip reset.<a class="headerlink" href="#common_address_map_summary" title="Permalink to this headline">¶</a></h2>
+<p><p>The bitfields indicate the various possible reasons for the reset.
+When none of the fields are set, that indicates the most recent
+reset was due to a POR.</p>
+</p>
+<p>Field Address: 0x0004</p>
+<p>Field Details:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 8%" />
+<col style="width: 25%" />
+<col style="width: 67%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Bit</p></th>
+<th class="head"><p>Name</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">0</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">SoftwareReset</span></code></td>
+<td><p><p>The firmware initiated the reset.</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">1</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">WatchdogTimeout</span></code></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">2</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">Lockup</span></code></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">3</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">ExternalReset</span></code></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<h2 id="address-entry-Status">Status: The active firmware context<a class="headerlink" href="#common_address_map_summary" title="Permalink to this headline">¶</a></h2>
+<p><p>Indicates whether the application or bootloader context is currently active.</p>
+</p>
+<p>Field Address: 0x0006</p>
+<p>Field Details:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 8%" />
+<col style="width: 25%" />
+<col style="width: 67%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Bit</p></th>
+<th class="head"><p>Name</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">1:0</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">Status</span></code></td>
+<td><p><table class="docutils align-default">
+<colgroup>
+<col style="width: 9%" />
+<col style="width: 45%" />
+<col style="width: 45%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Value</p></th>
+<th class="head"><p>Name</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">0x1</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">Bootloader</span></code></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">0x2</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">Application</span></code></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</p></td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<h2 id="address-entry-VersionString">VersionString: The application firmware version string<a class="headerlink" href="#common_address_map_summary" title="Permalink to this headline">¶</a></h2>
+<p><p>The version string conforms with Semantic Versioning 2.x
+<a class="reference external" href="https://semver.org/">https://semver.org/</a></p>
+</p>
+<p></p>
+<h2 id="address-entry-BuildNumber">BuildNumber: The application firmware build number<a class="headerlink" href="#common_address_map_summary" title="Permalink to this headline">¶</a></h2>
+<p><p>The build number assigned by the CI system when building (and testing)
+the application firmware.</p>
+</p>
+<p></p>
+<h2 id="address-entry-GitHash">GitHash: The application firmware git hash<a class="headerlink" href="#common_address_map_summary" title="Permalink to this headline">¶</a></h2>
+<p><p>The Git (version control tool) SHA that identifies the state of the
+source code used to build the application firmware. Only the 4 left most
+bytes are used, in byte order.</p>
+</p>
+<p></p>
+<h2 id="address-entry-SerialNumber">SerialNumber: The device serial number<a class="headerlink" href="#common_address_map_summary" title="Permalink to this headline">¶</a></h2>
+<p><p>The serial number uniquely identifies the Impinj reader chip amongst all
+other devices which have been manufactured.
+Each device is assigned a unique 32 byte value.</p>
+</p>
+<p></p>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="../../_static/logo.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Common Address Map</a><ul>
+<li><a class="reference internal" href="#common_address_map_summary">Address Map Summary</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="yk_firmware_ex10_api_messages.html"
+                        title="previous chapter">Messages</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="yk_firmware_ex10_api_bootloader_address_map.html"
+                        title="next chapter">Bootloader Address Map</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="yk_firmware_ex10_api_bootloader_address_map.html" title="Bootloader Address Map"
+             >next</a></li>
+        <li class="right" >
+          <a href="yk_firmware_ex10_api_messages.html" title="Messages"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="yk_firmware_ex10_api.html" >Impinj Reader Chip Wireline API</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Common Address Map</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Impinj, Inc..
+    </div>
+  </body>
+</html>

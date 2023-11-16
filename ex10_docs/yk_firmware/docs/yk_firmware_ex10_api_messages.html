@@ -1,0 +1,1172 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Messages &#8212; Impinj Reader Chip SDK</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinxdoc.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Common Address Map" href="yk_firmware_ex10_api_common_address_map.html" />
+    <link rel="prev" title="Wireline" href="yk_firmware_ex10_api_wireline.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="yk_firmware_ex10_api_common_address_map.html" title="Common Address Map"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="yk_firmware_ex10_api_wireline.html" title="Wireline"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="yk_firmware_ex10_api.html" accesskey="U">Impinj Reader Chip Wireline API</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Messages</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="messages">
+<h1>Messages<a class="headerlink" href="#messages" title="Permalink to this headline">¶</a></h1>
+<p>The Impinj reader chip and host communicate via SPI transactions. A SPI transaction
+is either a command message or a command message followed by a response
+message. Note that only some commands have responses. A command message
+consists of a command code byte followed by a payload. A response message
+consists of a response code followed by a payload of the requested size. All
+response sizes are known prior to the host receiving them, there is never a
+situation where a host must examine the received data to determine the length
+of the transfer. Impinj reader chip SPI transactions follow the form:</p>
+<figure class="align-default" id="id4">
+<span id="ex10-api-messages"></span><img alt="../../_images/ex10_api_messages.svg" src="../../_images/ex10_api_messages.svg" /><figcaption>
+<p><span class="caption-number">Fig. 12 </span><span class="caption-text">General form of an Impinj reader chip SPI transaction</span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+<div class="admonition-todo admonition" id="id1">
+<p class="admonition-title">Todo</p>
+<p>Put in a diagram here to illustrate the reset -&gt; bootloader -&gt; app
+and update state machine.</p>
+</div>
+<section id="commands">
+<h2>Commands<a class="headerlink" href="#commands" title="Permalink to this headline">¶</a></h2>
+<p>The following is a summary of the available Impinj reader chip commands. The Impinj reader chip
+can either be operating in the bootloader context or the application context.
+Some commands are common to both contexts, some are specific to each context.
+There are more details on each command in the following sections.</p>
+<table class="colwidths-given docutils align-default" id="id5">
+<caption><span class="caption-number">Table 10 </span><span class="caption-text">Command Summary</span><a class="headerlink" href="#id5" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 20%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Command Code</p></th>
+<th class="head"><p>Name</p></th>
+<th class="head"><p>Has Response</p></th>
+<th class="head"><p>Context</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0x01</p></td>
+<td><p><a class="reference internal" href="#ex10-api-read"><span class="std std-ref">Read</span></a></p></td>
+<td><p>Yes</p></td>
+<td><p>Common</p></td>
+<td><p>Read data from the address map</p></td>
+</tr>
+<tr class="row-odd"><td><p>0x02</p></td>
+<td><p><a class="reference internal" href="#ex10-api-write"><span class="std std-ref">Write</span></a></p></td>
+<td><p>No</p></td>
+<td><p>Common</p></td>
+<td><p>Write data into the address map</p></td>
+</tr>
+<tr class="row-even"><td><p>0x03</p></td>
+<td><p><a class="reference internal" href="#ex10-api-read-fifo"><span class="std std-ref">ReadFifo</span></a></p></td>
+<td><p>Yes</p></td>
+<td><p>Application only</p></td>
+<td><p>Read data from one of the FIFO streams</p></td>
+</tr>
+<tr class="row-odd"><td><p>0x04</p></td>
+<td><p><a class="reference internal" href="#startupload">StartUpload</a></p></td>
+<td><p>No</p></td>
+<td><p>Bootloader only</p></td>
+<td><p>Start the process to upgrade the main image with the first piece of the
+main image content</p></td>
+</tr>
+<tr class="row-even"><td><p>0x05</p></td>
+<td><p><a class="reference internal" href="#continueupload">ContinueUpload</a></p></td>
+<td><p>No</p></td>
+<td><p>Bootloader only</p></td>
+<td><p>Continue the upgrade process with more image content</p></td>
+</tr>
+<tr class="row-odd"><td><p>0x06</p></td>
+<td><p><a class="reference internal" href="#completeupload">CompleteUpload</a></p></td>
+<td><p>No</p></td>
+<td><p>Bootloader only</p></td>
+<td><p>Finish the upload process with a last piece of the image.  This will
+perform any necessary validation before completing.</p></td>
+</tr>
+<tr class="row-even"><td><p>0x07</p></td>
+<td><p><a class="reference internal" href="#revalidatemainimage">ReValidateMainImage</a></p></td>
+<td><p>No</p></td>
+<td><p>Bootloader only</p></td>
+<td><p>Perform a signature check on the currently loaded image and potentially
+mark it as invalid if the check fails.</p></td>
+</tr>
+<tr class="row-odd"><td><p>0x08</p></td>
+<td><p><a class="reference internal" href="#reset">Reset</a></p></td>
+<td><p>No</p></td>
+<td><p>Common</p></td>
+<td><p>Soft reset the chip. It will have completed the reset when READY_N is
+next asserted.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 20%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>0x0A</p></td>
+<td><p><a class="reference internal" href="#transfertest">TransferTest</a></p></td>
+<td><p>Yes</p></td>
+<td><p>Common</p></td>
+<td><p>Transfer a series of bytes to and from the Ex10 for debugging
+connectivity issues.</p></td>
+</tr>
+<tr class="row-even"><td><p>0x0B</p></td>
+<td><p><a class="reference internal" href="#writeinfopage">WriteInfoPage</a></p></td>
+<td><p>Yes</p></td>
+<td><p>Bootloader only</p></td>
+<td><p>Write contents to one of the Flash Info Pages.</p></td>
+</tr>
+<tr class="row-odd"><td><p>0x0C</p></td>
+<td><p><a class="reference internal" href="#testread">TestRead</a></p></td>
+<td><p>Yes</p></td>
+<td><p>Common</p></td>
+<td><p>Read from the Ex10 internal memory bus.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 20%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>0x0E</p></td>
+<td><p><a class="reference internal" href="#insertfifoevent">InsertFifoEvent</a></p></td>
+<td><p>No</p></td>
+<td><p>Application Only</p></td>
+<td><p>Inject a Custom Event Packet into the EventFifo stream</p></td>
+</tr>
+</tbody>
+</table>
+<p>An application firmware image upload is a sequence of transactions that begin
+with a StartUpload, zero or more ContinueUploads and ends with a
+CompleteUpload. Meaningless sequences (e.g. sending a ContinueUpload or
+CompleteUpload without first sending a StartUpload) are ignored. These
+constraints are captured in the the following upload state diagram.</p>
+<p>The <a class="reference internal" href="#responsecodes">ResponseCodes</a> are described in the next section.</p>
+</section>
+<section id="responsecodes">
+<span id="ex10-api-response-codes"></span><h2>ResponseCodes<a class="headerlink" href="#responsecodes" title="Permalink to this headline">¶</a></h2>
+<p>The following is a summary of the possible response codes. The response code
+is the first byte of all response messages.</p>
+<table class="colwidths-given docutils align-default" id="id6">
+<caption><span class="caption-number">Table 11 </span><span class="caption-text">Response Code Summary</span><a class="headerlink" href="#id6" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 13%" />
+<col style="width: 25%" />
+<col style="width: 63%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Response Code</p></th>
+<th class="head"><p>Name</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0xA5</p></td>
+<td><p>Success</p></td>
+<td><p>Result of the command is success.</p></td>
+</tr>
+<tr class="row-odd"><td><p>0x01</p></td>
+<td><p>CommandInvalid</p></td>
+<td><p>The command issued is invalid; i.e. has no implementation.</p></td>
+</tr>
+<tr class="row-even"><td><p>0x02</p></td>
+<td><p>ArgumentInvalid</p></td>
+<td><p>An argument, passed within the command payload, was out of range.</p></td>
+</tr>
+<tr class="row-odd"><td><p>0x06</p></td>
+<td><p>ResponseOverflow</p></td>
+<td><p>The number of response bytes requested exceeds the buffer capacity
+of the response buffer.</p></td>
+</tr>
+<tr class="row-even"><td><p>0x07</p></td>
+<td><p>CommandMalformed</p></td>
+<td><p>The number of command bytes is insufficient to complete the command
+operation or the number of bytes transferred overflowed the command
+buffer.</p></td>
+</tr>
+<tr class="row-odd"><td><p>0x08</p></td>
+<td><p>AddressWriteFailure</p></td>
+<td><p>Write command execution failure.
+The write operation associated with a given address failed.</p></td>
+</tr>
+<tr class="row-even"><td><p>0x09</p></td>
+<td><p>ImageInvalid</p></td>
+<td><p>The attempt to validate the image fails. When uploading an image to
+flash the image is validated when the <a class="reference internal" href="#completeupload">CompleteUpload</a> command is issued.</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p>0x0A</p></td>
+<td><p>LengthInvalid</p></td>
+<td><p>The payload length exceeds the limit of the chip’s message buffer.</p></td>
+</tr>
+<tr class="row-even"><td><p>0x0B</p></td>
+<td><p>UploadStateInvalid</p></td>
+<td><p>The image upload state is invalid for the command received.
+The likely case is that the destination has not been set prior to
+an image upload continue request.</p></td>
+</tr>
+<tr class="row-odd"><td><p>0x0C</p></td>
+<td><p>ImageExecFailure</p></td>
+<td><p>An image was uploaded and successfully executed, however the image
+detected a failure when running and returned a non-zero return value.</p></td>
+</tr>
+<tr class="row-even"><td><p>0x0E</p></td>
+<td><p>BadCrc</p></td>
+<td><p>The CRC provided does not match the command’s payload.</p></td>
+</tr>
+<tr class="row-odd"><td><p>0x0F</p></td>
+<td><p>FlashInvalidPage</p></td>
+<td><p>Requested flash page is an invalid target.</p></td>
+</tr>
+<tr class="row-even"><td><p>0x10</p></td>
+<td><p>FlashPageLocked</p></td>
+<td><p>Operation failed due to flash page being locked.</p></td>
+</tr>
+<tr class="row-odd"><td><p>0x11</p></td>
+<td><p>FlashEraseFailure</p></td>
+<td><p>A flash erase operation failed.</p></td>
+</tr>
+<tr class="row-even"><td><p>0x12</p></td>
+<td><p>FlashProgramFailure</p></td>
+<td><p>A flash program operation failed.</p></td>
+</tr>
+<tr class="row-odd"><td><p>0x13</p></td>
+<td><p>StoredSettingsMalformed</p></td>
+<td><p>The stored settings were malformed and therefore were not executed.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="command-details">
+<h2>Command Details<a class="headerlink" href="#command-details" title="Permalink to this headline">¶</a></h2>
+<p>Details about the command formats follows:</p>
+<section id="read">
+<span id="ex10-api-read"></span><h3>Read<a class="headerlink" href="#read" title="Permalink to this headline">¶</a></h3>
+<p>The read command allows for reading segments of data (sequences of bytes) from
+the address map.  You can bundle several reads together into a single command
+for efficiency purposes.  It is up to the host to unpack and map the response
+bytes to the requested read segments.</p>
+<p>Requested segments may span multiple adjacent addresses.</p>
+<p>Reading invalid or write-only memory will result in padding bytes being returned
+in the response. In this manner the response buffer contains the expected
+number of bytes requested even when reading invalid memory.</p>
+<p>A read command is malformed when the command buffer contains a number of
+bytes N, where (N - 1) % 4 is not equal to zero. Since the zeroth byte in the
+command buffer is the read command identifier each subsequent set of bytes must
+specify the (address, length) pair for the read request. Sending a malformed
+read command will result in the error ‘MalformedCommand` response code.</p>
+<p>Malformed read commands cannot be parsed properly. The length and/or address of
+the read command cannot be determined. In this situation the Impinj reader chip response
+code will be set to ‘MalformedCommand’.</p>
+<p>A read command which requests a response buffer longer than the available
+response buffer will result in the error ‘ResponseOverflow’ in the response
+code field. No other valid data bytes will be present in the response buffer.</p>
+<p>When a read command error occurs the response code byte will be the only valid
+field in the response buffer. All subsequent bytes clocked out via the serial
+interface will be invalid data.</p>
+<table class="colwidths-given docutils align-default" id="id7">
+<caption><span class="caption-number">Table 12 </span><span class="caption-text">Read Command</span><a class="headerlink" href="#id7" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 60%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Field Name</p></th>
+<th class="head"><p>Size (bytes)</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Command Code</p></td>
+<td><p>1</p></td>
+<td><p>Always 0x01 to indicate that this is a read</p></td>
+</tr>
+<tr class="row-odd"><td><p>Address_0</p></td>
+<td><p>2</p></td>
+<td><p>The starting address for the read segment</p></td>
+</tr>
+<tr class="row-even"><td><p>Length_0</p></td>
+<td><p>2</p></td>
+<td><p>The number of bytes to read from the given location in the memory map</p></td>
+</tr>
+<tr class="row-odd"><td><p>…</p></td>
+<td><p>…</p></td>
+<td><p>…</p></td>
+</tr>
+<tr class="row-even"><td><p>Address_n</p></td>
+<td><p>2</p></td>
+<td><p>The starting address for the read segment</p></td>
+</tr>
+<tr class="row-odd"><td><p>Length_n</p></td>
+<td><p>2</p></td>
+<td><p>The number of bytes to read from the given location in the memory map</p></td>
+</tr>
+</tbody>
+</table>
+<table class="colwidths-given docutils align-default" id="id8">
+<caption><span class="caption-number">Table 13 </span><span class="caption-text">Read Response</span><a class="headerlink" href="#id8" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 60%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Field Name</p></th>
+<th class="head"><p>Size (bytes)</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Response Code</p></td>
+<td><p>1</p></td>
+<td><p>One of the response codes described in <a class="reference internal" href="#responsecodes">ResponseCodes</a>.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Payload_0</p></td>
+<td><p>Length_0</p></td>
+<td><p>The content of the first requested read segment</p></td>
+</tr>
+<tr class="row-even"><td><p>…</p></td>
+<td><p>…</p></td>
+<td><p>…</p></td>
+</tr>
+<tr class="row-odd"><td><p>Payload_n</p></td>
+<td><p>Length_n</p></td>
+<td><p>The content of the n’th requested read segment</p></td>
+</tr>
+</tbody>
+</table>
+<p>The total length of the response is
+<code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">+</span> <span class="pre">sum_of_the_lengths_of_the_requested_segments</span></code>.</p>
+</section>
+<section id="write">
+<span id="ex10-api-write"></span><h3>Write<a class="headerlink" href="#write" title="Permalink to this headline">¶</a></h3>
+<p>The write command allows for writing segments of data (sequences of bytes) into
+the address map.  You can bundle several writes together into a single command
+for efficiency purposes.</p>
+<p>Requested segments may span multiple adjacent addresses.
+Writing to undefined or read-only addresses are silently ignored.</p>
+<p>A write command is malformed when the command buffer does not contain sufficient
+data content to complete the write operation. One example of an malformed write
+command is a write command with fewer payload bytes than are specified in the
+write request length field.</p>
+<p>Sending a malformed write command will result in the error ‘MalformedCommand`.
+In the event of a write command error the write command will be rejected and
+no data will be written.</p>
+<p>The write command has no response. To determine the outcome of a write
+command, the
+<a class="reference external" href="yk_firmware_ex10_api_common_address_map.html#address-entry-CommandResult">CommandResult</a>
+address should be read.</p>
+<table class="colwidths-given docutils align-default" id="id9">
+<caption><span class="caption-number">Table 14 </span><span class="caption-text">Write Command</span><a class="headerlink" href="#id9" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 60%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Field Name</p></th>
+<th class="head"><p>Size (bytes)</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Command Code</p></td>
+<td><p>1</p></td>
+<td><p>Always 0x02 to indicate that this is a write</p></td>
+</tr>
+<tr class="row-odd"><td><p>Address_0</p></td>
+<td><p>2</p></td>
+<td><p>The starting address for the write segment</p></td>
+</tr>
+<tr class="row-even"><td><p>Length_0</p></td>
+<td><p>2</p></td>
+<td><p>The number of bytes that will be written to the given location in the
+memory map</p></td>
+</tr>
+<tr class="row-odd"><td><p>Data_0</p></td>
+<td><p>Length_0</p></td>
+<td><p>The bytes to write to the given location in the memory map</p></td>
+</tr>
+<tr class="row-even"><td><p>…</p></td>
+<td><p>…</p></td>
+<td><p>…</p></td>
+</tr>
+<tr class="row-odd"><td><p>Address_n</p></td>
+<td><p>2</p></td>
+<td><p>The starting address for the write segment</p></td>
+</tr>
+<tr class="row-even"><td><p>Length_n</p></td>
+<td><p>2</p></td>
+<td><p>The number of bytes that will be written to the given location in the
+memory map</p></td>
+</tr>
+<tr class="row-odd"><td><p>Data_n</p></td>
+<td><p>Length_n</p></td>
+<td><p>The bytes to write to the given location in the memory map</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="readfifo">
+<span id="ex10-api-read-fifo"></span><h3>ReadFifo<a class="headerlink" href="#readfifo" title="Permalink to this headline">¶</a></h3>
+<p>The ReadFifo command allows for reading data from the Impinj reader chip EventFifo.</p>
+<table class="colwidths-given docutils align-default" id="id10">
+<caption><span class="caption-number">Table 15 </span><span class="caption-text">ReadFifo Command</span><a class="headerlink" href="#id10" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 60%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Field Name</p></th>
+<th class="head"><p>Size (bytes)</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Command Code</p></td>
+<td><p>1</p></td>
+<td><p>Always 0x03 to indicate that this is a ReadFifo</p></td>
+</tr>
+<tr class="row-odd"><td><p>Selection</p></td>
+<td><p>1</p></td>
+<td><p>Which FIFO to read from</p>
+<table class="colwidths-given docutils align-default" id="id11">
+<caption><span class="caption-number">Table 16 </span><span class="caption-text">FIFO selection</span><a class="headerlink" href="#id11" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Value</p></th>
+<th class="head"><p>FIFO description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0x00</p></td>
+<td><p>Event FIFO</p></td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+<tr class="row-even"><td><p>Length</p></td>
+<td><p>2</p></td>
+<td><p>The number of bytes to read from the given FIFO</p></td>
+</tr>
+</tbody>
+</table>
+<table class="colwidths-given docutils align-default" id="id12">
+<caption><span class="caption-number">Table 17 </span><span class="caption-text">ReadFifo Response</span><a class="headerlink" href="#id12" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 60%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Field Name</p></th>
+<th class="head"><p>Size (bytes)</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Response Code</p></td>
+<td><p>1</p></td>
+<td><p>One of the response codes described in <a class="reference internal" href="#responsecodes">ResponseCodes</a>.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Data</p></td>
+<td><p>Length</p></td>
+<td><p>The requested bytes from the FIFO.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="startupload">
+<span id="ex10-api-start-upload"></span><h3>StartUpload<a class="headerlink" href="#startupload" title="Permalink to this headline">¶</a></h3>
+<p>The StartUpload command is the first of the three upload commands used when in
+the bootloader to upload new images into the part. Because of the 2kB limit on
+payload size, images will often need to be broken out into multiple chunks for
+uploading.</p>
+<table class="colwidths-given docutils align-default" id="id13">
+<caption><span class="caption-number">Table 18 </span><span class="caption-text">StartUpload Command</span><a class="headerlink" href="#id13" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 60%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Field Name</p></th>
+<th class="head"><p>Size (bytes)</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Command Code</p></td>
+<td><p>1</p></td>
+<td><p>Always 0x04 to indicate that this is a StartUpload</p></td>
+</tr>
+<tr class="row-odd"><td><p>Destination</p></td>
+<td><p>1</p></td>
+<td><p>Always 0x01 to indicate that the destination is FLASH.</p></td>
+</tr>
+<tr class="row-even"><td><p>Payload</p></td>
+<td><p>n</p></td>
+<td><p>Up to 2048 bytes of image to write</p></td>
+</tr>
+</tbody>
+</table>
+<p>The StartUpload command has no response.</p>
+</section>
+<section id="continueupload">
+<span id="ex10-api-continue-upload"></span><h3>ContinueUpload<a class="headerlink" href="#continueupload" title="Permalink to this headline">¶</a></h3>
+<p>The ContinueUpload command is the second of the three upload commands used when
+in the bootloader to upload new images into the chip. Because of the 2kB
+limit on payload size, images will often need to be broken out into multiple
+chunks for uploading.</p>
+<p>An upload must be in progress as started by a StartUpload command. If this is
+not the case, the command will be interpreted as an invalid command.</p>
+<table class="colwidths-given docutils align-default" id="id15">
+<caption><span class="caption-number">Table 20 </span><span class="caption-text">ContinueUpload Command</span><a class="headerlink" href="#id15" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 60%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Field Name</p></th>
+<th class="head"><p>Size (bytes)</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Command Code</p></td>
+<td><p>1</p></td>
+<td><p>Always 0x05 to indicate that this is a ContinueUpload</p></td>
+</tr>
+<tr class="row-odd"><td><p>Payload</p></td>
+<td><p>n</p></td>
+<td><p>Up to 2048 bytes of image to write. These bytes should be the
+continuation of the image to immediately follow the bytes written by the
+previous StartUpload or ContinueUpload command.</p></td>
+</tr>
+</tbody>
+</table>
+<p>The ContinueUpload command has no response.</p>
+</section>
+<section id="completeupload">
+<span id="ex10-api-complete-upload"></span><h3>CompleteUpload<a class="headerlink" href="#completeupload" title="Permalink to this headline">¶</a></h3>
+<p>The CompleteUpload command is the last of the three upload commands used when
+in the bootloader to upload new images to the Impinj reader chip.</p>
+<p>An upload must be in progress as started by a StartUpload command.  If this is
+not the case, the command will be interpreted as an invalid command.</p>
+<p>If the image destination is the FLASH memory then the image validity markers
+are updated based on validating the signature with the public key.</p>
+<table class="colwidths-given docutils align-default" id="id16">
+<caption><span class="caption-number">Table 21 </span><span class="caption-text">CompleteUpload Command</span><a class="headerlink" href="#id16" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 60%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Field Name</p></th>
+<th class="head"><p>Size (bytes)</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Command Code</p></td>
+<td><p>1</p></td>
+<td><p>Always 0x06 to indicate that this is a CompleteUpload</p></td>
+</tr>
+</tbody>
+</table>
+<p>The image validation will depend on the image size and may take several hundred
+milliseconds to conclude. The host must be prepared to wait for READY_N
+to reassert indicating that the command completed.</p>
+<p>The CompleteUpload command has no response. To determine the outcome of
+the command, read from the
+<a class="reference external" href="yk_firmware_ex10_api_common_address_map.html#address-entry-CommandResult">CommandResult</a>
+address.</p>
+</section>
+<section id="revalidatemainimage">
+<span id="ex10-api-revalidate-main-image"></span><h3>ReValidateMainImage<a class="headerlink" href="#revalidatemainimage" title="Permalink to this headline">¶</a></h3>
+<p>The ReValidateMainImage command allows a host to check whether the integrity
+of the main image held in FLASH has been compromised. When this command is
+run the signature of the main image is validated against its public key. If
+validation fails then the validity marker ‘MarkedInvalid’ will be set to true
+and the main image will not be allowed to execute until a new main image is
+successfully uploaded and validated using the [Start|Continue|Complete]Upload
+commands. Note that if the main flash image validity markers are set to an
+image invalid state, running this command never ‘repairs’ the validity markers
+to a valid state whereby the main image can be executed. The image validity
+markers are only set to a valid state within the CompleteUpload command.</p>
+<p>Image headers include a field that can constrain an image to a specific Impinj reader
+chip, specifically using the chip’s unique serial number. The ReValidateMainImage
+command additionally checks that the serial numbers match for node-locked
+images. This check is unlikely to fail as the image would not have been
+successfully uploaded in the first place if the node-lock serial number didn’t
+match.</p>
+<table class="colwidths-given docutils align-default" id="id17">
+<caption><span class="caption-number">Table 22 </span><span class="caption-text">ReValidateMainImage Command</span><a class="headerlink" href="#id17" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 60%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Field Name</p></th>
+<th class="head"><p>Size (bytes)</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Command Code</p></td>
+<td><p>1</p></td>
+<td><p>Always 0x07 to indicate that this is a ReValidateMainImage</p></td>
+</tr>
+</tbody>
+</table>
+<p>The following truth table elucidates how the ReValidateMainImage command
+interacts with the validity markers:</p>
+<table class="colwidths-given docutils align-default" id="id18">
+<caption><span class="caption-number">Table 23 </span><span class="caption-text">ReValidateImage Outcomes</span><a class="headerlink" href="#id18" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 57%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Marked Valid</p></th>
+<th class="head"><p>Marked Invalid</p></th>
+<th class="head"><p>Failure Code</p></th>
+<th class="head"><p>Comments</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>True</p></td>
+<td><p>True</p></td>
+<td><p>Invalid Image</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>True</p></td>
+<td><p>False</p></td>
+<td><p>None (Success)</p></td>
+<td><p>The image is valid and was successfully re-validated.</p></td>
+</tr>
+<tr class="row-even"><td><p>True</p></td>
+<td><p>False</p></td>
+<td><p>Invalid Image</p></td>
+<td><p>The image was valid and is now marked as invalid. The MarkedInvalid
+marker is set from false to true. The next time ReValidateMainImage is
+called rows 1 and 2 of this table will be in effect.</p></td>
+</tr>
+<tr class="row-odd"><td><p>False</p></td>
+<td><p>True</p></td>
+<td><p>Invalid Image</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>False</p></td>
+<td><p>False</p></td>
+<td><p>Invalid Image</p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>The ReValidateMainImage command has no response. To determine the outcome of
+the operation, read the
+<a class="reference external" href="yk_firmware_ex10_api_common_address_map.html#address-entry-CommandResult">CommandResult</a>
+address.</p>
+</section>
+<section id="reset">
+<span id="ex10-api-reset"></span><h3>Reset<a class="headerlink" href="#reset" title="Permalink to this headline">¶</a></h3>
+<p>When handling the reset command the READY_N signal will de-assert (high)
+indicating the Impinj reader chip is busy resetting. After the chip has reset the READY_N
+signal will assert (low) once the reader chip is ready for further communications.</p>
+<table class="colwidths-given docutils align-default" id="id19">
+<caption><span class="caption-number">Table 24 </span><span class="caption-text">Reset Command</span><a class="headerlink" href="#id19" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 60%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Field Name</p></th>
+<th class="head"><p>Size (bytes)</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Command Code</p></td>
+<td><p>1</p></td>
+<td><p>Always 0x08 to indicate that this is a Reset</p></td>
+</tr>
+<tr class="row-odd"><td><p>Destination</p></td>
+<td><p>1</p></td>
+<td><p>Where to go when the reset completes. Possible values are:</p>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Integer Value</p></th>
+<th class="head"><p>Destination</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>Bootloader</p></td>
+</tr>
+<tr class="row-odd"><td><p>2</p></td>
+<td><p>Application</p></td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="transfertest">
+<span id="ex10-api-transfer-test"></span><h3>TransferTest<a class="headerlink" href="#transfertest" title="Permalink to this headline">¶</a></h3>
+<p>Echos back the sent payload where each byte is incremented by its position in
+the payload. The first byte is sent back incremented by 0 (unchanged), the
+second byte is incremented by 1 and so forth. For example, if the user sent
+the payload [1, 1, 1, 1], the response payload would be [1, 2, 3, 4].</p>
+<table class="colwidths-given docutils align-default" id="id20">
+<caption><span class="caption-number">Table 25 </span><span class="caption-text">TransferTest Command</span><a class="headerlink" href="#id20" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 60%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Field Name</p></th>
+<th class="head"><p>Size (bytes)</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Command Code</p></td>
+<td><p>1</p></td>
+<td><p>Always 0x0a to indicate that this is a TransferTest</p></td>
+</tr>
+<tr class="row-odd"><td><p>Payload</p></td>
+<td><p>n</p></td>
+<td><p>Up to 2048 bytes</p></td>
+</tr>
+</tbody>
+</table>
+<table class="colwidths-given docutils align-default" id="id21">
+<caption><span class="caption-number">Table 26 </span><span class="caption-text">TransferTest Response</span><a class="headerlink" href="#id21" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 60%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Field Name</p></th>
+<th class="head"><p>Size (bytes)</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Response Code</p></td>
+<td><p>1</p></td>
+<td><p>One of the response codes described in <a class="reference internal" href="#responsecodes">ResponseCodes</a>.
+Note that this was not present in the YX1 bootloader.</p></td>
+</tr>
+<tr class="row-odd"><td><p>TransformedPayload</p></td>
+<td><p>n</p></td>
+<td><p>The transformed payload value where each byte has been incremented by
+its offset.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="writeinfopage">
+<span id="ex10-api-write-info-page"></span><h3>WriteInfoPage<a class="headerlink" href="#writeinfopage" title="Permalink to this headline">¶</a></h3>
+<p>If allowed and the CRC passes, erase the specified page and write the contents
+of this command into the specified info page. This command has an additional
+CRC field because misconfigurations in the info pages can have catastrophic
+consequences. The Gen2 16-bit CRC was chosen because it is required
+by the firmware to implement other Gen2 specific features and can be reused here.</p>
+<table class="colwidths-given docutils align-default" id="id23">
+<caption><span class="caption-number">Table 28 </span><span class="caption-text">WriteInfoPage Command</span><a class="headerlink" href="#id23" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 60%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Field Name</p></th>
+<th class="head"><p>Size (bytes)</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Command Code</p></td>
+<td><p>1</p></td>
+<td><p>Always 0x0b to indicate that this is a WriteInfoPage</p></td>
+</tr>
+<tr class="row-odd"><td><p>PageId</p></td>
+<td><p>1</p></td>
+<td><p>Page to which to write.  Valid values are:</p>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 75%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Value</p></th>
+<th class="head"><p>Page</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>3</p></td>
+<td><p>Oem (Calibration)</p></td>
+</tr>
+<tr class="row-odd"><td><p>4</p></td>
+<td><p>StoredSettings (see <a class="reference internal" href="yk_firmware_ex10_api_stored_settings.html#ex10-api-stored-settings"><span class="std std-ref">Application Stored Settings</span></a>)</p></td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+<tr class="row-even"><td><p>Content</p></td>
+<td><p>n</p></td>
+<td><p>Up to 2048 bytes to write to the page.</p></td>
+</tr>
+<tr class="row-odd"><td><p>CRC</p></td>
+<td><p>2</p></td>
+<td><p>The same CRC as is used in the 16-bit Gen2 CRC.  This covers the bytes
+from PageId through the end of the content.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="colwidths-given docutils align-default" id="id24">
+<caption><span class="caption-number">Table 29 </span><span class="caption-text">WriteInfoPage Response</span><a class="headerlink" href="#id24" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 60%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Field Name</p></th>
+<th class="head"><p>Size (bytes)</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Response Code</p></td>
+<td><p>1</p></td>
+<td><p>One of the response codes described in <a class="reference internal" href="#responsecodes">ResponseCodes</a>.
+These should include Ok, Bad Crc, Invalid Page, and Page Locked.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="testread">
+<span id="ex10-api-test-read"></span><h3>TestRead<a class="headerlink" href="#testread" title="Permalink to this headline">¶</a></h3>
+<p>Read n 32-bit words from the specified address, where n is provided in the
+length field.</p>
+<table class="colwidths-given docutils align-default" id="id25">
+<caption><span class="caption-number">Table 30 </span><span class="caption-text">TestRead Command</span><a class="headerlink" href="#id25" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 60%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Field Name</p></th>
+<th class="head"><p>Size (bytes)</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Command Code</p></td>
+<td><p>1</p></td>
+<td><p>Always 0x0c to indicate that this is a TestRead</p></td>
+</tr>
+<tr class="row-odd"><td><p>Address</p></td>
+<td><p>4</p></td>
+<td><p>Internal address at which to start the read.  This must be 32-bit
+aligned.</p></td>
+</tr>
+<tr class="row-even"><td><p>Length</p></td>
+<td><p>2</p></td>
+<td><p>Number of 32-bit values to read starting at Address.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="colwidths-given docutils align-default" id="id26">
+<caption><span class="caption-number">Table 31 </span><span class="caption-text">TestRead Response</span><a class="headerlink" href="#id26" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 60%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Field Name</p></th>
+<th class="head"><p>Size (bytes)</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Response Code</p></td>
+<td><p>1</p></td>
+<td><p>One of the response codes described in <a class="reference internal" href="#responsecodes">ResponseCodes</a>.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Payload</p></td>
+<td><p>Length * 4</p></td>
+<td><p>The data that was read.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="insertfifoevent">
+<span id="ex10-api-insert-fifo-event"></span><h3>InsertFifoEvent<a class="headerlink" href="#insertfifoevent" title="Permalink to this headline">¶</a></h3>
+<p>The InsertFifoEvent command allows the host to inject an arbitrary event into
+the EventFifo. The insertion point of the event is the end of the EventFifo.</p>
+<p>This command may also be used to force an EventFifo threshold interrupt
+regardless of if it is sending an EventFifo packet. The first byte is always
+the command id byte, and the second is the trigger_irq byte. If set to 1, this
+byte will trigger the irq. A user may choose to send these 2 bytes alone with
+no packet appended.</p>
+<p>If the user does insert an EventFifo packet, the event format consists of
+the format described in the <a class="reference internal" href="yk_firmware_ex10_api_event_packets.html#ex10-api-event-packets"><span class="std std-ref">EventFifo Packets</span></a> section. Any packet
+may be inserted by the host. The host must provide the packet header (length,
+packet type, sha, us_counter) and the event packet contents. The packet
+contents may or may not include dynamic data.</p>
+<p>The user has a variety of options when inserting an event fifo command, but
+there are certain requirements in order to interpret the command properly.</p>
+<p>If the EventFifo packet does not conform to the following formatting rules,
+it will be rejected as malformed (CommandMalformed).</p>
+<ol class="arabic simple">
+<li><p>There must be enough bytes to fill at least the packet header (8).</p></li>
+<li><p>The EventFifo packet contents must be a multiple of 4 bytes in length.</p></li>
+<li><p>The denoted packet length in the header must match the payload length.</p></li>
+</ol>
+<table class="colwidths-given docutils align-default" id="id27">
+<caption><span class="caption-number">Table 32 </span><span class="caption-text">InsertFifoEvent Command</span><a class="headerlink" href="#id27" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 60%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Field Name</p></th>
+<th class="head"><p>Size (bytes)</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Command Code</p></td>
+<td><p>1</p></td>
+<td><p>Always 0x0E to indicate that this is an InsertFifoEvent</p></td>
+</tr>
+<tr class="row-odd"><td><p>Trigger Interrupt</p></td>
+<td><p>1</p></td>
+<td><p>Force the Impinj reader chip to trigger the EventFifo threshold interrupt.</p>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 75%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Value</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>No EventFifo threshold interrupt is generated.</p></td>
+</tr>
+<tr class="row-odd"><td><p>!= 0</p></td>
+<td><p>The EventFifo threshold interrupt is generated regardless of the
+actual EventFifo level.</p></td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+<tr class="row-even"><td><p>EventFifo Packet Header</p></td>
+<td><p>4</p></td>
+<td><p>The EventFifo Packet Header bytes:</p>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Offset</p></th>
+<th class="head"><p>Length in bytes</p></th>
+<th class="head"><p>Mnemonic</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>PacketLength</p></td>
+<td><p>The Packet Length in 32-bit word chunks.
+This value will be written by the Impinj reader chip to match the number of
+EventFifo packet bytes contained within this command, divided by 4.
+It is recommended that the host set this byte to zero.</p></td>
+</tr>
+<tr class="row-odd"><td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>PacketType</p></td>
+<td><p>The packet type which typically will match one of the types found
+in the list of valid EventFifo message types. However, the host
+may insert any value here.</p></td>
+</tr>
+<tr class="row-even"><td><p>2</p></td>
+<td><p>2</p></td>
+<td><p>SHA (16-bits)</p></td>
+<td><p>This value is set by the Impinj reader chip. Its value is unique to the firmware
+release. It is recommended that the host set these bytes to zero.</p></td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+<tr class="row-odd"><td><p>us_counter</p></td>
+<td><p>4</p></td>
+<td><p>The microsecond counter. This value will be set by the Impinj reader chip. It is recommended that the host set these 4 bytes to zeroes.</p></td>
+</tr>
+<tr class="row-even"><td><p>EventFifo packet payload</p></td>
+<td><p>N</p></td>
+<td><p>Up to 1020 bytes of data that will be the EventFifo entry inserted to the end of the EventFifo queue. No value checking or discrimination is performed by the Impinj reader chip against this payload data. The only requirement is that the payload be a multiple of 4 bytes in length.</p></td>
+</tr>
+</tbody>
+</table>
+<p>The InsertFifoEvent command has no response.</p>
+</section>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="../../_static/logo.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Messages</a><ul>
+<li><a class="reference internal" href="#commands">Commands</a></li>
+<li><a class="reference internal" href="#responsecodes">ResponseCodes</a></li>
+<li><a class="reference internal" href="#command-details">Command Details</a><ul>
+<li><a class="reference internal" href="#read">Read</a></li>
+<li><a class="reference internal" href="#write">Write</a></li>
+<li><a class="reference internal" href="#readfifo">ReadFifo</a></li>
+<li><a class="reference internal" href="#startupload">StartUpload</a></li>
+<li><a class="reference internal" href="#continueupload">ContinueUpload</a></li>
+<li><a class="reference internal" href="#completeupload">CompleteUpload</a></li>
+<li><a class="reference internal" href="#revalidatemainimage">ReValidateMainImage</a></li>
+<li><a class="reference internal" href="#reset">Reset</a></li>
+<li><a class="reference internal" href="#transfertest">TransferTest</a></li>
+<li><a class="reference internal" href="#writeinfopage">WriteInfoPage</a></li>
+<li><a class="reference internal" href="#testread">TestRead</a></li>
+<li><a class="reference internal" href="#insertfifoevent">InsertFifoEvent</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="yk_firmware_ex10_api_wireline.html"
+                        title="previous chapter">Wireline</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="yk_firmware_ex10_api_common_address_map.html"
+                        title="next chapter">Common Address Map</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="yk_firmware_ex10_api_common_address_map.html" title="Common Address Map"
+             >next</a></li>
+        <li class="right" >
+          <a href="yk_firmware_ex10_api_wireline.html" title="Wireline"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="yk_firmware_ex10_api.html" >Impinj Reader Chip Wireline API</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Messages</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Impinj, Inc..
+    </div>
+  </body>
+</html>

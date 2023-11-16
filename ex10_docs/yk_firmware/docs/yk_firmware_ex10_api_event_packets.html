@@ -1,0 +1,1590 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>EventFifo Packets &#8212; Impinj Reader Chip SDK</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinxdoc.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="LMAC Access Operations" href="yk_firmware_ex10_api_access.html" />
+    <link rel="prev" title="Operations" href="yk_firmware_ex10_api_operations.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="yk_firmware_ex10_api_access.html" title="LMAC Access Operations"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="yk_firmware_ex10_api_operations.html" title="Operations"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="yk_firmware_ex10_api.html" accesskey="U">Impinj Reader Chip Wireline API</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">EventFifo Packets</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="eventfifo-packets">
+<span id="ex10-api-event-packets"></span><h1>EventFifo Packets<a class="headerlink" href="#eventfifo-packets" title="Permalink to this headline">¶</a></h1>
+<p>The Impinj reader chip sends asynchronous data to the host using the
+<a class="reference internal" href="yk_firmware_ex10_api_messages.html#ex10-api-read-fifo"><span class="std std-ref">ReadFifo</span></a> command. This command allows the host to read packets
+from the EventFifo. Within the EventFifo are packets which are described in
+the tables and figures below.</p>
+<p>There are a few rules which apply to the EventFifo packets:</p>
+<blockquote>
+<div><ul>
+<li><p>EventFifo packets are always multiples of 32-bit words in length.
+When a packet, as shown below, does not end on a 32-bit boundary, it will
+be zero-padded to the next 32-bit boundary.</p></li>
+<li><p>Each packet begins with a packet header. The packet header is 8 bytes
+in length, occupying bytes 0 through 8 of the packet data. Each packet
+header is format consists of the following bytes:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">packet_length</span></code> field, located at byte offset 0, indicates the
+length of the entire packet in 32-bit words (not bytes), and includes
+the packet header.</p></li>
+<li><p>The EventFifo <code class="docutils literal notranslate"><span class="pre">packet_type</span></code> is located at byte offset 1.</p></li>
+<li><p>A 16-bit SHA is located at byte offsets 2 and 3. This SHA value
+changes with each release of firmware.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">us_counter</span></code>, located at byte offsets 4 through 7, is the time
+when the packet was inserted into the reader chip EventFifo. The us_counter
+value starts at the value zero when the reader chip device is reset.</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>All fields are sent with the least significant octet first.
+i.e. little endian order.</p></li>
+</ul>
+</div></blockquote>
+<p>EventFifo packets may contain dynamic data. Dynamic data is the variable length
+portion of the payload which is not shown in the payloads which follow.</p>
+<p>To determine the length of the dynamic portion of the packet the following
+formula applies:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dynamic_data_length</span> <span class="o">=</span> <span class="n">packet_length</span> <span class="o">-</span> <span class="n">static_packet_length</span>
+</pre></div>
+</div>
+<p>Where the <cite>static_packet_length</cite> is the fixed packet length as shown in the packets
+below, and includes the packet header. The dynamic data continues beyond the
+static packet length until the header field <cite>packet_length</cite> is satisfied.
+Again, all packet length value units are 32-bit words.</p>
+<p>If the insertion of an event would cause the FIFO to overflow, that event will
+not be inserted and instead the FIFO overflow op will be put in. More info on this
+overflow packet can be found in the packet description <a class="reference external" href="yk_firmware_ex10_api_event_packets.html#ex10_api_event_packet_fifo_overflow_packet">FIFO Overflow</a></p>
+<section id="ex10-api-fifo-packet-summary">
+<h2>Packet Summary<a class="headerlink" href="#ex10-api-fifo-packet-summary" title="Permalink to this headline">¶</a></h2>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 8%" />
+<col style="width: 25%" />
+<col style="width: 67%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Packet Type</p></th>
+<th class="head"><p>Name</p></th>
+<th class="head"><p>Brief</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">0x01</span></code></td>
+<td><code class="docutils literal notranslate"><a class="reference internal" href="#ex10_api_event_packet_tx_ramp_up"><span class="pre">tx_ramp_up</span></a></code></td>
+<td><p><p>When the host initiates a TxRampUpOp, the modem will perform the ramp and
+generate a tx_ramp_up EventFifo packet to indicate when the ramp actually began.</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">0x02</span></code></td>
+<td><code class="docutils literal notranslate"><a class="reference internal" href="#ex10_api_event_packet_tx_ramp_down"><span class="pre">tx_ramp_down</span></a></code></td>
+<td><p><p>RF power can be ramped down by the host if desired, but also in the case
+that a regulatory timer has expired. For example, if a ramp up was
+requested and the regulatory timer was configured to be 200ms then after
+200ms the transmitter will automatically ramp down.</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">0x03</span></code></td>
+<td><code class="docutils literal notranslate"><a class="reference internal" href="#ex10_api_event_packet_inventory_round_summary"><span class="pre">inventory_round_summary</span></a></code></td>
+<td><p><p>At the completion of each inventory round, an inventory_round_summary EventFifo packet is generated</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">0x04</span></code></td>
+<td><code class="docutils literal notranslate"><a class="reference internal" href="#ex10_api_event_packet_q_changed"><span class="pre">q_changed</span></a></code></td>
+<td><p><p>The modem has adjusted the Q value</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">0x05</span></code></td>
+<td><code class="docutils literal notranslate"><a class="reference internal" href="#ex10_api_event_packet_tag_read"><span class="pre">tag_read</span></a></code></td>
+<td><p><p>Indicates a tag singulation. This packet contains dynamic data.</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">0x07</span></code></td>
+<td><code class="docutils literal notranslate"><a class="reference internal" href="#ex10_api_event_packet_gen2_transaction"><span class="pre">gen2_transaction</span></a></code></td>
+<td><p><p>The result of a user requested Gen2 transaction</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">0x08</span></code></td>
+<td><code class="docutils literal notranslate"><a class="reference internal" href="#ex10_api_event_packet_continuous_inventory_summary"><span class="pre">continuous_inventory_summary</span></a></code></td>
+<td><p><p>At the completion of a continuous inventory a continuous_inventory_summary
+EventFifo packet is generated.</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">0x09</span></code></td>
+<td><code class="docutils literal notranslate"><a class="reference internal" href="#ex10_api_event_packet_hello_world"><span class="pre">hello_world</span></a></code></td>
+<td><p><p>Sign on message emitted when the reader chip boots up</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">0x0a</span></code></td>
+<td><code class="docutils literal notranslate"><a class="reference internal" href="#ex10_api_event_packet_custom"><span class="pre">custom</span></a></code></td>
+<td><p><p>Packet from the InsertFifoEvent command. This packet contains dynamic data.</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">0x0b</span></code></td>
+<td><code class="docutils literal notranslate"><a class="reference internal" href="#ex10_api_event_packet_power_control_loop_summary"><span class="pre">power_control_loop_summary</span></a></code></td>
+<td><p><p>Contains summary data from the PowerControlLoopOp</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">0x0d</span></code></td>
+<td><code class="docutils literal notranslate"><a class="reference internal" href="#ex10_api_event_packet_aggregate_op_summary"><span class="pre">aggregate_op_summary</span></a></code></td>
+<td><p><p>Contains summary data of what was run in the aggregate Op.</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">0x0e</span></code></td>
+<td><code class="docutils literal notranslate"><a class="reference internal" href="#ex10_api_event_packet_halted"><span class="pre">halted</span></a></code></td>
+<td><p><p>Packet is emitted when the LMAC enters the halted state</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">0xf0</span></code></td>
+<td><code class="docutils literal notranslate"><a class="reference internal" href="#ex10_api_event_packet_invalid_packet"><span class="pre">invalid_packet</span></a></code></td>
+<td><p><p>The host should use this to denote an incorrectly parsed event fifo packet.</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">0xf1</span></code></td>
+<td><code class="docutils literal notranslate"><a class="reference internal" href="#ex10_api_event_packet_fifo_overflow_packet"><span class="pre">fifo_overflow_packet</span></a></code></td>
+<td><p><p>The FIFO overflowed while inserting the previous packet. Space for this packet is
+always reserved to notify the host when this has happened.
+If the insertion of an event would cause the FIFO to overflow, that event will
+not be inserted and instead the FIFO overflow Op will be put in. There is
+always enough room reserved for the overflow packet.
+Potential cases:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>There are always 12 bytes reserved for the overflow packet</p></li>
+<li><p>If there are 12 bytes left in the event FIFO, the fifo full interrupt
+will be sent and no FIFO overflow is sent.</p></li>
+<li><p>If there are 14 bytes left in the event FIFO and we attempt to send an
+8 byte packet, this crosses the 12 byte reserve.
+We set the fifo full interrupts, insert the FIFO overflow packet, and
+drop the packet which caused the overflow.</p></li>
+<li><p>If there are 18 bytes left in the event FIFO and we attempt to send a
+6 byte packet, this hits the 12 byte reserve perfectly.
+We set the fifo full interrupts and properly insert the 6 byte packet.</p></li>
+</ul>
+</div></blockquote>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">0xf2</span></code></td>
+<td><code class="docutils literal notranslate"><a class="reference internal" href="#ex10_api_event_packet_ex10_result_packet"><span class="pre">ex10_result_packet</span></a></code></td>
+<td><p><p>The Ex10 SDK will use this packet to denote an error occured in interrupt context.</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">0xfe</span></code></td>
+<td><code class="docutils literal notranslate"><a class="reference internal" href="#ex10_api_event_packet_sjc_measurement"><span class="pre">sjc_measurement</span></a></code></td>
+<td><p><p>A SJC residue measurement and configuration corresponding to the RxRunSjcOp.
+These measurements can arrive during the RxRunSjcOp if enabled, and at the end
+of the RxRunSjcOp. The final measurement event packet generated by the FW
+corresponds with the last and best SJC solution determined by the RxRunSjcOp.</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">0xff</span></code></td>
+<td><code class="docutils literal notranslate"><a class="reference internal" href="#ex10_api_event_packet_debug"><span class="pre">debug</span></a></code></td>
+<td><p><p>Packet for debugging purposes. This packet contains dynamic data.</p>
+</p></td>
+</tr>
+</tbody>
+</table>
+<h2 id="ex10_api_event_packet_tx_ramp_up">Event tx_ramp_up<a class="headerlink" href="#ex10-api-fifo-packet-summary" title="Permalink to this headline">¶</a></h2>
+<p><p>When the host initiates a TxRampUpOp, the modem will perform the ramp and
+generate a tx_ramp_up EventFifo packet to indicate when the ramp actually began.</p>
+</p>
+<img alt="../../_images/ex10_api_fifo_tx_ramp_up.svg" src="../../_images/ex10_api_fifo_tx_ramp_up.svg" /><p>Fields:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 8%" />
+<col style="width: 25%" />
+<col style="width: 67%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Offset</p></th>
+<th class="head"><p>Name</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">0</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">packet_length</span></code></td>
+<td><p><p>The length of the entire packet in 32-bit words.</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">1</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">packet_type</span></code></td>
+<td><p><p>The EventFifo packet type. See <a class="reference external" href="./ex10_host_c_support/event_parser.html#_CPPv415EventPacketType">enum EventPacketType</a>.</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">2</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">sha</span></code></td>
+<td><p><p>A SHA which is generated based on the EventFifo format.</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">4</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">us_counter</span></code></td>
+<td><p><p>Packet timestamp, in microseconds, from the Impinj reader chip.</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">8</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">carrier_frequency</span></code></td>
+<td><p><p>The carrier frequency of the CW signal in kHz.</p>
+</p></td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<h2 id="ex10_api_event_packet_tx_ramp_down">Event tx_ramp_down<a class="headerlink" href="#ex10-api-fifo-packet-summary" title="Permalink to this headline">¶</a></h2>
+<p><p>RF power can be ramped down by the host if desired, but also in the case
+that a regulatory timer has expired. For example, if a ramp up was
+requested and the regulatory timer was configured to be 200ms then after
+200ms the transmitter will automatically ramp down.</p>
+</p>
+<img alt="../../_images/ex10_api_fifo_tx_ramp_down.svg" src="../../_images/ex10_api_fifo_tx_ramp_down.svg" /><p>Fields:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 8%" />
+<col style="width: 25%" />
+<col style="width: 67%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Offset</p></th>
+<th class="head"><p>Name</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">0</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">packet_length</span></code></td>
+<td><p><p>The length of the entire packet in 32-bit words.</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">1</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">packet_type</span></code></td>
+<td><p><p>The EventFifo packet type. See <a class="reference external" href="./ex10_host_c_support/event_parser.html#_CPPv415EventPacketType">enum EventPacketType</a>.</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">2</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">sha</span></code></td>
+<td><p><p>A SHA which is generated based on the EventFifo format.</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">4</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">us_counter</span></code></td>
+<td><p><p>Packet timestamp, in microseconds, from the Impinj reader chip.</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">8</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">reason</span></code></td>
+<td><p><p>Indicates why the power was ramped down.</p>
+<ul class="simple">
+<p><p>0x1 : host : The host performed a TxRampDownOp</p>
+</p>
+<p><p>0x2 : regulatory : The regulatory timer expired</p>
+</p>
+</ul>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">9</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">packet_rfu_1</span></code></td>
+<td><p><p>Padding byte with value 0x00</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">10</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">packet_rfu_2</span></code></td>
+<td><p><p>Padding byte with value 0x00</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">11</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">packet_rfu_3</span></code></td>
+<td><p><p>Padding byte with value 0x00</p>
+</p></td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<h2 id="ex10_api_event_packet_inventory_round_summary">Event inventory_round_summary<a class="headerlink" href="#ex10-api-fifo-packet-summary" title="Permalink to this headline">¶</a></h2>
+<p><p>At the completion of each inventory round, an inventory_round_summary EventFifo packet is generated</p>
+</p>
+<img alt="../../_images/ex10_api_fifo_inventory_round_summary.svg" src="../../_images/ex10_api_fifo_inventory_round_summary.svg" /><p>Fields:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 8%" />
+<col style="width: 25%" />
+<col style="width: 67%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Offset</p></th>
+<th class="head"><p>Name</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">0</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">packet_length</span></code></td>
+<td><p><p>The length of the entire packet in 32-bit words.</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">1</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">packet_type</span></code></td>
+<td><p><p>The EventFifo packet type. See <a class="reference external" href="./ex10_host_c_support/event_parser.html#_CPPv415EventPacketType">enum EventPacketType</a>.</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">2</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">sha</span></code></td>
+<td><p><p>A SHA which is generated based on the EventFifo format.</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">4</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">us_counter</span></code></td>
+<td><p><p>Packet timestamp, in microseconds, from the Impinj reader chip.</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">8</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">duration_us</span></code></td>
+<td><p><p>The duration of this inventory round in microseconds</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">12</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">total_slots</span></code></td>
+<td><p><p>The total number of slots during this inventory round</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">16</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">num_slots</span></code></td>
+<td><p><p>The number of slots since the last Query or QueryAdj</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">18</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">empty_slots</span></code></td>
+<td><p><p>The number of empty slots since the last Query or QueryAdj</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">20</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">single_slots</span></code></td>
+<td><p><p>The number of single slots since the last Query or QueryAdj</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">22</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">collided_slots</span></code></td>
+<td><p><p>The number of collided slots since the last Query or QueryAdj</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">24</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">reason</span></code></td>
+<td><p><p>The reason the inventory round has ended</p>
+<ul class="simple">
+<p><p>0x0 : none : This value never occurs in an EventFifo packet. It represents an
+invalid value and can be used to initialize values in the SDK.</p>
+</p>
+<p><p>0x1 : done : The normal ending of an inventory round when the tag population has
+been exhausted.</p>
+</p>
+<p><p>0x2 : host : The host requested a stop via a register write.</p>
+</p>
+<p><p>0x3 : regulatory : A regulatory timer expired, indicating that it was time to end
+the round to allow for an orderly ramp down.</p>
+</p>
+<p><p>0x4 : event_fifo_full : The inventory round has ended because the EventFifo is full.</p>
+</p>
+<p><p>0x5 : tx_not_ramped_up : The inventory round failed to start because the transmitter was not ramped up.</p>
+</p>
+<p><p>0x6 : invalid_param : The inventory round failed to start due to an invalid parameter.</p>
+</p>
+<p><p>0x7 : lmac_overload : The inventory round has ended because internally, lmac fell behind and forced
+a stop.</p>
+</p>
+<p><p>0x8 : unsupported : The requested action is unsupported.</p>
+</p>
+</ul>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">25</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">final_q</span></code></td>
+<td><p><p>The final Q value in the inventory round</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">26</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">min_q_count</span></code></td>
+<td><p><p>The min Q count of the Q algorithm when it stopped</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">27</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">queries_since_valid_epc_count</span></code></td>
+<td><p><p>The num queries since valid epc count of the Q algorithm when it stopped</p>
+</p></td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<h2 id="ex10_api_event_packet_q_changed">Event q_changed<a class="headerlink" href="#ex10-api-fifo-packet-summary" title="Permalink to this headline">¶</a></h2>
+<p><p>The modem has adjusted the Q value</p>
+</p>
+<img alt="../../_images/ex10_api_fifo_q_changed.svg" src="../../_images/ex10_api_fifo_q_changed.svg" /><p>Fields:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 8%" />
+<col style="width: 25%" />
+<col style="width: 67%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Offset</p></th>
+<th class="head"><p>Name</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">0</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">packet_length</span></code></td>
+<td><p><p>The length of the entire packet in 32-bit words.</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">1</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">packet_type</span></code></td>
+<td><p><p>The EventFifo packet type. See <a class="reference external" href="./ex10_host_c_support/event_parser.html#_CPPv415EventPacketType">enum EventPacketType</a>.</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">2</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">sha</span></code></td>
+<td><p><p>A SHA which is generated based on the EventFifo format.</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">4</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">us_counter</span></code></td>
+<td><p><p>Packet timestamp, in microseconds, from the Impinj reader chip.</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">8</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">num_slots</span></code></td>
+<td><p><p>The number of slots since the last Query or QueryAdj</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">10</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">empty_slots</span></code></td>
+<td><p><p>The number of empty slots since the last Query or QueryAdj</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">12</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">single_slots</span></code></td>
+<td><p><p>The number of single slots since the last Query or QueryAdj</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">14</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">collided_slots</span></code></td>
+<td><p><p>The number of collided slots since the last Query or QueryAdj</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">16</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">q_value</span></code></td>
+<td><p><p>The new value for Q</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">17</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">sent_query</span></code></td>
+<td><p><p>True if a full Query was sent to change the Q instead of a QueryAdj</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">18</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">packet_rfu_1</span></code></td>
+<td><p><p>Padding byte with value 0x00</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">19</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">packet_rfu_2</span></code></td>
+<td><p><p>Padding byte with value 0x00</p>
+</p></td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<h2 id="ex10_api_event_packet_tag_read">Event tag_read<a class="headerlink" href="#ex10-api-fifo-packet-summary" title="Permalink to this headline">¶</a></h2>
+<p><p>Indicates a tag singulation. This packet contains dynamic data.</p>
+</p>
+<img alt="../../_images/ex10_api_fifo_tag_read.svg" src="../../_images/ex10_api_fifo_tag_read.svg" /><p>Fields:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 8%" />
+<col style="width: 25%" />
+<col style="width: 67%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Offset</p></th>
+<th class="head"><p>Name</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">0</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">packet_length</span></code></td>
+<td><p><p>The length of the entire packet in 32-bit words.</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">1</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">packet_type</span></code></td>
+<td><p><p>The EventFifo packet type. See <a class="reference external" href="./ex10_host_c_support/event_parser.html#_CPPv415EventPacketType">enum EventPacketType</a>.</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">2</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">sha</span></code></td>
+<td><p><p>A SHA which is generated based on the EventFifo format.</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">4</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">us_counter</span></code></td>
+<td><p><p>Packet timestamp, in microseconds, from the Impinj reader chip.</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">8</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">rssi</span></code></td>
+<td><p><p>ADC value of the RSSI of the tag response. This RSSI is a measurement of the environment from the Ex10 device’s perspective. This measurement uses the same HW as the MeasureRssiOp, but is slightly less accurate as it happens over a shorter window of time. There is also a guaranteed tag backscatter happening during the measurement window.</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">10</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">rf_phase_begin</span></code></td>
+<td><p><p>The RF phase of the tag response at the beginning of the packet. This is a 12-bit unsigned value with a resolution of 0.087 degrees per bit, representing the full range of phase.</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">12</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">rf_phase_end</span></code></td>
+<td><p><p>The RF phase of the tag response at the end of the packet. This is a 12-bit unsigned value with a resolution of 0.087 degrees per bit, representing the full range of phase.</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">14</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">rx_gain_settings</span></code></td>
+<td><p><p>This is the RX gain settings that were were in the Ex10 RxGainControl
+register when the inventory round was started.</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">16</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">type</span></code></td>
+<td><p><p>The data contained in the dynamic data</p>
+<ul class="simple">
+<p><p>0x1 : epc : The data contains the PC-EPC-CRC of a normal tag read.</p>
+</p>
+<p><p>0x2 : epc_with_tid : The data contains a PC-EPC-CRC and then the Gen2 Read of the TID</p>
+</p>
+<p><p>0x3 : epc_with_fast_id_tid : The data contains the fast_id response from a tag that supports
+fast_id. The format could be either PC-EPC-TID-CRC or
+PC-EPC-CRC-TID-CRC.</p>
+</p>
+</ul>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">17</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">tid_offset</span></code></td>
+<td><p><p>The offset, in bytes, from the beginning of dynamic data in the
+tag_read packet to the TID if the TID was received.</p>
+<p>If no TID was received then the tid_offset value is 0.</p>
+<ul class="simple">
+<li><p>For <code class="docutils literal notranslate"><span class="pre">epc</span></code> type, this will be set to 0.</p></li>
+<li><p>For <code class="docutils literal notranslate"><span class="pre">epc_with_tid</span></code> type, this will be the length of PC+EPC
+or PC+EPC+CRC.</p></li>
+<li><p>For <code class="docutils literal notranslate"><span class="pre">epc_with_fast_id_tid</span></code> type, this will be the length of the EPC
+received, meaning the length of PC+EPC+CRC.</p></li>
+</ul>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">18.0</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">halted_on_tag</span></code></td>
+<td><p><p>If true, the modem is currently halted on a tag.</p>
+ (byte 18, bit position 0)</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">18.1</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">memory_parity_err</span></code></td>
+<td><p><p>False if the CRC is not inverted and true if the CRC is inverted
+and memory diagnostics mode is enabled.</p>
+ (byte 18, bit position 1)</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">18.2</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">packet_rfu_1</span></code></td>
+<td><p><p>Padding byte with value 0x00</p>
+ (byte 18, bit position 2)</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">19</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">packet_rfu_2</span></code></td>
+<td><p><p>Padding byte with value 0x00</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">20</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">dynamic_data_start</span></code></td>
+<td><p><p>Complete tag response padded out with bit 0s</p>
+</p></td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<h2 id="ex10_api_event_packet_gen2_transaction">Event gen2_transaction<a class="headerlink" href="#ex10-api-fifo-packet-summary" title="Permalink to this headline">¶</a></h2>
+<p><p>The result of a user requested Gen2 transaction</p>
+</p>
+<img alt="../../_images/ex10_api_fifo_gen2_transaction.svg" src="../../_images/ex10_api_fifo_gen2_transaction.svg" /><p>Fields:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 8%" />
+<col style="width: 25%" />
+<col style="width: 67%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Offset</p></th>
+<th class="head"><p>Name</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">0</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">packet_length</span></code></td>
+<td><p><p>The length of the entire packet in 32-bit words.</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">1</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">packet_type</span></code></td>
+<td><p><p>The EventFifo packet type. See <a class="reference external" href="./ex10_host_c_support/event_parser.html#_CPPv415EventPacketType">enum EventPacketType</a>.</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">2</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">sha</span></code></td>
+<td><p><p>A SHA which is generated based on the EventFifo format.</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">4</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">us_counter</span></code></td>
+<td><p><p>Packet timestamp, in microseconds, from the Impinj reader chip.</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">8</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">transaction_id</span></code></td>
+<td><p><p>When the user specifies a transaction to perform, one of the fields is
+a transaction id. The only purpose this serves is to allow the user to
+more easily synchronize requests with results. The modem does not
+use this for anything internally.</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">9</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">status</span></code></td>
+<td><p><p>The status of the Gen2 transaction that the modem observed. Note that in the
+case of a Gen2 error for packets that contain the header bit, this
+status will indicate <code class="docutils literal notranslate"><span class="pre">ok</span></code> and the host should look at the payload
+bits to examine whether the header bit indicates a Gen2 error, and if
+so, the error code will be in the payload buffer as described in the
+Gen2 tag reply documentation.</p>
+<ul class="simple">
+<p><p>0x1 : ok : The transaction completed with valid data.</p>
+</p>
+<p><p>0x2 : bad_crc : When the CRC-16 was checked, it was found to be incorrect. If the
+transaction was not supposed to have a CRC-16 on the end of the
+packet, this status code can still indicate that the reception was ok.</p>
+</p>
+<p><p>0x3 : no_reply : The modem was not able to detect a response from the tag or was
+not configured to expect a response.</p>
+</p>
+<p><p>0x4 : invalid_reply_type : The reply type specified in the Gen2TxnControls register is either
+invalid or unsupported.</p>
+</p>
+<p><p>0x5 : cover_code_failed : The cover code was requested but the response to the ReqRn failed CRC.</p>
+</p>
+<p><p>0x6 : memory_parity_err : The CRC is inverted due to a memory parity error.</p>
+</p>
+<p><p>0xff : unknown : There was an unknown error in attempting to send the requested
+command. Please contact Impinj for further investigation.</p>
+</p>
+<p><p>0x7 : unsupported : The requested command can not be sent. Please contact Impinj for
+more information.</p>
+</p>
+</ul>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">10</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">valid_path_metrics</span></code></td>
+<td><p><p>This boolean value indicates if the path metrics exceeded the minimum thresholds.</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">11</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">packet_rfu</span></code></td>
+<td><p><p>Padding byte with value 0x00</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">12</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">rf_phase_begin</span></code></td>
+<td><p><p>The RF phase of the tag response near the beginning of the packet.
+This is a 12-bit unsigned value with a resolution of 0.087 degrees
+per bit, representing the full range of phase.</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">14</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">rf_phase_end</span></code></td>
+<td><p><p>The rf phase of the tag response near the end of the packet.
+This is a 12-bit unsigned value with a resolution of 0.087 degrees
+per bit, representing the full range of phase.</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">16</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">rssi</span></code></td>
+<td><p><p>ADC value of the RSSI of the tag response.</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">18</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">num_bits</span></code></td>
+<td><p><p>Number of bits in the response</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">20</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">dynamic_data_start</span></code></td>
+<td><p><p>Complete tag response padded out with bit 0s</p>
+</p></td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<h2 id="ex10_api_event_packet_continuous_inventory_summary">Event continuous_inventory_summary<a class="headerlink" href="#ex10-api-fifo-packet-summary" title="Permalink to this headline">¶</a></h2>
+<p><p>At the completion of a continuous inventory a continuous_inventory_summary
+EventFifo packet is generated.</p>
+</p>
+<img alt="../../_images/ex10_api_fifo_continuous_inventory_summary.svg" src="../../_images/ex10_api_fifo_continuous_inventory_summary.svg" /><p>Fields:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 8%" />
+<col style="width: 25%" />
+<col style="width: 67%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Offset</p></th>
+<th class="head"><p>Name</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">0</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">packet_length</span></code></td>
+<td><p><p>The length of the entire packet in 32-bit words.</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">1</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">packet_type</span></code></td>
+<td><p><p>The EventFifo packet type. See <a class="reference external" href="./ex10_host_c_support/event_parser.html#_CPPv415EventPacketType">enum EventPacketType</a>.</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">2</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">sha</span></code></td>
+<td><p><p>A SHA which is generated based on the EventFifo format.</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">4</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">us_counter</span></code></td>
+<td><p><p>Packet timestamp, in microseconds, from the Impinj reader chip.</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">8</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">duration_us</span></code></td>
+<td><p><p>The duration of this continuous inventory in microseconds.</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">12</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">number_of_inventory_rounds</span></code></td>
+<td><p><p>The total number of inventory rounds during this continuous inventory</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">16</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">number_of_tags</span></code></td>
+<td><p><p>The total number of inventoried tags (singulations) during this continuous inventory.</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">20</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">reason</span></code></td>
+<td><p><p>Reason for the termination of this continuous inventory</p>
+<ul class="simple">
+<p><p>0x1 : host : The host terminated the continuous inventory via a register write.</p>
+</p>
+<p><p>0x2 : max_number_of_inventory_rounds : The requested number of inventory rounds was reached.</p>
+</p>
+<p><p>0x3 : max_num_of_tags : The requested number of inventoried tags was reached.</p>
+</p>
+<p><p>0x4 : max_duration : The requested continuous inventory duration, in microseconds, was reached.</p>
+</p>
+<p><p>0x5 : op_error : When attempting to execute an Op, within the sequence of Ops required to
+start an inventory, one of the Ops failed. The Op may be the
+StartInventoryRoundOp (0xB0), or an Op embedded within the AggregateOp (0xB9), etc.</p>
+</p>
+<p><p>0x6 : sdk_timeout_error : The SDK attempted to wait for an Ex10 Op to finish, but the SDK timeout
+was encountered first.</p>
+</p>
+<p><p>0x7 : device_command_error : The Ex10 device responded to an Ex10 command with an error.</p>
+</p>
+<p><p>0x8 : device_aggregate_buffer_overflow : The user attempted to add more data to the aggregate Op buffer than
+there is size for. The device side buffer would overflow and thus the Op
+would fail.</p>
+</p>
+<p><p>0x9 : device_ramp_callback_error : The SDK encountered an error during a ramp callback. This could
+have been the pre-ramp or post-ramp callback.</p>
+</p>
+</ul>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">21</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">last_op_id</span></code></td>
+<td><p><p>The last OpId run which encountered an error. If the ‘reason’ field is not
+‘op_error’, then this field has no meaning.</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">22</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">last_op_error</span></code></td>
+<td><p><p>The error code from the last Op to run. If the ‘reason’ field is not
+‘op_error’, then this field has no meaning.</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">23</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">packet_rfu_1</span></code></td>
+<td><p><p>Padding byte with value 0x00</p>
+</p></td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<h2 id="ex10_api_event_packet_hello_world">Event hello_world<a class="headerlink" href="#ex10-api-fifo-packet-summary" title="Permalink to this headline">¶</a></h2>
+<p><p>Sign on message emitted when the reader chip boots up</p>
+</p>
+<img alt="../../_images/ex10_api_fifo_hello_world.svg" src="../../_images/ex10_api_fifo_hello_world.svg" /><p>Fields:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 8%" />
+<col style="width: 25%" />
+<col style="width: 67%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Offset</p></th>
+<th class="head"><p>Name</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">0</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">packet_length</span></code></td>
+<td><p><p>The length of the entire packet in 32-bit words.</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">1</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">packet_type</span></code></td>
+<td><p><p>The EventFifo packet type. See <a class="reference external" href="./ex10_host_c_support/event_parser.html#_CPPv415EventPacketType">enum EventPacketType</a>.</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">2</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">sha</span></code></td>
+<td><p><p>A SHA which is generated based on the EventFifo format.</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">4</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">us_counter</span></code></td>
+<td><p><p>Packet timestamp, in microseconds, from the Impinj reader chip.</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">8</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">sku</span></code></td>
+<td><p><p>A 16 bit value which identifies the Impinj reader chip SKU.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">0x0910</span></code>: E910</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">0x0710</span></code>: E710</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">0x0510</span></code>: E510</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">0x0310</span></code>: E310</p></li>
+</ul>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">10</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">reset_reason</span></code></td>
+<td><p><p>A bitfield of reset reasons of which there are 4.
+If none are set then it was a normal power on reset (POR)</p>
+<ul class="simple">
+<li><p>Bit <code class="docutils literal notranslate"><span class="pre">0</span></code>: System reset (internal reset signal)</p></li>
+<li><p>Bit <code class="docutils literal notranslate"><span class="pre">1</span></code>: Watchdog timeout</p></li>
+<li><p>Bit <code class="docutils literal notranslate"><span class="pre">2</span></code>: Cortex lockup</p></li>
+<li><p>Bit <code class="docutils literal notranslate"><span class="pre">3</span></code>: External reset (the RESET_N pin was set low)</p></li>
+</ul>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">11</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">crash_info_conditional</span></code></td>
+<td><p><p>This field contains the crash info conditional value that indicates
+the crash info status</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">0</span></code>: Unknown (illegal state)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">1</span></code>: Reset normal</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">2</span></code>: Crash</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">3</span></code>: Fault</p></li>
+</ul>
+</p></td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<h2 id="ex10_api_event_packet_custom">Event custom<a class="headerlink" href="#ex10-api-fifo-packet-summary" title="Permalink to this headline">¶</a></h2>
+<p><p>Packet from the InsertFifoEvent command. This packet contains dynamic data.</p>
+</p>
+<img alt="../../_images/ex10_api_fifo_custom.svg" src="../../_images/ex10_api_fifo_custom.svg" /><p>Fields:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 8%" />
+<col style="width: 25%" />
+<col style="width: 67%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Offset</p></th>
+<th class="head"><p>Name</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">0</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">packet_length</span></code></td>
+<td><p><p>The length of the entire packet in 32-bit words.</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">1</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">packet_type</span></code></td>
+<td><p><p>The EventFifo packet type. See <a class="reference external" href="./ex10_host_c_support/event_parser.html#_CPPv415EventPacketType">enum EventPacketType</a>.</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">2</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">sha</span></code></td>
+<td><p><p>A SHA which is generated based on the EventFifo format.</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">4</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">us_counter</span></code></td>
+<td><p><p>Packet timestamp, in microseconds, from the Impinj reader chip.</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">8</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">payload_len</span></code></td>
+<td><p><p>The number of 32-bit words in the payload</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">12</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">dynamic_data_start</span></code></td>
+<td><p><p>Complete tag response padded out with bit 0s</p>
+</p></td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<h2 id="ex10_api_event_packet_power_control_loop_summary">Event power_control_loop_summary<a class="headerlink" href="#ex10-api-fifo-packet-summary" title="Permalink to this headline">¶</a></h2>
+<p><p>Contains summary data from the PowerControlLoopOp</p>
+</p>
+<img alt="../../_images/ex10_api_fifo_power_control_loop_summary.svg" src="../../_images/ex10_api_fifo_power_control_loop_summary.svg" /><p>Fields:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 8%" />
+<col style="width: 25%" />
+<col style="width: 67%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Offset</p></th>
+<th class="head"><p>Name</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">0</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">packet_length</span></code></td>
+<td><p><p>The length of the entire packet in 32-bit words.</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">1</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">packet_type</span></code></td>
+<td><p><p>The EventFifo packet type. See <a class="reference external" href="./ex10_host_c_support/event_parser.html#_CPPv415EventPacketType">enum EventPacketType</a>.</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">2</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">sha</span></code></td>
+<td><p><p>A SHA which is generated based on the EventFifo format.</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">4</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">us_counter</span></code></td>
+<td><p><p>Packet timestamp, in microseconds, from the Impinj reader chip.</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">8</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">iterations_taken</span></code></td>
+<td><p><p>Number of iterations through the control loop</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">12</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">final_error</span></code></td>
+<td><p><p>The final error after running the control loop</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">14</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">final_tx_fine_gain</span></code></td>
+<td><p><p>The final TxFineGain used</p>
+</p></td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<h2 id="ex10_api_event_packet_aggregate_op_summary">Event aggregate_op_summary<a class="headerlink" href="#ex10-api-fifo-packet-summary" title="Permalink to this headline">¶</a></h2>
+<p><p>Contains summary data of what was run in the aggregate Op.</p>
+</p>
+<img alt="../../_images/ex10_api_fifo_aggregate_op_summary.svg" src="../../_images/ex10_api_fifo_aggregate_op_summary.svg" /><p>Fields:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 8%" />
+<col style="width: 25%" />
+<col style="width: 67%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Offset</p></th>
+<th class="head"><p>Name</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">0</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">packet_length</span></code></td>
+<td><p><p>The length of the entire packet in 32-bit words.</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">1</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">packet_type</span></code></td>
+<td><p><p>The EventFifo packet type. See <a class="reference external" href="./ex10_host_c_support/event_parser.html#_CPPv415EventPacketType">enum EventPacketType</a>.</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">2</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">sha</span></code></td>
+<td><p><p>A SHA which is generated based on the EventFifo format.</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">4</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">us_counter</span></code></td>
+<td><p><p>Packet timestamp, in microseconds, from the Impinj reader chip.</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">8</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">op_run_count</span></code></td>
+<td><p><p>The number of Op runs which were executed.</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">10</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">write_count</span></code></td>
+<td><p><p>The number of write commands which were executed.</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">12</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">insert_fifo_count</span></code></td>
+<td><p><p>The number of insert fifo events which were executed.</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">14</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">final_buffer_byte_index</span></code></td>
+<td><p><p>The aggregate Op parses through the aggregate Op buffer. This index
+shows the final byte index of the Op within the buffer. This means
+it is the bytes at which the parsing stopped, whether that is due
+to proper completion or error.
+If the last byte was the end instruction code, the index will show the
+byte of that instruction since it caused the exit. If there is an error
+in a given command, the index will point to the beginning of the
+instruction that caused the error.</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">16</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">total_jump_count</span></code></td>
+<td><p><p>The summed count of all jumps executed.</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">18</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">last_inner_op_run</span></code></td>
+<td><p><p>In the aggregate Op, if an Op in the buffer fails, the Op error will
+be placed in the last_inner_op_error field.</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">19</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">last_inner_op_error</span></code></td>
+<td><p><p>If the most recent Op run within the aggregate Op fails, the error code
+of this failure will be placed here before the Op exits. Otherwise this
+will be success.</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">20</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">identifier</span></code></td>
+<td><p><p>The identifier of the aggregate Op. The user can specify an identifier
+to use in this field through the identifier aggregate Op command. By
+default, this will always be 0u each time the aggregate Op is run unless
+the identifier command is used in the aggregate Op buffer.</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">22</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">last_inner_command_run</span></code></td>
+<td><p><p>The last Ex10 command to run inside the aggregate Op. If an error occurs
+during the command, it will be placed in the last_inner_command_error
+field.</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">23</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">last_inner_command_error</span></code></td>
+<td><p><p>If an Ex10 command encounters an error while running the aggregate Op,
+the error will be placed here. If no error occurs, this field will show
+Success.</p>
+</p></td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<h2 id="ex10_api_event_packet_halted">Event halted<a class="headerlink" href="#ex10-api-fifo-packet-summary" title="Permalink to this headline">¶</a></h2>
+<p><p>Packet is emitted when the LMAC enters the halted state</p>
+</p>
+<img alt="../../_images/ex10_api_fifo_halted.svg" src="../../_images/ex10_api_fifo_halted.svg" /><p>Fields:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 8%" />
+<col style="width: 25%" />
+<col style="width: 67%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Offset</p></th>
+<th class="head"><p>Name</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">0</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">packet_length</span></code></td>
+<td><p><p>The length of the entire packet in 32-bit words.</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">1</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">packet_type</span></code></td>
+<td><p><p>The EventFifo packet type. See <a class="reference external" href="./ex10_host_c_support/event_parser.html#_CPPv415EventPacketType">enum EventPacketType</a>.</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">2</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">sha</span></code></td>
+<td><p><p>A SHA which is generated based on the EventFifo format.</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">4</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">us_counter</span></code></td>
+<td><p><p>Packet timestamp, in microseconds, from the Impinj reader chip.</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">8</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">halted_handle</span></code></td>
+<td><p><p>If the modem has entered or returned the halted state, this is the handle
+that was returned with the Req_RN Gen2 command that was used to open the tag</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">10</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">reason</span></code></td>
+<td><p><p>The reason the LMAC entered the halted state</p>
+<ul class="simple">
+<p><p>0x1 : entered : The LMAC has transitioned from inventory to halted state</p>
+</p>
+<p><p>0x2 : returned : The LMAC has returned to the halted state after access commands</p>
+</p>
+</ul>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">11</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">packet_rfu</span></code></td>
+<td><p><p>Padding byte with value 0x00</p>
+</p></td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<h2 id="ex10_api_event_packet_invalid_packet">Event invalid_packet<a class="headerlink" href="#ex10-api-fifo-packet-summary" title="Permalink to this headline">¶</a></h2>
+<p><p>The host should use this to denote an incorrectly parsed event fifo packet.</p>
+</p>
+<img alt="../../_images/ex10_api_fifo_invalid_packet.svg" src="../../_images/ex10_api_fifo_invalid_packet.svg" /><p>Fields:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 8%" />
+<col style="width: 25%" />
+<col style="width: 67%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Offset</p></th>
+<th class="head"><p>Name</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">0</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">packet_length</span></code></td>
+<td><p><p>The length of the entire packet in 32-bit words.</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">1</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">packet_type</span></code></td>
+<td><p><p>The EventFifo packet type. See <a class="reference external" href="./ex10_host_c_support/event_parser.html#_CPPv415EventPacketType">enum EventPacketType</a>.</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">2</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">sha</span></code></td>
+<td><p><p>A SHA which is generated based on the EventFifo format.</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">4</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">us_counter</span></code></td>
+<td><p><p>Packet timestamp, in microseconds, from the Impinj reader chip.</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">8</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">packet_rfu</span></code></td>
+<td><p><p>Padding bytes with value 0x00</p>
+</p></td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<h2 id="ex10_api_event_packet_fifo_overflow_packet">Event fifo_overflow_packet<a class="headerlink" href="#ex10-api-fifo-packet-summary" title="Permalink to this headline">¶</a></h2>
+<p><p>The FIFO overflowed while inserting the previous packet. Space for this packet is
+always reserved to notify the host when this has happened.
+If the insertion of an event would cause the FIFO to overflow, that event will
+not be inserted and instead the FIFO overflow Op will be put in. There is
+always enough room reserved for the overflow packet.
+Potential cases:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>There are always 12 bytes reserved for the overflow packet</p></li>
+<li><p>If there are 12 bytes left in the event FIFO, the fifo full interrupt
+will be sent and no FIFO overflow is sent.</p></li>
+<li><p>If there are 14 bytes left in the event FIFO and we attempt to send an
+8 byte packet, this crosses the 12 byte reserve.
+We set the fifo full interrupts, insert the FIFO overflow packet, and
+drop the packet which caused the overflow.</p></li>
+<li><p>If there are 18 bytes left in the event FIFO and we attempt to send a
+6 byte packet, this hits the 12 byte reserve perfectly.
+We set the fifo full interrupts and properly insert the 6 byte packet.</p></li>
+</ul>
+</div></blockquote>
+</p>
+<img alt="../../_images/ex10_api_fifo_fifo_overflow_packet.svg" src="../../_images/ex10_api_fifo_fifo_overflow_packet.svg" /><p>Fields:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 8%" />
+<col style="width: 25%" />
+<col style="width: 67%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Offset</p></th>
+<th class="head"><p>Name</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">0</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">packet_length</span></code></td>
+<td><p><p>The length of the entire packet in 32-bit words.</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">1</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">packet_type</span></code></td>
+<td><p><p>The EventFifo packet type. See <a class="reference external" href="./ex10_host_c_support/event_parser.html#_CPPv415EventPacketType">enum EventPacketType</a>.</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">2</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">sha</span></code></td>
+<td><p><p>A SHA which is generated based on the EventFifo format.</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">4</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">us_counter</span></code></td>
+<td><p><p>Packet timestamp, in microseconds, from the Impinj reader chip.</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">8</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">num_bytes_over</span></code></td>
+<td><p><p>The number of bytes by which the Fifo has overflowed.</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">10</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">overflowing_packet_type</span></code></td>
+<td><p><p>The type of packet which caused the overflow</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">11</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">rfu</span></code></td>
+<td><p><p>Reserved for future use</p>
+</p></td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<h2 id="ex10_api_event_packet_ex10_result_packet">Event ex10_result_packet<a class="headerlink" href="#ex10-api-fifo-packet-summary" title="Permalink to this headline">¶</a></h2>
+<p><p>The Ex10 SDK will use this packet to denote an error occured in interrupt context.</p>
+</p>
+<img alt="../../_images/ex10_api_fifo_ex10_result_packet.svg" src="../../_images/ex10_api_fifo_ex10_result_packet.svg" /><p>Fields:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 8%" />
+<col style="width: 25%" />
+<col style="width: 67%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Offset</p></th>
+<th class="head"><p>Name</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">0</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">packet_length</span></code></td>
+<td><p><p>The length of the entire packet in 32-bit words.</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">1</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">packet_type</span></code></td>
+<td><p><p>The EventFifo packet type. See <a class="reference external" href="./ex10_host_c_support/event_parser.html#_CPPv415EventPacketType">enum EventPacketType</a>.</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">2</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">sha</span></code></td>
+<td><p><p>A SHA which is generated based on the EventFifo format.</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">4</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">us_counter</span></code></td>
+<td><p><p>Packet timestamp, in microseconds, from the Impinj reader chip.</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">8</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">ex10_result</span></code></td>
+<td><p><p>struct Ex10Result detailing the occurred error.</p>
+</p></td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<h2 id="ex10_api_event_packet_sjc_measurement">Event sjc_measurement<a class="headerlink" href="#ex10-api-fifo-packet-summary" title="Permalink to this headline">¶</a></h2>
+<p><p>A SJC residue measurement and configuration corresponding to the RxRunSjcOp.
+These measurements can arrive during the RxRunSjcOp if enabled, and at the end
+of the RxRunSjcOp. The final measurement event packet generated by the FW
+corresponds with the last and best SJC solution determined by the RxRunSjcOp.</p>
+</p>
+<img alt="../../_images/ex10_api_fifo_sjc_measurement.svg" src="../../_images/ex10_api_fifo_sjc_measurement.svg" /><p>Fields:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 8%" />
+<col style="width: 25%" />
+<col style="width: 67%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Offset</p></th>
+<th class="head"><p>Name</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">0</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">packet_length</span></code></td>
+<td><p><p>The length of the entire packet in 32-bit words.</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">1</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">packet_type</span></code></td>
+<td><p><p>The EventFifo packet type. See <a class="reference external" href="./ex10_host_c_support/event_parser.html#_CPPv415EventPacketType">enum EventPacketType</a>.</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">2</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">sha</span></code></td>
+<td><p><p>A SHA which is generated based on the EventFifo format.</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">4</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">us_counter</span></code></td>
+<td><p><p>Packet timestamp, in microseconds, from the Impinj reader chip.</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">8</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">cdac_i</span></code></td>
+<td><p><p>The SJC CDAC I gain value, in signed integer counts,
+associated with the measurement or solution</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">9</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">cdac_q</span></code></td>
+<td><p><p>The SJC CDAC Q gain value, in signed integer counts,
+associated with the measurement or solution</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">10</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">rx_atten</span></code></td>
+<td><p><p>The receiver attenuation setting during the measurement.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">0</span></code>: 0 dB attenuation</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">1</span></code>: 3 dB attenuation</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">2</span></code>: 6 dB attenuation</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">3</span></code>: 12 dB attenuation</p></li>
+</ul>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">11</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">flags</span></code></td>
+<td><p><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">1</span></code>: DC offset measurement</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">2</span></code>: New minimum value found</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">3</span></code>: Grid scan begin</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">4</span></code>: Grid scan end</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">5</span></code>: SJC solution completed successfully</p></li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">6</span></code>: SJC solution search failed due to CDAC range error.</dt><dd><p>The self-jammer signal was too large to be completely cancelled by the SJC circuit.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">7</span></code>: SJC solution failed due to residue error.</dt><dd><p>The left-over signal amplitude from the self-jammer after finding the optimal solution
+was larger than the threshold set in the
+<a class="reference external" href="yk_firmware_ex10_api_application_address_map.html#address-entry-SjcResidueThreshold">SjcResidueThreshold</a>
+register.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">12</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">residue_i</span></code></td>
+<td><p><p>The signed I residue measurement in the specified SJC configuration. A larger magnitude indicates
+a worse residual self-jammer signal in the receiver, reducing RX sensitivity.</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">16</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">residue_q</span></code></td>
+<td><p><p>The signed Q residue measurement in the specified SJC configuration. A larger magnitude indicates
+a worse residual self-jammer signal in the receiver, reducing RX sensitivity.</p>
+</p></td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<h2 id="ex10_api_event_packet_debug">Event debug<a class="headerlink" href="#ex10-api-fifo-packet-summary" title="Permalink to this headline">¶</a></h2>
+<p><p>Packet for debugging purposes. This packet contains dynamic data.</p>
+</p>
+<img alt="../../_images/ex10_api_fifo_debug.svg" src="../../_images/ex10_api_fifo_debug.svg" /><p>Fields:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 8%" />
+<col style="width: 25%" />
+<col style="width: 67%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Offset</p></th>
+<th class="head"><p>Name</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">0</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">packet_length</span></code></td>
+<td><p><p>The length of the entire packet in 32-bit words.</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">1</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">packet_type</span></code></td>
+<td><p><p>The EventFifo packet type. See <a class="reference external" href="./ex10_host_c_support/event_parser.html#_CPPv415EventPacketType">enum EventPacketType</a>.</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">2</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">sha</span></code></td>
+<td><p><p>A SHA which is generated based on the EventFifo format.</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">4</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">us_counter</span></code></td>
+<td><p><p>Packet timestamp, in microseconds, from the Impinj reader chip.</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">8</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">payload_len</span></code></td>
+<td><p><p>The number of 32-bit words in the payload</p>
+</p></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">12</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">dynamic_data_start</span></code></td>
+<td><p><p>Complete tag response padded out with bit 0s</p>
+</p></td>
+</tr>
+</tbody>
+</table>
+<p></p>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="../../_static/logo.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">EventFifo Packets</a><ul>
+<li><a class="reference internal" href="#ex10-api-fifo-packet-summary">Packet Summary</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="yk_firmware_ex10_api_operations.html"
+                        title="previous chapter">Operations</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="yk_firmware_ex10_api_access.html"
+                        title="next chapter">LMAC Access Operations</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="yk_firmware_ex10_api_access.html" title="LMAC Access Operations"
+             >next</a></li>
+        <li class="right" >
+          <a href="yk_firmware_ex10_api_operations.html" title="Operations"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="yk_firmware_ex10_api.html" >Impinj Reader Chip Wireline API</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">EventFifo Packets</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Impinj, Inc..
+    </div>
+  </body>
+</html>

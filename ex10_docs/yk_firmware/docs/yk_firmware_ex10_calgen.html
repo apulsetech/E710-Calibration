@@ -1,0 +1,750 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Calibration Customization Using CalGen &#8212; Impinj Reader Chip SDK</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinxdoc.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Impinj Reader Chip Wireline API" href="yk_firmware_ex10_api.html" />
+    <link rel="prev" title="Regulatory Regions Usage" href="yk_firmware_ex10_host_c_regions_usage.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="yk_firmware_ex10_api.html" title="Impinj Reader Chip Wireline API"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="yk_firmware_ex10_host_c_regions_usage.html" title="Regulatory Regions Usage"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="yk_firmware_ex10_host_c_api.html" >Impinj Reader Chip C Host SDK</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="yk_firmware_ex10_host_c_advanced_topics.html" accesskey="U">Advanced Topics</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Calibration Customization Using CalGen</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="calibration-customization-using-calgen">
+<span id="ex10-calgen"></span><h1>Calibration Customization Using CalGen<a class="headerlink" href="#calibration-customization-using-calgen" title="Permalink to this headline">¶</a></h1>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<p>The current way of customizing calibration is by manually changing the Impinj-provided
+calibration files. The challenge with the current method is that the users need to
+dig into different files and make any updates by hand without any given
+instructions. This complicates the customization process and quickly leads to
+uncoordinated calibration files. Impinj aims to provide a simpler way of
+customizing calibration by introducing a new tool named Calibration
+Autogen(CalGen) and giving easy-to-follow instructions and examples on
+changing the calibration files. The CalGen tool uses content
+templates(python and jinja2 files) to automatically generate calibration source
+codes, therefore, allowing different calibration files to be in-sync with
+each other by modifying a single YAML file.</p>
+</section>
+<section id="objective">
+<h2>Objective<a class="headerlink" href="#objective" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Ease the burden of changing calibration.</p></li>
+<li><p>Give the customer CalGen files and process as relates to calibration.</p></li>
+<li><p>Give the customer documentation with examples on creating new calibration
+measurements to the YAML file.</p></li>
+<li><p>Give the customer documentation with examples on modifying existing calibration
+measurements to the YAML.</p></li>
+</ul>
+</section>
+<section id="files-involved-in-calibration">
+<h2>Files Involved In Calibration<a class="headerlink" href="#files-involved-in-calibration" title="Permalink to this headline">¶</a></h2>
+<p>Here is the list of files involved in calibration customization.
+The highlighted files are those that should be manually modified.</p>
+<div class="literal-block-wrapper docutils container" id="id6">
+<div class="code-block-caption"><span class="caption-number">Listing 1 </span><span class="caption-text">ex10_bundle</span><a class="headerlink" href="#id6" title="Permalink to this code">¶</a></div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>.
+├── ex10_calgen/
+│   ├── content_template/
+│   │   ├── gen_calibration_v5_c.jinja2
+│   │   ├── gen_calibration_v5_c.py
+│   │   ├── gen_calibration_v5_h.jinja2
+│   │   ├── gen_calibration_v5_h.py
+│   │   ├── gen_calibration_v5_shim.jinja2
+│   │   ├── gen_calibration_v5_shim.py
+│   │   ├── gen_cal_v5_c_example.jinja2
+│   │   └── gen_cal_v5_c_example.py
+│   ├── python_tools/
+│   │   ├── ex10_api_yaml_parsers
+│   │   │   └── calibration_parser.py
+│   │   └── parsing/
+│   │       └── parsing_utils.py
+│   ├── run_inline_calgen.py
+│   └── source_me_for_calgen_venv.sh
+├── ex10_cal/
+│   ├── cal_yaml/
+│   │   └── cal_info_page_v5.yml
+<span class="hll">│   ├── calib_info.py
+</span><span class="hll">│   └── pc_cal_example.py
+</span>├── ex10_c_dev_kit/
+│   ├── board/
+│   │   └── e710_ref_design/
+<span class="hll">│   │       ├── calibration.c
+</span><span class="hll">│   │       ├── calibration.h
+</span>│   │       ├── calibration_v5.c
+│   │       └── calibration_v5.h
+│   └── examples/
+│       └── print_calibration_v5.c
+└── ex10_dev_kit/
+    └── py2c_interface/
+        └── py2c_python_cal.py
+</pre></div>
+</div>
+</div>
+<section id="id1">
+<h3>ex10_calgen/<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Jinja2</span> <span class="pre">&amp;</span> <span class="pre">python</span> <span class="pre">paired</span> <span class="pre">files</span></code>: The jinja2 files are the template files and
+the python files create context to fill in these templates. For each file to
+CalGen, a pair of one jinja2 and one python files are required and both file
+names must match, for example <code class="docutils literal notranslate"><span class="pre">custom_cal.jinja2</span></code> and <code class="docutils literal notranslate"><span class="pre">custom_cal.py</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">carlibration_parser.py</span> <span class="pre">&amp;</span> <span class="pre">parsing_utils.py</span></code>: These are modules that help
+parse the calibration YAML file(s).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">run_inline_calgen.py</span></code>: Python file the user calls to run CalGen. Unless the
+users would like to create multiple versions of calibration files, no
+modification is necessary in this code file.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">source_me_for_calgen_venv.sh</span></code> : A shell script that creates a virtual
+environment and installs all the required packages for CalGen. This script
+can be run in a Bash shell by running <code class="docutils literal notranslate"><span class="pre">source</span> <span class="pre">source_me_for_calgen_venv.sh</span></code>.</p></li>
+</ul>
+</section>
+<section id="ex10-cal">
+<h3>ex10_cal/<a class="headerlink" href="#ex10-cal" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">cal_info_page_v5.yml</span></code>: YAML file that contains all calibration information.
+Any modification to this file will result in changes to all highlighted files
+in the tree above.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">calib_info.py</span></code>: A helper python file that reads the calibration YAML file
+and writes any parameter info on the Impinj Reader Chip.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pc_cal_example.py</span></code>: PC calibration script that collects calibration data
+which will be written on the device.</p></li>
+</ul>
+</section>
+<section id="ex10-c-dev-kit">
+<h3>ex10_c_dev_kit/<a class="headerlink" href="#ex10-c-dev-kit" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">calibration.h</span> <span class="pre">&amp;</span> <span class="pre">calibration.c</span></code>: Uses parameter values from calibration_v5
+files and does the actual calibration tasks.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">calibration_v5.h</span> <span class="pre">&amp;</span> <span class="pre">calibration_v5.c</span></code>: Defines Ex10CalibrationParamsV5 and
+CalibrationOffset structs.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">print_calibration_v5.c</span></code>: An example file to print out all calibration
+information for a board using calibration version 5.</p></li>
+</ul>
+</section>
+<section id="ex10-dev-kit">
+<h3>ex10_dev_kit/<a class="headerlink" href="#ex10-dev-kit" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">py2c_python_cal.py</span></code>: Python calibration file.</p></li>
+</ul>
+</section>
+</section>
+<section id="calgen-architecture">
+<h2>CalGen Architecture<a class="headerlink" href="#calgen-architecture" title="Permalink to this headline">¶</a></h2>
+<p>Here is a sequence diagram of running CalGen. The green file will be CalGened
+and the yellow file should be manually changed.</p>
+<figure class="align-default" id="id7">
+<img alt="../../_images/ex10_calgen_sequence_diagram.png" src="../../_images/ex10_calgen_sequence_diagram.png" />
+<figcaption>
+<p><span class="caption-number">Fig. 6 </span><span class="caption-text">CalGen Sequence Diagram</span><a class="headerlink" href="#id7" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+<section id="run-inline-calgen-py">
+<h3>run_inline_calgen.py<a class="headerlink" href="#run-inline-calgen-py" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">run_inline_calgen.py</span></code> is the main python script for running CalGen.</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">PROJ_ROOT</span></code>: The root directory. By default, it is set to be the bundle root
+directory. The root directory can be changed by calling <code class="docutils literal notranslate"><span class="pre">set_calgen_proj_root(new_proj_root)</span></code>
+function or by passing in the <code class="docutils literal notranslate"><span class="pre">new_proj_root</span></code> as an argument when calling CalGen.</p>
+<p>I.e., <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">run_inline_calgen</span> <span class="pre">--root</span> <span class="pre">&lt;new_proj_root&gt;</span></code></p>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MOD_DIR</span></code>: The path to the CalGen content templates. This path can be changed
+by calling the <code class="docutils literal notranslate"><span class="pre">set_calgen_mod_dir(new_mod_dir)</span></code> function.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">YAML_FILEPATH</span></code>: The file path to the calibration YAML file. If you have more
+than one YAML file, make sure to store them in the same path. The path can be
+changed by calling the <code class="docutils literal notranslate"><span class="pre">set_calgen_yaml_filepath(new_yaml_filepath)</span></code> function.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">_FILES_TO_CALGEN</span></code>: List of filenames to CalGen. If you would like to add
+additional files to CalGen, add the filename with the full file path starting
+from the root directory.</p></li>
+</ul>
+</section>
+<section id="calgenable-calibration-files">
+<h3>CalGenable Calibration Files<a class="headerlink" href="#calgenable-calibration-files" title="Permalink to this headline">¶</a></h3>
+<p>Each CalGenable file should have at least one CalGen block. The CalGen block is an
+indication of where the CalGen context should be placed and what content template
+should be used. It looks like the following:</p>
+<div class="literal-block-wrapper docutils container" id="id8">
+<div class="code-block-caption"><span class="caption-number">Listing 2 </span><span class="caption-text">c files</span><a class="headerlink" href="#id8" title="Permalink to this code">¶</a></div>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="c1">// Impinj_calgen | &lt;content_template_name&gt; {</span>
+<span class="c1">// Impinj_calgen }</span>
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id9">
+<div class="code-block-caption"><span class="caption-number">Listing 3 </span><span class="caption-text">python files</span><a class="headerlink" href="#id9" title="Permalink to this code">¶</a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Impinj_calgen | &lt;content_template_name&gt; {</span>
+<span class="c1"># Impinj_calgen }</span>
+</pre></div>
+</div>
+</div>
+<p>Any written code between those two lines will be replaced by the new autogenerated
+CalGen block. The rest of the code existing outside of the block will remain the
+same.</p>
+<p>The given calibration files should already have these comments on, so unless you
+would like to keep multiple versions of customized calibration files, no
+modification is necessary.</p>
+</section>
+<section id="calgen-content-templates">
+<h3>CalGen Content Templates<a class="headerlink" href="#calgen-content-templates" title="Permalink to this headline">¶</a></h3>
+<p>There must be a content template for each CalGen block. A content template
+consists of a jinja2 template file and a python script that returns a
+python dictionary with all contents. For each jinja2 and python file pair,
+the filename should be identical, as the CalGen block determines which content
+template to use based on their filename.</p>
+<p>Unless the user wishes to add additional files to CalGen, no modification nor
+additional files are necessary.</p>
+</section>
+</section>
+<section id="customizing-calibration-files">
+<h2>Customizing Calibration Files<a class="headerlink" href="#customizing-calibration-files" title="Permalink to this headline">¶</a></h2>
+<p>Customizing calibration files can be categorized into two types:
+(1) modifying an existing calibration measurement and
+(2) creating a new calibration measurement.
+We divided the type of modification
+into two categories since they have slightly differing requirements.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 22%" />
+<col style="width: 12%" />
+<col style="width: 66%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Category Type</p></th>
+<th class="head" colspan="2"><p>Examples</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Modifying existing</p></td>
+<td colspan="2"><ul class="simple">
+<li><p>Increase the antenna count beyond what is supported by V5 RSSI cal</p></li>
+<li><p>Add forward power calibration for an additional SAW filter and frequency band</p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td rowspan="2"><p>Creating a new
+calibration measurement</p></td>
+<td><p>New parameter</p></td>
+<td><ul class="simple">
+<li><p>Add a partner HW unique ID</p></li>
+<li><p>Reduce TX power calibration complexity to a single point TX power target</p></li>
+<li><p>Add PA VBias operating points to calibration</p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td><p>New field</p></td>
+<td><ul class="simple">
+<li><p>Add LO PDET3 support for TX Power control</p></li>
+<li><p>Add RX power calibration to improve RX power measurement accuracy</p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<section id="modifying-an-existing-calibration-measurement">
+<h3>Modifying An Existing Calibration Measurement<a class="headerlink" href="#modifying-an-existing-calibration-measurement" title="Permalink to this headline">¶</a></h3>
+<p>Any modification to an existing field will fall under this category. An example
+would be increasing the count of RSSI antennas from 8 to 10. This can be done by
+changing a field value in the YAML file and the pc_cal_example.py file. The steps
+are shown below.</p>
+<section id="update-the-calibration-yaml-file">
+<h4>Update the Calibration YAML File<a class="headerlink" href="#update-the-calibration-yaml-file" title="Permalink to this headline">¶</a></h4>
+<p>The calibration YAML file stores all calibration data. For this specific example,
+<code class="docutils literal notranslate"><span class="pre">RssiAntennas</span></code> parameter values will be changed. The following is a before and
+after comparison of the YAML file. The highlighted parts show the changes.</p>
+<p>Before:</p>
+<div class="literal-block-wrapper docutils container" id="id10">
+<div class="code-block-caption"><span class="caption-number">Listing 4 </span><span class="caption-text">cal_info_page_v5.yml</span><a class="headerlink" href="#id10" title="Permalink to this code">¶</a></div>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="linenos">496</span><span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RssiAntennas</span>
+<span class="linenos">497</span>    <span class="l l-Scalar l-Scalar-Plain">brief</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">Antennas used for RSSI calibration</span>
+<span class="linenos">498</span>    <span class="l l-Scalar l-Scalar-Plain">address</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">1164</span> <span class="c1"># Offset value from `CalibrationInfo` register(0xE800) to the current parameter in bytes</span>
+<span class="linenos">499</span>    <span class="nt">length</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">8</span> <span class="c1"># Total length of the parameter in bytes. This parameter has 8 entries of 1-byte fields.</span>
+<span class="linenos">500</span>    <span class="nt">fields</span><span class="p">:</span>
+<span class="linenos">501</span>    <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Antenna</span>
+<span class="linenos">502</span>        <span class="l l-Scalar l-Scalar-Plain">pos</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span> <span class="c1"># Offset value from the current parameter `address`(1164) to the current field in bits</span>
+<span class="linenos">503</span>        <span class="nt">bits</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">8</span> <span class="c1"># Length of the field in bits</span>
+<span class="linenos">504</span>        <span class="nt">init_value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span> <span class="c1"># initial value of the field</span>
+<span class="linenos">505</span>        <span class="nt">num_entries</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">8</span> <span class="c1"># number of entries. There are 8 Antennas.</span>
+<span class="linenos">506</span>
+<span class="linenos">507</span><span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RssiAntennaLut</span>
+<span class="linenos">508</span>    <span class="l l-Scalar l-Scalar-Plain">brief</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">Lookup table for correcting RSSI estimations based on antenna</span>
+<span class="linenos">509</span>    <span class="l l-Scalar l-Scalar-Plain">address</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">1172</span> <span class="c1"># RssiAntennas’ `address`(1164) + `length`(8)</span>
+<span class="linenos">510</span>    <span class="nt">length</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">16</span>
+</pre></div>
+</div>
+</div>
+<p>After (option 1):</p>
+<div class="literal-block-wrapper docutils container" id="id11">
+<div class="code-block-caption"><span class="caption-number">Listing 5 </span><span class="caption-text">cal_info_page_v5.yml</span><a class="headerlink" href="#id11" title="Permalink to this code">¶</a></div>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="linenos">496</span><span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RssiAntennas</span>
+<span class="linenos">497</span>    <span class="l l-Scalar l-Scalar-Plain">brief</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">Antennas used for RSSI calibration</span>
+<span class="linenos">498</span>    <span class="l l-Scalar l-Scalar-Plain">address</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">1164</span>
+<span class="hll"><span class="linenos">499</span>    <span class="l l-Scalar l-Scalar-Plain">length</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">10</span> <span class="c1"># This parameter has 10 entries of 1-byte fields,</span>
+</span><span class="linenos">500</span>    <span class="nt">fields</span><span class="p">:</span>
+<span class="linenos">501</span>    <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Antenna</span>
+<span class="linenos">502</span>        <span class="l l-Scalar l-Scalar-Plain">pos</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
+<span class="linenos">503</span>        <span class="l l-Scalar l-Scalar-Plain">bits</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">8</span>
+<span class="linenos">504</span>        <span class="l l-Scalar l-Scalar-Plain">init_value</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
+<span class="hll"><span class="linenos">505</span>        <span class="l l-Scalar l-Scalar-Plain">num_entries</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">10</span> <span class="c1"># Now there are 10 antennas.</span>
+</span><span class="linenos">506</span>
+<span class="linenos">507</span><span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RssiAntennaLut</span>
+<span class="linenos">508</span>    <span class="l l-Scalar l-Scalar-Plain">brief</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">Lookup table for correcting RSSI estimations based on antenna</span>
+<span class="hll"><span class="linenos">509</span>    <span class="l l-Scalar l-Scalar-Plain">address</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">1174</span> <span class="c1"># Registers can only store 1 entity. Since 2 bytes are added to</span>
+</span><span class="hll"><span class="linenos">510</span>                  <span class="c1"># the previous parameter, all following parameter address should</span>
+</span><span class="hll"><span class="linenos">511</span>                  <span class="c1"># be shifted by 2.</span>
+</span><span class="linenos">512</span>    <span class="nt">length</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">16</span>
+</pre></div>
+</div>
+</div>
+<p>After (option 2):</p>
+<div class="literal-block-wrapper docutils container" id="id12">
+<div class="code-block-caption"><span class="caption-number">Listing 6 </span><span class="caption-text">cal_info_page_v5.yml</span><a class="headerlink" href="#id12" title="Permalink to this code">¶</a></div>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="linenos">496</span><span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RssiAntennas</span>
+<span class="linenos">497</span>    <span class="l l-Scalar l-Scalar-Plain">brief</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">Antennas used for RSSI calibration</span>
+<span class="hll"><span class="linenos">498</span>    <span class="l l-Scalar l-Scalar-Plain">address</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">1202</span> <span class="c1"># Alternative option is to move the parameter address to the end</span>
+</span><span class="hll"><span class="linenos">499</span>    <span class="nt">length</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">10</span>
+</span><span class="linenos">500</span>    <span class="nt">fields</span><span class="p">:</span>
+<span class="linenos">501</span>    <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Antenna</span>
+<span class="linenos">502</span>        <span class="l l-Scalar l-Scalar-Plain">pos</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
+<span class="linenos">503</span>        <span class="l l-Scalar l-Scalar-Plain">bits</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">8</span>
+<span class="linenos">504</span>        <span class="l l-Scalar l-Scalar-Plain">init_value</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
+<span class="hll"><span class="linenos">505</span>        <span class="l l-Scalar l-Scalar-Plain">num_entries</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">10</span>
+</span><span class="linenos">506</span>
+<span class="linenos">507</span><span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RssiAntennaLut</span>
+<span class="linenos">508</span>    <span class="l l-Scalar l-Scalar-Plain">brief</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">Lookup table for correcting RSSI estimations based on antenna</span>
+<span class="linenos">509</span>    <span class="l l-Scalar l-Scalar-Plain">address</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">1172</span>
+<span class="linenos">510</span>    <span class="l l-Scalar l-Scalar-Plain">length</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">16</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="run-calgen">
+<span id="id2"></span><h4>Run CalGen<a class="headerlink" href="#run-calgen" title="Permalink to this headline">¶</a></h4>
+<p><strong>Linux</strong></p>
+<p>This section assumes usage of the RPi using Raspbian GNU/Linux version 10.</p>
+<p>Open the bundle folder and follow the instructions below.</p>
+<div class="literal-block-wrapper docutils container" id="id13">
+<div class="code-block-caption"><span class="caption-number">Listing 7 </span><span class="caption-text">Terminal</span><a class="headerlink" href="#id13" title="Permalink to this code">¶</a></div>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># 1. Source the source_me file to create a python virtual environment and install all the required packages</span>
+$ <span class="nb">cd</span> ex10_calgen
+$ <span class="nb">source</span> source_me_for_calgen_venv.sh
+
+<span class="c1"># 2. Run CalGen python file</span>
+<span class="c1"># Runs CalGen on all files in the _FILES_TO_CALGEN list with the default PROJ_ROOT</span>
+$ python run_inline_calgen.py
+<span class="c1"># Runs CalGen on all files in the _FILES_TO_CALGEN list with a new project root</span>
+$ python run_inline_calgen.py --root &lt;new-project-root-path&gt;
+<span class="c1"># For more information</span>
+$ python run_inline_calgen.py --help
+</pre></div>
+</div>
+</div>
+<p>For Raspberry Pi users, CalGen can be also run under the <code class="docutils literal notranslate"><span class="pre">impinj_reader_chip_venv</span></code>
+virtual environment.</p>
+<div class="literal-block-wrapper docutils container" id="id14">
+<div class="code-block-caption"><span class="caption-number">Listing 8 </span><span class="caption-text">Terminal</span><a class="headerlink" href="#id14" title="Permalink to this code">¶</a></div>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># 1. Source the source_me file to create a python virtual environment and install all</span>
+<span class="c1">#    the required packages</span>
+$ <span class="nb">cd</span> ex10_dev_kit
+$ <span class="nb">source</span> source_me_for_impinj_reader_chip_venv.sh
+
+<span class="c1"># 2. Run CalGen python file</span>
+$ python ../ex10_calgen/run_inline_calgen.py
+</pre></div>
+</div>
+</div>
+<p><strong>Windows</strong></p>
+<div class="literal-block-wrapper docutils container" id="id15">
+<div class="code-block-caption"><span class="caption-number">Listing 9 </span><span class="caption-text">Command Prompt</span><a class="headerlink" href="#id15" title="Permalink to this code">¶</a></div>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># 1. Install python</span>
+
+<span class="c1"># 2. Create a virtual environment</span>
+&gt; <span class="nb">cd</span> ex10_calgen
+<span class="se">\e</span>x10_calgen&gt; py –m venv calgen_venv
+
+<span class="c1"># 3. Activate the virtual environment</span>
+<span class="se">\e</span>x10_calgen&gt; calgen_venv<span class="se">\S</span>cripts<span class="se">\a</span>ctivate.bat
+
+<span class="c1"># 4. Install CalGen package</span>
+<span class="o">(</span>calgen_venv<span class="o">)</span><span class="se">\e</span>x10_calgen&gt; pip install –e ..<span class="se">\e</span>x10_calgen
+
+<span class="c1"># 5. Run CalGen python file</span>
+<span class="o">(</span>calgen_venv<span class="o">)</span><span class="se">\e</span>x10_calgen&gt; py run_inline_calgen.py
+
+<span class="c1"># To deactivate the virtual environment</span>
+<span class="o">(</span>calgen_venv<span class="o">)</span>&gt; deactivate
+</pre></div>
+</div>
+</div>
+</section>
+<section id="update-the-pc-calibration-script">
+<h4>Update the PC Calibration Script<a class="headerlink" href="#update-the-pc-calibration-script" title="Permalink to this headline">¶</a></h4>
+<p>Search for the modified field and change its configuration value.</p>
+<div class="literal-block-wrapper docutils container" id="id16">
+<div class="code-block-caption"><span class="caption-number">Listing 10 </span><span class="caption-text">pc_cal_exmaple.py</span><a class="headerlink" href="#id16" title="Permalink to this code">¶</a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">208</span>    <span class="bp">self</span><span class="o">.</span><span class="n">RSSI_CFG</span> <span class="o">=</span> <span class="p">{</span>
+<span class="linenos">209</span>        <span class="s1">&#39;N_RF_MODES&#39;</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span> <span class="c1"># Number of max allowed RF modes in cal table</span>
+<span class="hll"><span class="linenos">210</span>        <span class="s1">&#39;N_ANTENNA_PORTS&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span> <span class="c1"># Number of max allowed antennas in cal table (Value changed from 8 to 10)</span>
+</span><span class="hll"><span class="linenos">211</span>        <span class="s1">&#39;ANTENNA_PORTS&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="c1"># Antenna ports (Add more if necessary)</span>
+</span><span class="linenos">212</span>        <span class="s1">&#39;RF_MODES&#39;</span><span class="p">:</span> <span class="n">sku_rssi_cfg</span><span class="p">[</span><span class="n">sku</span><span class="p">][</span><span class="s1">&#39;RF_MODES&#39;</span><span class="p">],</span>
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+<section id="creating-a-new-calibration-measurement">
+<h3>Creating A New Calibration Measurement<a class="headerlink" href="#creating-a-new-calibration-measurement" title="Permalink to this headline">¶</a></h3>
+<p>Creating a new calibration measurement includes creating a new parameter or
+creating a new field in an existing parameter. An example of this category is
+adding a new factory/manufacturer. In this section, we will go over an example of
+adding a new parameter with the following spec:</p>
+<ul class="simple">
+<li><p>Parameter name: <code class="docutils literal notranslate"><span class="pre">CustomerCalibrationVersion</span></code></p></li>
+<li><p>Description: A field to store the calibration file version number for the
+customers that is separate from the Impinj calibration version number.</p></li>
+<li><p>Information about the field: Single field named <code class="docutils literal notranslate"><span class="pre">CustomerCalFileVersion</span></code> with a
+length of <code class="docutils literal notranslate"><span class="pre">1</span></code> byte and an initial value of <code class="docutils literal notranslate"><span class="pre">0</span></code>.</p></li>
+</ul>
+<section id="id3">
+<h4>Update the Calibration YAML File<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h4>
+<div class="literal-block-wrapper docutils container" id="id17">
+<div class="code-block-caption"><span class="caption-number">Listing 11 </span><span class="caption-text">cal_info_page_v5.yml</span><a class="headerlink" href="#id17" title="Permalink to this code">¶</a></div>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="nt">brief</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Ex10 Calibration Info Page</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="nt">parameters</span><span class="p">:</span>
+<span class="linenos"> 4</span><span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">CalibrationVersion</span>
+<span class="linenos"> 5</span>    <span class="l l-Scalar l-Scalar-Plain">brief</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">The version number of this calibration file</span>
+<span class="linenos"> 6</span>    <span class="l l-Scalar l-Scalar-Plain">description</span><span class="p p-Indicator">:</span> <span class="p p-Indicator">|</span>
+<span class="linenos"> 7</span>    <span class="no">This is the version number for the format of this data</span>
+<span class="linenos"> 8</span>    <span class="no">address: 0 # Offset value from &#39;CalibrationInfo&#39; register(0xE800) to the current parameter in bytes</span>
+<span class="linenos"> 9</span>    <span class="no">length: 1 # Total length in bytes</span>
+<span class="linenos">10</span>    <span class="no">fields:</span>
+<span class="linenos">11</span>    <span class="no">- name: CalFileVersion</span>
+<span class="linenos">12</span>        <span class="no">pos: 0 # Offset value from the current parameter &#39;address&#39;(0) to the current field in bits</span>
+<span class="linenos">13</span>        <span class="no">bits: 8 # Length in bits</span>
+<span class="linenos">14</span>        <span class="no">init_value: 0xff # initial value</span>
+<span class="linenos">15</span>
+<span class="hll"><span class="linenos">16</span><span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">CustomerCalibrationVersion</span>
+</span><span class="hll"><span class="linenos">17</span>    <span class="l l-Scalar l-Scalar-Plain">brief</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">The customer assigned version number of this calibration file</span>
+</span><span class="hll"><span class="linenos">18</span>    <span class="l l-Scalar l-Scalar-Plain">description</span><span class="p p-Indicator">:</span> <span class="p p-Indicator">|</span>
+</span><span class="hll"><span class="linenos">19</span>    <span class="no">This is the customer assigned version number for the format of this data</span>
+</span><span class="hll"><span class="linenos">20</span>    <span class="no">address: 1 # Any offset value that is not allocated to other parameters/fields</span>
+</span><span class="hll"><span class="linenos">21</span>    <span class="no">length: 1 # Total length in bytes</span>
+</span><span class="hll"><span class="linenos">22</span>    <span class="no">fields:</span>
+</span><span class="hll"><span class="linenos">23</span>    <span class="no">- name: CustomerCalFileVersion</span>
+</span><span class="hll"><span class="linenos">24</span>        <span class="no">pos: 0 # Offset value from the current parameter &#39;address&#39;(1) to the current field in bits</span>
+</span><span class="hll"><span class="linenos">25</span>        <span class="no">bits: 8 # Length in bits</span>
+</span><span class="hll"><span class="linenos">26</span>        <span class="no">init_value: 0x00</span>
+</span></pre></div>
+</div>
+</div>
+<p>Lines 16-26 show the changes to the YAML file after a new factory parameter is added.
+The parameter’s address can be any value from 0 to 2047 if not allocated to another
+parameter or field.</p>
+</section>
+<section id="id4">
+<h4>Run CalGen<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h4>
+<p>Refer to section <a class="reference internal" href="#run-calgen"><span class="std std-ref">Run CalGen</span></a>.</p>
+</section>
+<section id="update-calibration-c-and-calibration-c-files">
+<h4>Update calibration.c and calibration.c Files<a class="headerlink" href="#update-calibration-c-and-calibration-c-files" title="Permalink to this headline">¶</a></h4>
+<p>Since new calibration parameter readings will be added to the device, we will need
+additional functions in the SDK to access and utilize them. This requires changing
+the <code class="docutils literal notranslate"><span class="pre">calibration.c</span></code> and <code class="docutils literal notranslate"><span class="pre">calibration.h</span></code> files. Users are free to modify these files,
+however, changing this file will result in changing the API of the SDK, which is not
+recommended.</p>
+<p>In our example, a getter function, <code class="docutils literal notranslate"><span class="pre">get_customer_cal_version()</span></code>, is added.
+<code class="docutils literal notranslate"><span class="pre">cal_init()</span></code> is modified to obtain the calibration v5 new factory number from the
+CalibrationInfo register. The modified lines are highlighted in yellow.</p>
+<div class="literal-block-wrapper docutils container" id="id18">
+<div class="code-block-caption"><span class="caption-number">Listing 12 </span><span class="caption-text">calibration.c</span><a class="headerlink" href="#id18" title="Permalink to this code">¶</a></div>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="hll"><span class="linenos">1433</span><span class="k">static</span> <span class="kt">uint8_t</span> <span class="nf">get_customer_cal_version</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+</span><span class="hll"><span class="linenos">1434</span><span class="p">{</span>
+</span><span class="hll"><span class="linenos">1435</span>    <span class="k">return</span> <span class="n">customer_cal_version</span><span class="p">;</span>
+</span><span class="hll"><span class="linenos">1436</span><span class="p">}</span>
+</span><span class="linenos">1437</span>
+<span class="linenos">1438</span><span class="k">static</span> <span class="kt">size_t</span> <span class="nf">cal_init</span><span class="p">(</span><span class="k">struct</span> <span class="nc">Ex10Protocol</span> <span class="k">const</span><span class="o">*</span> <span class="n">ex10_protocol</span><span class="p">)</span>
+<span class="linenos">1439</span><span class="p">{</span>
+<span class="hll"><span class="linenos">1440</span>    <span class="c1">// Read the cal version and customer cal version so we can parse the cal</span>
+</span><span class="hll"><span class="linenos">1441</span>    <span class="c1">// info correctly</span>
+</span><span class="linenos">1442</span>    <span class="kt">uint16_t</span> <span class="k">const</span> <span class="n">source_address</span> <span class="o">=</span> <span class="n">calibration_info_reg</span><span class="p">.</span><span class="n">address</span><span class="p">;</span>
+<span class="linenos">1443</span>    <span class="c1">// Read 1 byte from offset 0 to obtain the Impinj cal version</span>
+<span class="linenos">1444</span>    <span class="n">ex10_protocol</span><span class="o">-&gt;</span><span class="n">read_partial</span><span class="p">(</span><span class="n">source_address</span><span class="p">,</span> <span class="mi">1u</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">cal_version</span><span class="p">);</span>
+<span class="hll"><span class="linenos">1445</span>    <span class="c1">// Read 1 byte from offset 1 to obtain the customer assigned cal version</span>
+</span><span class="hll"><span class="linenos">1446</span>    <span class="n">ex10_protocol</span><span class="o">-&gt;</span><span class="n">read_partial</span><span class="p">(</span>
+</span><span class="hll"><span class="linenos">1447</span>        <span class="n">source_address</span> <span class="o">+</span> <span class="n">offsetof</span><span class="p">(</span><span class="k">struct</span> <span class="nc">Ex10CalibrationParamsV5</span><span class="p">,</span>
+</span><span class="hll"><span class="linenos">1448</span>                                <span class="n">customer_calibration_version</span><span class="p">),</span>
+</span><span class="hll"><span class="linenos">1449</span>        <span class="mi">1u</span><span class="p">,</span>
+</span><span class="hll"><span class="linenos">1450</span>        <span class="o">&amp;</span><span class="n">customer_cal_version</span><span class="p">);</span>
+</span><span class="linenos">1451</span>
+<span class="linenos">1452</span>    <span class="k">if</span> <span class="p">(</span><span class="n">cal_version</span> <span class="o">!=</span> <span class="mh">0xFF</span> <span class="o">&amp;&amp;</span> <span class="n">cal_version</span> <span class="o">!=</span> <span class="mh">0x05</span><span class="p">)</span>
+<span class="linenos">1453</span>    <span class="p">{</span>
+<span class="linenos">1454</span>        <span class="n">ex10_eprintf</span><span class="p">(</span><span class="s">&quot;Calibration version %u is not supported</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">cal_version</span><span class="p">);</span>
+<span class="linenos">1455</span>        <span class="n">ex10_eprintf</span><span class="p">(</span>
+<span class="linenos">1456</span>            <span class="s">&quot;Please upgrade your calibration or erase the current one &quot;</span>
+<span class="linenos">1457</span>            <span class="s">&quot;and run without calibration.</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<span class="linenos">1458</span>    <span class="p">}</span>
+<span class="linenos">1459</span>
+<span class="linenos">1460</span>    <span class="k">if</span> <span class="p">(</span><span class="n">cal_version</span> <span class="o">==</span> <span class="mh">0xFF</span><span class="p">)</span>
+<span class="linenos">1461</span>    <span class="p">{</span>
+<span class="linenos">1462</span>        <span class="n">ex10_eprintf</span><span class="p">(</span><span class="s">&quot;CALIBRATION NOT FOUND, DEFAULT SETTINGS WILL BE USED</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<span class="linenos">1463</span>    <span class="p">}</span>
+<span class="linenos">1464</span>
+<span class="hll"><span class="linenos">1465</span>    <span class="k">if</span> <span class="p">(</span><span class="n">cal_version</span> <span class="o">==</span> <span class="mh">0x05</span> <span class="o">&amp;&amp;</span> <span class="n">customer_cal_version</span> <span class="o">!=</span> <span class="mh">0x00</span><span class="p">)</span>
+</span><span class="hll"><span class="linenos">1466</span>    <span class="p">{</span>
+</span><span class="hll"><span class="linenos">1467</span>        <span class="n">ex10_eprintf</span><span class="p">(</span><span class="s">&quot;Customer calibration version %u will be used</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span>
+</span><span class="hll"><span class="linenos">1468</span>                    <span class="n">customer_cal_version</span><span class="p">);</span>
+</span><span class="hll"><span class="linenos">1469</span>    <span class="p">}</span>
+</span></pre></div>
+</div>
+</div>
+<p>Change the calibration.h accordingly.</p>
+<div class="literal-block-wrapper docutils container" id="id19">
+<div class="code-block-caption"><span class="caption-number">Listing 13 </span><span class="caption-text">calibration.h</span><a class="headerlink" href="#id19" title="Permalink to this code">¶</a></div>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="linenos">168</span>    <span class="cm">/**</span>
+<span class="linenos">169</span><span class="cm">    * Returns the current board calibrations version</span>
+<span class="linenos">170</span><span class="cm">    *</span>
+<span class="linenos">171</span><span class="cm">    * @return The current board calibration version</span>
+<span class="linenos">172</span><span class="cm">    */</span>
+<span class="linenos">173</span>    <span class="kt">uint8_t</span> <span class="p">(</span><span class="o">*</span><span class="n">get_cal_version</span><span class="p">)(</span><span class="kt">void</span><span class="p">);</span>
+<span class="linenos">174</span>
+<span class="hll"><span class="linenos">175</span>    <span class="cm">/**</span>
+</span><span class="hll"><span class="linenos">176</span><span class="cm">    * Returns the current board customer calibrations version</span>
+</span><span class="hll"><span class="linenos">177</span><span class="cm">    *</span>
+</span><span class="hll"><span class="linenos">178</span><span class="cm">    * @return The current board customer calibration version</span>
+</span><span class="hll"><span class="linenos">179</span><span class="cm">    */</span>
+</span><span class="hll"><span class="linenos">180</span>    <span class="kt">uint8_t</span> <span class="p">(</span><span class="o">*</span><span class="n">get_customer_cal_version</span><span class="p">)(</span><span class="kt">void</span><span class="p">);</span>
+</span><span class="linenos">181</span><span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<p>For this specific example, we created a getter to get the file version, but in other
+cases, the users would want to create/modify a function that calculates the offset of
+the new parameter. Generally, creating a new parameter may require creating a new
+function; creating a new field of an existing parameter may require modifying a
+function in <code class="docutils literal notranslate"><span class="pre">calibration.c</span></code>. These functions could be called by other functions
+in <code class="docutils literal notranslate"><span class="pre">calibration.c</span></code> or within the ex10_reader layer.</p>
+</section>
+<section id="id5">
+<h4>Update the PC Calibration Script<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h4>
+<p>Add configuration value for customer calibration version and call
+<code class="docutils literal notranslate"><span class="pre">set_parameter(name,</span> <span class="pre">value)</span></code> in appropriate lines.</p>
+<div class="literal-block-wrapper docutils container" id="id20">
+<div class="code-block-caption"><span class="caption-number">Listing 14 </span><span class="caption-text">pc_cal_example.py</span><a class="headerlink" href="#id20" title="Permalink to this code">¶</a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">54</span><span class="k">class</span> <span class="nc">Ex10CalibrationExample</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="linenos">55</span>    <span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">56</span><span class="sd">    Calibration procedure example class for Ex10 reader.</span>
+<span class="linenos">57</span><span class="sd">    &quot;&quot;&quot;</span>
+<span class="linenos">58</span>    <span class="c1"># The calibration procedure configuration is set with the definitions below</span>
+<span class="linenos">59</span>    <span class="n">CAL_CFG</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;CAL_VERSION&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+<span class="hll"><span class="linenos">60</span>            <span class="s1">&#39;CUSTOMER_CAL_VERSION&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+</span><span class="linenos">61</span>            <span class="s1">&#39;PM_SLEEP_TIME&#39;</span><span class="p">:</span> <span class="mf">0.15</span><span class="p">,</span>
+<span class="linenos">62</span>            <span class="s1">&#39;PD_SLEEP_TIME&#39;</span><span class="p">:</span> <span class="mf">0.02</span><span class="p">,</span>
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id21">
+<div class="code-block-caption"><span class="caption-number">Listing 15 </span><span class="caption-text">pc_cal_example.py</span><a class="headerlink" href="#id21" title="Permalink to this code">¶</a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">787</span>    <span class="k">def</span> <span class="nf">store_cal_version_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">board_id</span><span class="p">):</span>
+<span class="linenos">788</span>        <span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">789</span><span class="sd">        Store calibration version number, board id, calibration tx_scalar,</span>
+<span class="linenos">790</span><span class="sd">        PDET limits, and power control loop params</span>
+<span class="linenos">791</span><span class="sd">        :param board_id: device id number</span>
+<span class="linenos">792</span><span class="sd">        &quot;&quot;&quot;</span>
+<span class="linenos">793</span>        <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">set_parameter</span><span class="p">(</span>
+<span class="linenos">794</span>            <span class="s1">&#39;CalibrationVersion&#39;</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">CAL_CFG</span><span class="p">[</span><span class="s1">&#39;CAL_VERSION&#39;</span><span class="p">]]))</span>
+<span class="linenos">795</span>
+<span class="hll"><span class="linenos">796</span>        <span class="n">Self</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">set_parameter</span><span class="p">(</span><span class="s1">&#39;CustomerCalibrationVersion&#39;</span><span class="p">,</span>
+</span><span class="hll"><span class="linenos">797</span>            <span class="nb">tuple</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">CAL_CFG</span><span class="p">[</span><span class="s1">&#39;CUSTOMER_CAL_VERSION&#39;</span><span class="p">]]))</span>
+</span><span class="linenos">798</span>
+<span class="linenos">799</span>        <span class="c1"># User board ID</span>
+<span class="linenos">800</span>        <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">set_parameter</span><span class="p">(</span><span class="s1">&#39;UserBoardId&#39;</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">([</span><span class="n">board_id</span><span class="p">]))</span>
+</pre></div>
+</div>
+</div>
+<p>No further modification is necessary if the user has only one version of the customer
+calibration YAML file. However, if the user would like to keep track of multiple YAML
+file versions, there is an optional change the user can make to the <code class="docutils literal notranslate"><span class="pre">calib_info.py</span></code>
+file. See below for how to specify the YAML version.</p>
+<div class="literal-block-wrapper docutils container" id="id22">
+<div class="code-block-caption"><span class="caption-number">Listing 16 </span><span class="caption-text">pc_cal_example.py</span><a class="headerlink" href="#id22" title="Permalink to this code">¶</a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">155</span>    <span class="k">def</span> <span class="nf">initialize_cal_info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="linenos">156</span>        <span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">157</span><span class="sd">        Instantiates an accessor object to read in and parse calibration</span>
+<span class="linenos">158</span><span class="sd">        configurations from YAML.</span>
+<span class="linenos">159</span><span class="sd">        :return: calibration accessor object</span>
+<span class="linenos">160</span><span class="sd">        &quot;&quot;&quot;</span>
+<span class="linenos">161</span>        <span class="n">info</span> <span class="o">=</span> <span class="n">calib_info</span><span class="o">.</span><span class="n">CalibrationInfoPageAccessor</span><span class="p">()</span>
+<span class="hll"><span class="linenos">162</span>        <span class="n">info</span><span class="o">.</span><span class="n">read_in_yaml</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">CAL_CFG</span><span class="p">[</span><span class="s1">&#39;CUSTOMER_CAL_VERSION&#39;</span><span class="p">])</span>
+</span><span class="linenos">163</span>        <span class="k">return</span> <span class="n">info</span>
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id23">
+<div class="code-block-caption"><span class="caption-number">Listing 17 </span><span class="caption-text">calib_info.py</span><a class="headerlink" href="#id23" title="Permalink to this code">¶</a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">39</span><span class="k">class</span> <span class="nc">CalibrationInfoPageAccessor</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="linenos">40</span>    <span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">41</span><span class="sd">    This is a class to read and write the OEM calibration info page of</span>
+<span class="linenos">42</span><span class="sd">    the Impinj Reader Chip.</span>
+<span class="linenos">43</span><span class="sd">    &quot;&quot;&quot;</span>
+<span class="linenos">44</span>
+<span class="linenos">45</span>    <span class="c1"># these are the filename for the YAML files that define the</span>
+<span class="linenos">46</span>    <span class="c1"># format of the data in the info page.  The first byte of the</span>
+<span class="linenos">47</span>    <span class="c1"># first 32 bits of the info page designates what format it is</span>
+<span class="linenos">48</span>    <span class="n">_INFO_PAGE_YAML_FILES</span> <span class="o">=</span> <span class="p">(</span>
+<span class="linenos">49</span>        <span class="sa">b</span><span class="s1">&#39;dummy_page.yml&#39;</span><span class="p">,</span>
+<span class="linenos">50</span>        <span class="sa">b</span><span class="s1">&#39;dummy_page.yml&#39;</span><span class="p">,</span>
+<span class="linenos">51</span>        <span class="sa">b</span><span class="s1">&#39;dummy_page.yml&#39;</span><span class="p">,</span>
+<span class="linenos">52</span>        <span class="sa">b</span><span class="s1">&#39;dummy_page.yml&#39;</span><span class="p">,</span>
+<span class="linenos">53</span>        <span class="sa">b</span><span class="s1">&#39;dummy_page.yml&#39;</span><span class="p">,</span>
+<span class="linenos">54</span>        <span class="sa">b</span><span class="s1">&#39;cal_yaml/cal_info_page_v5.yml&#39;</span><span class="p">,</span>
+<span class="linenos">55</span>    <span class="p">)</span>
+<span class="linenos">56</span>
+<span class="hll"><span class="linenos">57</span>    <span class="n">_INFO_PAGE_CUSTOMER_YAML_FILES</span> <span class="o">=</span> <span class="p">(</span>
+</span><span class="hll"><span class="linenos">58</span>        <span class="sa">b</span><span class="s1">&#39;dummy_page.yml&#39;</span><span class="p">,</span> <span class="c1"># placeholder for the default customer cal file version</span>
+</span><span class="hll"><span class="linenos">59</span>        <span class="sa">b</span><span class="s1">&#39;cal_yaml/cal_info_page_v5_1.yml&#39;</span><span class="p">,</span>
+</span><span class="hll"><span class="linenos">60</span>        <span class="sa">b</span><span class="s1">&#39;cal_yaml/cal_info_page_v5_2.yml&#39;</span><span class="p">,</span>
+</span><span class="hll"><span class="linenos">61</span>        <span class="c1"># And so on...</span>
+</span><span class="hll"><span class="linenos">62</span>    <span class="p">)</span>
+</span></pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id24">
+<div class="code-block-caption"><span class="caption-number">Listing 18 </span><span class="caption-text">calib_info.py</span><a class="headerlink" href="#id24" title="Permalink to this code">¶</a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">104</span>    <span class="k">def</span> <span class="nf">read_in_yaml</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">yaml_version</span><span class="p">):</span>
+<span class="linenos">105</span>    <span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">106</span><span class="sd">    Helper function to read in the yaml file and setup the cal_parameters</span>
+<span class="linenos">107</span><span class="sd">    based on the data in the calibration file</span>
+<span class="linenos">108</span><span class="sd">    &quot;&quot;&quot;</span>
+<span class="linenos">109</span>    <span class="c1"># ugly little hack to figure out where this module is installed</span>
+<span class="linenos">110</span>    <span class="c1"># so that we can open the file relative to that.  If there is a</span>
+<span class="linenos">111</span>    <span class="c1"># better way that will work in yk_design, and a package please</span>
+<span class="linenos">112</span>    <span class="c1"># speak up!</span>
+<span class="linenos">113</span>    <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+<span class="linenos">114</span>        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span>
+<span class="hll"><span class="linenos">115</span>        <span class="bp">self</span><span class="o">.</span><span class="n">_INFO_PAGE_CUSTOMER_YAML_FILES</span><span class="p">[</span><span class="n">yaml_version</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
+</span><span class="linenos">116</span>
+<span class="linenos">117</span>    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">yaml_file</span><span class="p">:</span>
+<span class="linenos">118</span>        <span class="n">cal_yaml</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">yaml_file</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="../../_static/logo.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Calibration Customization Using CalGen</a><ul>
+<li><a class="reference internal" href="#introduction">Introduction</a></li>
+<li><a class="reference internal" href="#objective">Objective</a></li>
+<li><a class="reference internal" href="#files-involved-in-calibration">Files Involved In Calibration</a><ul>
+<li><a class="reference internal" href="#id1">ex10_calgen/</a></li>
+<li><a class="reference internal" href="#ex10-cal">ex10_cal/</a></li>
+<li><a class="reference internal" href="#ex10-c-dev-kit">ex10_c_dev_kit/</a></li>
+<li><a class="reference internal" href="#ex10-dev-kit">ex10_dev_kit/</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#calgen-architecture">CalGen Architecture</a><ul>
+<li><a class="reference internal" href="#run-inline-calgen-py">run_inline_calgen.py</a></li>
+<li><a class="reference internal" href="#calgenable-calibration-files">CalGenable Calibration Files</a></li>
+<li><a class="reference internal" href="#calgen-content-templates">CalGen Content Templates</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#customizing-calibration-files">Customizing Calibration Files</a><ul>
+<li><a class="reference internal" href="#modifying-an-existing-calibration-measurement">Modifying An Existing Calibration Measurement</a><ul>
+<li><a class="reference internal" href="#update-the-calibration-yaml-file">Update the Calibration YAML File</a></li>
+<li><a class="reference internal" href="#run-calgen">Run CalGen</a></li>
+<li><a class="reference internal" href="#update-the-pc-calibration-script">Update the PC Calibration Script</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#creating-a-new-calibration-measurement">Creating A New Calibration Measurement</a><ul>
+<li><a class="reference internal" href="#id3">Update the Calibration YAML File</a></li>
+<li><a class="reference internal" href="#id4">Run CalGen</a></li>
+<li><a class="reference internal" href="#update-calibration-c-and-calibration-c-files">Update calibration.c and calibration.c Files</a></li>
+<li><a class="reference internal" href="#id5">Update the PC Calibration Script</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="yk_firmware_ex10_host_c_regions_usage.html"
+                        title="previous chapter">Regulatory Regions Usage</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="yk_firmware_ex10_api.html"
+                        title="next chapter">Impinj Reader Chip Wireline API</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="yk_firmware_ex10_api.html" title="Impinj Reader Chip Wireline API"
+             >next</a></li>
+        <li class="right" >
+          <a href="yk_firmware_ex10_host_c_regions_usage.html" title="Regulatory Regions Usage"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="yk_firmware_ex10_host_c_api.html" >Impinj Reader Chip C Host SDK</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="yk_firmware_ex10_host_c_advanced_topics.html" >Advanced Topics</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Calibration Customization Using CalGen</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Impinj, Inc..
+    </div>
+  </body>
+</html>

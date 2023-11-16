@@ -1,0 +1,266 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Ex10SjcAccessor &#8212; Impinj Reader Chip SDK</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinxdoc.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Inventory Round Q/Target Behavior for Continuous Inventory" href="yk_firmware_ex10_host_c_q_target.html" />
+    <link rel="prev" title="Ex10PowerModes" href="yk_firmware_ex10_host_c_power_modes_layer.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="yk_firmware_ex10_host_c_q_target.html" title="Inventory Round Q/Target Behavior for Continuous Inventory"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="yk_firmware_ex10_host_c_power_modes_layer.html" title="Ex10PowerModes"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="yk_firmware_ex10_host_c_api.html" >Impinj Reader Chip C Host SDK</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="yk_firmware_ex10_host_c_advanced_topics.html" accesskey="U">Advanced Topics</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Ex10SjcAccessor</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="ex10sjcaccessor">
+<span id="ex10-api-host-c-api-sjc-accessor"></span><h1>Ex10SjcAccessor<a class="headerlink" href="#ex10sjcaccessor" title="Permalink to this headline">¶</a></h1>
+<p>The SjcAccessor provides for specialized access to the SJC run-time performance.
+The primary use case for modifying the SJC behavior is for testing and
+characterization. Under normal reader operations these parameters do not need
+to be changed or examined.</p>
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv415Ex10SjcAccessor">
+<span id="_CPPv315Ex10SjcAccessor"></span><span id="_CPPv215Ex10SjcAccessor"></span><span id="Ex10SjcAccessor"></span><span class="target" id="struct_ex10_sjc_accessor"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ex10SjcAccessor</span></span></span><a class="headerlink" href="#_CPPv415Ex10SjcAccessor" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The SJC interface. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N15Ex10SjcAccessor4initE">
+<span id="_CPPv3N15Ex10SjcAccessor4initE"></span><span id="_CPPv2N15Ex10SjcAccessor4initE"></span><span class="target" id="struct_ex10_sjc_accessor_1a46e335c1b9aded2efd1eccae7050047e"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">init</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="yk_firmware_ex10_host_c_protocol_layer.html#_CPPv412Ex10Protocol" title="Ex10Protocol"><span class="n"><span class="pre">Ex10Protocol</span></span></a><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N15Ex10SjcAccessor4initE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Write the default SJC settings to find a solution. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N15Ex10SjcAccessor15set_sjc_controlE">
+<span id="_CPPv3N15Ex10SjcAccessor15set_sjc_controlE"></span><span id="_CPPv2N15Ex10SjcAccessor15set_sjc_controlE"></span><span class="target" id="struct_ex10_sjc_accessor_1a6b29dd48622e1149ddc223f2f4a22cba"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">set_sjc_control</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n"><span class="pre">sample_average_coarse</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n"><span class="pre">sample_average_fine</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n"><span class="pre">events_enable</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n"><span class="pre">fixed_rx_atten</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n"><span class="pre">sample_decimator</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N15Ex10SjcAccessor15set_sjc_controlE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Write the SjcControl Register. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Param sample_average_coarse</dt>
+<dd class="field-odd"><p>The number of samples to take for each SJC measurement when the step size &gt;= 8. </p>
+</dd>
+<dt class="field-even">Param sample_average_fine</dt>
+<dd class="field-even"><p>The number of samples to take for each SJC measurement when the step size &lt; 8. </p>
+</dd>
+<dt class="field-odd">Param events_enable</dt>
+<dd class="field-odd"><p>Enable SJC measurement data to be output on the Events stream. </p>
+</dd>
+<dt class="field-even">Param fixed_rx_atten</dt>
+<dd class="field-even"><p>When set to true the SJC algorithm will not manipulate the RxGainControl.RxAtten value when searching for a solution. When set to false the SJC algorithm will change the RxAtten value to decrease solution search time and optimize the solution. </p>
+</dd>
+<dt class="field-odd">Param sample_decimator</dt>
+<dd class="field-odd"><p>Reduces the Rx sample rate by 2^sample_decimator using the decimator lowpass filter. This value is applied to all samples. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N15Ex10SjcAccessor20set_analog_rx_configE">
+<span id="_CPPv3N15Ex10SjcAccessor20set_analog_rx_configE"></span><span id="_CPPv2N15Ex10SjcAccessor20set_analog_rx_configE"></span><span class="target" id="struct_ex10_sjc_accessor_1a3ef161bb6ff58b4ed06263a8394b6150"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">set_analog_rx_config</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N15Ex10SjcAccessor20set_analog_rx_configE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Write the typical Analog Rx Gain values for SJC operation. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N15Ex10SjcAccessor17set_settling_timeE">
+<span id="_CPPv3N15Ex10SjcAccessor17set_settling_timeE"></span><span id="_CPPv2N15Ex10SjcAccessor17set_settling_timeE"></span><span class="target" id="struct_ex10_sjc_accessor_1a718ccbfd9857382381808a56158405ba"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">set_settling_time</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">uint16_t</span></span><span class="w"> </span><span class="n"><span class="pre">initial_measure_settling_usec</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">uint16_t</span></span><span class="w"> </span><span class="n"><span class="pre">residue_measure_settling_usec</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N15Ex10SjcAccessor17set_settling_timeE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Write the DC offset and residue measurement settling times. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Param initial_measure_settling_usec</dt>
+<dd class="field-odd"><p>The number of microseconds to wait after the receiver has been configured for SJC measurements to the time of the first sample taken within a group of measurements. </p>
+</dd>
+<dt class="field-even">Param residue_measure_settling_usec</dt>
+<dd class="field-even"><p>The number of microseconds to wait after the CDAC I,Q attenuator has changed, prior to taking SJC residue measurements. This allows the transient related to the CDAC switching to settle out. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N15Ex10SjcAccessor14set_cdac_rangeE">
+<span id="_CPPv3N15Ex10SjcAccessor14set_cdac_rangeE"></span><span id="_CPPv2N15Ex10SjcAccessor14set_cdac_rangeE"></span><span class="target" id="struct_ex10_sjc_accessor_1a045d9fcacffe5703339f0537d0ecca76"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">set_cdac_range</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv49CdacRange" title="CdacRange"><span class="n"><span class="pre">CdacRange</span></span></a><span class="w"> </span><span class="n"><span class="pre">cdac_i</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv49CdacRange" title="CdacRange"><span class="n"><span class="pre">CdacRange</span></span></a><span class="w"> </span><span class="n"><span class="pre">cdac_q</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N15Ex10SjcAccessor14set_cdac_rangeE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Prior to the running the RxRunSjcOp set the SJC CDAC ranges. </p>
+<p><dl class="simple">
+<dt><strong>See</strong></dt><dd><p>struct <a class="reference internal" href="#struct_cdac_range"><span class="std std-ref">CdacRange</span></a> </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N15Ex10SjcAccessor21set_residue_thresholdE">
+<span id="_CPPv3N15Ex10SjcAccessor21set_residue_thresholdE"></span><span id="_CPPv2N15Ex10SjcAccessor21set_residue_thresholdE"></span><span class="target" id="struct_ex10_sjc_accessor_1afda1c4639268ef545457a3e72e1fb523"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">set_residue_threshold</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">uint16_t</span></span><span class="w"> </span><span class="n"><span class="pre">residue_threshold</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N15Ex10SjcAccessor21set_residue_thresholdE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Sets the SJC residue threshold, which defines the pass/fail criterion when running the RxRunSjcOp. </p>
+<p>If the magnitude of the resulting SJC residue voltage magnitude exceeds this value, then the SJC solution is not considered adequate for LO carrier cancellation into the receiver. If the value zero is set, then this threshold is ignored by the RxRunSjcOp.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Param residue_threshold</dt>
+<dd class="field-odd"><p>The SJC residue voltage magnitude threshold as measured after the PGA3 receiver stage. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N15Ex10SjcAccessor25set_cdac_to_find_solutionE">
+<span id="_CPPv3N15Ex10SjcAccessor25set_cdac_to_find_solutionE"></span><span id="_CPPv2N15Ex10SjcAccessor25set_cdac_to_find_solutionE"></span><span class="target" id="struct_ex10_sjc_accessor_1a0f4c46109411d2cffe153e9af8ac74f3"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">set_cdac_to_find_solution</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N15Ex10SjcAccessor25set_cdac_to_find_solutionE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Initialize the CDAC I,Q values to null out the reflected Tx LO within the Rx chain. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N15Ex10SjcAccessor15get_sjc_resultsE">
+<span id="_CPPv3N15Ex10SjcAccessor15get_sjc_resultsE"></span><span id="_CPPv2N15Ex10SjcAccessor15get_sjc_resultsE"></span><span class="target" id="struct_ex10_sjc_accessor_1aea3b2b36b20a5b4e9bf3d21dba85e40e"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv413SjcResultPair" title="SjcResultPair"><span class="n"><span class="pre">SjcResultPair</span></span></a><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_sjc_results</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N15Ex10SjcAccessor15get_sjc_resultsE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>After the RxRunSjcOp has completed read the SJC results. </p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv49CdacRange">
+<span id="_CPPv39CdacRange"></span><span id="_CPPv29CdacRange"></span><span id="CdacRange"></span><span class="target" id="struct_cdac_range"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">CdacRange</span></span></span><a class="headerlink" href="#_CPPv49CdacRange" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The CDAC range can be set to limit the SJC search range. </p>
+<p>By default the SJC search range is initialized by the <a class="reference internal" href="#struct_ex10_sjc_accessor"><span class="std std-ref">Ex10SjcAccessor</span></a> module to perform a full search of the CDAC range.</p>
+<p>Limiting the CDAC range is useful when the target solution has been previously determined or for testing purposes. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N9CdacRange6centerE">
+<span id="_CPPv3N9CdacRange6centerE"></span><span id="_CPPv2N9CdacRange6centerE"></span><span id="CdacRange::center__int8_t"></span><span class="target" id="struct_cdac_range_1ac7287ecf29b0483985d308f55ebd69ab"></span><span class="n"><span class="pre">int8_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">center</span></span></span><a class="headerlink" href="#_CPPv4N9CdacRange6centerE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The center of the CDAC range. Nominally zero. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N9CdacRange5limitE">
+<span id="_CPPv3N9CdacRange5limitE"></span><span id="_CPPv2N9CdacRange5limitE"></span><span id="CdacRange::limit__uint8_t"></span><span class="target" id="struct_cdac_range_1a35a0d6fb636c5265c8d70e52cdb7a5bd"></span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">limit</span></span></span><a class="headerlink" href="#_CPPv4N9CdacRange5limitE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The symmetric start, stop span for searching. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N9CdacRange9step_sizeE">
+<span id="_CPPv3N9CdacRange9step_sizeE"></span><span id="_CPPv2N9CdacRange9step_sizeE"></span><span id="CdacRange::step_size__uint8_t"></span><span class="target" id="struct_cdac_range_1ad97a852b955d987968ff227e77c09b7e"></span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">step_size</span></span></span><a class="headerlink" href="#_CPPv4N9CdacRange9step_sizeE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The CDAC step size when searching. </p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv49SjcResult">
+<span id="_CPPv39SjcResult"></span><span id="_CPPv29SjcResult"></span><span id="SjcResult"></span><span class="target" id="struct_sjc_result"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SjcResult</span></span></span><a class="headerlink" href="#_CPPv49SjcResult" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Once the SJC solution has been found the resulting residue measurement and CDAC location may be read. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N9SjcResult7residueE">
+<span id="_CPPv3N9SjcResult7residueE"></span><span id="_CPPv2N9SjcResult7residueE"></span><span id="SjcResult::residue__int32_t"></span><span class="target" id="struct_sjc_result_1adf22fd498789667c947d4358ca678004"></span><span class="n"><span class="pre">int32_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">residue</span></span></span><a class="headerlink" href="#_CPPv4N9SjcResult7residueE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The relative LO power detected by the receiver. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N9SjcResult4cdacE">
+<span id="_CPPv3N9SjcResult4cdacE"></span><span id="_CPPv2N9SjcResult4cdacE"></span><span id="SjcResult::cdac__int8_t"></span><span class="target" id="struct_sjc_result_1af28e65c946bae70f076dc2a72a9fdb44"></span><span class="n"><span class="pre">int8_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cdac</span></span></span><a class="headerlink" href="#_CPPv4N9SjcResult4cdacE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The CDAC location of the SJC solution. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N9SjcResult12cdac_limitedE">
+<span id="_CPPv3N9SjcResult12cdac_limitedE"></span><span id="_CPPv2N9SjcResult12cdac_limitedE"></span><span id="SjcResult::cdac_limited__b"></span><span class="target" id="struct_sjc_result_1aae7cfa0471223ebd4bb6c99243d4f8f9"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cdac_limited</span></span></span><a class="headerlink" href="#_CPPv4N9SjcResult12cdac_limitedE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The SJC solution was outside the SKU range. </p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv413SjcResultPair">
+<span id="_CPPv313SjcResultPair"></span><span id="_CPPv213SjcResultPair"></span><span id="SjcResultPair"></span><span class="target" id="struct_sjc_result_pair"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SjcResultPair</span></span></span><a class="headerlink" href="#_CPPv413SjcResultPair" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The SJC I, Q result pair. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N13SjcResultPair1iE">
+<span id="_CPPv3N13SjcResultPair1iE"></span><span id="_CPPv2N13SjcResultPair1iE"></span><span id="SjcResultPair::i__SjcResult"></span><span class="target" id="struct_sjc_result_pair_1aaa3887f582d85596fe4b883fc9b7a296"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv49SjcResult" title="SjcResult"><span class="n"><span class="pre">SjcResult</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">i</span></span></span><a class="headerlink" href="#_CPPv4N13SjcResultPair1iE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N13SjcResultPair1qE">
+<span id="_CPPv3N13SjcResultPair1qE"></span><span id="_CPPv2N13SjcResultPair1qE"></span><span id="SjcResultPair::q__SjcResult"></span><span class="target" id="struct_sjc_result_pair_1a147fe3e1fa2f5643d5e6b1577496bcd9"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv49SjcResult" title="SjcResult"><span class="n"><span class="pre">SjcResult</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">q</span></span></span><a class="headerlink" href="#_CPPv4N13SjcResultPair1qE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="../../_static/logo.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="yk_firmware_ex10_host_c_power_modes_layer.html"
+                        title="previous chapter">Ex10PowerModes</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="yk_firmware_ex10_host_c_q_target.html"
+                        title="next chapter">Inventory Round Q/Target Behavior for Continuous Inventory</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="yk_firmware_ex10_host_c_q_target.html" title="Inventory Round Q/Target Behavior for Continuous Inventory"
+             >next</a></li>
+        <li class="right" >
+          <a href="yk_firmware_ex10_host_c_power_modes_layer.html" title="Ex10PowerModes"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="yk_firmware_ex10_host_c_api.html" >Impinj Reader Chip C Host SDK</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="yk_firmware_ex10_host_c_advanced_topics.html" >Advanced Topics</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Ex10SjcAccessor</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Impinj, Inc..
+    </div>
+  </body>
+</html>

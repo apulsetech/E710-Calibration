@@ -1,0 +1,134 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Ex10 Use Case Layers &#8212; Impinj Reader Chip SDK</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinxdoc.css" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Ex10 Continuous Inventory Use Case" href="continuous_inventory.html" />
+    <link rel="prev" title="API Layers" href="../yk_firmware_ex10_host_c_api_layers.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="continuous_inventory.html" title="Ex10 Continuous Inventory Use Case"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="../yk_firmware_ex10_host_c_api_layers.html" title="API Layers"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../yk_firmware_ex10_host_c_api.html" >Impinj Reader Chip C Host SDK</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../yk_firmware_ex10_host_c_api_layers.html" accesskey="U">API Layers</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Ex10 Use Case Layers</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="ex10-use-case-layers">
+<span id="ex10-api-host-c-api-use-case"></span><h1>Ex10 Use Case Layers<a class="headerlink" href="#ex10-use-case-layers" title="Permalink to this headline">¶</a></h1>
+<p>The use case layer replaces the <code class="docutils literal notranslate"><span class="pre">Ex10reader</span></code> at the top of the SDK. Its primary
+function is to setup the Impinj Reader Chip for the specific use case, and then
+manage the interrupt requests from the Impinj Reader Chip.  There are multiple use
+cases available, but only one can be active at any given time. The use case is
+required to provide an <code class="docutils literal notranslate"><span class="pre">init()</span></code> API.  This will install the
+interrupt handlers in the protocol layer and take care of any initialization needed
+by the use case.</p>
+<p>The use case provides a callback type interface which allows the user application to register
+the use case callback. Each use case has a unique API that is customized
+for the specific needs of the use case.  The callback is provided by the application
+so it will know what to do with the information when it is called.  For example
+with the <code class="docutils literal notranslate"><span class="pre">Ex10ContinuousInventoryUseCase</span></code> the callback is called when a <code class="docutils literal notranslate"><span class="pre">TagRead</span></code> or
+<code class="docutils literal notranslate"><span class="pre">ContinuousInventorySummary</span></code> packet types are received from the Impinj Reader Chip.
+In the supplied examples, the callback optionally prints out the tag report
+and keeps track of the number of tag reads.  Another application, however, may need to
+publish the packet to a MQTT broker (pub-sub broker) for example.</p>
+<p>The functionality of the use case is to setup the use case via the <code class="docutils literal notranslate"><span class="pre">init()</span></code> API to register
+the callbacks, and then call the provided API that will do that use case’s functionality.
+Using the <code class="docutils literal notranslate"><span class="pre">Ex10ContinuousInventoryUseCase</span></code> as an example, the use case has a <code class="docutils literal notranslate"><span class="pre">continuous_inventory()</span></code>
+API that is called, and then it will run inventory continuously and call the
+callback when it receives the correct packets.  Other use cases have different behaviors
+that are appropriate for those use cases.</p>
+<p>These use cases should be looked at like a menu of RAIN RFID behaviors, where the application picks the
+one that best fits the use case that it is trying to address.  This may mean using
+more than one use case (one at a time) to accomplish a complex task.  This menu
+of use cases will likely grow over time as more are identified and published.
+These use cases are also intended to be starting places for the end users application
+where the user might copy the use case into their own directory and modify it
+to make it better for their specific application.  A simple example might be to
+take the <code class="docutils literal notranslate"><span class="pre">Ex10ContinuousInventoryUseCase</span></code> and implement a filter
+on a certain EPC pattern and only call a callback on a specific pattern match.
+This is a simple example that could arguably be implemented in the use case, or
+in the callback and it is just intended to illustrate the point.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="continuous_inventory.html">Ex10 Continuous Inventory Use Case</a></li>
+<li class="toctree-l1"><a class="reference internal" href="inventory_sequence.html">Ex10 Inventory Sequence Use Case</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tag_access.html">Ex10 Tag Access Use Case</a></li>
+</ul>
+</div>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../../../_static/logo.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../yk_firmware_ex10_host_c_api_layers.html"
+                        title="previous chapter">API Layers</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="continuous_inventory.html"
+                        title="next chapter">Ex10 Continuous Inventory Use Case</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="continuous_inventory.html" title="Ex10 Continuous Inventory Use Case"
+             >next</a></li>
+        <li class="right" >
+          <a href="../yk_firmware_ex10_host_c_api_layers.html" title="API Layers"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Impinj Reader Chip SDK</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../yk_firmware_ex10_host_c_api.html" >Impinj Reader Chip C Host SDK</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../yk_firmware_ex10_host_c_api_layers.html" >API Layers</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Ex10 Use Case Layers</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Impinj, Inc..
+    </div>
+  </body>
+</html>

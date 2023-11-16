@@ -1,0 +1,124 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>CRC Test Data &#8212; Impinj Reader Chip SDK</title>
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sphinxdoc.css" />
+    <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+    <script src="../../../../_static/jquery.js"></script>
+    <script src="../../../../_static/underscore.js"></script>
+    <script src="../../../../_static/doctools.js"></script>
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="nav-item nav-item-0"><a href="../../../docs/index.html">Impinj Reader Chip SDK</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">CRC Test Data</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="crc-test-data">
+<h1>CRC Test Data<a class="headerlink" href="#crc-test-data" title="Permalink to this headline">¶</a></h1>
+<section id="boost-libraries">
+<h2>Boost Libraries<a class="headerlink" href="#boost-libraries" title="Permalink to this headline">¶</a></h2>
+<p>Boost is not part of the Yukon firmware nor the SDK. It is being used to generate
+Yukon firmware unit tests. To compile the test data module requires boost to
+be in the compiler include path. This test data is compiled using boot
+version 1.79.0, which is installed in the directory /opt/boost_1_79_0.</p>
+<p>Therefore, the <code class="docutils literal notranslate"><span class="pre">gcc</span></code> command line required to build the test data requires
+the <code class="docutils literal notranslate"><span class="pre">-I</span> <span class="pre">/opt/boos_1_79_0</span></code> option.</p>
+</section>
+<section id="crc-5-epc">
+<h2>CRC-5/EPC<a class="headerlink" href="#crc-5-epc" title="Permalink to this headline">¶</a></h2>
+<p>The CRC-5/EPC, also named CRC-5/EPC-C1G2, is the CRC-5 encoder/decoder specified
+in Annex F of the Gen2 specification.</p>
+<p>References:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p><a class="reference external" href="https://reveng.sourceforge.io/crc-catalogue/all.htm#crc.cat-bits.5">https://reveng.sourceforge.io/crc-catalogue/all.htm#crc.cat-bits.5</a></p></li>
+<li><p><a class="reference external" href="https://en.wikipedia.org/wiki/Cyclic_redundancy_check#CRC_catalogues">https://en.wikipedia.org/wiki/Cyclic_redundancy_check#CRC_catalogues</a></p></li>
+<li><p><a class="reference external" href="https://pythonhosted.org/crccheck/crctable.html">https://pythonhosted.org/crccheck/crctable.html</a></p></li>
+</ol>
+</div></blockquote>
+<p>The CRC-5/EPC is succinctly specified as:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>name      = “CRC-5/EPC-C1G2”</p></li>
+<li><p>width     = 5</p></li>
+<li><p>poly      = 0x09</p></li>
+<li><p>init      = 0x09</p></li>
+<li><p>refin     = false</p></li>
+<li><p>refout    = false</p></li>
+<li><p>xorout    = 0x00</p></li>
+<li><p>check     = 0x00</p></li>
+<li><p>residue   = 0x00</p></li>
+</ul>
+</div></blockquote>
+<p>(See reference 1 above)</p>
+<p>This specification can be used with the boost library to instantiate CRC
+instances as:</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="n">boost</span><span class="o">::</span><span class="n">crc_optimal</span><span class="o">&lt;</span><span class="mi">5</span><span class="p">,</span> <span class="mh">0x09</span><span class="p">,</span> <span class="mh">0x09</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="nb">false</span><span class="p">,</span> <span class="nb">false</span><span class="o">&gt;</span> <span class="n">crc_5_epc_fast</span><span class="p">;</span>
+<span class="n">boost</span><span class="o">::</span><span class="n">crc_basic</span><span class="o">&lt;</span><span class="mi">5</span><span class="o">&gt;</span> <span class="n">crc_5_epc_basic</span><span class="p">(</span><span class="mh">0x09</span><span class="p">,</span> <span class="mh">0x09</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">false</span><span class="p">,</span> <span class="nb">false</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>These are used to generate the CRC test data used to verify the CRC-5/EPC
+implementation used in the Yukon firmware.</p>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../docs/index.html">
+              <img class="logo" src="../../../../_static/logo.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../../../docs/index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">CRC Test Data</a><ul>
+<li><a class="reference internal" href="#boost-libraries">Boost Libraries</a></li>
+<li><a class="reference internal" href="#crc-5-epc">CRC-5/EPC</a></li>
+</ul>
+</li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="nav-item nav-item-0"><a href="../../../docs/index.html">Impinj Reader Chip SDK</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">CRC Test Data</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Impinj, Inc..
+    </div>
+  </body>
+</html>

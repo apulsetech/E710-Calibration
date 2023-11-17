@@ -53,10 +53,8 @@ power_meter_addr = "USB0::0x2A8D::0x0701::MY59260011::0::INSTR"
 
 # 2023-11-17
 # Updated by Kim Young Bong
-# Todo: find sig_gen_addr of N9310A(SignalGenerator) connected with Window PC
-sig_gen_addr = "USB0::0x0957::0x2018::0116C599::INSTR"
-# sig_gen_addr = "USB0::0x2319::0x8216::0115000001::INSTR"
-# sig_gen_addr = "USB0::0x1456::0x5571::0115000001::0::INSTR"
+sig_gen_addr = "USB0::0x0957::0x2018::0115001234::INSTR"
+
 
 # The serial interface to the device running ex10_fct_wrapper.bin
 com_port = "COM5"

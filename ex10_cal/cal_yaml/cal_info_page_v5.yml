@@ -192,20 +192,20 @@ parameters:
         init_value: 0
         num_entries: 31
 
-  - name: UpperBandFwdPowerCoarsePwrCal
-    brief: List of calibrated coarse attenuation values, with PPA_HALF_PWR off
-    description: |
-     List of calibrated coarse attenuation values, with PPA_HALF_PWR toggle off
-    address: 226
-    length: 124
-    fields:
-      - name: Coarse_Attn_Cal
-        pos: 0
-        bits: float
-        init_value: 0.0
-        num_entries: 31
-        description: |
-          Calibrated coarse attenuation at setting 0-30.
+  # - name: UpperBandFwdPowerCoarsePwrCal
+  #   brief: List of calibrated coarse attenuation values, with PPA_HALF_PWR off
+  #   description: |
+  #    List of calibrated coarse attenuation values, with PPA_HALF_PWR toggle off
+  #   address: 226
+  #   length: 124
+  #   fields:
+  #     - name: Coarse_Attn_Cal
+  #       pos: 0
+  #       bits: float
+  #       init_value: 0.0
+  #       num_entries: 31
+  #       description: |
+  #         Calibrated coarse attenuation at setting 0-30.
 
   - name: UpperBandFwdPowerTempSlope
     brief: Temperature slope of forward power curve
@@ -309,20 +309,20 @@ parameters:
         init_value: 0
         num_entries: 31
 
-  - name: LowerBandFwdPowerCoarsePwrCal
-    brief: List of calibrated coarse attenuation values, with PPA_HALF_PWR off
-    description: |
-     List of calibrated coarse attenuation values, with PPA_HALF_PWR toggle off
-    address: 642
-    length: 124
-    fields:
-      - name: Coarse_Attn_Cal
-        pos: 0
-        bits: float
-        init_value: 0.0
-        num_entries: 31
-        description: |
-          Calibrated coarse attenuation at setting 0-30.
+  # - name: LowerBandFwdPowerCoarsePwrCal
+  #   brief: List of calibrated coarse attenuation values, with PPA_HALF_PWR off
+  #   description: |
+  #    List of calibrated coarse attenuation values, with PPA_HALF_PWR toggle off
+  #   address: 642
+  #   length: 124
+  #   fields:
+  #     - name: Coarse_Attn_Cal
+  #       pos: 0
+  #       bits: float
+  #       init_value: 0.0
+  #       num_entries: 31
+  #       description: |
+  #         Calibrated coarse attenuation at setting 0-30.
 
   - name: LowerBandFwdPowerTempSlope
     brief: Temperature slope of forward power curve

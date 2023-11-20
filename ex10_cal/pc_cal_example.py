@@ -901,6 +901,7 @@ def run_pc_cal(uart_helper, power_meter, sig_gen, path_loss, board_id, verbose, 
     stopwatch.split('CAL', 'setup')
 
     board_id, json_file_to_write = cal_example.get_board_id(board_id)
+    print("####    json_file_to_write    ####", json_file_to_write)
     rssi_data = cal_example.acquire_rssi_cal_data(path_loss=path_loss)
     stopwatch.split('RSSI CAL', 'stop')
     upper_data = cal_example.acquire_pwr_cal_data(rf_filter='UPPER_BAND',
